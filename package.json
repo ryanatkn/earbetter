@@ -1,9 +1,10 @@
 {
-  "name": "felt-template",
-  "description": "a static web app and Node library template with SvelteKit, Gro, and Felt",
+  "name": "@ryanatkn/earworm",
+  "description": "ear training game 🪱",
+  "homepage": "https://ryanatkn.github.io/earworm",
+  "license": "Unlicense",
   "version": "0.0.1",
   "type": "module",
-  "homepage": "https://template.felt.dev",
   "engines": {
     "node": ">=18.6"
   },

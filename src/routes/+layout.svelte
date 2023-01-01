@@ -2,11 +2,11 @@
 	import '@feltcoop/felt/style.css';
 	import {base} from '$app/paths';
 
-	import '$lib/style.css';
+	import './style.css';
 </script>
 
 <svelte:head>
-	<title>felt-template</title>
+	<title>@ryanatkn/earworm</title>
 	<link rel="icon" href="{base}/favicon.png" />
 </svelte:head>
 
