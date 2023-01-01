@@ -1,4 +1,4 @@
-<script>
+<script lang="ts">
 	export let level;
 
 	// TODO colors
@@ -17,6 +17,7 @@
 	{#each {length: $level.def.trialCount} as _, index}
 		<div
 			class="flex-1 border-primary h-full"
-			style="background-color: {getBgColor($level, index)}" />
+			style="background-color: {getBgColor($level, index)}"
+		/>
 	{/each}
 </div>

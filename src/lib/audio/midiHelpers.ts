@@ -1,12 +1,12 @@
-import {
+import type {
 	MIDICommand,
 	MIDIMessageEvent,
 	MIDIOptions,
 	MIDIAccess,
 	MIDIChannel,
 	requestMIDIAccess,
-} from '$lib/WebMIDI.js';
-import {Midi} from '$lib/music/midi.js';
+} from '$lib/audio/WebMIDI';
+import type {Midi} from '$lib/music/midi';
 
 // WebMIDI helpers specific to cosmicplayground
 

@@ -1,12 +1,12 @@
-<script>
-	import {onMount} from 'svelte/index.mjs';
+<script lang="ts">
+	import {onMount} from 'svelte';
 
-	import {createLevelStore} from '$lib/levelStore.js';
-	import PianoInstrument from '$lib/music/PianoInstrument.svelte';
-	import LevelProgressIndicator from '$lib/LevelProgressIndicator.svelte';
-	import TrialProgressIndicator from '$lib/TrialProgressIndicator.svelte';
-	import {useAudioCtx} from '$lib/audio/audioCtx.js';
-	import {useMidiInput} from '$lib/audio/midiInput.js';
+	import {createLevelStore, type LevelDef} from '$lib/earworm/level';
+	import Piano from '$lib/music/Piano.svelte';
+	import LevelProgressIndicator from '$lib/earworm/LevelProgressIndicator.svelte';
+	import TrialProgressIndicator from '$lib/earworm/TrialProgressIndicator.svelte';
+	import {getAudioCtx} from '$lib/audio/audioCtx';
+	import {getMidiInput} from '$lib/audio/midiInput';
 
 	/*
 
@@ -14,7 +14,7 @@
 
 	- MIDI input!!
 	- orient people to their keyboard, maybe showing middle C?
-		- related: consider rendering the PianoInstrument clamped to the tonic and octaveShift (validNotes) - problem is you might have a harder time arranging yourself on your keyboard
+		- related: consider rendering the Piano clamped to the tonic and octaveShift (validNotes) - problem is you might have a harder time arranging yourself on your keyboard
 		- maybe always show the full keyboard? maybe always start at a C?
 	- clamp level def data to the audible range
 	- xstate!
@@ -23,12 +23,12 @@
   - show a histogram of the correct inputs lined up vertically  with the buttons, moving to the right from the left or fixed onscreen
 
   */
-	export let levelDef;
+	export let levelDef: LevelDef;
 	export let exitLevelToMap;
 
 	let clientWidth; // `undefined` on first render
 
-	const audioCtx = useAudioCtx();
+	const audioCtx = getAudioCtx();
 
 	const level = createLevelStore(levelDef, audioCtx);
 	// $: level.setDef(levelDef); // TODO update if levelDef prop changes
@@ -43,7 +43,7 @@
 		level.send('START');
 	});
 
-	useMidiInput({
+	getMidiInput({
 		onNoteStart: (midi) => {
 			// TODO should this be ignored if it's not an enabled key? should the level itself ignore the guess?
 			level.send({type: 'GUESS', midi});
@@ -125,12 +125,12 @@
 
 	<div class="absolute l-0 b-0 w-100">
 		{#if clientWidth}
-			<PianoInstrument
+			<Piano
 				width={clientWidth}
 				midiMin={$level.def.midiMin}
 				midiMax={$level.def.midiMax}
 				onPressKey={$level.status === 'waitingForInput' ? onPressKey : undefined}
-				enabledKeys={$level.trial && $level.trial.validNotes}
+				enabledKeys={$level.trial?.validNotes}
 				{highlightedKeys}
 				{emphasizedKeys}
 			/>

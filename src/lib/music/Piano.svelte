@@ -1,23 +1,21 @@
-<script>
-	import PianoInstrumentKey from '$lib/PianoInstrumentKey.svelte';
-	import {midiNaturals, midiChromas} from '$lib/music/notes.js';
-	import {MIDI_MIN, MIDI_MAX} from '$lib/music/midi.js';
+<script lang="ts">
+	import PianoKey from '$lib/music/PianoKey.svelte';
+	import {midiNaturals, midiChromas} from '$lib/music/notes';
+	import {MIDI_MIN, MIDI_MAX} from '$lib/music/midi';
 
-	// TODO should we move these music components to src/music?
+	export let width: number;
+	export let midiMin: Midi = MIDI_MIN;
+	export let midiMax: Midi = MIDI_MAX;
+	export let onPressKey: ((midi: Midi) => void) | undefined = undefined; // TODO event
+	export let enabledKeys: Set<Midi> | undefined = undefined;
+	export let highlightedKeys: Set<Midi> | undefined = undefined;
+	export let emphasizedKeys: Set<Midi> | undefined = undefined;
 
-	export let width; // : number
-	export let midiMin = MIDI_MIN; // ?: Midi
-	export let midiMax = MIDI_MAX; // ?: Midi
-	export let onPressKey = undefined; // ?(midi: Midi): void
-	export let enabledKeys = undefined; // ?: Set<Midi>
-	export let highlightedKeys = undefined; // ?: Set<Midi>
-	export let emphasizedKeys = undefined; // ?: Set<Midi>
+	const isKeyEnabled = (key: Midi, enabledKeys): boolean => !enabledKeys || enabledKeys.has(key); // (key: Midi, enabledKeys: Set<Midi> | undefined): boolean
 
-	const isKeyEnabled = (key, enabledKeys) => !enabledKeys || enabledKeys.has(key); // (key: Midi, enabledKeys: Set<Midi> | undefined): boolean
+	const isKeyHighlighted = (key, highlightedKeys): boolean => !!highlightedKeys?.has(key); // (key: Midi, highlightedKeys: Set<Midi> | undefined): boolean
 
-	const isKeyHighlighted = (key, highlightedKeys) => highlightedKeys && highlightedKeys.has(key); // (key: Midi, highlightedKeys: Set<Midi> | undefined): boolean
-
-	const isKeyEmphasized = (key, emphasizedKeys) => emphasizedKeys && emphasizedKeys.has(key); // (key: Midi, emphasizedKeys: Set<Midi> | undefined): boolean
+	const isKeyEmphasized = (key, emphasizedKeys): boolean => !!emphasizedKeys?.has(key); // (key: Midi, emphasizedKeys: Set<Midi> | undefined): boolean
 
 	$: noteCount = midiMax - midiMin + 1;
 	$: accidentalKeyWidth = Math.floor(width / noteCount);
@@ -91,10 +89,10 @@
 	);
 </script>
 
-<div className="PianoInstrument" style="position: relative; width: {width}px">
-	<div className="PianoInstrument-keys" style="height: {naturalKeyHeight}px">
+<div class="piano" style="position: relative; width: {width}px">
+	<div class="piano-keys" style="height: {naturalKeyHeight}px">
 		{#each pianoKeys as key (key.midi)}
-			<PianoInstrumentKey
+			<PianoKey
 				midi={key.midi}
 				leftOffset={key.leftOffset}
 				width={key.width}

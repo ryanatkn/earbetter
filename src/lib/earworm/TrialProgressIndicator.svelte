@@ -1,4 +1,4 @@
-<script>
+<script lang="ts">
 	// TODO should we hoist some logic so this just takes a trial?
 	export let level;
 
@@ -25,7 +25,8 @@
 		{#each {length: $level.trial.sequence.length} as _, index}
 			<div
 				class="flex-1 border-primary h-full"
-				style="background-color: {getBgColor($level, index)}" />
+				style="background-color: {getBgColor($level, index)}"
+			/>
 		{/each}
 	</div>
 {/if}

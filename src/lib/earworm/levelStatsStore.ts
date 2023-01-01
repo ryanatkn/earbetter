@@ -1,6 +1,6 @@
-import {writable, Writable} from 'svelte/store';
+import {writable, type Writable} from 'svelte/store';
 
-import {LevelDef} from '$lib/levelDefs';
+import type {LevelDef} from '$lib/earworm/levelDefs';
 
 type LevelStatsStoreState = {
 	isComplete: {[key: string]: boolean};
@@ -8,7 +8,7 @@ type LevelStatsStoreState = {
 
 interface LevelStatsStore {
 	subscribe: Writable<LevelStatsStoreState>['subscribe'];
-	registerSuccess(id: number): void;
+	registerSuccess: (id: number) => void;
 }
 
 const defaultState = (defs: LevelDef[]): LevelStatsStoreState => {

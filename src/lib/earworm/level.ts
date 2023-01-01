@@ -1,13 +1,12 @@
-import {writable, Writable} from 'svelte/store';
+import {writable, type Writable} from 'svelte/store';
+import {randomItem, randomInt} from '@feltcoop/util/random.js';
+import {UnreachableError} from '@feltcoop/util/error.js';
 
-import {LevelDef} from '$lib/levelDefs.js';
-import {randItem, randInt} from '$lib/utils/random.js';
-import {UnreachableError} from '$lib/utils/error.js';
-import {SMOOTH_GAIN_TIME_CONSTANT} from '$lib/audio/utils.js';
-import {Midi, midiToFreq} from '$lib/music/midi.js';
-import {DEFAULT_TUNING} from '$lib/music/constants.js';
-import {last} from '$lib/utils/arr.js';
-import {computeInterval} from '$lib/music/notes.js';
+import type {LevelDef} from '$lib/earworm/levelDefs';
+import {SMOOTH_GAIN_TIME_CONSTANT} from '$lib/audio/utils';
+import {type Midi, midiToFreq} from '$lib/music/midi';
+import {DEFAULT_TUNING} from '$lib/music/constants';
+import {computeInterval} from '$lib/music/notes';
 
 // TODO play a victory sound on complete
 // TODO show feedback on the pressed buttons, regardless of how their interval was input (keyboard, tapping, clicking, debug key, etc)
@@ -35,12 +34,12 @@ type LevelStoreState = {
 
 interface LevelStore {
 	subscribe: Writable<LevelStoreState>['subscribe'];
-	send(event: EventName | EventData): void;
-	reset(): void;
-	isInputDisabled($level: LevelStoreState, index: number): boolean;
+	send: (event: EventName | EventData) => void;
+	reset: () => void;
+	isInputDisabled: ($level: LevelStoreState, index: number) => boolean;
 	// dev and debug methods
-	guessCorrectly($level: LevelStoreState): void;
-	getCorrectGuess($level: LevelStoreState): number | null;
+	guessCorrectly: ($level: LevelStoreState) => void;
+	getCorrectGuess: ($level: LevelStoreState) => number | null;
 }
 
 interface Trial {
@@ -58,7 +57,7 @@ const createNextTrial = ({def, trial}: LevelStoreState): Trial => {
 	if (tonicMax < midiMin) {
 		throw Error(`tonicMax(${tonicMax}) is bigger than midiMin(${midiMin})`);
 	}
-	const tonic = randInt(midiMin, tonicMax) as Midi;
+	const tonic = randomInt(midiMin, tonicMax) as Midi;
 	const sequence: Midi[] = [tonic];
 
 	// compute the valid notes
@@ -98,8 +97,8 @@ const createNextTrial = ({def, trial}: LevelStoreState): Trial => {
 	for (let i = 0; i < def.sequenceLength - 1; i++) {
 		let nextNote: Midi;
 		do {
-			nextNote = randItem(validNotes);
-		} while (nextNote === last(sequence)); // disallow sequential repeats
+			nextNote = randomItem(validNotes);
+		} while (nextNote === sequence.at(-1)); // disallow sequential repeats
 		sequence.push(nextNote);
 	}
 
@@ -166,7 +165,7 @@ export const createLevelStore = (levelDef: LevelDef, audioCtx: AudioContext): Le
 					presentingIndex: i,
 				},
 			}));
-			await playNote(audioCtx, note, NOTE_DURATION);
+			await playNote(audioCtx, note, NOTE_DURATION); // eslint-disable-line no-await-in-loop
 		}
 		update(($level) => ({
 			...$level,
@@ -232,7 +231,7 @@ export const createLevelStore = (levelDef: LevelDef, audioCtx: AudioContext): Le
 							console.log('guessing interval', $level.trial.guessingIndex);
 							const guess = e.midi;
 							const actual = getCorrectGuess($level);
-							playNote(audioCtx, guess, NOTE_DURATION);
+							void playNote(audioCtx, guess, NOTE_DURATION);
 							console.log('GUESS', e.midi, guess, actual);
 							// if incorrect -> FAILURE -> showingFailureFeedback -> REPROMPT
 							if (actual !== guess) {

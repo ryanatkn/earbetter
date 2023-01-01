@@ -12,21 +12,21 @@ export interface MIDIOptions {
 export interface MIDIAccess extends EventTarget {
 	readonly inputs: MIDIInputMap;
 	readonly outputs: MIDIOutputMap;
-	onstatechange(event: MIDIConnectionEvent): void; // TODO EventHandler type?
+	onstatechange: (event: MIDIConnectionEvent) => void; // TODO EventHandler type?
 	readonly sysexEnabled: boolean;
 }
 
 export type MIDIInputMap = Map<MIDIPortID, MIDIInput>;
 export interface MIDIInput extends MIDIPort {
 	readonly type: 'input';
-	onmidimessage?(event: MIDIMessageEvent): void;
+	onmidimessage?: (event: MIDIMessageEvent) => void;
 }
 
 export type MIDIOutputMap = Map<MIDIPortID, MIDIOutput>;
 export interface MIDIOutput extends MIDIPort {
 	readonly type: 'output';
-	send(data: MIDIMessageData, timeStamp?: DOMHighResTimeStamp): void;
-	clear(): void;
+	send: (data: MIDIMessageData, timeStamp?: DOMHighResTimeStamp) => void;
+	clear: () => void;
 }
 
 export interface MIDIPort extends EventTarget {
@@ -37,9 +37,9 @@ export interface MIDIPort extends EventTarget {
 	readonly version?: string;
 	readonly state: MIDIPortDeviceState;
 	readonly connection: MIDIPortConnectionState;
-	onstatechange(): void; // TODO EventHandler with `statechange` type - MIDIStateChangeEvent?
-	open(): Promise<MIDIPort>;
-	close(): Promise<MIDIPort>;
+	onstatechange: () => void; // TODO EventHandler with `statechange` type - MIDIStateChangeEvent?
+	open: () => Promise<MIDIPort>;
+	close: () => Promise<MIDIPort>;
 }
 export type MIDIPortID = string;
 export type MIDIPortType = 'input' | 'output';
@@ -48,7 +48,7 @@ export type MIDIPortConnectionState = 'open' | 'closed' | 'pending';
 
 // TODO this is a global class - do we need to change this to a `.d.ts` file?
 export interface MIDIMessageEvent extends Event {
-	new (type: string, eventInitDict?: MIDIMessageEventInit): MIDIMessageEvent;
+	new (type: string, eventInitDict?: MIDIMessageEventInit): MIDIMessageEvent; // eslint-disable-line @typescript-eslint/no-misused-new
 	readonly type: 'midimessage';
 	readonly data: MIDIMessageData;
 	readonly timeStamp: DOMHighResTimeStamp;
@@ -61,10 +61,7 @@ export type MIDIMessageData = [number, number, number] & Uint8Array; // TODO doe
 
 // TODO this is a global class - do we need to change this to a `.d.ts` file?
 export interface MIDIConnectionEvent extends Event {
-	new (
-		type: string,
-		eventInitDict?: MIDIConnectionEventInit,
-	): MIDIConnectionEvent;
+	new (type: string, eventInitDict?: MIDIConnectionEventInit): MIDIConnectionEvent; // eslint-disable-line @typescript-eslint/no-misused-new
 	readonly port: MIDIPort;
 }
 export interface MIDIConnectionEventInit extends EventInit {

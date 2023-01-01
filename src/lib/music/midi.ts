@@ -1,4 +1,4 @@
-import {Frequency} from '$lib/audio/types.js';
+import type {Frequency} from '$lib/audio/types';
 
 // TODO min audible Midi (max too?)
 
@@ -23,6 +23,7 @@ export type Midi =
   | 100 | 101 | 102 | 103 | 104 | 105 | 106 | 107 | 108 | 109
   | 110 | 111 | 112 | 113 | 114 | 115 | 116 | 117 | 118 | 119
   | 120 | 121 | 122 | 123 | 124 | 125 | 126 | 127; // prettier-ignore
+
 export const MIDI_MIN = 0;
 export const MIDI_MAX = 127;
 
@@ -30,21 +31,20 @@ export const midis: Midi[] = Object.freeze(
 	Array.from({length: MIDI_MAX + 1}, (_, i) => i),
 ) as Midi[];
 
-export const isMidi = (n: number): n is Midi => {
-	return n >= MIDI_MIN && n <= MIDI_MAX && Number.isInteger(n);
-};
+export const isMidi = (n: number): n is Midi =>
+	n >= MIDI_MIN && n <= MIDI_MAX && Number.isInteger(n);
 
 // note/midi/frequency formulas: https://newt.phys.unsw.edu.au/jw/notes.html
 // We could give `tuning` a default value
 // in the following midi<-->frequency functions,
 // but we want to eventually support user-customized tunings everywhere,
 // so to avoid errors and make things obvious, it's a required argument.
-export const midiToFreq = (midi: Midi, tuning: Frequency): Frequency => {
-	return Math.pow(2, (midi - 69) / 12) * tuning;
-};
-export const freqToMidi = (freq: Frequency, tuning: Frequency): Midi => {
-	return Math.round(12 * Math.log2(freq / tuning) + 69) as Midi;
-};
+export const midiToFreq = (midi: Midi, tuning: Frequency): Frequency =>
+	2 ** ((midi - 69) / 12) * tuning;
+
+export const freqToMidi = (freq: Frequency, tuning: Frequency): Midi =>
+	Math.round(12 * Math.log2(freq / tuning) + 69) as Midi;
+
 export const freqToMidiSafe = (freq: Frequency, tuning: Frequency): Midi | null => {
 	const midi = freqToMidi(freq, tuning);
 	if (!isMidi(midi)) return null;

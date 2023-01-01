@@ -1,5 +1,5 @@
-import {Semitones} from '$lib/music/notes.js';
-import {Midi} from '$lib/music/midi.js';
+import type {Semitones} from '$lib/music/notes';
+import type {Midi} from '$lib/music/midi';
 
 // TODO maybe rename this to `name`?
 export type LevelId = string;

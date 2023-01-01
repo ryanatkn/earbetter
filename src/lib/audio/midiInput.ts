@@ -1,12 +1,11 @@
-import {setContext, getContext, onMount, onDestroy} from 'svelte/index.mjs';
+import {setContext, getContext, onMount, onDestroy} from 'svelte';
 
-import {MIDIAccess, MIDIMessageEvent, MIDICommand} from '$lib/WebMIDI.js';
-import {requestMidiAccess, parseMidiMessage} from '$lib/midiHelpers.js';
-// import {logger} from 'src/utils/log';
-import {Midi} from '$lib/music/midi.js';
+import {type MIDIAccess, type MIDIMessageEvent, MIDICommand} from '$lib/audio/WebMIDI';
+import {requestMidiAccess, parseMidiMessage} from '$lib/audio/midiHelpers';
+import type {Midi} from '$lib/music/midi';
 
 export const midiInputKey = {};
-export const useMidiInput = (events: MidiAccessStoreEvents) => {
+export const getMidiInput = (events: MidiAccessStoreEvents): MidiAccessStore => {
 	const midiInput: MidiAccessStore = getContext(midiInputKey);
 
 	// TODO improve this code - event emitter? something else?
@@ -46,11 +45,11 @@ const log = console.log.bind(console);
 
 // TODO do this differently? EventEmitter?
 export interface MidiAccessStoreEvents {
-	onNoteStart?(midi: Midi, velocity: number): void;
-	onNoteStop?(midi: Midi, velocity: number): void;
-	onPadStart?(midi: Midi, velocity: number): void;
-	onPadStop?(midi: Midi, velocity: number): void;
-	onModWheel?(velocity: number): void;
+	onNoteStart?: (midi: Midi, velocity: number) => void;
+	onNoteStop?: (midi: Midi, velocity: number) => void;
+	onPadStart?: (midi: Midi, velocity: number) => void;
+	onPadStop?: (midi: Midi, velocity: number) => void;
+	onModWheel?: (velocity: number) => void;
 }
 
 // TODO is `Store` the right term?
@@ -61,12 +60,12 @@ export class MidiAccessStore {
 
 	// TODO dispose and clear `events` and `onmidimesssage` handlers?
 
-	async requestMidiAccess() {
+	async requestMidiAccess(): Promise<void> {
 		this.midiAccess = await requestMidiAccess();
 		console.log('midiAccess', this.midiAccess);
 	}
 
-	initInputs() {
+	initInputs(): void {
 		if (!this.midiAccess) {
 			throw Error(`Cannot list midi inputs without access`);
 		}

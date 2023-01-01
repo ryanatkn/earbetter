@@ -1,6 +1,7 @@
-import {Hsl, hslToStr, Hue} from '$lib/utils/colors'; // TODO maybe this belongs somewhere elase - a `colorsAndMusic` module?
-import {mapRecord} from '$lib/utils/obj';
-import {Midi, midis, isMidi} from '$lib/midi';
+import {mapRecord} from '@feltcoop/util/object.js';
+
+import {type Hsl, hslToStr, type Hue} from '$lib/util/colors'; // TODO maybe this belongs somewhere elase - a `colorsAndMusic` module?
+import {type Midi, midis, isMidi} from '$lib/music/midi';
 
 export const NOTE_FLAT_SYMBOL = '♭';
 export const NOTE_SHARP_SYMBOL = '♯';
@@ -18,9 +19,9 @@ export type NoteName =
   | 'C9'  | 'C♯9'  | 'D9'  | 'D♯9'  | 'E9'  | 'F9'  | 'F♯9'  | 'G9'; // prettier-ignore
 
 export const chromas = Object.freeze([0,  1,  2,  3,  4,  5,  6,  7,  8,  9,  10,  11] as const); // prettier-ignore
-export type Chroma = ArrayElement<typeof chromas>; // corresponds to indices of `pitchClasses`
+export type Chroma = typeof chromas[number]; // corresponds to indices of `pitchClasses`
 export const pitchClasses = Object.freeze(['C', 'C♯', 'D', 'D♯', 'E', 'F', 'F♯', 'G', 'G♯', 'A', 'A♯', 'B'] as const); // prettier-ignore
-export type PitchClass = ArrayElement<typeof pitchClasses>;
+export type PitchClass = typeof pitchClasses[number];
 export type Octave = -1 | 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9;
 // export type NoteLetter = 'C' | 'D' | 'E' | 'F' | 'G' | 'A' | 'B'; // TODO this is unused - is it even a useful concept?
 export type Semitones = number;
@@ -85,5 +86,5 @@ export const noteChromaToHsl = Object.freeze(
 	}, {} as Record<Chroma, Hsl>),
 );
 export const noteChromaToHslString = Object.freeze(
-	mapRecord(noteChromaToHsl, (hsl) => hslToStr(hsl)),
+	mapRecord(noteChromaToHsl, ([h, s, l]) => hslToStr(h, s, l)),
 );

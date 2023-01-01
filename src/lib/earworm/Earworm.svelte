@@ -1,34 +1,24 @@
-<script>
-	// TODO BLOCK dont show the initial note
-	/*
-
-
-  TODO
-  - don't render the background after transitioning to full screen
-  - how to teach? maybe show visuals for the first couple levels? or the first few rounds of the first few levels?
-
-  */
-
-	import {levelDefs} from '$lib/levelDefs.js';
-	import {createLevelStatsStore} from '$lib/levelStatsStore.js';
-	import Level from '$lib/Level.svelte';
-	import MapLevelIcon from '$lib/MapLevelIcon.svelte';
-	import {useAudioCtx} from '$lib/audio/audioCtx.js';
-	import {provideMidiInput} from '$lib/audio/midiInput.js';
+<script lang="ts">
+	import {levelDefs} from '$lib/earworm/levelDefs';
+	import {createLevelStatsStore} from '$lib/earworm/levelStatsStore';
+	import Level from '$lib/earworm/Level.svelte';
+	import MapLevelIcon from '$lib/earworm/MapLevelIcon.svelte';
+	import {getAudioCtx} from '$lib/audio/audioCtx';
+	import {provideMidiInput} from '$lib/audio/midiInput';
 
 	console.log('levelDefs', levelDefs);
 
 	let activeLevelDef = null; // TODO initialize to undefined
 
-	let levelStats = createLevelStatsStore(levelDefs);
+	const levelStats = createLevelStatsStore(levelDefs);
 	$: console.log('stats', $levelStats);
 	console.log($levelStats);
 
-	const audioCtx = useAudioCtx();
-	window['audio'] = audioCtx;
+	const audioCtx = getAudioCtx();
+	(window as any).audio = audioCtx;
 
 	const selectLevelDef = (levelDef) => {
-		audioCtx.resume(); // TODO where's the best place for this? needs to be synchronous with a click or similar, so this breaks if `selectLevelDef` is called without a user action
+		void audioCtx.resume(); // TODO where's the best place for this? needs to be synchronous with a click or similar, so this breaks if `selectLevelDef` is called without a user action
 		activeLevelDef = levelDef;
 	};
 
@@ -51,17 +41,16 @@
 			midiAccess.initInputs();
 		} catch (err) {
 			console.log('failed to request MIDI access', err);
-			alert('failed to request MIDI access: ' + err.message);
+			alert('failed to request MIDI access: ' + err.message); // eslint-disable-line no-alert
 		}
 		console.log('MIDI ready!');
 	};
 </script>
 
-<div class="h-full w-full">
+<div class="earworm">
 	{#if activeLevelDef}
 		<Level levelDef={activeLevelDef} {exitLevelToMap} />
 	{:else}
-		<img class="w-auto h-auto max-width-none" alt="UGC 2885" src="assets/space/heic2002a.jpg" />
 		<div>
 			{#each levelDefs as levelDef}
 				<MapLevelIcon
@@ -71,13 +60,19 @@
 				/>
 			{/each}
 		</div>
-		<button on:click={initMidi} class="absolute l-0 t-0">init MIDI</button>
+		<button on:click={initMidi}>init MIDI</button>
 	{/if}
 </div>
 
 <style>
-	/* TODO this shouldn't be rendered at all */
-	:global(.bg) {
-		display: none;
+	.earworm {
+		width: 100%;
+		height: 100%;
+	}
+
+	button {
+		position: absolute;
+		left: 0;
+		top: 0;
 	}
 </style>

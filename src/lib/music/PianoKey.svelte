@@ -1,32 +1,36 @@
-<script>
-	import {midiNaturals} from '$lib/music/notes.js';
+<script lang="ts">
+	import {midiNaturals} from '$lib/music/notes';
+	import type {Midi} from '$lib/music/midi';
 
-	export let midi; // Midi
-	export let leftOffset; // number
-	export let width; // number
-	export let height; // number
-	export let isEnabled = true; // ?boolean
-	export let isHighlighted = false; // ?boolean
-	export let isEmphasized = false; // ?boolean
-	export let onPress = undefined; // ?(midi: Midi): void
+	export let midi: Midi;
+	export let leftOffset: number;
+	export let width: number;
+	export let height: number;
+	export let isEnabled = true;
+	export let isHighlighted = false;
+	export let isEmphasized = false;
+	export let onPress: ((midi: Midi) => void) | undefined = undefined; // TODO event
 
-	const doPress = () => {
+	const press = () => {
 		if (onPress) onPress(midi);
 	};
 </script>
 
-<div
-	class="key {midiNaturals[midi] ? 'white' : 'black'}"
+<button
+	class="piano-key {midiNaturals[midi] ? 'white' : 'black'}"
 	class:disabled={!isEnabled}
 	class:clickable={onPress && isEnabled}
 	class:highlighted={isHighlighted}
 	class:emphasized={isEmphasized}
-	on:click={isEnabled ? doPress : undefined}
-	style="width: {width}px; height: {height}px; left: {leftOffset}px;"
+	on:click={isEnabled ? press : undefined}
+	aria-label="piano key for midi {midi}"
+	style:width="{width}px"
+	style:height="{height}px"
+	style:left="{leftOffset}px"
 />
 
 <style>
-	.key {
+	.piano-key {
 		/* TODO move these */
 		--white-key-color: #fff;
 		--black-key-color: #333;
@@ -44,7 +48,7 @@
 		border-bottom: 1px solid var(--border-color);
 	}
 
-	.key:last-child {
+	.piano-key:last-child {
 		border-right: 1px solid var(--border-color);
 	}
 

@@ -1,5 +1,5 @@
-<script>
-	import {intervalShortNames} from '$lib/music/intervals.js';
+<script lang="ts">
+	import {intervalShortNames} from '$lib/music/intervals';
 
 	// TODO this isn't being used any more
 
