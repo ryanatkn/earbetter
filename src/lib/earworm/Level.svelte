@@ -64,6 +64,9 @@
 						exitLevelToMap(true);
 						break;
 					}
+					default: {
+						break;
+					}
 				}
 				break;
 			}
