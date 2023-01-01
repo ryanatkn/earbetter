@@ -2,11 +2,10 @@ import {writable, type Writable} from 'svelte/store';
 import {randomItem, randomInt} from '@feltcoop/util/random.js';
 import {UnreachableError} from '@feltcoop/util/error.js';
 
-import type {LevelDef} from '$lib/earworm/levelDefs';
 import {SMOOTH_GAIN_TIME_CONSTANT} from '$lib/audio/utils';
 import {type Midi, midiToFreq} from '$lib/music/midi';
 import {DEFAULT_TUNING} from '$lib/music/constants';
-import {computeInterval} from '$lib/music/notes';
+import {computeInterval, type Semitones} from '$lib/music/notes';
 
 // TODO play a victory sound on complete
 // TODO show feedback on the pressed buttons, regardless of how their interval was input (keyboard, tapping, clicking, debug key, etc)
@@ -17,7 +16,34 @@ import {computeInterval} from '$lib/music/notes';
 
 const NOTE_DURATION = 500;
 
-type Status =
+// TODO maybe rename this to `name`?
+export type LevelId = string;
+
+export interface LevelDef {
+	id: LevelId;
+	trialCount: number;
+	// The midiMin and midiMax define the entire allowable spectrum of notes.
+	// Values like the intervals and octaveShift
+	// may spill over combined with the tonic.
+	midiMin: Midi;
+	midiMax: Midi;
+	octaveShiftMin: 0 | -1 | -2 | -3 | -4 | -5 | -6 | -7 | -8 | -9; // TODO shrink to more realistic values?
+	octaveShiftMax: 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8; // TODO shrink to more realistic values?
+	sequenceLength: 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10 | 11 | 12 | 13 | 14 | 15 | 16; // prettier-ignore
+	intervals: Semitones[];
+	x: number;
+	y: number;
+	// TODO probably want to specify a tuple of `[LevelId, LevelRating]`
+	// so things can unlock with 1-star performances
+	// (or even 0-star performances, especially at the very beginning)
+	// TODO support something like this,
+	// and lay out levels in a pattern that combines levels that you beat into new levels
+	// like 1/5/7 + 1/2/4  -> unlocks 1/2/4/5/7
+	// unlock: [1, 2],
+	unlock?: LevelId[];
+}
+
+export type Status =
 	| 'initial'
 	| 'presentingPrompt'
 	| 'waitingForInput'
@@ -25,14 +51,14 @@ type Status =
 	| 'showingFailureFeedback'
 	| 'complete';
 
-type LevelStoreState = {
+export type LevelStoreState = {
 	status: Status;
 	def: LevelDef;
 	trial: Trial | null; // TODO these nullable values are unfortunate - maybe make this a type union based on status
 	trials: Trial[];
 };
 
-interface LevelStore {
+export interface LevelStore {
 	subscribe: Writable<LevelStoreState>['subscribe'];
 	send: (event: EventName | EventData) => void;
 	reset: () => void;
@@ -42,7 +68,7 @@ interface LevelStore {
 	getCorrectGuess: ($level: LevelStoreState) => number | null;
 }
 
-interface Trial {
+export interface Trial {
 	index: number;
 	validNotes: Set<Midi>;
 	sequence: Midi[];
@@ -50,6 +76,7 @@ interface Trial {
 	guessingIndex: number | null; // index of interval being guessed
 	retryCount: number;
 }
+
 const createNextTrial = ({def, trial}: LevelStoreState): Trial => {
 	const {midiMin, midiMax, octaveShiftMin, octaveShiftMax} = def;
 
@@ -112,8 +139,8 @@ const createNextTrial = ({def, trial}: LevelStoreState): Trial => {
 	};
 };
 
-type EventName = 'START' | 'PRESENTED' | 'NEXT_TRIAL' | 'RETRY_TRIAL' | 'COMPLETE_LEVEL';
-type EventData =
+export type EventName = 'START' | 'PRESENTED' | 'NEXT_TRIAL' | 'RETRY_TRIAL' | 'COMPLETE_LEVEL';
+export type EventData =
 	| {type: 'START'}
 	| {type: 'NEXT_TRIAL'}
 	| {type: 'RETRY_TRIAL'}

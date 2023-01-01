@@ -1,6 +1,7 @@
 <script lang="ts">
 	import {levelDefs} from '$lib/earworm/levelDefs';
-	import {createLevelStatsStore} from '$lib/earworm/levelStatsStore';
+	import type {LevelDef} from '$lib/earworm/level';
+	import {createLevelStats} from '$lib/earworm/levelStats';
 	import Level from '$lib/earworm/Level.svelte';
 	import MapLevelIcon from '$lib/earworm/MapLevelIcon.svelte';
 	import {getAudioCtx} from '$lib/audio/audioCtx';
@@ -8,16 +9,16 @@
 
 	console.log('levelDefs', levelDefs);
 
-	let activeLevelDef = null; // TODO initialize to undefined
+	let activeLevelDef: LevelDef | null = null; // TODO initialize to undefined
 
-	const levelStats = createLevelStatsStore(levelDefs);
+	const levelStats = createLevelStats(levelDefs);
 	$: console.log('stats', $levelStats);
 	console.log($levelStats);
 
 	const audioCtx = getAudioCtx();
 	(window as any).audio = audioCtx;
 
-	const selectLevelDef = (levelDef) => {
+	const selectLevelDef = (levelDef: LevelDef) => {
 		void audioCtx.resume(); // TODO where's the best place for this? needs to be synchronous with a click or similar, so this breaks if `selectLevelDef` is called without a user action
 		activeLevelDef = levelDef;
 	};
@@ -56,7 +57,7 @@
 				<MapLevelIcon
 					{levelDef}
 					select={selectLevelDef}
-					isComplete={$levelStats.isComplete[levelDef.id]}
+					completed={$levelStats.completed[levelDef.id]}
 				/>
 			{/each}
 		</div>

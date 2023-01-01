@@ -3,13 +3,19 @@
 
 	export let levelDef: LevelDef;
 	export let select: (levelDef: LevelDef) => void;
-	export let isComplete: boolean;
+	export let completed: boolean;
 </script>
 
 <button
 	on:click={() => select(levelDef)}
-	class="absolute cursor-pointer p-8 {isComplete ? 'border-accent' : 'border-primary'}"
+	class={completed ? 'border-accent' : 'border-primary'}
 	style="left: {levelDef.x}px; top: {levelDef.y}px;"
 >
 	<div class="color-primary">{levelDef.id}</div>
 </button>
+
+<style>
+	button {
+		position: absolute;
+	}
+</style>

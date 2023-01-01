@@ -1,32 +1,4 @@
-import type {Semitones} from '$lib/music/notes';
-import type {Midi} from '$lib/music/midi';
-
-// TODO maybe rename this to `name`?
-export type LevelId = string;
-
-export interface LevelDef {
-	id: LevelId;
-	trialCount: number;
-	// The midiMin and midiMax define the entire allowable spectrum of notes.
-	// Values like the intervals and octaveShift
-	// may spill over combined with the tonic.
-	midiMin: Midi;
-	midiMax: Midi;
-	octaveShiftMin: 0 | -1 | -2 | -3 | -4 | -5 | -6 | -7 | -8 | -9; // TODO shrink to more realistic values?
-	octaveShiftMax: 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8; // TODO shrink to more realistic values?
-	sequenceLength: 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10 | 11 | 12 | 13 | 14 | 15 | 16; // prettier-ignore
-	intervals: Semitones[];
-	x: number;
-	y: number;
-	// TODO probably want to specify a tuple of `[LevelId, LevelRating]`
-	// so things can unlock with 1-star performances
-	// (or even 0-star performances, especially at the very beginning)
-	// TODO support something like this,
-	// and lay out levels in a pattern that combines levels that you beat into new levels
-	// like 1/5/7 + 1/2/4  -> unlocks 1/2/4/5/7
-	// unlock: [1, 2],
-	unlock?: LevelId[];
-}
+import type {LevelDef} from '$lib/earworm/level';
 
 const baseLevelDef = {
 	// TODO support something like this for 3-star accomplishment (or N-star)
