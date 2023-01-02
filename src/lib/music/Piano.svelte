@@ -11,11 +11,14 @@
 	export let highlightedKeys: Set<Midi> | undefined = undefined;
 	export let emphasizedKeys: Set<Midi> | undefined = undefined;
 
-	const isKeyEnabled = (key: Midi, enabledKeys): boolean => !enabledKeys || enabledKeys.has(key); // (key: Midi, enabledKeys: Set<Midi> | undefined): boolean
+	const isKeyEnabled = (key: Midi, enabledKeys: Set<Midi> | undefined): boolean =>
+		!enabledKeys || enabledKeys.has(key);
 
-	const isKeyHighlighted = (key, highlightedKeys): boolean => !!highlightedKeys?.has(key); // (key: Midi, highlightedKeys: Set<Midi> | undefined): boolean
+	const isKeyHighlighted = (key: Midi, highlightedKeys: Set<Midi> | undefined): boolean =>
+		!!highlightedKeys?.has(key);
 
-	const isKeyEmphasized = (key, emphasizedKeys): boolean => !!emphasizedKeys?.has(key); // (key: Midi, emphasizedKeys: Set<Midi> | undefined): boolean
+	const isKeyEmphasized = (key: Midi, emphasizedKeys: Set<Midi> | undefined): boolean =>
+		!!emphasizedKeys?.has(key);
 
 	$: noteCount = midiMax - midiMin + 1;
 	$: accidentalKeyWidth = Math.floor(width / noteCount);
@@ -27,8 +30,7 @@
 	const ACCIDENTAL_KEY_HEIGHT_MULT = 0.7;
 
 	// TODO calculate layout more precisely?
-	const pcLeftOffsetPct = {
-		//  Record<Chroma, number>
+	const pcLeftOffsetPct: Record<Chroma, number> = {
 		0: 0,
 		1: 0,
 		2: -1 / 3,
@@ -43,18 +45,25 @@
 		11: -3 / 4,
 	};
 
+	interface PianoKey {
+		midi: Midi;
+		leftOffset: number;
+		width: number;
+		height: number;
+	}
+
 	const computePianoKeys = (
-		width,
-		midiMin,
-		midiMax,
-		noteCount,
-		accidentalKeyWidth,
-		naturalKeyHeight,
-	) => {
+		width: number,
+		midiMin: Midi,
+		midiMax: Midi,
+		noteCount: number,
+		accidentalKeyWidth: number,
+		naturalKeyHeight: number,
+	): PianoKey[] => {
 		const naturalKeyWidth = Math.floor(accidentalKeyWidth / ACCIDENTAL_KEY_WIDTH_MULT);
 		const accidentalKeyHeight = naturalKeyHeight * ACCIDENTAL_KEY_HEIGHT_MULT;
 
-		const keys = [];
+		const keys: PianoKey[] = [];
 		for (let i = 0; i < noteCount; i++) {
 			const midi = i + midiMin;
 			let keyWidth; // number
@@ -89,8 +98,8 @@
 	);
 </script>
 
-<div class="piano" style="position: relative; width: {width}px">
-	<div class="piano-keys" style="height: {naturalKeyHeight}px">
+<div class="piano" style:width="{width}px">
+	<div class="piano-keys" style:height="{naturalKeyHeight}px">
 		{#each pianoKeys as key (key.midi)}
 			<PianoKey
 				midi={key.midi}
@@ -105,3 +114,9 @@
 		{/each}
 	</div>
 </div>
+
+<style>
+	.piano {
+		position: relative;
+	}
+</style>

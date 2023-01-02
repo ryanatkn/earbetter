@@ -11,7 +11,7 @@
 	export let isEmphasized = false;
 	export let onPress: ((midi: Midi) => void) | undefined = undefined; // TODO event
 
-	const press = () => {
+	const press = (): void => {
 		if (onPress) onPress(midi);
 	};
 </script>

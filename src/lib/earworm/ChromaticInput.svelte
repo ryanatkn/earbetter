@@ -1,10 +1,11 @@
 <script lang="ts">
 	import {intervalShortNames} from '$lib/music/intervals';
+	import type {LevelStore} from '$lib/earworm/level';
 
 	// TODO this isn't being used any more
 
-	export let level;
-	export let select;
+	export let level: LevelStore;
+	export let select: (index: number) => void;
 
 	// TODO high level input control abstraction - register through context?
 	const indexByKey = {
@@ -30,14 +31,9 @@
 	};
 </script>
 
-<div class="flex flex-col absolute t-0 l-0 w-50 h-full">
+<div class="chromatic-input">
 	{#each {length: 12} as _, index}
-		<button
-			class="flex-1 flex items-center justify-between w-full text-2xl px-8
-			bg-transparent color-primary border"
-			on:click={() => select(index)}
-			disabled={level.isInputDisabled($level, index)}
-		>
+		<button on:click={() => select(index)} disabled={level.isInputDisabled($level, index)}>
 			<div>{index}</div>
 			<div>{intervalShortNames[index]}</div>
 		</button>
@@ -47,6 +43,25 @@
 <svelte:window on:keydown={onDocumentKeyDown} />
 
 <style>
+	.chromatic-input {
+		display: flex;
+		flex-direction: column;
+		position: absolute;
+		top: 0;
+		left: 0;
+		width: 50%;
+		height: 100%;
+	}
+	button {
+		flex: 1;
+		display: flex;
+		align-items: center;
+		justify-content: space-between;
+		width: 100%;
+		font-size: var(--font_size_xl);
+		padding: var(--spacing_xl);
+		background: transparent;
+	}
 	/* TOOD disabled styling should be global for this kind of button (as should the other styles) */
 	button[disabled] {
 		color: #777;

@@ -24,7 +24,7 @@
 
   */
 	export let levelDef: LevelDef;
-	export let exitLevelToMap;
+	export let exitLevelToMap: (success?: boolean) => void;
 
 	let clientWidth; // `undefined` on first render
 
@@ -114,7 +114,7 @@
 	{:else if $level.status === 'showingFailureFeedback'}
 		<div class="absolute t-50 r-0 w-50 h-50" style="background-color: red;" />
 	{:else if $level.status === 'complete'}
-		<button class="absolute t-50 r-0 w-50 h-25 text-3xl" on:click={exitLevelToMap}>
+		<button class="absolute t-50 r-0 w-50 h-25 text-3xl" on:click={() => exitLevelToMap()}>
 			return to the galaxy map
 		</button>
 	{/if}

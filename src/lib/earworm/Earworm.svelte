@@ -18,12 +18,12 @@
 	const audioCtx = getAudioCtx();
 	(window as any).audio = audioCtx;
 
-	const selectLevelDef = (levelDef: LevelDef) => {
+	const selectLevelDef = (levelDef: LevelDef): void => {
 		void audioCtx.resume(); // TODO where's the best place for this? needs to be synchronous with a click or similar, so this breaks if `selectLevelDef` is called without a user action
 		activeLevelDef = levelDef;
 	};
 
-	const exitLevelToMap = (success = false) => {
+	const exitLevelToMap = (success = false): void => {
 		if (success) {
 			levelStats.registerSuccess(activeLevelDef.id);
 		}
@@ -34,7 +34,7 @@
 
 	const midiAccess = provideMidiInput();
 
-	const initMidi = async () => {
+	const initMidi = async (): Promise<void> => {
 		// TODO how to call this better? needs to be a user-initiated action right?
 		// do we need to present a screen to users that lets them opt into midi?
 		try {
