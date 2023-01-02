@@ -13,11 +13,20 @@
 	};
 </script>
 
-<div class="flex h-full w-full">
+<div class="level-progress-indicator">
 	{#each {length: $level.def.trialCount} as _, index}
-		<div
-			class="flex-1 border-primary h-full"
-			style="background-color: {getBgColor($level, index)}"
-		/>
+		<div class="level" style="background-color: {getBgColor($level, index)}" />
 	{/each}
 </div>
+
+<style>
+	.level-progress-indicator {
+		display: flex;
+		width: 100%;
+		height: 100%;
+	}
+	.level {
+		flex: 1;
+		border: var(--border_width) var(--border_style) var(--border_color);
+	}
+</style>

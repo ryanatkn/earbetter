@@ -21,12 +21,21 @@
 </script>
 
 {#if $level.trial}
-	<div class="flex h-full w-full">
+	<div class="trial-progress-indicator">
 		{#each {length: $level.trial.sequence.length} as _, index}
-			<div
-				class="flex-1 border-primary h-full"
-				style="background-color: {getBgColor($level, index)}"
-			/>
+			<div class="trial" style="background-color: {getBgColor($level, index)}" />
 		{/each}
 	</div>
 {/if}
+
+<style>
+	.trial-progress-indicator {
+		display: flex;
+		width: 100%;
+		height: 100%;
+	}
+	.trial {
+		flex: 1;
+		border: var(--border_width) var(--border_style) var(--border_color);
+	}
+</style>
