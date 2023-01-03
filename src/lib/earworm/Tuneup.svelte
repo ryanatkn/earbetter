@@ -1,9 +1,9 @@
 <script lang="ts">
-	import {levelDefs} from '$lib/earworm/levelDefs';
-	import type {LevelDef} from '$lib/earworm/level';
-	import {createLevelStats} from '$lib/earworm/levelStats';
-	import Level from '$lib/earworm/Level.svelte';
-	import MapLevelIcon from '$lib/earworm/MapLevelIcon.svelte';
+	import {levelDefs} from '$lib/tuneup/levelDefs';
+	import type {LevelDef} from '$lib/tuneup/level';
+	import {createLevelStats} from '$lib/tuneup/levelStats';
+	import Level from '$lib/tuneup/Level.svelte';
+	import MapLevelIcon from '$lib/tuneup/MapLevelIcon.svelte';
 	import {getAudioCtx} from '$lib/audio/audioCtx';
 	import {provideMidiInput} from '$lib/audio/midiInput';
 
@@ -47,7 +47,7 @@
 	};
 </script>
 
-<div class="earworm">
+<div class="tuneup">
 	{#if activeLevelDef}
 		<Level levelDef={activeLevelDef} {exitLevelToMap} />
 	{:else}
@@ -65,7 +65,7 @@
 </div>
 
 <style>
-	.earworm {
+	.tuneup {
 		width: 100%;
 		height: 100%;
 	}

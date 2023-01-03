@@ -9,7 +9,7 @@ export default {
 	compilerOptions: {immutable: true},
 	kit: {
 		adapter: adapter(),
-		paths: dev ? undefined : {base: '/earworm'},
+		paths: dev ? undefined : {base: '/tuneup'},
 		files: {assets: 'src/static'},
 	},
 };

@@ -1,10 +1,10 @@
 <script lang="ts">
 	import {onMount} from 'svelte';
 
-	import {createLevelStore, type LevelDef} from '$lib/earworm/level';
+	import {createLevelStore, type LevelDef} from '$lib/tuneup/level';
 	import Piano from '$lib/music/Piano.svelte';
-	import LevelProgressIndicator from '$lib/earworm/LevelProgressIndicator.svelte';
-	import TrialProgressIndicator from '$lib/earworm/TrialProgressIndicator.svelte';
+	import LevelProgressIndicator from '$lib/tuneup/LevelProgressIndicator.svelte';
+	import TrialProgressIndicator from '$lib/tuneup/TrialProgressIndicator.svelte';
 	import {getAudioCtx} from '$lib/audio/audioCtx';
 	import {getMidiInput} from '$lib/audio/midiInput';
 	import type {Midi} from '$lib/music/midi';

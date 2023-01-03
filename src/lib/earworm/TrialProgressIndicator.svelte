@@ -1,5 +1,5 @@
 <script lang="ts">
-	import type {LevelStore, LevelStoreState} from '$lib/earworm/level';
+	import type {LevelStore, LevelStoreState} from '$lib/tuneup/level';
 
 	// TODO should we hoist some logic so this just takes a trial?
 	export let level: LevelStore;
