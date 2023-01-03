@@ -16,7 +16,7 @@
 			? 'rgba(255, 255, 255, 0.6)'
 			: index === currentIndex
 			? 'rgba(255, 255, 255, 0.4)'
-			: index < currentIndex
+			: currentIndex !== null && index < currentIndex
 			? 'rgba(255, 255, 255, 0.2)'
 			: 'transparent';
 </script>

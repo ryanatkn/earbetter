@@ -22,9 +22,9 @@
 		'-': 10,
 		'=': 11,
 	};
-	const onDocumentKeyDown = (e) => {
+	const onDocumentKeyDown = (e: KeyboardEvent) => {
 		if (e.key in indexByKey) {
-			const index = indexByKey[e.key];
+			const index = (indexByKey as any)[e.key];
 			if (level.isInputDisabled($level, index)) return;
 			select(index);
 		}

@@ -1,8 +1,10 @@
 <script lang="ts">
-	export let level;
+	import type {LevelStore, LevelStoreState} from './level';
+
+	export let level: LevelStore;
 
 	// TODO colors
-	const getBgColor = ($level, index) => {
+	const getBgColor = ($level: LevelStoreState, index: number) => {
 		return $level.status === 'complete'
 			? 'rgba(255, 255, 255, 0.6)'
 			: $level.trials[index] // trials are created when needed, not ahead of time

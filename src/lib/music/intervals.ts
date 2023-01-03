@@ -14,7 +14,7 @@ export const intervalShortNames = Object.freeze([
 	'P8',
 ] as const);
 
-export type IntervalShortNames = ArrayElement<typeof intervalShortNames>;
+export type IntervalShortNames = typeof intervalShortNames[number];
 
 export const intervalNames = Object.freeze([
 	'perfect unison',
@@ -32,4 +32,4 @@ export const intervalNames = Object.freeze([
 	'perfect octave',
 ] as const);
 
-export type IntervalNames = ArrayElement<typeof intervalNames>;
+export type IntervalNames = typeof intervalNames[number];
