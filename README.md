@@ -1,6 +1,6 @@
-# tuneup
+# earworm
 
-> ear training game 🎶 [ryanatkn.github.io/tuneup](https://ryanatkn.github.io/tuneup)
+> ear training game 🪱🎶 [ryanatkn.github.io/earworm](https://ryanatkn.github.io/earworm)
 
 **status**: pre-alpha
 

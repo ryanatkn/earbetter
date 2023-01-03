@@ -1,6 +1,6 @@
 <script lang="ts">
 	import {intervalShortNames} from '$lib/music/intervals';
-	import type {LevelStore} from '$lib/tuneup/level';
+	import type {LevelStore} from '$lib/earworm/level';
 
 	// TODO this isn't being used any more
 

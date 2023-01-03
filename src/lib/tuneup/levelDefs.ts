@@ -1,4 +1,4 @@
-import type {LevelDef} from '$lib/tuneup/level';
+import type {LevelDef} from '$lib/earworm/level';
 
 const baseLevelDef = {
 	// TODO support something like this for 3-star accomplishment (or N-star)

@@ -1,6 +1,6 @@
 import {writable, type Writable} from 'svelte/store';
 
-import type {LevelDef} from '$lib/tuneup/level';
+import type {LevelDef} from '$lib/earworm/level';
 
 export type LevelStatsState = {
 	completed: {[key: string]: boolean};

@@ -1,5 +1,5 @@
 <script lang="ts">
-	import Tuneup from '$lib/tuneup/Tuneup.svelte';
+	import Earworm from '$lib/earworm/Earworm.svelte';
 	import {setAudioCtx} from '$lib/audio/audioCtx';
 
 	setAudioCtx(); // allows components to do `const audioCtx = useAudioCtx();` which uses svelte's `getContext`
@@ -8,10 +8,10 @@
 <main class="markup column">
 	<section>
 		<header class="centered-hz">
-			<h1><a href="https://github.com/ryanatkn/tuneup">tuneup🎶</a></h1>
+			<h1><a href="https://github.com/ryanatkn/earworm">earworm🎶</a></h1>
 		</header>
 	</section>
-	<Tuneup />
+	<Earworm />
 </main>
 
 <style>

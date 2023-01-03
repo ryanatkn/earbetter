@@ -6,7 +6,7 @@
 </script>
 
 <svelte:head>
-	<title>@ryanatkn/tuneup</title>
+	<title>@ryanatkn/earworm</title>
 	<link rel="icon" href="{base}/favicon.png" />
 </svelte:head>
 
