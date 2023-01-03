@@ -27,7 +27,7 @@
 	class:clickable={clickable && enabled}
 	class:highlighted
 	class:emphasized
-	on:click={enabled ? () => dispatch('press') : undefined}
+	on:click={enabled ? () => dispatch('press', midi) : undefined}
 	aria-label="piano key for midi {midi}"
 	style:width="{width}px"
 	style:height="{height}px"

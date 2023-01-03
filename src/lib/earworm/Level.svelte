@@ -166,15 +166,15 @@
 		position: absolute;
 		right: 0;
 		top: 0;
-		height: 50%;
-		width: 50%;
+		height: 50px;
+		width: 50px;
 	}
 	.trial-progress {
 		position: absolute;
 		right: 0;
-		top: 100%;
-		height: 50%;
-		width: 80%;
+		top: 100px;
+		height: 50px;
+		width: 80px;
 	}
 	.piano-wrapper {
 		position: absolute;
@@ -184,10 +184,10 @@
 	}
 	.feedback {
 		position: absolute;
-		top: 50%;
+		top: 50px;
 		right: 0;
-		width: 50%;
-		height: 50%;
+		width: 50px;
+		height: 50px;
 	}
 	.feedback.success {
 		background-color: green;
@@ -196,7 +196,7 @@
 		background-color: red;
 	}
 	.feedback.complete {
-		height: 25%;
+		height: 25px;
 		font-size: var(--font_size_xl2);
 	}
 </style>
