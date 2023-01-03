@@ -24,11 +24,10 @@
 	};
 
 	const exitLevelToMap = (success = false): void => {
+		if (!activeLevelDef) return;
 		if (success) {
 			levelStats.registerSuccess(activeLevelDef.id);
 		}
-		// TODO do we actually want to replace this with a statechart?
-		// so the active level is a nested machine?
 		activeLevelDef = null;
 	};
 

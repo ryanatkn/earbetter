@@ -16,11 +16,8 @@ import {computeInterval, type Semitones} from '$lib/music/notes';
 
 const NOTE_DURATION = 500;
 
-// TODO maybe rename this to `name`?
-export type LevelId = string;
-
 export interface LevelDef {
-	id: LevelId;
+	id: string;
 	trialCount: number;
 	// The midiMin and midiMax define the entire allowable spectrum of notes.
 	// Values like the intervals and octaveShift
@@ -33,14 +30,14 @@ export interface LevelDef {
 	intervals: Semitones[];
 	x: number;
 	y: number;
-	// TODO probably want to specify a tuple of `[LevelId, LevelRating]`
+	// TODO probably want to specify a tuple of `[string, LevelRating]`
 	// so things can unlock with 1-star performances
 	// (or even 0-star performances, especially at the very beginning)
 	// TODO support something like this,
 	// and lay out levels in a pattern that combines levels that you beat into new levels
 	// like 1/5/7 + 1/2/4  -> unlocks 1/2/4/5/7
 	// unlock: [1, 2],
-	unlock?: LevelId[];
+	unlock?: string[];
 }
 
 export type Status =

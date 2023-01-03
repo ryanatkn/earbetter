@@ -1,7 +1,7 @@
 <script lang="ts">
 	import PianoKey from '$lib/music/PianoKey.svelte';
 	import {midiNaturals, midiChromas} from '$lib/music/notes';
-	import {MIDI_MIN, MIDI_MAX} from '$lib/music/midi';
+	import {MIDI_MIN, MIDI_MAX, type Midi} from '$lib/music/midi';
 
 	export let width: number;
 	export let midiMin: Midi = MIDI_MIN;

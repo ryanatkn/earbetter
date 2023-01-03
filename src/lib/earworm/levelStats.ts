@@ -8,7 +8,7 @@ export type LevelStatsState = {
 
 export interface LevelStats {
 	subscribe: Writable<LevelStatsState>['subscribe'];
-	registerSuccess: (id: number) => void;
+	registerSuccess: (id: string) => void;
 }
 
 const defaultState = (defs: LevelDef[]): LevelStatsState => {
@@ -26,7 +26,7 @@ export const createLevelStats = (defs: LevelDef[]): LevelStats => {
 
 	return {
 		subscribe,
-		registerSuccess: (id: number) => {
+		registerSuccess: (id: string) => {
 			console.log('register success', id);
 			update((s) => {
 				return {
