@@ -40,11 +40,11 @@
 		try {
 			await midiAccess.requestMidiAccess();
 			midiAccess.initInputs();
+			console.log('MIDI ready!');
 		} catch (err) {
-			console.log('failed to request MIDI access', err);
-			alert('failed to request MIDI access: ' + err.message); // eslint-disable-line no-alert
+			console.error('requestMidiAccess failed', err);
+			alert('Failed to request MIDI access: ' + err.message); // eslint-disable-line no-alert
 		}
-		console.log('MIDI ready!');
 	};
 </script>
 

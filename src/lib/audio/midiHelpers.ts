@@ -28,6 +28,11 @@ export const parseMidiMessage = (e: MIDIMessageEvent): MidiMessage => {
 	};
 };
 
+/**
+ * Uses `navigator.requestMIDIAccess`, throwing an error on failure.
+ * @param opts - WebMIDI options - https://developer.mozilla.org/en-US/docs/Web/API/Web_MIDI_API
+ * @returns
+ */
 export const requestMidiAccess = async (opts?: Partial<MIDIOptions>): Promise<MIDIAccess> => {
 	const requestMIDIAccessFn: requestMIDIAccess =
 		(navigator as any).requestMIDIAccess && (navigator as any).requestMIDIAccess.bind(navigator);
@@ -39,12 +44,5 @@ export const requestMidiAccess = async (opts?: Partial<MIDIOptions>): Promise<MI
 		software: undefined,
 		...opts,
 	};
-	let midiAccess: MIDIAccess;
-	try {
-		midiAccess = await requestMIDIAccessFn(options);
-	} catch (err) {
-		console.error('Failed requesting midi access', err);
-		throw err;
-	}
-	return midiAccess;
+	return requestMIDIAccessFn(options);
 };
