@@ -1,9 +1,5 @@
-/* global stylesheet imported by `src/routes/__layout.svelte */
-
-/*
-
-:root {
-  --some_stylish_property: 100%;
+html,
+body {
+	width: 100%;
+	height: 100%;
 }
-
-*/

@@ -10,8 +10,7 @@
 </main>
 
 <style>
-	main,
-	:global(html, body) {
+	main {
 		width: 100%;
 		height: 100%;
 	}

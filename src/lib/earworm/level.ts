@@ -2,10 +2,9 @@ import {writable, type Writable} from 'svelte/store';
 import {randomItem, randomInt} from '@feltcoop/util/random.js';
 import {UnreachableError} from '@feltcoop/util/error.js';
 
-import {SMOOTH_GAIN_TIME_CONSTANT} from '$lib/audio/utils';
-import {type Midi, midiToFreq} from '$lib/music/midi';
-import {DEFAULT_TUNING} from '$lib/music/constants';
+import type {Midi} from '$lib/music/midi';
 import {computeInterval, type Semitones} from '$lib/music/notes';
+import {playNote} from '$lib/audio/playNote';
 
 // TODO play a victory sound on complete
 // TODO show feedback on the pressed buttons, regardless of how their interval was input (keyboard, tapping, clicking, debug key, etc)
@@ -144,27 +143,6 @@ export type EventData =
 	| {type: 'COMPLETE_LEVEL'}
 	| {type: 'PRESENTED'}
 	| {type: 'GUESS'; midi: Midi};
-
-const playNote = async (audioCtx: AudioContext, note: Midi, durationMs: number) => {
-	// TODO
-	const freq = midiToFreq(note, DEFAULT_TUNING);
-	console.log('playing note', note, freq);
-
-	const gain = audioCtx.createGain();
-	gain.gain.value = 0.1; // TODO volume variable
-	gain.connect(audioCtx.destination);
-	const osc = audioCtx.createOscillator();
-	osc.type = 'sine';
-	osc.frequency.setValueAtTime(freq, audioCtx.currentTime);
-	osc.start();
-	osc.connect(gain);
-
-	const endTime = audioCtx.currentTime + durationMs / 1000;
-	gain.gain.setTargetAtTime(0, endTime, SMOOTH_GAIN_TIME_CONSTANT);
-	osc.stop(endTime + SMOOTH_GAIN_TIME_CONSTANT * 2);
-
-	await new Promise((r) => setTimeout(r, durationMs));
-};
 
 const defaultState = (levelDef: LevelDef): LevelStoreState => ({
 	status: 'initial',
