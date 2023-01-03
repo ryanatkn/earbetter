@@ -7,6 +7,7 @@
 	import TrialProgressIndicator from '$lib/earworm/TrialProgressIndicator.svelte';
 	import {getAudioCtx} from '$lib/audio/audioCtx';
 	import {getMidiInput} from '$lib/audio/midiInput';
+	import type {Midi} from '$lib/music/midi';
 
 	/*
 
@@ -37,7 +38,7 @@
 	$: console.log('highlighted', highlightedKeys);
 
 	// emphasize middle C to make it easier to orient oneself on a MIDI keyboard
-	const emphasizedKeys = new Set([60]);
+	const emphasizedKeys = new Set([60 as Midi]);
 
 	onMount(() => {
 		level.send('START');
@@ -52,7 +53,7 @@
 
 	const reset = () => level.reset();
 
-	const onDocumentKeyDown = (e) => {
+	const onDocumentKeyDown = (e: KeyboardEvent) => {
 		switch (e.key) {
 			case 'r': {
 				reset();
@@ -81,7 +82,7 @@
 		}
 	};
 
-	const onPressKey = (midi) => {
+	const onPressKey = (midi: Midi): void => {
 		console.log('press midi key', midi);
 		level.send({type: 'GUESS', midi});
 	};
@@ -132,7 +133,7 @@
 				width={clientWidth}
 				midiMin={$level.def.midiMin}
 				midiMax={$level.def.midiMax}
-				onPressKey={$level.status === 'waitingForInput' ? onPressKey : undefined}
+				on:press={$level.status === 'waitingForInput' ? (e) => onPressKey(e.detail) : undefined}
 				enabledKeys={$level.trial?.validNotes}
 				{highlightedKeys}
 				{emphasizedKeys}

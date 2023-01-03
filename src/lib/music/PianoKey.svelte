@@ -1,28 +1,28 @@
 <script lang="ts">
+	import {createEventDispatcher} from 'svelte';
+
 	import {midiNaturals} from '$lib/music/notes';
 	import type {Midi} from '$lib/music/midi';
+
+	const dispatch = createEventDispatcher<{press: Midi}>();
 
 	export let midi: Midi;
 	export let leftOffset: number;
 	export let width: number;
 	export let height: number;
-	export let isEnabled = true;
-	export let isHighlighted = false;
-	export let isEmphasized = false;
-	export let onPress: ((midi: Midi) => void) | undefined = undefined; // TODO event
-
-	const press = (): void => {
-		if (onPress) onPress(midi);
-	};
+	export let clickable = true;
+	export let enabled = true;
+	export let highlighted = false;
+	export let emphasized = false;
 </script>
 
 <button
 	class="piano-key {midiNaturals[midi] ? 'white' : 'black'}"
-	class:disabled={!isEnabled}
-	class:clickable={onPress && isEnabled}
-	class:highlighted={isHighlighted}
-	class:emphasized={isEmphasized}
-	on:click={isEnabled ? press : undefined}
+	class:disabled={!enabled}
+	class:clickable={clickable && enabled}
+	class:highlighted
+	class:emphasized
+	on:click={enabled ? () => dispatch('press') : undefined}
 	aria-label="piano key for midi {midi}"
 	style:width="{width}px"
 	style:height="{height}px"

@@ -1,30 +1,28 @@
 <script lang="ts">
 	import PianoKey from '$lib/music/PianoKey.svelte';
-	import {midiNaturals, midiChromas} from '$lib/music/notes';
+	import {midiNaturals, midiChromas, type Chroma} from '$lib/music/notes';
 	import {MIDI_MIN, MIDI_MAX, type Midi} from '$lib/music/midi';
 
 	export let width: number;
 	export let midiMin: Midi = MIDI_MIN;
 	export let midiMax: Midi = MIDI_MAX;
-	export let onPressKey: ((midi: Midi) => void) | undefined = undefined; // TODO event
-	export let enabledKeys: Set<Midi> | undefined = undefined;
-	export let highlightedKeys: Set<Midi> | undefined = undefined;
-	export let emphasizedKeys: Set<Midi> | undefined = undefined;
+	export let enabledKeys: Set<Midi> | null = null;
+	export let highlightedKeys: Set<Midi> | null = null;
+	export let emphasizedKeys: Set<Midi> | null = null;
 
-	const isKeyEnabled = (key: Midi, enabledKeys: Set<Midi> | undefined): boolean =>
+	const isKeyEnabled = (key: Midi, enabledKeys: Set<Midi> | null): boolean =>
 		!enabledKeys || enabledKeys.has(key);
 
-	const isKeyHighlighted = (key: Midi, highlightedKeys: Set<Midi> | undefined): boolean =>
+	const isKeyHighlighted = (key: Midi, highlightedKeys: Set<Midi> | null): boolean =>
 		!!highlightedKeys?.has(key);
 
-	const isKeyEmphasized = (key: Midi, emphasizedKeys: Set<Midi> | undefined): boolean =>
+	const isKeyEmphasized = (key: Midi, emphasizedKeys: Set<Midi> | null): boolean =>
 		!!emphasizedKeys?.has(key);
 
 	$: noteCount = midiMax - midiMin + 1;
 	$: accidentalKeyWidth = Math.floor(width / noteCount);
 	$: naturalKeyHeight = accidentalKeyWidth * KEY_HEIGHT_MULT;
 
-	const UNRENDERED_PIANO_WIDTH = -1;
 	const KEY_HEIGHT_MULT = 5; // width * mult = height // TODO - make dependent on container?
 	const ACCIDENTAL_KEY_WIDTH_MULT = 7 / 12;
 	const ACCIDENTAL_KEY_HEIGHT_MULT = 0.7;
@@ -53,9 +51,9 @@
 	}
 
 	const computePianoKeys = (
-		width: number,
+		_width: number, // TODO unused
 		midiMin: Midi,
-		midiMax: Midi,
+		_midiMax: Midi, // TODO unused
 		noteCount: number,
 		accidentalKeyWidth: number,
 		naturalKeyHeight: number,
@@ -65,7 +63,7 @@
 
 		const keys: PianoKey[] = [];
 		for (let i = 0; i < noteCount; i++) {
-			const midi = i + midiMin;
+			const midi = (i + midiMin) as Midi;
 			let keyWidth; // number
 			let keyHeight; // number
 			if (midiNaturals[midi]) {
@@ -106,10 +104,10 @@
 				leftOffset={key.leftOffset}
 				width={key.width}
 				height={key.height}
-				isEnabled={isKeyEnabled(key.midi, enabledKeys)}
-				isHighlighted={isKeyHighlighted(key.midi, highlightedKeys)}
-				isEmphasized={isKeyEmphasized(key.midi, emphasizedKeys)}
-				onPress={onPressKey}
+				enabled={isKeyEnabled(key.midi, enabledKeys)}
+				highlighted={isKeyHighlighted(key.midi, highlightedKeys)}
+				emphasized={isKeyEmphasized(key.midi, emphasizedKeys)}
+				on:press
 			/>
 		{/each}
 	</div>
