@@ -88,12 +88,9 @@
 	};
 </script>
 
-<div class="absolute l-0 t-0 w-full h-full color-primary" bind:clientWidth>
+<div class="level" bind:clientWidth>
 	<!-- debugging -->
-	<div
-		class="text-2xl h-full w-full absolute t-0 l-0 flex items-center
-		justify-center flex-col"
-	>
+	<div class="info">
 		<div>status: {$level.status}</div>
 		<div>trials created: {$level.trials.length}</div>
 		{#if $level.trial}
@@ -111,23 +108,23 @@
 	<!-- {#if $level.status === 'presentingPrompt'}
 	{:else if $level.status === 'waitingForInput'} -->
 	{#if $level.status === 'showingSuccessFeedback'}
-		<div class="absolute t-50 r-0 w-50 h-50" style="background-color: green;" />
+		<div class="feedback success" />
 	{:else if $level.status === 'showingFailureFeedback'}
-		<div class="absolute t-50 r-0 w-50 h-50" style="background-color: red;" />
+		<div class="feedback failure" />
 	{:else if $level.status === 'complete'}
-		<button class="absolute t-50 r-0 w-50 h-25 text-3xl" on:click={() => exitLevelToMap()}>
+		<button class="feedback complete" on:click={() => exitLevelToMap()}>
 			return to the galaxy map
 		</button>
 	{/if}
 
-	<div class="h-50 w-80 absolute r-0 t-0">
+	<div class="level-progress">
 		<LevelProgressIndicator {level} />
 	</div>
-	<div class="h-50 w-80 absolute r-0 t-100">
+	<div class="trial-progress">
 		<TrialProgressIndicator {level} />
 	</div>
 
-	<div class="absolute l-0 b-0 w-100">
+	<div class="piano-wrapper">
 		{#if clientWidth}
 			<Piano
 				width={clientWidth}
@@ -143,3 +140,63 @@
 </div>
 
 <svelte:window on:keydown={onDocumentKeyDown} />
+
+<style>
+	.level {
+		position: absolute;
+		left: 0;
+		top: 0;
+		width: 100%;
+		height: 100%;
+		color: var(--color_active);
+	}
+	.info {
+		font-size: var(--font_size_xl);
+		height: 100%;
+		width: 100%;
+		position: absolute;
+		left: 0;
+		top: 0;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		flex-direction: column;
+	}
+	.level-progress {
+		position: absolute;
+		right: 0;
+		top: 0;
+		height: 50%;
+		width: 50%;
+	}
+	.trial-progress {
+		position: absolute;
+		right: 0;
+		top: 100%;
+		height: 50%;
+		width: 80%;
+	}
+	.piano-wrapper {
+		position: absolute;
+		left: 0;
+		bottom: 0;
+		width: 100%;
+	}
+	.feedback {
+		position: absolute;
+		top: 50%;
+		right: 0;
+		width: 50%;
+		height: 50%;
+	}
+	.feedback.success {
+		background-color: green;
+	}
+	.feedback.failure {
+		background-color: red;
+	}
+	.feedback.complete {
+		height: 25%;
+		font-size: var(--font_size_xl2);
+	}
+</style>

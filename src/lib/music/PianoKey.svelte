@@ -14,10 +14,15 @@
 	export let enabled = true;
 	export let highlighted = false;
 	export let emphasized = false;
+
+	$: white = midiNaturals[midi];
+	$: black = !white;
 </script>
 
 <button
-	class="piano-key {midiNaturals[midi] ? 'white' : 'black'}"
+	class="piano-key"
+	class:white
+	class:black
 	class:disabled={!enabled}
 	class:clickable={clickable && enabled}
 	class:highlighted
