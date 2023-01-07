@@ -1,6 +1,6 @@
 # earworm
 
-> ear training game 🪱 [ryanatkn.github.io/earworm](https://ryanatkn.github.io/earworm)
+> ear training game 🪱🎶 [ryanatkn.github.io/earworm](https://ryanatkn.github.io/earworm)
 
 **status**: pre-alpha
 
