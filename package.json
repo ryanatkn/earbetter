@@ -16,7 +16,6 @@
     "deploy": "gro deploy"
   },
   "devDependencies": {
-    "@feltcoop/dealt": "^0.19.1",
     "@feltjs/eslint-config": "^0.2.1",
     "@feltjs/felt-ui": "^0.51.1",
     "@feltjs/gro": "^0.72.0",
