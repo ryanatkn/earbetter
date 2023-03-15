@@ -6,8 +6,8 @@ const baseLevelDef = {
 	// but the number of trials that must be correct to count as success (which should probably be 0 for the first level!)
 	// trialCount: [2, 5, 25],
 	trialCount: 2,
-	midiMin: 46,
-	midiMax: 84,
+	midi_min: 46,
+	midi_max: 84,
 	octaveShiftMin: 0,
 	octaveShiftMax: 0,
 	sequenceLength: 2,

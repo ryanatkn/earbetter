@@ -3,7 +3,7 @@ import {randomItem, randomInt} from '@feltjs/util/random.js';
 import {UnreachableError} from '@feltjs/util/error.js';
 
 import type {Midi} from '$lib/music/midi';
-import {computeInterval, type Semitones} from '$lib/music/notes';
+import {compute_interval, type Semitones} from '$lib/music/notes';
 import {playNote} from '$lib/audio/playNote';
 
 // TODO play a victory sound on complete
@@ -18,11 +18,11 @@ const NOTE_DURATION = 500;
 export interface LevelDef {
 	id: string;
 	trialCount: number;
-	// The midiMin and midiMax define the entire allowable spectrum of notes.
+	// The midi_min and midi_max define the entire allowable spectrum of notes.
 	// Values like the intervals and octaveShift
 	// may spill over combined with the tonic.
-	midiMin: Midi;
-	midiMax: Midi;
+	midi_min: Midi;
+	midi_max: Midi;
 	octaveShiftMin: 0 | -1 | -2 | -3 | -4 | -5 | -6 | -7 | -8 | -9; // TODO shrink to more realistic values?
 	octaveShiftMax: 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8; // TODO shrink to more realistic values?
 	sequenceLength: 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10 | 11 | 12 | 13 | 14 | 15 | 16; // prettier-ignore
@@ -74,22 +74,22 @@ export interface Trial {
 }
 
 const createNextTrial = ({def, trial}: LevelStoreState): Trial => {
-	const {midiMin, midiMax, octaveShiftMin, octaveShiftMax} = def;
+	const {midi_min, midi_max, octaveShiftMin, octaveShiftMax} = def;
 
-	const tonicMax = midiMax - 12;
-	if (tonicMax < midiMin) {
-		throw Error(`tonicMax(${tonicMax}) is bigger than midiMin(${midiMin})`);
+	const tonicMax = midi_max - 12;
+	if (tonicMax < midi_min) {
+		throw Error(`tonicMax(${tonicMax}) is bigger than midi_min(${midi_min})`);
 	}
-	const tonic = randomInt(midiMin, tonicMax) as Midi;
+	const tonic = randomInt(midi_min, tonicMax) as Midi;
 	const sequence: Midi[] = [tonic];
 
 	// compute the valid notes
 	const intervals = new Set([0, ...def.intervals]); // allow tonic to repeat
 	const validNotes: Midi[] = [];
-	const noteMin = Math.max(midiMin, tonic + octaveShiftMin * 12) as Midi;
-	const noteMax = Math.min(midiMax, tonic + octaveShiftMax * 12 + 12) as Midi; // always span the tonic's octave
+	const noteMin = Math.max(midi_min, tonic + octaveShiftMin * 12) as Midi;
+	const noteMax = Math.min(midi_max, tonic + octaveShiftMax * 12 + 12) as Midi; // always span the tonic's octave
 	for (let i = noteMin; i <= noteMax; i++) {
-		const interval = computeInterval(tonic, i);
+		const interval = compute_interval(tonic, i);
 
 		// is the interval valid? add this note if so
 		if (intervals.has(interval)) {

@@ -1,7 +1,17 @@
 import {mapRecord} from '@feltjs/util/object.js';
 
 import {type Hsl, hslToStr, type Hue} from '$lib/util/colors'; // TODO maybe this belongs somewhere elase - a `colorsAndMusic` module?
-import {type Midi, midis, isMidi} from '$lib/music/midi';
+import {type Midi, midis, is_midi} from '$lib/music/midi';
+
+// `Midi` is our primary means of identifying notes,
+// and its type is a number with a min of 0, just like array indices.
+// The result is that arrays are great for storing static `Midi` data.
+// Using the `Midi` number everywhere as array indices has its drawbacks,
+// but it's really nice to program with, and it's efficient.
+// Using flat data structures instead of objects to pack up this data
+// makes the code very naturally extensible - any new data associated to `Midi`
+// is just an array of anything that can live anywhere,
+// and these arrays are always indexed by `Midi` number.
 
 export const NOTE_FLAT_SYMBOL = '♭';
 export const NOTE_SHARP_SYMBOL = '♯';
@@ -19,43 +29,40 @@ export type NoteName =
   | 'C9'  | 'C♯9'  | 'D9'  | 'D♯9'  | 'E9'  | 'F9'  | 'F♯9'  | 'G9'; // prettier-ignore
 
 export const chromas = Object.freeze([0,  1,  2,  3,  4,  5,  6,  7,  8,  9,  10,  11] as const); // prettier-ignore
-export type Chroma = (typeof chromas)[number]; // corresponds to indices of `pitchClasses`
-export const pitchClasses = Object.freeze(['C', 'C♯', 'D', 'D♯', 'E', 'F', 'F♯', 'G', 'G♯', 'A', 'A♯', 'B'] as const); // prettier-ignore
-export type PitchClass = (typeof pitchClasses)[number];
+export type Chroma = (typeof chromas)[number]; // corresponds to indices of `pitch_classes`
+export const pitch_classes = Object.freeze(['C', 'C♯', 'D', 'D♯', 'E', 'F', 'F♯', 'G', 'G♯', 'A', 'A♯', 'B'] as const); // prettier-ignore
+export type PitchClass = (typeof pitch_classes)[number];
 export type Octave = -1 | 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9;
-// export type NoteLetter = 'C' | 'D' | 'E' | 'F' | 'G' | 'A' | 'B'; // TODO this is unused - is it even a useful concept?
 export type Semitones = number;
-
-// `Midi` is our primary means of identifying notes,
-// and its type is a number with a min of 0, just like array indices.
-// The result is that arrays are great for storing static `Midi` data.
-// Using the `Midi` number everywhere as array indices has its drawbacks,
-// but it's really nice to program with, and it's efficient.
-// Using flat data structures instead of objects to pack up this data
-// makes the code very naturally extensible - any new data associated to `Midi`
-// is just an array of anything that can live anywhere,
-// and these arrays are always indexed by `Midi` number.
 
 // TODO consider converting all of these to `Map`s
 // TODO do we want to remove the `midi` part of these data array names, or otherwise rename them?
 // maybe instead of `midiFoos`, rename to `noteFoos`?
-export const midiChromas: Chroma[] = Object.freeze(midis.map((m) => m % 12)) as Chroma[];
-export const midiPcs: PitchClass[] = Object.freeze(
-	midis.map((m) => pitchClasses[midiChromas[m]]),
+export const midi_chromas: Chroma[] = Object.freeze(midis.map((m) => m % 12)) as Chroma[];
+export const midi_pcs: PitchClass[] = Object.freeze(
+	midis.map((m) => pitch_classes[midi_chromas[m]]),
 ) as PitchClass[];
-export const midiOctaves: Octave[] = Object.freeze(
+export const midi_octaves: Octave[] = Object.freeze(
 	midis.map((m) => Math.floor(m / 12) - 1),
 ) as Octave[];
-export const midiNames: NoteName[] = Object.freeze(
-	midis.map((m) => midiPcs[m] + midiOctaves[m]),
+export const midi_names: NoteName[] = Object.freeze(
+	midis.map((m) => midi_pcs[m] + midi_octaves[m]),
 ) as NoteName[];
-export const midiNaturals: boolean[] = Object.freeze(
-	midis.map((m) => midiPcs[m][1] !== NOTE_SHARP_SYMBOL),
-) as boolean[];
+export const midi_naturals: Set<Midi> = new Set(
+	midis.filter((m) => midi_pcs[m][1] !== NOTE_SHARP_SYMBOL),
+);
+
+export const compute_naturals = (min: Midi, max: Midi): Midi[] => {
+	const naturals: Midi[] = [];
+	for (let i = min; i <= max; i++) {
+		if (midi_naturals.has(i)) naturals.push(i);
+	}
+	return naturals;
+};
 
 export const transpose = (midi: Midi, semitones: Semitones): Midi => {
 	const transposed = midi + semitones;
-	if (!isMidi(transposed)) {
+	if (!is_midi(transposed)) {
 		throw Error(`Failed to transpose midi ${midi} by ${semitones}`);
 	}
 	return transposed;
@@ -65,26 +72,26 @@ export const transpose = (midi: Midi, semitones: Semitones): Midi => {
 // Note that compound intervals spanning more than an octave
 // are normalized to a single octave, so notes 13 semitones apart
 // are actually an interval of 1.
-export const computeInterval = (a: Midi, b: Midi): Semitones => {
+export const compute_interval = (a: Midi, b: Midi): Semitones => {
 	let interval = b - a;
 	while (interval < 0) interval += 12; // not the best code, but it works
 	return interval % 12;
 };
 
 // TODO the hue shouldn't be hardcoded from the chroma - this relationship should be user-customizable (`app.colors` or `app.audio.colors` or something)
-export const noteChromaToHue = Object.freeze(
+export const note_chroma_to_hue = Object.freeze(
 	chromas.reduce((result, chroma) => {
 		result[chroma] = chroma / 12;
 		return result;
 	}, {} as Record<Chroma, Hue>),
 );
 // TODO consider changing to a memoized helper function with optional saturation+lightness
-export const noteChromaToHsl = Object.freeze(
+export const note_chroma_to_hsl = Object.freeze(
 	chromas.reduce((result, chroma) => {
-		result[chroma] = Object.freeze([noteChromaToHue[chroma], 0.5, 0.5] as const);
+		result[chroma] = Object.freeze([note_chroma_to_hue[chroma], 0.5, 0.5] as const);
 		return result;
 	}, {} as Record<Chroma, Hsl>),
 );
-export const noteChromaToHslString = Object.freeze(
-	mapRecord(noteChromaToHsl, ([h, s, l]) => hslToStr(h, s, l)),
+export const note_chroma_to_hsl_string = Object.freeze(
+	mapRecord(note_chroma_to_hsl, ([h, s, l]) => hslToStr(h, s, l)),
 );

@@ -1,13 +1,13 @@
 <script lang="ts">
 	import {createEventDispatcher} from 'svelte';
 
-	import {midiNaturals} from '$lib/music/notes';
+	import {midi_naturals} from '$lib/music/notes';
 	import type {Midi} from '$lib/music/midi';
 
 	const dispatch = createEventDispatcher<{press: Midi}>();
 
 	export let midi: Midi;
-	export let leftOffset: number;
+	export let left_offset: number;
 	export let width: number;
 	export let height: number;
 	export let clickable = true;
@@ -15,7 +15,7 @@
 	export let highlighted = false;
 	export let emphasized = false;
 
-	$: white = midiNaturals[midi];
+	$: white = midi_naturals.has(midi);
 	$: black = !white;
 </script>
 
@@ -31,7 +31,7 @@
 	aria-label="piano key for midi {midi}"
 	style:width="{width}px"
 	style:height="{height}px"
-	style:left="{leftOffset}px"
+	style:left="{left_offset}px"
 />
 
 <style>
@@ -51,6 +51,7 @@
 		border-left: 1px solid var(--border-color);
 		border-top: 1px solid var(--border-color);
 		border-bottom: 1px solid var(--border-color);
+		padding: 0;
 	}
 
 	.piano-key:last-child {

@@ -31,7 +31,7 @@ export const midis: Midi[] = Object.freeze(
 	Array.from({length: MIDI_MAX + 1}, (_, i) => i),
 ) as Midi[];
 
-export const isMidi = (n: number): n is Midi =>
+export const is_midi = (n: number): n is Midi =>
 	n >= MIDI_MIN && n <= MIDI_MAX && Number.isInteger(n);
 
 // note/midi/frequency formulas: https://newt.phys.unsw.edu.au/jw/notes.html
@@ -47,6 +47,6 @@ export const freqToMidi = (freq: Frequency, tuning: Frequency): Midi =>
 
 export const freqToMidiSafe = (freq: Frequency, tuning: Frequency): Midi | null => {
 	const midi = freqToMidi(freq, tuning);
-	if (!isMidi(midi)) return null;
+	if (!is_midi(midi)) return null;
 	return midi;
 };

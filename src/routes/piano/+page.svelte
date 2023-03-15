@@ -12,7 +12,7 @@
 	let clientWidth: number; // `undefined` on first render
 
 	// emphasize middle C to make it easier to orient oneself on a MIDI keyboard
-	const emphasizedKeys = new Set([60 as Midi]);
+	const emphasized_keys = new Set([60 as Midi]);
 
 	// TODO BLOCK instead of duration do up/down
 	const DURATION = 1000;
@@ -35,10 +35,10 @@
 		{#if clientWidth}
 			<Piano
 				width={clientWidth}
-				midiMin={48}
-				midiMax={96}
+				midi_min={48}
+				midi_max={96}
 				on:press={(e) => onPressKey(e.detail)}
-				{emphasizedKeys}
+				{emphasized_keys}
 			/>
 		{/if}
 	</div>

@@ -34,11 +34,11 @@
 	const level = createLevelStore(levelDef, audioCtx);
 	// $: level.setDef(levelDef); // TODO update if levelDef prop changes
 
-	$: highlightedKeys = $level.trial && new Set([$level.trial.sequence[0]]);
-	$: console.log('highlighted', highlightedKeys);
+	$: highlighted_keys = $level.trial && new Set([$level.trial.sequence[0]]);
+	$: console.log('highlighted', highlighted_keys);
 
 	// emphasize middle C to make it easier to orient oneself on a MIDI keyboard
-	const emphasizedKeys = new Set([60 as Midi]);
+	const emphasized_keys = new Set([60 as Midi]);
 
 	onMount(() => {
 		level.send('START');
@@ -128,12 +128,12 @@
 		{#if clientWidth}
 			<Piano
 				width={clientWidth}
-				midiMin={$level.def.midiMin}
-				midiMax={$level.def.midiMax}
+				midi_min={$level.def.midi_min}
+				midi_max={$level.def.midi_max}
 				on:press={$level.status === 'waitingForInput' ? (e) => onPressKey(e.detail) : undefined}
-				enabledKeys={$level.trial?.validNotes}
-				{highlightedKeys}
-				{emphasizedKeys}
+				enabled_keys={$level.trial?.validNotes}
+				{highlighted_keys}
+				{emphasized_keys}
 			/>
 		{/if}
 	</div>
