@@ -5,8 +5,8 @@ import {requestMidiAccess, parseMidiMessage} from '$lib/audio/midiHelpers';
 import type {Midi} from '$lib/music/midi';
 
 export const midiInputKey = {};
-export const getMidiInput = (events: MidiAccessStoreEvents): MidiAccessStore => {
-	const midiInput: MidiAccessStore = getContext(midiInputKey);
+export const getMidiInput = (events: MidiInputEvents): MidiInput => {
+	const midiInput: MidiInput = getContext(midiInputKey);
 
 	// TODO improve this code - event emitter? something else?
 	// currently it allows only 1 of each event to be registered.
@@ -29,14 +29,9 @@ export const getMidiInput = (events: MidiAccessStoreEvents): MidiAccessStore => 
 
 	return midiInput;
 };
-export const provideMidiInput = (): MidiAccessStore => {
-	// TODO make this a svelte store?
-	const midiInput = new MidiAccessStore({}); // TODO constructor param?
-	setContext(midiInputKey, midiInput);
-	return midiInput;
-};
+export const provideMidiInput = (): MidiInput => setContext(midiInputKey, new MidiInput({}));
 
-// const log = logger('MidiAccessStore');
+// const log = logger('MidiInput');
 const log = console.log.bind(console);
 
 // TODO set up dev env with https
@@ -44,7 +39,7 @@ const log = console.log.bind(console);
 // chrome://flags/#unsafely-treat-insecure-origin-as-secure
 
 // TODO do this differently? EventEmitter?
-export interface MidiAccessStoreEvents {
+export interface MidiInputEvents {
 	onNoteStart?: (midi: Midi, velocity: number) => void;
 	onNoteStop?: (midi: Midi, velocity: number) => void;
 	onPadStart?: (midi: Midi, velocity: number) => void;
@@ -52,11 +47,10 @@ export interface MidiAccessStoreEvents {
 	onModWheel?: (velocity: number) => void;
 }
 
-// TODO is `Store` the right term?
-export class MidiAccessStore {
+export class MidiInput {
 	midiAccess: MIDIAccess | null = null;
 
-	constructor(public readonly events: MidiAccessStoreEvents) {}
+	constructor(public readonly events: MidiInputEvents) {}
 
 	// TODO dispose and clear `events` and `onmidimesssage` handlers?
 
@@ -91,7 +85,7 @@ export class MidiAccessStore {
 	onMidiMessage = (event: MIDIMessageEvent): void => {
 		const message = parseMidiMessage(event);
 		const {command, channel, note, velocity} = message;
-		log('onMidiMessage', message);
+		log('onMidiMessage', command, message);
 
 		switch (command) {
 			case MIDICommand.Stop: {

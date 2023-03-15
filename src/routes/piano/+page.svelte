@@ -19,9 +19,9 @@
 	// TODO BLOCK instead of duration do up/down
 	const DURATION = 1000;
 
-	provideMidiInput();
 	getMidiInput({
 		onNoteStart: (midi) => {
+			console.log(`midi`, midi);
 			void playNote(audioCtx, midi, DURATION);
 		},
 	});
