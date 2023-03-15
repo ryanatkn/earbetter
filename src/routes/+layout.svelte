@@ -1,5 +1,5 @@
 <script lang="ts">
-	import '@feltcoop/felt/style.css';
+	import '@feltjs/felt-ui/style.css';
 	import {base} from '$app/paths';
 
 	import './style.css';
