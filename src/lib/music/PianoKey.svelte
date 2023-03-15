@@ -63,7 +63,7 @@
 	}
 
 	.clickable {
-		cursor: pointer;
+		transform-origin: top center;
 	}
 	.clickable:hover {
 		background-color: var(--primary-color);
