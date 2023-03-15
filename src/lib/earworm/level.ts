@@ -1,6 +1,6 @@
 import {writable, type Writable} from 'svelte/store';
-import {randomItem, randomInt} from '@feltcoop/util/random.js';
-import {UnreachableError} from '@feltcoop/util/error.js';
+import {randomItem, randomInt} from '@feltjs/util/random.js';
+import {UnreachableError} from '@feltjs/util/error.js';
 
 import type {Midi} from '$lib/music/midi';
 import {computeInterval, type Semitones} from '$lib/music/notes';
