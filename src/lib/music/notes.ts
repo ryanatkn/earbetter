@@ -1,6 +1,6 @@
 import {mapRecord} from '@feltjs/util/object.js';
+import {type Hsl, hsl_to_string, type Hue} from '@feltcoop/dealt/flat/colors.js';
 
-import {type Hsl, hslToStr, type Hue} from '$lib/util/colors'; // TODO maybe this belongs somewhere elase - a `colorsAndMusic` module?
 import {type Midi, midis, is_midi} from '$lib/music/midi';
 
 // `Midi` is our primary means of identifying notes,
@@ -93,5 +93,5 @@ export const note_chroma_to_hsl = Object.freeze(
 	}, {} as Record<Chroma, Hsl>),
 );
 export const note_chroma_to_hsl_string = Object.freeze(
-	mapRecord(note_chroma_to_hsl, ([h, s, l]) => hslToStr(h, s, l)),
+	mapRecord(note_chroma_to_hsl, ([h, s, l]) => hsl_to_string(h, s, l)),
 );
