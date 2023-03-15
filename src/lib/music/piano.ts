@@ -56,6 +56,7 @@ export const compute_piano_keys = (
 		} else {
 			key_width = accidental_key_width;
 			key_height = accidental_key_height;
+			// this could be improved but it's kinda close
 			left_offset =
 				i * accidental_key_width + pc_left_offset_pct[midi_chromas[midi]] * accidental_key_width;
 		}
