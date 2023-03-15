@@ -91,8 +91,7 @@
 	}}
 />
 <div class="level" bind:clientWidth>
-	<!-- debugging -->
-	<div class="info">
+	<!-- <div class="debug">
 		<div>status: {$level.status}</div>
 		<div>trials created: {$level.trials.length}</div>
 		{#if $level.trial}
@@ -104,26 +103,28 @@
 				</div>
 			{:else}...{/if}
 		{:else}no trial{/if}
-	</div>
-	<!-- /debugging -->
+	</div> -->
 
 	<!-- {#if $level.status === 'presenting_prompt'}
 	{:else if $level.status === 'waiting_for_input'} -->
-	{#if $level.status === 'showing_success_feedback'}
-		<div class="feedback success" />
-	{:else if $level.status === 'showing_failure_feedback'}
-		<div class="feedback failure" />
-	{:else if $level.status === 'complete'}
-		<button class="feedback complete" on:click={() => exit_level_to_map()}>
-			go back to the map
-		</button>
-	{/if}
 
 	<div class="level-progress">
 		<LevelProgressIndicator {level} />
 	</div>
 	<div class="trial-progress">
 		<TrialProgressIndicator {level} />
+	</div>
+
+	<div
+		class="feedback success"
+		class:success={$level.status === 'showing_success_feedback'}
+		class:failure={$level.status === 'showing_failure_feedback'}
+	>
+		{#if $level.status === 'complete'}
+			<button class="feedback complete" on:click={() => exit_level_to_map()}>
+				go back to the map
+			</button>
+		{/if}
 	</div>
 
 	<div class="piano-wrapper" style:padding="{piano_padding}px">
@@ -151,8 +152,12 @@
 		width: 100%;
 		height: 100%;
 		color: var(--color_active);
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+		justify-content: center;
 	}
-	.info {
+	/* .debug {
 		font-size: var(--font_size_xl);
 		height: 100%;
 		width: 100%;
@@ -163,25 +168,22 @@
 		align-items: center;
 		justify-content: center;
 		flex-direction: column;
-	}
+	} */
 	.level-progress {
 		position: absolute;
 		right: 0;
-		top: 0;
+		bottom: 0;
 		height: 50px;
 		width: 100%;
 	}
 	.trial-progress {
 		position: absolute;
 		right: 0;
-		top: 100px;
+		top: 0;
 		height: 50px;
 		width: 100%;
 	}
 	.piano-wrapper {
-		position: absolute;
-		left: 0;
-		bottom: 0;
 		width: 100%;
 	}
 	.feedback {
