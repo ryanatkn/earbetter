@@ -314,7 +314,7 @@ export const create_level_store = (level_def: LevelDef, audio_ctx: AudioContext)
 						case 'RETRY_TRIAL': {
 							// TODO this is really "on enter presenting_prompt state" logic
 							// TODO `s` is stale! so we need the timeout
-							setTimeout(() => present_trial_prompt($level.trial!.sequence), 0); // TODO do side effects within the xstate api
+							setTimeout(() => present_trial_prompt($level.trial!.sequence), 0);
 							return {
 								...$level,
 								status: 'presenting_prompt',
