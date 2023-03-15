@@ -41,10 +41,10 @@ export interface LevelDef {
 
 export type Status =
 	| 'initial'
-	| 'presentingPrompt'
-	| 'waitingForInput'
-	| 'showingSuccessFeedback'
-	| 'showingFailureFeedback'
+	| 'presenting_prompt'
+	| 'waiting_for_input'
+	| 'showing_success_feedback'
+	| 'showing_failure_feedback'
 	| 'complete';
 
 export type LevelStoreState = {
@@ -176,7 +176,7 @@ export const create_level_store = (level_def: LevelDef, audio_ctx: AudioContext)
 				presenting_index: null,
 			},
 		}));
-		// TODO when presenting is complete, we want to automatically transition to the `waitingForInput` state
+		// TODO when presenting is complete, we want to automatically transition to the `waiting_for_input` state
 		send('PRESENTED');
 	};
 
@@ -192,12 +192,12 @@ export const create_level_store = (level_def: LevelDef, audio_ctx: AudioContext)
 						case 'START': {
 							const trial = create_next_trial($level);
 							console.log('TRIAL', trial);
-							// TODO this is really "on enter presentingPrompt state" logic
+							// TODO this is really "on enter presenting_prompt state" logic
 							// TODO `s` is stale! so we need the timeout
 							setTimeout(() => present_trial_prompt(trial.sequence), 0); // TODO do side effects within the xstate api
 							return {
 								...$level,
-								status: 'presentingPrompt',
+								status: 'presenting_prompt',
 								trial,
 								trials: [...$level.trials, trial],
 							};
@@ -207,12 +207,12 @@ export const create_level_store = (level_def: LevelDef, audio_ctx: AudioContext)
 						}
 					}
 				}
-				case 'presentingPrompt': {
+				case 'presenting_prompt': {
 					switch (e.type) {
 						case 'PRESENTED': {
 							return {
 								...$level,
-								status: 'waitingForInput',
+								status: 'waiting_for_input',
 								trial: $level.trial && {
 									...$level.trial,
 									guessing_index: 0,
@@ -224,7 +224,7 @@ export const create_level_store = (level_def: LevelDef, audio_ctx: AudioContext)
 						}
 					}
 				}
-				case 'waitingForInput': {
+				case 'waiting_for_input': {
 					switch (e.type) {
 						case 'GUESS': {
 							if (!$level.trial || $level.trial.guessing_index === null) {
@@ -235,37 +235,37 @@ export const create_level_store = (level_def: LevelDef, audio_ctx: AudioContext)
 							const actual = get_correct_guess($level);
 							void play_note(audio_ctx, guess, NOTE_DURATION);
 							console.log('GUESS', e.note, guess, actual);
-							// if incorrect -> FAILURE -> showingFailureFeedback -> REPROMPT
+							// if incorrect -> FAILURE -> showing_failure_feedback -> REPROMPT
 							if (actual !== guess) {
 								console.log('GUESS INCORRECT');
-								// TODO this is really "on enter showingFailureFeedback state" logic
+								// TODO this is really "on enter showing_failure_feedback state" logic
 								setTimeout(() => send('RETRY_TRIAL'), 1000);
 								return {
 									...$level,
-									status: 'showingFailureFeedback',
+									status: 'showing_failure_feedback',
 								};
 							}
 							// else if more -> update current response index
 							else if ($level.trial.guessing_index >= $level.trial.sequence.length - 1) {
 								if ($level.trial.index < $level.def.trial_count - 1) {
 									console.log('GUESS CORRECT AND DONE WITH TRIAL!!');
-									// TODO this is really "on enter showingSuccessFeedback state" logic
+									// TODO this is really "on enter showing_success_feedback state" logic
 									setTimeout(() => send('NEXT_TRIAL'), 1000);
 									return {
 										...$level,
-										status: 'showingSuccessFeedback',
+										status: 'showing_success_feedback',
 									};
 								} else {
-									// TODO this is really "on enter showingSuccessFeedback state" logic
+									// TODO this is really "on enter showing_success_feedback state" logic
 									console.log('GUESS CORRECT AND DONE WITH ALL TRIALS!!!!');
 									setTimeout(() => send('COMPLETE_LEVEL'), 1000);
 									return {
 										...$level,
-										status: 'showingSuccessFeedback',
+										status: 'showing_success_feedback',
 									};
 								}
 							}
-							// else -> SUCCESS -> showingSuccessFeedback
+							// else -> SUCCESS -> showing_success_feedback
 							else {
 								console.log('GUESS CORRECT BUT NOT DONE');
 								return {
@@ -282,17 +282,17 @@ export const create_level_store = (level_def: LevelDef, audio_ctx: AudioContext)
 						}
 					}
 				}
-				case 'showingSuccessFeedback': {
+				case 'showing_success_feedback': {
 					switch (e.type) {
 						case 'NEXT_TRIAL': {
 							const trial = create_next_trial($level);
 							console.log('TRIAL', trial);
-							// TODO this is really "on enter presentingPrompt state" logic
+							// TODO this is really "on enter presenting_prompt state" logic
 							// TODO `s` is stale! so we need the timeout
 							setTimeout(() => present_trial_prompt(trial.sequence), 0); // TODO do side effects within the xstate api
 							return {
 								...$level,
-								status: 'presentingPrompt',
+								status: 'presenting_prompt',
 								trial,
 								trials: [...$level.trials, trial],
 							};
@@ -309,15 +309,15 @@ export const create_level_store = (level_def: LevelDef, audio_ctx: AudioContext)
 						}
 					}
 				}
-				case 'showingFailureFeedback': {
+				case 'showing_failure_feedback': {
 					switch (e.type) {
 						case 'RETRY_TRIAL': {
-							// TODO this is really "on enter presentingPrompt state" logic
+							// TODO this is really "on enter presenting_prompt state" logic
 							// TODO `s` is stale! so we need the timeout
 							setTimeout(() => present_trial_prompt($level.trial!.sequence), 0); // TODO do side effects within the xstate api
 							return {
 								...$level,
-								status: 'presentingPrompt',
+								status: 'presenting_prompt',
 								trial: $level.trial && {
 									...$level.trial,
 									retry_count: $level.trial.retry_count + 1,
@@ -351,7 +351,7 @@ export const create_level_store = (level_def: LevelDef, audio_ctx: AudioContext)
 
 		// dev and debug methods
 		guess_correctly: ($level: LevelStoreState): void => {
-			if ($level.status !== 'waitingForInput') return;
+			if ($level.status !== 'waiting_for_input') return;
 			const midi = get_correct_guess($level);
 			if (midi === null) return;
 			send({type: 'GUESS', note: midi});
@@ -361,7 +361,7 @@ export const create_level_store = (level_def: LevelDef, audio_ctx: AudioContext)
 };
 
 const is_input_disabled = ($level: LevelStoreState, index: number): boolean => {
-	if ($level.status !== 'waitingForInput') return true;
+	if ($level.status !== 'waiting_for_input') return true;
 	if (index === 0) return false;
 	return !$level.def.intervals.includes(index);
 };

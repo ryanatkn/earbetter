@@ -105,11 +105,11 @@
 	</div>
 	<!-- /debugging -->
 
-	<!-- {#if $level.status === 'presentingPrompt'}
-	{:else if $level.status === 'waitingForInput'} -->
-	{#if $level.status === 'showingSuccessFeedback'}
+	<!-- {#if $level.status === 'presenting_prompt'}
+	{:else if $level.status === 'waiting_for_input'} -->
+	{#if $level.status === 'showing_success_feedback'}
 		<div class="feedback success" />
-	{:else if $level.status === 'showingFailureFeedback'}
+	{:else if $level.status === 'showing_failure_feedback'}
 		<div class="feedback failure" />
 	{:else if $level.status === 'complete'}
 		<button class="feedback complete" on:click={() => exit_level_to_map()}>
@@ -130,7 +130,7 @@
 				width={clientWidth}
 				midi_min={$level.def.midi_min}
 				midi_max={$level.def.midi_max}
-				on:press={$level.status === 'waitingForInput' ? (e) => on_press_key(e.detail) : undefined}
+				on:press={$level.status === 'waiting_for_input' ? (e) => on_press_key(e.detail) : undefined}
 				enabled_keys={$level.trial?.valid_notes}
 				{highlighted_keys}
 				{emphasized_keys}
