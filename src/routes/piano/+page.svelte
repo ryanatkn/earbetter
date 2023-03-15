@@ -2,7 +2,7 @@
 	import Piano from '$lib/music/Piano.svelte';
 	import {set_audio_ctx, get_audio_ctx} from '$lib/audio/audio_ctx';
 	import MidiInput from '$lib/audio/MidiInput.svelte';
-	import type {Midi} from '$lib/music/midi';
+	import {MIDI_MAX, MIDI_MIN, type Midi} from '$lib/music/midi';
 	import {start_playing_note, type StopPlaying} from '$lib/audio/play_note';
 
 	// TODO BLOCK set in root layout?
@@ -29,6 +29,9 @@
 		stop_playing_note?.();
 		playing.delete(note);
 	};
+
+	let midi_min: Midi = 48;
+	let midi_max: Midi = 96;
 </script>
 
 <main bind:clientWidth>
@@ -41,8 +44,8 @@
 		{#if clientWidth}
 			<Piano
 				width={clientWidth}
-				midi_min={48}
-				midi_max={96}
+				{midi_min}
+				{midi_max}
 				on:press={(e) => start_playing(e.detail)}
 				on:release={(e) => stop_playing(e.detail)}
 				{emphasized_keys}
@@ -50,6 +53,18 @@
 		{/if}
 	</div>
 	<button on:click={() => void midi_input.init()}>init MIDI</button>
+	<form class="column-sm row">
+		<label>
+			MIDI min
+			<input type="number" bind:value={midi_min} step={1} min={MIDI_MIN} max={MIDI_MAX} />
+			<input type="range" bind:value={midi_min} step={1} min={MIDI_MIN} max={MIDI_MAX} />
+		</label>
+		<label>
+			MIDI max
+			<input type="number" bind:value={midi_max} step={1} min={MIDI_MIN} max={MIDI_MAX} />
+			<input type="range" bind:value={midi_max} step={1} min={MIDI_MIN} max={MIDI_MAX} />
+		</label>
+	</form>
 </main>
 
 <style>

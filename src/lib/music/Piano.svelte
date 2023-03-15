@@ -23,7 +23,7 @@
 	$: naturals = compute_naturals(midi_min, midi_max);
 	$: natural_key_width = Math.floor(width / naturals.length);
 	$: accidental_key_width = natural_key_width * ACCIDENTAL_KEY_WIDTH_MULT;
-	$: natural_key_height = accidental_key_width * KEY_HEIGHT_MULT;
+	$: natural_key_height = Math.min(600, accidental_key_width * KEY_HEIGHT_MULT);
 
 	const KEY_HEIGHT_MULT = 5; // width * mult = height // TODO - make dependent on container?
 	const ACCIDENTAL_KEY_WIDTH_MULT = 7 / 12;

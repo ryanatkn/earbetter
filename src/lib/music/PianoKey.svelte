@@ -28,7 +28,8 @@
 	class:highlighted
 	class:emphasized
 	on:mousedown={enabled ? () => dispatch('press', midi) : undefined}
-	on:mousedown={enabled ? () => dispatch('release', midi) : undefined}
+	on:mouseup={enabled ? () => dispatch('release', midi) : undefined}
+	on:mouseleave={enabled ? () => dispatch('release', midi) : undefined}
 	aria-label="piano key for midi {midi}"
 	style:width="{width}px"
 	style:height="{height}px"
@@ -52,6 +53,7 @@
 		border-left: 1px solid var(--border-color);
 		border-top: 1px solid var(--border-color);
 		border-bottom: 1px solid var(--border-color);
+		border-radius: var(--border_radius_xs);
 		padding: 0;
 	}
 
