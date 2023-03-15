@@ -25,7 +25,7 @@
 
   */
 	export let level_def: LevelDef;
-	export let exitLevelToMap: (success?: boolean) => void;
+	export let exit_level_to_map: (success?: boolean) => void;
 
 	let clientWidth; // `undefined` on first render
 
@@ -55,7 +55,7 @@
 			case ' ': {
 				switch ($level.status) {
 					case 'complete': {
-						exitLevelToMap(true);
+						exit_level_to_map(true);
 						break;
 					}
 					default: {
@@ -69,13 +69,13 @@
 				break;
 			}
 			case 'Escape': {
-				exitLevelToMap(); // TODO confirmation dialog
+				exit_level_to_map(); // TODO confirmation dialog
 				break;
 			}
 		}
 	};
 
-	const onPressKey = (note: Midi): void => {
+	const on_press_key = (note: Midi): void => {
 		console.log('press note key', note);
 		level.send({type: 'GUESS', note});
 	};
@@ -112,8 +112,8 @@
 	{:else if $level.status === 'showingFailureFeedback'}
 		<div class="feedback failure" />
 	{:else if $level.status === 'complete'}
-		<button class="feedback complete" on:click={() => exitLevelToMap()}>
-			return to the galaxy map
+		<button class="feedback complete" on:click={() => exit_level_to_map()}>
+			go back to the map
 		</button>
 	{/if}
 
@@ -130,7 +130,7 @@
 				width={clientWidth}
 				midi_min={$level.def.midi_min}
 				midi_max={$level.def.midi_max}
-				on:press={$level.status === 'waitingForInput' ? (e) => onPressKey(e.detail) : undefined}
+				on:press={$level.status === 'waitingForInput' ? (e) => on_press_key(e.detail) : undefined}
 				enabled_keys={$level.trial?.valid_notes}
 				{highlighted_keys}
 				{emphasized_keys}
@@ -197,6 +197,7 @@
 	}
 	.feedback.complete {
 		height: 25px;
+		width: auto;
 		font-size: var(--font_size_xl2);
 	}
 </style>

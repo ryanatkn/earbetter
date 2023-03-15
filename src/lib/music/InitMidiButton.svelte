@@ -7,7 +7,7 @@
 </script>
 
 <button
-	class="big w-full"
+	class="big"
 	on:click={() => void midi_input?.init()}
 	disabled={!midi_input || !!$midi_access}
 	title={midi_input ? ($midi_access ? 'MIDI is ready!' : 'connect your MIDI device') : 'loading...'}

@@ -6,6 +6,7 @@
 	import MapLevelIcon from '$lib/earworm/MapLevelIcon.svelte';
 	import {get_audio_ctx} from '$lib/audio/audio_ctx';
 	import MidiInput from '$lib/audio/MidiInput.svelte';
+	import InitMidiButton from '$lib/music/InitMidiButton.svelte';
 
 	console.log('level_defs', level_defs);
 
@@ -25,7 +26,7 @@
 		activeLevelDef = level_def;
 	};
 
-	const exitLevelToMap = (success = false): void => {
+	const exit_level_to_map = (success = false): void => {
 		if (!activeLevelDef) return;
 		if (success) {
 			level_stats.register_success(activeLevelDef.id);
@@ -37,7 +38,7 @@
 <MidiInput bind:this={midi_input} />
 <div class="earworm">
 	{#if activeLevelDef}
-		<Level level_def={activeLevelDef} {exitLevelToMap} />
+		<Level level_def={activeLevelDef} {exit_level_to_map} />
 	{:else}
 		<div>
 			{#each level_defs as level_def}
@@ -48,7 +49,7 @@
 				/>
 			{/each}
 		</div>
-		<button on:click={() => void midi_input.init()}>init MIDI</button>
+		<InitMidiButton {midi_input} />
 	{/if}
 </div>
 
@@ -56,11 +57,5 @@
 	.earworm {
 		width: 100%;
 		height: 100%;
-	}
-
-	button {
-		position: absolute;
-		left: 0;
-		top: 0;
 	}
 </style>
