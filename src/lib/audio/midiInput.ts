@@ -65,6 +65,19 @@ export class MidiAccessStore {
 		console.log('midiAccess', this.midiAccess);
 	}
 
+	async init(): Promise<void> {
+		// TODO how to call this better? needs to be a user-initiated action right?
+		// do we need to present a screen to users that lets them opt into midi?
+		try {
+			await this.requestMidiAccess();
+			this.initInputs();
+			console.log('MIDI ready!');
+		} catch (err) {
+			console.error('requestMidiAccess failed', err);
+			alert('Failed to request MIDI access: ' + err.message); // eslint-disable-line no-alert
+		}
+	}
+
 	initInputs(): void {
 		if (!this.midiAccess) {
 			throw Error(`Cannot list midi inputs without access`);
@@ -78,7 +91,7 @@ export class MidiAccessStore {
 	onMidiMessage = (event: MIDIMessageEvent): void => {
 		const message = parseMidiMessage(event);
 		const {command, channel, note, velocity} = message;
-		// log('onMidiMessage', message);
+		log('onMidiMessage', message);
 
 		switch (command) {
 			case MIDICommand.Stop: {

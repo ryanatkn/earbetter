@@ -9,6 +9,8 @@
 	setAudioCtx(); // allows components to do `const audioCtx = useAudioCtx();` which uses svelte's `getContext`
 	const audioCtx = getAudioCtx();
 
+	const midiAccess = provideMidiInput();
+
 	let clientWidth: number; // `undefined` on first render
 
 	// emphasize middle C to make it easier to orient oneself on a MIDI keyboard
@@ -42,6 +44,7 @@
 			/>
 		{/if}
 	</div>
+	<button on:click={() => void midiAccess.init()}>init MIDI</button>
 </main>
 
 <style>

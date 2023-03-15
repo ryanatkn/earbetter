@@ -18,6 +18,8 @@
 	const audioCtx = getAudioCtx();
 	(window as any).audio = audioCtx;
 
+	const midiAccess = provideMidiInput();
+
 	const selectLevelDef = (levelDef: LevelDef): void => {
 		void audioCtx.resume(); // TODO where's the best place for this? needs to be synchronous with a click or similar, so this breaks if `selectLevelDef` is called without a user action
 		activeLevelDef = levelDef;
@@ -29,21 +31,6 @@
 			levelStats.registerSuccess(activeLevelDef.id);
 		}
 		activeLevelDef = null;
-	};
-
-	const midiAccess = provideMidiInput();
-
-	const initMidi = async (): Promise<void> => {
-		// TODO how to call this better? needs to be a user-initiated action right?
-		// do we need to present a screen to users that lets them opt into midi?
-		try {
-			await midiAccess.requestMidiAccess();
-			midiAccess.initInputs();
-			console.log('MIDI ready!');
-		} catch (err) {
-			console.error('requestMidiAccess failed', err);
-			alert('Failed to request MIDI access: ' + err.message); // eslint-disable-line no-alert
-		}
 	};
 </script>
 
@@ -60,7 +47,7 @@
 				/>
 			{/each}
 		</div>
-		<button on:click={initMidi}>init MIDI</button>
+		<button on:click={() => void midiAccess.init()}>init MIDI</button>
 	{/if}
 </div>
 
