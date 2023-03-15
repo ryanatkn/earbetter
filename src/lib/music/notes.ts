@@ -1,7 +1,7 @@
 import {mapRecord} from '@feltjs/util/object.js';
-import {type Hsl, hsl_to_string, type Hue} from '@feltcoop/dealt/flat/colors.js';
 
 import {type Midi, midis, is_midi} from '$lib/music/midi';
+import {type Hsl, hsl_to_string, type Hue} from '$lib/util/colors';
 
 // `Midi` is our primary means of identifying notes,
 // and its type is a number with a min of 0, just like array indices.
