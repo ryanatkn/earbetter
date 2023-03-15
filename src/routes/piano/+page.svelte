@@ -33,6 +33,8 @@
 
 	let midi_min: Midi = 48;
 	let midi_max: Midi = 96;
+
+	const piano_padding = 20;
 </script>
 
 <main bind:clientWidth>
@@ -41,10 +43,10 @@
 		on:note_start={(e) => start_playing(e.detail.note)}
 		on:note_stop={(e) => stop_playing(e.detail.note)}
 	/>
-	<div class="piano-wrapper">
+	<div class="piano-wrapper" style:padding="{piano_padding}px">
 		{#if clientWidth}
 			<Piano
-				width={clientWidth}
+				width={clientWidth - piano_padding * 2}
 				{midi_min}
 				{midi_max}
 				on:press={(e) => start_playing(e.detail)}
@@ -76,5 +78,8 @@
 		display: flex;
 		flex-direction: column;
 		align-items: center;
+	}
+	.piano-wrapper {
+		padding: var(--spacing_md);
 	}
 </style>
