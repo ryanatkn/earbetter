@@ -21,7 +21,7 @@ const default_state = (defs: LevelDef[]): LevelStatsState => {
 	};
 };
 
-export const createLevelStats = (defs: LevelDef[]): LevelStats => {
+export const create_level_stats = (defs: LevelDef[]): LevelStats => {
 	const {subscribe, update} = writable(default_state(defs));
 
 	return {

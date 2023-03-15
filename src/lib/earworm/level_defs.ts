@@ -1,6 +1,6 @@
 import type {LevelDef} from '$lib/earworm/level';
 
-const baseLevelDef = {
+const base_level_def = {
 	// TODO support something like this for 3-star accomplishment (or N-star)
 	// we probably additionally want to say for each version not just the number of trials,
 	// but the number of trials that must be correct to count as success (which should probably be 0 for the first level!)
@@ -16,21 +16,21 @@ const baseLevelDef = {
 export const level_defs: LevelDef[] = [
 	{
 		id: '2,7',
-		...baseLevelDef,
+		...base_level_def,
 		intervals: [2, 7],
 		x: 100,
 		y: 300,
 	},
 	{
 		id: '4,7',
-		...baseLevelDef,
+		...base_level_def,
 		intervals: [4, 7],
 		x: 250,
 		y: 300,
 	},
 	{
 		id: '2,4,7',
-		...baseLevelDef,
+		...base_level_def,
 		intervals: [2, 4, 7],
 		x: 175,
 		y: 175,
@@ -38,7 +38,7 @@ export const level_defs: LevelDef[] = [
 	},
 	{
 		id: '2,4,7-b',
-		...baseLevelDef,
+		...base_level_def,
 		intervals: [2, 4, 7],
 		x: 350,
 		y: 175,
@@ -48,7 +48,7 @@ export const level_defs: LevelDef[] = [
 	},
 	{
 		id: '2,4,7-c',
-		...baseLevelDef,
+		...base_level_def,
 		intervals: [2, 4, 7],
 		x: 500,
 		y: 175,
@@ -58,7 +58,7 @@ export const level_defs: LevelDef[] = [
 	},
 	{
 		id: '7,12',
-		...baseLevelDef,
+		...base_level_def,
 		intervals: [7, 12],
 		x: 300,
 		y: 500,
@@ -66,7 +66,7 @@ export const level_defs: LevelDef[] = [
 	},
 	{
 		id: '4,7,12',
-		...baseLevelDef,
+		...base_level_def,
 		sequence_length: 2,
 		intervals: [4, 7, 12],
 		x: 400,

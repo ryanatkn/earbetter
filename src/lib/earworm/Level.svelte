@@ -80,6 +80,11 @@
 		level.send({type: 'GUESS', note});
 	};
 
+	let success: boolean; // TODO why is this needed? appears to be a bug in the Svelte language tools
+	$: success = $level.status === 'showing_success_feedback';
+	$: failure = $level.status === 'showing_failure_feedback';
+	$: complete = $level.status === 'complete';
+
 	const piano_padding = 20;
 </script>
 
@@ -115,12 +120,8 @@
 		<TrialProgressIndicator {level} />
 	</div>
 
-	<div
-		class="feedback"
-		class:success={$level.status === 'showing_success_feedback'}
-		class:failure={$level.status === 'showing_failure_feedback'}
-	>
-		{#if $level.status === 'complete'}
+	<div class="feedback" class:success class:failure class:complete>
+		{#if complete}
 			<button on:click={() => exit_level_to_map()}> go back to the map </button>
 		{/if}
 	</div>
@@ -198,8 +199,6 @@
 		background-color: red;
 	}
 	.feedback.complete {
-		height: 25px;
-		width: auto;
 		font-size: var(--font_size_xl2);
 	}
 </style>
