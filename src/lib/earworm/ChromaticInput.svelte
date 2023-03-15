@@ -1,5 +1,5 @@
 <script lang="ts">
-	import {intervalShortNames} from '$lib/music/intervals';
+	import {interval_short_names} from '$lib/music/constants';
 	import type {LevelStore} from '$lib/earworm/level';
 
 	// TODO this isn't being used any more
@@ -35,7 +35,7 @@
 	{#each {length: 12} as _, index}
 		<button on:click={() => select(index)} disabled={level.isInputDisabled($level, index)}>
 			<div>{index}</div>
-			<div>{intervalShortNames[index]}</div>
+			<div>{interval_short_names[index]}</div>
 		</button>
 	{/each}
 </div>

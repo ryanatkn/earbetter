@@ -4,7 +4,7 @@
 	import {midi_naturals} from '$lib/music/notes';
 	import type {Midi} from '$lib/music/midi';
 
-	const dispatch = createEventDispatcher<{press: Midi}>();
+	const dispatch = createEventDispatcher<{press: Midi; release: Midi}>();
 
 	export let midi: Midi;
 	export let left_offset: number;
@@ -27,7 +27,8 @@
 	class:clickable={clickable && enabled}
 	class:highlighted
 	class:emphasized
-	on:click={enabled ? () => dispatch('press', midi) : undefined}
+	on:mousedown={enabled ? () => dispatch('press', midi) : undefined}
+	on:mousedown={enabled ? () => dispatch('release', midi) : undefined}
 	aria-label="piano key for midi {midi}"
 	style:width="{width}px"
 	style:height="{height}px"

@@ -99,6 +99,8 @@
 	<div class="piano-keys" style:height="{natural_key_height}px">
 		{#each piano_keys as key (key.midi)}
 			<PianoKey
+				on:press
+				on:release
 				midi={key.midi}
 				left_offset={key.left_offset}
 				width={key.width}
@@ -106,7 +108,6 @@
 				enabled={is_key_enabled(key.midi, enabled_keys)}
 				highlighted={is_key_highlighted(key.midi, highlighted_keys)}
 				emphasized={is_key_emphasized(key.midi, emphasized_keys)}
-				on:press
 			/>
 		{/each}
 	</div>

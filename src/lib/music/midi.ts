@@ -1,4 +1,5 @@
 import type {Frequency} from '$lib/audio/types';
+import {DEFAULT_TUNING} from './constants';
 
 // TODO min audible Midi (max too?)
 
@@ -35,11 +36,7 @@ export const is_midi = (n: number): n is Midi =>
 	n >= MIDI_MIN && n <= MIDI_MAX && Number.isInteger(n);
 
 // note/midi/frequency formulas: https://newt.phys.unsw.edu.au/jw/notes.html
-// We could give `tuning` a default value
-// in the following midi<-->frequency functions,
-// but we want to eventually support user-customized tunings everywhere,
-// so to avoid errors and make things obvious, it's a required argument.
-export const midiToFreq = (midi: Midi, tuning: Frequency): Frequency =>
+export const midiToFreq = (midi: Midi, tuning: Frequency = DEFAULT_TUNING): Frequency =>
 	2 ** ((midi - 69) / 12) * tuning;
 
 export const freqToMidi = (freq: Frequency, tuning: Frequency): Midi =>
