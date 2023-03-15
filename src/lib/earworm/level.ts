@@ -142,7 +142,7 @@ export type EventData =
 	| {type: 'RETRY_TRIAL'}
 	| {type: 'COMPLETE_LEVEL'}
 	| {type: 'PRESENTED'}
-	| {type: 'GUESS'; midi: Midi};
+	| {type: 'GUESS'; note: Midi};
 
 const defaultState = (levelDef: LevelDef): LevelStoreState => ({
 	status: 'initial',
@@ -231,10 +231,10 @@ export const createLevelStore = (levelDef: LevelDef, audioCtx: AudioContext): Le
 								throw Error(`Expected a trial and guessingIndex`); // TODO how to encode in xstate?
 							}
 							console.log('guessing interval', $level.trial.guessingIndex);
-							const guess = e.midi;
+							const guess = e.note;
 							const actual = getCorrectGuess($level);
 							void playNote(audioCtx, guess, NOTE_DURATION);
-							console.log('GUESS', e.midi, guess, actual);
+							console.log('GUESS', e.note, guess, actual);
 							// if incorrect -> FAILURE -> showingFailureFeedback -> REPROMPT
 							if (actual !== guess) {
 								console.log('GUESS INCORRECT');
@@ -354,7 +354,7 @@ export const createLevelStore = (levelDef: LevelDef, audioCtx: AudioContext): Le
 			if ($level.status !== 'waitingForInput') return;
 			const midi = getCorrectGuess($level);
 			if (midi === null) return;
-			send({type: 'GUESS', midi});
+			send({type: 'GUESS', note: midi});
 		},
 		getCorrectGuess,
 	};

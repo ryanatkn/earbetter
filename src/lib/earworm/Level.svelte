@@ -6,7 +6,7 @@
 	import LevelProgressIndicator from '$lib/earworm/LevelProgressIndicator.svelte';
 	import TrialProgressIndicator from '$lib/earworm/TrialProgressIndicator.svelte';
 	import {getAudioCtx} from '$lib/audio/audioCtx';
-	import {getMidiInput} from '$lib/audio/midiInput';
+	import MidiInput from '$lib/audio/MidiInput.svelte';
 	import type {Midi} from '$lib/music/midi';
 
 	/*
@@ -44,13 +44,6 @@
 		level.send('START');
 	});
 
-	getMidiInput({
-		onNoteStart: (midi) => {
-			// TODO should this be ignored if it's not an enabled key? should the level itself ignore the guess?
-			level.send({type: 'GUESS', midi});
-		},
-	});
-
 	const reset = () => level.reset();
 
 	const onDocumentKeyDown = (e: KeyboardEvent) => {
@@ -82,12 +75,19 @@
 		}
 	};
 
-	const onPressKey = (midi: Midi): void => {
-		console.log('press midi key', midi);
-		level.send({type: 'GUESS', midi});
+	const onPressKey = (note: Midi): void => {
+		console.log('press note key', note);
+		level.send({type: 'GUESS', note});
 	};
 </script>
 
+<MidiInput
+	on:note_start={(e) => {
+		// TODO should this be ignored if it's not an enabled key? should the level itself ignore the guess?
+		console.log(`e`, e);
+		level.send({type: 'GUESS', note: e.detail.note});
+	}}
+/>
 <div class="level" bind:clientWidth>
 	<!-- debugging -->
 	<div class="info">

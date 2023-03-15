@@ -5,7 +5,7 @@
 	import Level from '$lib/earworm/Level.svelte';
 	import MapLevelIcon from '$lib/earworm/MapLevelIcon.svelte';
 	import {getAudioCtx} from '$lib/audio/audioCtx';
-	import {provideMidiInput} from '$lib/audio/midiInput';
+	import MidiInput from '$lib/audio/MidiInput.svelte';
 
 	console.log('levelDefs', levelDefs);
 
@@ -18,7 +18,7 @@
 	const audioCtx = getAudioCtx();
 	(window as any).audio = audioCtx;
 
-	const midiAccess = provideMidiInput();
+	let midi_input: MidiInput;
 
 	const selectLevelDef = (levelDef: LevelDef): void => {
 		void audioCtx.resume(); // TODO where's the best place for this? needs to be synchronous with a click or similar, so this breaks if `selectLevelDef` is called without a user action
@@ -34,6 +34,7 @@
 	};
 </script>
 
+<MidiInput bind:this={midi_input} />
 <div class="earworm">
 	{#if activeLevelDef}
 		<Level levelDef={activeLevelDef} {exitLevelToMap} />
@@ -47,7 +48,7 @@
 				/>
 			{/each}
 		</div>
-		<button on:click={() => void midiAccess.init()}>init MIDI</button>
+		<button on:click={() => void midi_input.init()}>init MIDI</button>
 	{/if}
 </div>
 

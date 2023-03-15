@@ -54,7 +54,6 @@
 
 	const compute_piano_keys = (
 		midi_min: Midi,
-		_midi_max: Midi, // TODO unused
 		noteCount: number,
 		natural_key_width: number,
 		accidental_key_width: number,
@@ -89,7 +88,6 @@
 	};
 	$: piano_keys = compute_piano_keys(
 		midi_min,
-		midi_max,
 		noteCount,
 		natural_key_width,
 		accidental_key_width,
