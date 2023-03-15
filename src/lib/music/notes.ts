@@ -1,5 +1,3 @@
-import {mapRecord} from '@feltjs/util/object.js';
-
 import {type Midi, midis, is_midi} from '$lib/music/midi';
 import {type Hsl, hsl_to_string, type Hue} from '$lib/util/colors';
 
@@ -28,8 +26,8 @@ export type NoteName =
   | 'C8'  | 'C♯8'  | 'D8'  | 'D♯8'  | 'E8'  | 'F8'  | 'F♯8'  | 'G8'  | 'G♯8'  | 'A8'  | 'A♯8'  | 'B8'
   | 'C9'  | 'C♯9'  | 'D9'  | 'D♯9'  | 'E9'  | 'F9'  | 'F♯9'  | 'G9'; // prettier-ignore
 
-export const chromas = Object.freeze([0,  1,  2,  3,  4,  5,  6,  7,  8,  9,  10,  11] as const); // prettier-ignore
-export type Chroma = (typeof chromas)[number]; // corresponds to indices of `pitch_classes`
+export const chromas = Object.freeze([1,  2,  3,  4,  5,  6,  7,  8,  9,  10,  11, 12] as const); // prettier-ignore
+export type Chroma = (typeof chromas)[number]; // corresponds to indices of `pitch_classes` + 1
 export const pitch_classes = Object.freeze(['C', 'C♯', 'D', 'D♯', 'E', 'F', 'F♯', 'G', 'G♯', 'A', 'A♯', 'B'] as const); // prettier-ignore
 export type PitchClass = (typeof pitch_classes)[number];
 export type Octave = -1 | 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9;
@@ -38,18 +36,18 @@ export type Semitones = number;
 // TODO consider converting all of these to `Map`s
 // TODO do we want to remove the `midi` part of these data array names, or otherwise rename them?
 // maybe instead of `midiFoos`, rename to `noteFoos`?
-export const midi_chromas: Chroma[] = Object.freeze(midis.map((m) => m % 12)) as Chroma[];
-export const midi_pcs: PitchClass[] = Object.freeze(
-	midis.map((m) => pitch_classes[midi_chromas[m]]),
+export const midi_chromas: Chroma[] = Object.freeze(midis.map((m) => (m % 12) + 1)) as Chroma[];
+export const midi_pitch_classes: PitchClass[] = Object.freeze(
+	midis.map((m) => pitch_classes[midi_chromas[m] - 1]),
 ) as PitchClass[];
 export const midi_octaves: Octave[] = Object.freeze(
 	midis.map((m) => Math.floor(m / 12) - 1),
 ) as Octave[];
 export const midi_names: NoteName[] = Object.freeze(
-	midis.map((m) => midi_pcs[m] + midi_octaves[m]),
+	midis.map((m) => midi_pitch_classes[m] + midi_octaves[m]),
 ) as NoteName[];
 export const midi_naturals: Set<Midi> = new Set(
-	midis.filter((m) => midi_pcs[m][1] !== NOTE_SHARP_SYMBOL),
+	midis.filter((m) => midi_pitch_classes[m][1] !== NOTE_SHARP_SYMBOL),
 );
 
 export const compute_naturals = (min: Midi, max: Midi): Midi[] => {
@@ -79,19 +77,13 @@ export const compute_interval = (a: Midi, b: Midi): Semitones => {
 };
 
 // TODO the hue shouldn't be hardcoded from the chroma - this relationship should be user-customizable (`app.colors` or `app.audio.colors` or something)
-export const note_chroma_to_hue = Object.freeze(
-	chromas.reduce((result, chroma) => {
-		result[chroma] = chroma / 12;
-		return result;
-	}, {} as Record<Chroma, Hue>),
+export const chroma_to_hue: Map<Chroma, Hue> = new Map(
+	chromas.map((chroma) => [chroma, (chroma - 1) / 12]),
 );
 // TODO consider changing to a memoized helper function with optional saturation+lightness
-export const note_chroma_to_hsl = Object.freeze(
-	chromas.reduce((result, chroma) => {
-		result[chroma] = Object.freeze([note_chroma_to_hue[chroma], 0.5, 0.5] as const);
-		return result;
-	}, {} as Record<Chroma, Hsl>),
+export const chroma_to_hsl: Map<Chroma, Hsl> = new Map(
+	chromas.map((chroma) => [chroma, [chroma_to_hue.get(chroma)!, 0.5, 0.5] as const]),
 );
-export const note_chroma_to_hsl_string = Object.freeze(
-	mapRecord(note_chroma_to_hsl, ([h, s, l]) => hsl_to_string(h, s, l)),
+export const chroma_to_hsl_string: Map<Chroma, string> = new Map(
+	chromas.map((chroma) => [chroma, hsl_to_string(...chroma_to_hsl.get(chroma)!)]),
 );

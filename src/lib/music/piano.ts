@@ -7,7 +7,6 @@ const ACCIDENTAL_KEY_HEIGHT_MULT = 0.7;
 
 // TODO calculate layout more precisely? these are eyeballed
 const pc_left_offset_pct: Record<Chroma, number> = {
-	0: 0,
 	1: 0,
 	2: -1 / 3,
 	3: 0,
@@ -19,6 +18,7 @@ const pc_left_offset_pct: Record<Chroma, number> = {
 	9: -1 / 2,
 	10: 0,
 	11: -3 / 4,
+	12: 0,
 };
 
 interface PianoKey {
@@ -58,7 +58,8 @@ export const compute_piano_keys = (
 			key_height = accidental_key_height;
 			// this could be improved but it's kinda close
 			left_offset =
-				i * accidental_key_width + pc_left_offset_pct[midi_chromas[midi]] * accidental_key_width;
+				natural_index * natural_key_width +
+				pc_left_offset_pct[midi_chromas[midi]] * accidental_key_width;
 		}
 
 		piano_keys.push({
