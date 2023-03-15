@@ -1,17 +1,18 @@
 <script lang="ts">
+	import Breadcrumbs from '@feltjs/felt-ui/Breadcrumbs.svelte';
+
 	import Piano from '$lib/music/Piano.svelte';
 	import {set_audio_ctx, get_audio_ctx} from '$lib/audio/audio_ctx';
 	import MidiInput from '$lib/audio/MidiInput.svelte';
 	import {MIDI_MAX, MIDI_MIN, type Midi} from '$lib/music/midi';
 	import {start_playing_note, type StopPlaying} from '$lib/audio/play_note';
-	import type {MIDIAccess} from '$lib/audio/WebMIDI';
+	import InitMidiButton from '$lib/music/InitMidiButton.svelte';
 
 	// TODO BLOCK set in root layout?
 	set_audio_ctx(); // allows components to do `const audio_ctx = useAudio_ctx();` which uses svelte's `getContext`
 	const audio_ctx = get_audio_ctx();
 
 	let midi_input: MidiInput | undefined;
-	let midi_access: MIDIAccess | null | undefined;
 
 	let clientWidth: number; // `undefined` on first render
 
@@ -39,7 +40,6 @@
 <main bind:clientWidth>
 	<MidiInput
 		bind:this={midi_input}
-		bind:midi_access
 		on:note_start={(e) => start_playing(e.detail.note)}
 		on:note_stop={(e) => stop_playing(e.detail.note)}
 	/>
@@ -68,11 +68,15 @@
 				<input type="range" bind:value={midi_max} step={1} min={MIDI_MIN} max={MIDI_MAX} />
 			</label>
 		</fieldset>
-		<button
-			class="big w-full"
-			on:click={() => void midi_input?.init()}
-			disabled={!!midi_access}
-			title={midi_access ? 'MIDI is ready!' : 'connect your MIDI device'}>init MIDI</button
-		>
+		<InitMidiButton {midi_input} />
 	</form>
+	<Breadcrumbs basePath="" />
 </main>
+
+<style>
+	main {
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+	}
+</style>
