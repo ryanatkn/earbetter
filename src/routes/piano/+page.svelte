@@ -1,13 +1,13 @@
 <script lang="ts">
 	import Piano from '$lib/music/Piano.svelte';
-	import {setAudioCtx, getAudioCtx} from '$lib/audio/audioCtx';
+	import {set_audio_ctx, get_audio_ctx} from '$lib/audio/audio_ctx';
 	import MidiInput from '$lib/audio/MidiInput.svelte';
 	import type {Midi} from '$lib/music/midi';
 	import {start_playing_note, type StopPlaying} from '$lib/audio/play_note';
 
 	// TODO BLOCK set in root layout?
-	setAudioCtx(); // allows components to do `const audioCtx = useAudioCtx();` which uses svelte's `getContext`
-	const audioCtx = getAudioCtx();
+	set_audio_ctx(); // allows components to do `const audio_ctx = useAudio_ctx();` which uses svelte's `getContext`
+	const audio_ctx = get_audio_ctx();
 
 	let midi_input: MidiInput;
 
@@ -21,7 +21,7 @@
 	const start_playing = (note: Midi): void => {
 		const current = playing.get(note);
 		if (current) return;
-		playing.set(note, start_playing_note(audioCtx, note));
+		playing.set(note, start_playing_note(audio_ctx, note));
 	};
 	const stop_playing = (note: Midi) => {
 		const stop_playing_note = playing.get(note);

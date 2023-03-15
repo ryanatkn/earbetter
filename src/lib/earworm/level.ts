@@ -151,12 +151,12 @@ const defaultState = (levelDef: LevelDef): LevelStoreState => ({
 	trials: [],
 });
 
-export const createLevelStore = (levelDef: LevelDef, audioCtx: AudioContext): LevelStore => {
+export const createLevelStore = (levelDef: LevelDef, audio_ctx: AudioContext): LevelStore => {
 	const {subscribe, update, set} = writable<LevelStoreState>(defaultState(levelDef));
 
 	const presentTrialPrompt = async (sequence: Midi[]): Promise<void> => {
 		console.log('PRESENT TRIAL PROMPT', sequence);
-		// audioCtx
+		// audio_ctx
 		for (let i = 0; i < sequence.length; i++) {
 			const note = sequence[i];
 			console.log('SET INTERVAL', note);
@@ -167,7 +167,7 @@ export const createLevelStore = (levelDef: LevelDef, audioCtx: AudioContext): Le
 					presentingIndex: i,
 				},
 			}));
-			await play_note(audioCtx, note, NOTE_DURATION); // eslint-disable-line no-await-in-loop
+			await play_note(audio_ctx, note, NOTE_DURATION); // eslint-disable-line no-await-in-loop
 		}
 		update(($level) => ({
 			...$level,
@@ -233,7 +233,7 @@ export const createLevelStore = (levelDef: LevelDef, audioCtx: AudioContext): Le
 							console.log('guessing interval', $level.trial.guessingIndex);
 							const guess = e.note;
 							const actual = getCorrectGuess($level);
-							void play_note(audioCtx, guess, NOTE_DURATION);
+							void play_note(audio_ctx, guess, NOTE_DURATION);
 							console.log('GUESS', e.note, guess, actual);
 							// if incorrect -> FAILURE -> showingFailureFeedback -> REPROMPT
 							if (actual !== guess) {

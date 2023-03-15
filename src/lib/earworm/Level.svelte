@@ -5,7 +5,7 @@
 	import Piano from '$lib/music/Piano.svelte';
 	import LevelProgressIndicator from '$lib/earworm/LevelProgressIndicator.svelte';
 	import TrialProgressIndicator from '$lib/earworm/TrialProgressIndicator.svelte';
-	import {getAudioCtx} from '$lib/audio/audioCtx';
+	import {get_audio_ctx} from '$lib/audio/audio_ctx';
 	import MidiInput from '$lib/audio/MidiInput.svelte';
 	import type {Midi} from '$lib/music/midi';
 
@@ -29,9 +29,9 @@
 
 	let clientWidth; // `undefined` on first render
 
-	const audioCtx = getAudioCtx();
+	const audio_ctx = get_audio_ctx();
 
-	const level = createLevelStore(levelDef, audioCtx);
+	const level = createLevelStore(levelDef, audio_ctx);
 	// $: level.setDef(levelDef); // TODO update if levelDef prop changes
 
 	$: highlighted_keys = $level.trial && new Set([$level.trial.sequence[0]]);

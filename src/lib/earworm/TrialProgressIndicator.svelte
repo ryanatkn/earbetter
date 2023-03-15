@@ -4,7 +4,7 @@
 	// TODO should we hoist some logic so this just takes a trial?
 	export let level: LevelStore;
 
-	$: currentIndex = $level.trial
+	$: current_index = $level.trial
 		? $level.trial.presentingIndex === null
 			? $level.trial.guessingIndex
 			: $level.trial.presentingIndex
@@ -14,9 +14,9 @@
 	const getBgColor = ($level: LevelStoreState, index: number): string =>
 		$level.status === 'complete'
 			? 'rgba(255, 255, 255, 0.6)'
-			: index === currentIndex
+			: index === current_index
 			? 'rgba(255, 255, 255, 0.4)'
-			: currentIndex !== null && index < currentIndex
+			: current_index !== null && index < current_index
 			? 'rgba(255, 255, 255, 0.2)'
 			: 'transparent';
 </script>

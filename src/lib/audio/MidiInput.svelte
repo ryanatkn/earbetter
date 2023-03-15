@@ -6,7 +6,7 @@
 	import {createEventDispatcher} from 'svelte';
 
 	import {type MIDIAccess, type MIDIMessageEvent, MIDICommand} from '$lib/audio/WebMIDI';
-	import {requestMidiAccess, parseMidiMessage} from '$lib/audio/midiHelpers';
+	import {requestMidiAccess, parseMidiMessage} from '$lib/audio/midi_helpers';
 	import type {Midi} from '$lib/music/midi';
 
 	const log = console.log.bind(console);

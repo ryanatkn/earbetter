@@ -4,7 +4,7 @@
 	import {createLevelStats} from '$lib/earworm/levelStats';
 	import Level from '$lib/earworm/Level.svelte';
 	import MapLevelIcon from '$lib/earworm/MapLevelIcon.svelte';
-	import {getAudioCtx} from '$lib/audio/audioCtx';
+	import {get_audio_ctx} from '$lib/audio/audio_ctx';
 	import MidiInput from '$lib/audio/MidiInput.svelte';
 
 	console.log('levelDefs', levelDefs);
@@ -15,13 +15,13 @@
 	$: console.log('stats', $levelStats);
 	console.log($levelStats);
 
-	const audioCtx = getAudioCtx();
-	(window as any).audio = audioCtx;
+	const audio_ctx = get_audio_ctx();
+	(window as any).audio = audio_ctx;
 
 	let midi_input: MidiInput;
 
 	const selectLevelDef = (levelDef: LevelDef): void => {
-		void audioCtx.resume(); // TODO where's the best place for this? needs to be synchronous with a click or similar, so this breaks if `selectLevelDef` is called without a user action
+		void audio_ctx.resume(); // TODO where's the best place for this? needs to be synchronous with a click or similar, so this breaks if `selectLevelDef` is called without a user action
 		activeLevelDef = levelDef;
 	};
 
