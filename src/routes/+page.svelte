@@ -3,17 +3,15 @@
 </script>
 
 <main class="column">
-	<section>
-		<header class="centered-hz">
-			<h1>earworm</h1>
-			<div class="icons">🪱🎶</div>
-		</header>
-	</section>
+	<header class="centered-hz panel padded-md">
+		<h1>earworm</h1>
+		<div class="icons">🪱🎶</div>
+	</header>
 	<menu>
 		<li><a class="panel" href="{base}/game">play the game!</a></li>
 		<li><a class="panel" href="{base}/piano">play piano!</a></li>
 	</menu>
-	<footer>
+	<footer class="panel padded-md">
 		<div>public domain</div>
 		<a href="https://github.com/ryanatkn/earworm">source code on GitHub</a>
 	</footer>
@@ -30,7 +28,7 @@
 		text-align: center;
 		display: flex;
 		flex-direction: column;
-		margin-bottom: var(--spacing_xl5);
+		margin: var(--spacing_xl3) 0;
 	}
 	menu {
 		display: flex;
@@ -48,7 +46,7 @@
 		font-size: var(--font_size_xl5);
 	}
 	footer {
-		margin: var(--spacing_xl5) 0;
+		margin: var(--spacing_xl3) 0;
 		text-align: center;
 	}
 </style>
