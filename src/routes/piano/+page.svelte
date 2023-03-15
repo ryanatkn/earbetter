@@ -1,7 +1,7 @@
 <script lang="ts">
 	import Piano from '$lib/music/Piano.svelte';
 	import {setAudioCtx, getAudioCtx} from '$lib/audio/audioCtx';
-	import {getMidiInput} from '$lib/audio/midiInput';
+	import {getMidiInput, provideMidiInput} from '$lib/audio/midiInput';
 	import type {Midi} from '$lib/music/midi';
 	import {playNote} from '$lib/audio/playNote';
 
@@ -17,6 +17,7 @@
 	// TODO BLOCK instead of duration do up/down
 	const DURATION = 1000;
 
+	provideMidiInput();
 	getMidiInput({
 		onNoteStart: (midi) => {
 			void playNote(audioCtx, midi, DURATION);
