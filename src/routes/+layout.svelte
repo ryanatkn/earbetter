@@ -3,6 +3,9 @@
 	import {base} from '$app/paths';
 
 	import './style.css';
+	import {set_audio_ctx} from '$lib/audio/audio_ctx';
+
+	set_audio_ctx();
 </script>
 
 <svelte:head>

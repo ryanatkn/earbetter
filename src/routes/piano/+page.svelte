@@ -2,14 +2,12 @@
 	import Breadcrumbs from '@feltjs/felt-ui/Breadcrumbs.svelte';
 
 	import Piano from '$lib/music/Piano.svelte';
-	import {set_audio_ctx, get_audio_ctx} from '$lib/audio/audio_ctx';
+	import {get_audio_ctx} from '$lib/audio/audio_ctx';
 	import MidiInput from '$lib/audio/MidiInput.svelte';
 	import {MIDI_MAX, MIDI_MIN, type Midi} from '$lib/music/midi';
 	import {start_playing_note, type StopPlaying} from '$lib/audio/play_note';
 	import InitMidiButton from '$lib/music/InitMidiButton.svelte';
 
-	// TODO BLOCK set in root layout?
-	set_audio_ctx(); // allows components to do `const audio_ctx = useAudio_ctx();` which uses svelte's `getContext`
 	const audio_ctx = get_audio_ctx();
 
 	let midi_input: MidiInput | undefined;

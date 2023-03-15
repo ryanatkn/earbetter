@@ -7,8 +7,10 @@
 	import {writable} from 'svelte/store';
 
 	import {type MIDIAccess, type MIDIMessageEvent, MIDICommand} from '$lib/audio/WebMIDI';
-	import {requestMidiAccess, parseMidiMessage} from '$lib/audio/midi_helpers';
+	import {request_midi_access, parse_midi_message} from '$lib/audio/midi_helpers';
 	import type {Midi} from '$lib/music/midi';
+
+	// This component uses
 
 	const log = console.log.bind(console);
 
@@ -20,7 +22,7 @@
 		mod_wheel: number; // velocity
 	}>();
 
-	export const midi_access = writable(global_midi_access); // exported for binding
+	export const midi_access = writable(global_midi_access);
 
 	export const init = async (): Promise<void> => {
 		if ($midi_access) return;
@@ -31,7 +33,7 @@
 		// TODO how to call this better? needs to be a user-initiated action right?
 		// do we need to present a screen to users that lets them opt into midi?
 		try {
-			$midi_access = global_midi_access = await requestMidiAccess();
+			$midi_access = global_midi_access = await request_midi_access();
 			console.log('requested midi_access', $midi_access);
 			initInputs();
 			console.log('MIDI ready!');
@@ -47,14 +49,14 @@
 		}
 		for (const input of $midi_access.inputs.values()) {
 			log('midi input', input);
-			input.onmidimessage = onMidiMessage;
+			input.onmidimessage = on_midi_message;
 		}
 	};
 
-	const onMidiMessage = (event: MIDIMessageEvent): void => {
-		const message = parseMidiMessage(event);
+	const on_midi_message = (event: MIDIMessageEvent): void => {
+		const message = parse_midi_message(event);
 		const {command, channel, note, velocity} = message;
-		log('onMidiMessage', command, message);
+		log('on_midi_message', command, message);
 
 		switch (command) {
 			case MIDICommand.Stop: {
