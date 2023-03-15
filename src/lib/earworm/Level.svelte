@@ -79,6 +79,8 @@
 		console.log('press note key', note);
 		level.send({type: 'GUESS', note});
 	};
+
+	const piano_padding = 20;
 </script>
 
 <MidiInput
@@ -124,10 +126,10 @@
 		<TrialProgressIndicator {level} />
 	</div>
 
-	<div class="piano-wrapper">
+	<div class="piano-wrapper" style:padding="{piano_padding}px">
 		{#if clientWidth}
 			<Piano
-				width={clientWidth}
+				width={clientWidth - piano_padding}
 				midi_min={$level.def.midi_min}
 				midi_max={$level.def.midi_max}
 				on:press={$level.status === 'waiting_for_input' ? (e) => on_press_key(e.detail) : undefined}
@@ -167,14 +169,14 @@
 		right: 0;
 		top: 0;
 		height: 50px;
-		width: 50px;
+		width: 100%;
 	}
 	.trial-progress {
 		position: absolute;
 		right: 0;
 		top: 100px;
 		height: 50px;
-		width: 80px;
+		width: 100%;
 	}
 	.piano-wrapper {
 		position: absolute;
@@ -186,7 +188,7 @@
 		position: absolute;
 		top: 50px;
 		right: 0;
-		width: 50px;
+		width: 100%;
 		height: 50px;
 	}
 	.feedback.success {

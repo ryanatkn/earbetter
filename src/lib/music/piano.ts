@@ -21,24 +21,27 @@ const pc_left_offset_pct: Record<Chroma, number> = {
 	12: 0,
 };
 
-interface PianoKey {
+export interface Piano {
+	piano_keys: PianoKey[];
+	natural_key_height: number;
+	natural_key_width: number;
+	accidental_key_height: number;
+	accidental_key_width: number;
+}
+
+export interface PianoKey {
 	midi: Midi;
 	left_offset: number;
 	width: number;
 	height: number;
 }
 
-export const compute_piano_keys = (
-	width: number,
-	midi_min: Midi,
-	midi_max: Midi,
-): {piano_keys: PianoKey[]; natural_key_height: number} => {
+export const compute_piano = (width: number, midi_min: Midi, midi_max: Midi): Piano => {
 	const note_count = midi_max - midi_min + 1;
 	const naturals = compute_naturals(midi_min, midi_max);
 	const natural_key_width = Math.floor(width / naturals.length);
 	const accidental_key_width = natural_key_width * ACCIDENTAL_KEY_WIDTH_MULT;
 	const natural_key_height = Math.min(600, accidental_key_width * KEY_HEIGHT_MULT);
-
 	const accidental_key_height = natural_key_height * ACCIDENTAL_KEY_HEIGHT_MULT;
 
 	let natural_index = 0;
@@ -70,5 +73,11 @@ export const compute_piano_keys = (
 		});
 	}
 
-	return {piano_keys, natural_key_height};
+	return {
+		piano_keys,
+		natural_key_height,
+		natural_key_width,
+		accidental_key_height,
+		accidental_key_width,
+	};
 };

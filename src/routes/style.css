@@ -3,7 +3,7 @@
 	color-scheme: dark;
 
 	/* TODO force dark mode and remove these when Felt supports it */
-	--bg: hsl(var(--accent_hue), 100%, 6%);
+	--bg: hsl(var(--accent_hue), 63%, 11%);
 	--text_color: hsl(var(--accent_hue), 8%, 85%);
 	--text_color_light: hsl(var(--accent_hue), 8%, 65%);
 	--link_color: var(--accent_text_color);
@@ -23,8 +23,8 @@
 	--bg_color_fg: hsla(var(--accent_hue), 100%, 98%, 0.08);
 	--border_color: hsla(var(--accent_hue), 100%, 98%, 0.2);
 	--font_color_heading: hsl(var(--accent_hue), 17%, 81%);
-	--accent_text_color: hsl(var(--accent_hue), 90%, 50%);
-	--light_text_color: hsl(var(--primary_hue), 80%, 50%);
+	--accent_text_color: hsl(var(--accent_hue), 90%, 60%);
+	--light_text_color: hsl(var(--primary_hue), 80%, 60%);
 	--accent_border_color: hsla(var(--accent_hue), 50%, 50%, 0.4);
 	--light_border_color: hsla(var(--primary_hue), 50%, 50%, 0.4);
 	--spacing_lg: 20px;
