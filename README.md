@@ -12,8 +12,8 @@ This is a followup with a new design.
 The goal is to make an ear training experience that's fun and useful,
 and I'm crossing my fingers that at least one of those works out.
 
-It's designed for MIDI input like a piano keyboard, and it works without MIDI,
-but the experience probably won't be as good for most people.
+It's designed to be played with a MIDI device like a piano keyboard.
+It also works without them, but it's recommended.
 
 ## develop
 
