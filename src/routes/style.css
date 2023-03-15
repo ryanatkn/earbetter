@@ -6,7 +6,7 @@
 	--bg: hsl(var(--accent_hue), 100%, 6%);
 	--text_color: hsl(var(--accent_hue), 8%, 85%);
 	--text_color_light: hsl(var(--accent_hue), 8%, 65%);
-	--link_color: var(--shadow_text_color);
+	--link_color: var(--accent_text_color);
 	--button_color: var(--bg_color_fg);
 	--button_color_hover: var(--bg);
 	--button_color_active: var(--bg);
@@ -23,9 +23,9 @@
 	--bg_color_fg: hsla(var(--accent_hue), 100%, 98%, 0.08);
 	--border_color: hsla(var(--accent_hue), 100%, 98%, 0.2);
 	--font_color_heading: hsl(var(--accent_hue), 17%, 81%);
-	--shadow_text_color: hsl(var(--accent_hue), 90%, 50%);
+	--accent_text_color: hsl(var(--accent_hue), 90%, 50%);
 	--light_text_color: hsl(var(--primary_hue), 80%, 50%);
-	--shadow_border_color: hsla(var(--accent_hue), 50%, 50%, 0.4);
+	--accent_border_color: hsla(var(--accent_hue), 50%, 50%, 0.4);
 	--light_border_color: hsla(var(--primary_hue), 50%, 50%, 0.4);
 	--spacing_lg: 20px;
 	--font_size_lg: 20px;
@@ -55,7 +55,7 @@ a:hover {
 	color: var(--light_text_color);
 }
 a:active {
-	color: var(--shadow_text_color);
+	color: var(--accent_text_color);
 }
 
 /* TODO maybe upstream? */
