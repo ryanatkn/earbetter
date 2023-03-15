@@ -4,12 +4,14 @@
 	import MidiInput from '$lib/audio/MidiInput.svelte';
 	import {MIDI_MAX, MIDI_MIN, type Midi} from '$lib/music/midi';
 	import {start_playing_note, type StopPlaying} from '$lib/audio/play_note';
+	import type {MIDIAccess} from '$lib/audio/WebMIDI';
 
 	// TODO BLOCK set in root layout?
 	set_audio_ctx(); // allows components to do `const audio_ctx = useAudio_ctx();` which uses svelte's `getContext`
 	const audio_ctx = get_audio_ctx();
 
-	let midi_input: MidiInput;
+	let midi_input: MidiInput | undefined;
+	let midi_access: MIDIAccess | null | undefined;
 
 	let clientWidth: number; // `undefined` on first render
 
@@ -37,6 +39,7 @@
 <main bind:clientWidth>
 	<MidiInput
 		bind:this={midi_input}
+		bind:midi_access
 		on:note_start={(e) => start_playing(e.detail.note)}
 		on:note_stop={(e) => stop_playing(e.detail.note)}
 	/>
@@ -52,24 +55,24 @@
 			/>
 		{/if}
 	</div>
-	<button on:click={() => void midi_input.init()}>init MIDI</button>
-	<form class="column-sm row">
-		<label>
-			MIDI min
-			<input type="number" bind:value={midi_min} step={1} min={MIDI_MIN} max={MIDI_MAX} />
-			<input type="range" bind:value={midi_min} step={1} min={MIDI_MIN} max={MIDI_MAX} />
-		</label>
-		<label>
-			MIDI max
-			<input type="number" bind:value={midi_max} step={1} min={MIDI_MIN} max={MIDI_MAX} />
-			<input type="range" bind:value={midi_max} step={1} min={MIDI_MIN} max={MIDI_MAX} />
-		</label>
+	<form class="column-sm">
+		<fieldset class="row">
+			<label>
+				MIDI min
+				<input type="number" bind:value={midi_min} step={1} min={MIDI_MIN} max={MIDI_MAX} />
+				<input type="range" bind:value={midi_min} step={1} min={MIDI_MIN} max={MIDI_MAX} />
+			</label>
+			<label>
+				MIDI max
+				<input type="number" bind:value={midi_max} step={1} min={MIDI_MIN} max={MIDI_MAX} />
+				<input type="range" bind:value={midi_max} step={1} min={MIDI_MIN} max={MIDI_MAX} />
+			</label>
+		</fieldset>
+		<button
+			class="big w-full"
+			on:click={() => void midi_input?.init()}
+			disabled={!!midi_access}
+			title={midi_access ? 'MIDI is ready!' : 'connect your MIDI device'}>init MIDI</button
+		>
 	</form>
 </main>
-
-<style>
-	main {
-		width: 100%;
-		height: 100%;
-	}
-</style>

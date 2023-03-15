@@ -1,5 +1,4 @@
-html,
-body {
-	width: 100%;
-	height: 100%;
+button.big {
+	font-size: var(--font_size_xl3);
+	padding: var(--spacing_md) var(--spacing_xl3);
 }

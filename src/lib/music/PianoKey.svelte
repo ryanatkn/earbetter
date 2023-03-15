@@ -55,6 +55,7 @@
 		border-bottom: 1px solid var(--border-color);
 		border-radius: var(--border_radius_xs);
 		padding: 0;
+		min-height: 0;
 	}
 
 	.piano-key:last-child {
