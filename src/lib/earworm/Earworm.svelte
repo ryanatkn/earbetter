@@ -1,34 +1,34 @@
 <script lang="ts">
-	import {levelDefs} from '$lib/earworm/levelDefs';
+	import {level_defs} from '$lib/earworm/level_defs';
 	import type {LevelDef} from '$lib/earworm/level';
-	import {createLevelStats} from '$lib/earworm/levelStats';
+	import {createLevelStats} from '$lib/earworm/level_stats';
 	import Level from '$lib/earworm/Level.svelte';
 	import MapLevelIcon from '$lib/earworm/MapLevelIcon.svelte';
 	import {get_audio_ctx} from '$lib/audio/audio_ctx';
 	import MidiInput from '$lib/audio/MidiInput.svelte';
 
-	console.log('levelDefs', levelDefs);
+	console.log('level_defs', level_defs);
 
 	let activeLevelDef: LevelDef | null = null; // TODO initialize to undefined
 
-	const levelStats = createLevelStats(levelDefs);
-	$: console.log('stats', $levelStats);
-	console.log($levelStats);
+	const level_stats = createLevelStats(level_defs);
+	$: console.log('stats', $level_stats);
+	console.log($level_stats);
 
 	const audio_ctx = get_audio_ctx();
 	(window as any).audio = audio_ctx;
 
 	let midi_input: MidiInput;
 
-	const selectLevelDef = (levelDef: LevelDef): void => {
+	const selectLevelDef = (level_def: LevelDef): void => {
 		void audio_ctx.resume(); // TODO where's the best place for this? needs to be synchronous with a click or similar, so this breaks if `selectLevelDef` is called without a user action
-		activeLevelDef = levelDef;
+		activeLevelDef = level_def;
 	};
 
 	const exitLevelToMap = (success = false): void => {
 		if (!activeLevelDef) return;
 		if (success) {
-			levelStats.registerSuccess(activeLevelDef.id);
+			level_stats.register_success(activeLevelDef.id);
 		}
 		activeLevelDef = null;
 	};
@@ -37,14 +37,14 @@
 <MidiInput bind:this={midi_input} />
 <div class="earworm">
 	{#if activeLevelDef}
-		<Level levelDef={activeLevelDef} {exitLevelToMap} />
+		<Level level_def={activeLevelDef} {exitLevelToMap} />
 	{:else}
 		<div>
-			{#each levelDefs as levelDef}
+			{#each level_defs as level_def}
 				<MapLevelIcon
-					{levelDef}
+					{level_def}
 					select={selectLevelDef}
-					completed={$levelStats.completed[levelDef.id]}
+					completed={$level_stats.completed[level_def.id]}
 				/>
 			{/each}
 		</div>

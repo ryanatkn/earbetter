@@ -4,7 +4,7 @@
 	export let level: LevelStore;
 
 	// TODO colors
-	const getBgColor = ($level: LevelStoreState, index: number) => {
+	const get_bg_color = ($level: LevelStoreState, index: number) => {
 		return $level.status === 'complete'
 			? 'rgba(255, 255, 255, 0.6)'
 			: $level.trials[index] // trials are created when needed, not ahead of time
@@ -16,8 +16,8 @@
 </script>
 
 <div class="level-progress-indicator">
-	{#each {length: $level.def.trialCount} as _, index}
-		<div class="level" style="background-color: {getBgColor($level, index)}" />
+	{#each {length: $level.def.trial_count} as _, index}
+		<div class="level" style="background-color: {get_bg_color($level, index)}" />
 	{/each}
 </div>
 

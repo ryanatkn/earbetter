@@ -25,7 +25,7 @@
 	const onDocumentKeyDown = (e: KeyboardEvent) => {
 		if (e.key in indexByKey) {
 			const index = (indexByKey as any)[e.key];
-			if (level.isInputDisabled($level, index)) return;
+			if (level.is_input_disabled($level, index)) return;
 			select(index);
 		}
 	};
@@ -33,7 +33,7 @@
 
 <div class="chromatic-input">
 	{#each {length: 12} as _, index}
-		<button on:click={() => select(index)} disabled={level.isInputDisabled($level, index)}>
+		<button on:click={() => select(index)} disabled={level.is_input_disabled($level, index)}>
 			<div>{index}</div>
 			<div>{interval_short_names[index]}</div>
 		</button>

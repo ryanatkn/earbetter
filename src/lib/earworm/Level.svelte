@@ -1,7 +1,7 @@
 <script lang="ts">
 	import {onMount} from 'svelte';
 
-	import {createLevelStore, type LevelDef} from '$lib/earworm/level';
+	import {create_level_store, type LevelDef} from '$lib/earworm/level';
 	import Piano from '$lib/music/Piano.svelte';
 	import LevelProgressIndicator from '$lib/earworm/LevelProgressIndicator.svelte';
 	import TrialProgressIndicator from '$lib/earworm/TrialProgressIndicator.svelte';
@@ -15,24 +15,24 @@
 
 	- MIDI input!!
 	- orient people to their keyboard, maybe showing middle C?
-		- related: consider rendering the Piano clamped to the tonic and octaveShift (validNotes) - problem is you might have a harder time arranging yourself on your keyboard
+		- related: consider rendering the Piano clamped to the tonic and octaveShift (valid_notes) - problem is you might have a harder time arranging yourself on your keyboard
 		- maybe always show the full keyboard? maybe always start at a C?
 	- clamp level def data to the audible range
 	- xstate!
-	- what about supporting only a negative octave shift? changes the `tonicMax` calculation!
+	- what about supporting only a negative octave shift? changes the `tonic_max` calculation!
 	- consider disabling input except for the tonic at first
   - show a histogram of the correct inputs lined up vertically  with the buttons, moving to the right from the left or fixed onscreen
 
   */
-	export let levelDef: LevelDef;
+	export let level_def: LevelDef;
 	export let exitLevelToMap: (success?: boolean) => void;
 
 	let clientWidth; // `undefined` on first render
 
 	const audio_ctx = get_audio_ctx();
 
-	const level = createLevelStore(levelDef, audio_ctx);
-	// $: level.setDef(levelDef); // TODO update if levelDef prop changes
+	const level = create_level_store(level_def, audio_ctx);
+	// $: level.setDef(level_def); // TODO update if level_def prop changes
 
 	$: highlighted_keys = $level.trial && new Set([$level.trial.sequence[0]]);
 	$: console.log('highlighted', highlighted_keys);
@@ -65,7 +65,7 @@
 				break;
 			}
 			case '`': {
-				level.guessCorrectly($level);
+				level.guess_correctly($level);
 				break;
 			}
 			case 'Escape': {
@@ -94,11 +94,11 @@
 		<div>status: {$level.status}</div>
 		<div>trials created: {$level.trials.length}</div>
 		{#if $level.trial}
-			<div>trial: {$level.trial.index + 1} of {$level.def.trialCount}</div>
-			<div>retryCount: {$level.trial.retryCount}</div>
-			{#if $level.trial.presentingIndex !== null}
+			<div>trial: {$level.trial.index + 1} of {$level.def.trial_count}</div>
+			<div>retry_count: {$level.trial.retry_count}</div>
+			{#if $level.trial.presenting_index !== null}
 				<div>
-					presentingIndex: {$level.trial.sequence[$level.trial.presentingIndex]}
+					presenting_index: {$level.trial.sequence[$level.trial.presenting_index]}
 				</div>
 			{:else}...{/if}
 		{:else}no trial{/if}
@@ -131,7 +131,7 @@
 				midi_min={$level.def.midi_min}
 				midi_max={$level.def.midi_max}
 				on:press={$level.status === 'waitingForInput' ? (e) => onPressKey(e.detail) : undefined}
-				enabled_keys={$level.trial?.validNotes}
+				enabled_keys={$level.trial?.valid_notes}
 				{highlighted_keys}
 				{emphasized_keys}
 			/>

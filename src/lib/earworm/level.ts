@@ -17,15 +17,15 @@ const NOTE_DURATION = 500;
 
 export interface LevelDef {
 	id: string;
-	trialCount: number;
+	trial_count: number;
 	// The midi_min and midi_max define the entire allowable spectrum of notes.
 	// Values like the intervals and octaveShift
 	// may spill over combined with the tonic.
 	midi_min: Midi;
 	midi_max: Midi;
-	octaveShiftMin: 0 | -1 | -2 | -3 | -4 | -5 | -6 | -7 | -8 | -9; // TODO shrink to more realistic values?
-	octaveShiftMax: 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8; // TODO shrink to more realistic values?
-	sequenceLength: 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10 | 11 | 12 | 13 | 14 | 15 | 16; // prettier-ignore
+	octave_shift_min: 0 | -1 | -2 | -3 | -4 | -5 | -6 | -7 | -8 | -9; // TODO shrink to more realistic values?
+	octave_shift_max: 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8; // TODO shrink to more realistic values?
+	sequence_length: 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10 | 11 | 12 | 13 | 14 | 15 | 16; // prettier-ignore
 	intervals: Semitones[];
 	x: number;
 	y: number;
@@ -58,46 +58,46 @@ export interface LevelStore {
 	subscribe: Writable<LevelStoreState>['subscribe'];
 	send: (event: EventName | EventData) => void;
 	reset: () => void;
-	isInputDisabled: ($level: LevelStoreState, index: number) => boolean;
+	is_input_disabled: ($level: LevelStoreState, index: number) => boolean;
 	// dev and debug methods
-	guessCorrectly: ($level: LevelStoreState) => void;
-	getCorrectGuess: ($level: LevelStoreState) => number | null;
+	guess_correctly: ($level: LevelStoreState) => void;
+	get_correct_guess: ($level: LevelStoreState) => number | null;
 }
 
 export interface Trial {
 	index: number;
-	validNotes: Set<Midi>;
+	valid_notes: Set<Midi>;
 	sequence: Midi[];
-	presentingIndex: number | null; // index of interval being presented
-	guessingIndex: number | null; // index of interval being guessed
-	retryCount: number;
+	presenting_index: number | null; // index of interval being presented
+	guessing_index: number | null; // index of interval being guessed
+	retry_count: number;
 }
 
-const createNextTrial = ({def, trial}: LevelStoreState): Trial => {
-	const {midi_min, midi_max, octaveShiftMin, octaveShiftMax} = def;
+const create_next_trial = ({def, trial}: LevelStoreState): Trial => {
+	const {midi_min, midi_max, octave_shift_min, octave_shift_max} = def;
 
-	const tonicMax = midi_max - 12;
-	if (tonicMax < midi_min) {
-		throw Error(`tonicMax(${tonicMax}) is bigger than midi_min(${midi_min})`);
+	const tonic_max = midi_max - 12;
+	if (tonic_max < midi_min) {
+		throw Error(`tonic_max(${tonic_max}) is bigger than midi_min(${midi_min})`);
 	}
-	const tonic = randomInt(midi_min, tonicMax) as Midi;
+	const tonic = randomInt(midi_min, tonic_max) as Midi;
 	const sequence: Midi[] = [tonic];
 
 	// compute the valid notes
 	const intervals = new Set([0, ...def.intervals]); // allow tonic to repeat
-	const validNotes: Midi[] = [];
-	const noteMin = Math.max(midi_min, tonic + octaveShiftMin * 12) as Midi;
-	const noteMax = Math.min(midi_max, tonic + octaveShiftMax * 12 + 12) as Midi; // always span the tonic's octave
-	for (let i = noteMin; i <= noteMax; i++) {
+	const valid_notes: Midi[] = [];
+	const note_min = Math.max(midi_min, tonic + octave_shift_min * 12) as Midi;
+	const note_max = Math.min(midi_max, tonic + octave_shift_max * 12 + 12) as Midi; // always span the tonic's octave
+	for (let i = note_min; i <= note_max; i++) {
 		const interval = compute_interval(tonic, i);
 
 		// is the interval valid? add this note if so
 		if (intervals.has(interval)) {
-			validNotes.push(i);
+			valid_notes.push(i);
 		}
 	}
 
-	if (validNotes.length <= 2) {
+	if (valid_notes.length <= 2) {
 		// TODO use TS invariant helper!
 		console.log({
 			def,
@@ -105,33 +105,33 @@ const createNextTrial = ({def, trial}: LevelStoreState): Trial => {
 			tonic,
 			sequence,
 			intervals,
-			validNotes,
-			noteMin,
-			noteMax,
+			valid_notes,
+			note_min,
+			note_max,
 		});
 		throw Error(
-			`validNotes aren't valid! [${validNotes.join(
+			`valid_notes aren't valid! [${valid_notes.join(
 				', ',
 			)}]. Is the code buggy or is the def data bad?`,
 		);
 	}
 
 	// create the random sequence of notes
-	for (let i = 0; i < def.sequenceLength - 1; i++) {
-		let nextNote: Midi;
+	for (let i = 0; i < def.sequence_length - 1; i++) {
+		let next_note: Midi;
 		do {
-			nextNote = randomItem(validNotes);
-		} while (nextNote === sequence.at(-1)); // disallow sequential repeats
-		sequence.push(nextNote);
+			next_note = randomItem(valid_notes);
+		} while (next_note === sequence.at(-1)); // disallow sequential repeats
+		sequence.push(next_note);
 	}
 
 	return {
 		index: (trial && trial.index + 1) || 0,
-		validNotes: new Set(validNotes),
+		valid_notes: new Set(valid_notes),
 		sequence,
-		presentingIndex: null,
-		guessingIndex: null,
-		retryCount: 0,
+		presenting_index: null,
+		guessing_index: null,
+		retry_count: 0,
 	};
 };
 
@@ -144,17 +144,17 @@ export type EventData =
 	| {type: 'PRESENTED'}
 	| {type: 'GUESS'; note: Midi};
 
-const defaultState = (levelDef: LevelDef): LevelStoreState => ({
+const default_state = (level_def: LevelDef): LevelStoreState => ({
 	status: 'initial',
-	def: levelDef,
+	def: level_def,
 	trial: null,
 	trials: [],
 });
 
-export const createLevelStore = (levelDef: LevelDef, audio_ctx: AudioContext): LevelStore => {
-	const {subscribe, update, set} = writable<LevelStoreState>(defaultState(levelDef));
+export const create_level_store = (level_def: LevelDef, audio_ctx: AudioContext): LevelStore => {
+	const {subscribe, update, set} = writable<LevelStoreState>(default_state(level_def));
 
-	const presentTrialPrompt = async (sequence: Midi[]): Promise<void> => {
+	const present_trial_prompt = async (sequence: Midi[]): Promise<void> => {
 		console.log('PRESENT TRIAL PROMPT', sequence);
 		// audio_ctx
 		for (let i = 0; i < sequence.length; i++) {
@@ -164,7 +164,7 @@ export const createLevelStore = (levelDef: LevelDef, audio_ctx: AudioContext): L
 				...$level,
 				trial: $level.trial && {
 					...$level.trial,
-					presentingIndex: i,
+					presenting_index: i,
 				},
 			}));
 			await play_note(audio_ctx, note, NOTE_DURATION); // eslint-disable-line no-await-in-loop
@@ -173,7 +173,7 @@ export const createLevelStore = (levelDef: LevelDef, audio_ctx: AudioContext): L
 			...$level,
 			trial: $level.trial && {
 				...$level.trial,
-				presentingIndex: null,
+				presenting_index: null,
 			},
 		}));
 		// TODO when presenting is complete, we want to automatically transition to the `waitingForInput` state
@@ -190,11 +190,11 @@ export const createLevelStore = (levelDef: LevelDef, audio_ctx: AudioContext): L
 				case 'initial': {
 					switch (e.type) {
 						case 'START': {
-							const trial = createNextTrial($level);
+							const trial = create_next_trial($level);
 							console.log('TRIAL', trial);
 							// TODO this is really "on enter presentingPrompt state" logic
 							// TODO `s` is stale! so we need the timeout
-							setTimeout(() => presentTrialPrompt(trial.sequence), 0); // TODO do side effects within the xstate api
+							setTimeout(() => present_trial_prompt(trial.sequence), 0); // TODO do side effects within the xstate api
 							return {
 								...$level,
 								status: 'presentingPrompt',
@@ -215,7 +215,7 @@ export const createLevelStore = (levelDef: LevelDef, audio_ctx: AudioContext): L
 								status: 'waitingForInput',
 								trial: $level.trial && {
 									...$level.trial,
-									guessingIndex: 0,
+									guessing_index: 0,
 								},
 							};
 						}
@@ -227,12 +227,12 @@ export const createLevelStore = (levelDef: LevelDef, audio_ctx: AudioContext): L
 				case 'waitingForInput': {
 					switch (e.type) {
 						case 'GUESS': {
-							if (!$level.trial || $level.trial.guessingIndex === null) {
-								throw Error(`Expected a trial and guessingIndex`); // TODO how to encode in xstate?
+							if (!$level.trial || $level.trial.guessing_index === null) {
+								throw Error(`Expected a trial and guessing_index`); // TODO how to encode in xstate?
 							}
-							console.log('guessing interval', $level.trial.guessingIndex);
+							console.log('guessing interval', $level.trial.guessing_index);
 							const guess = e.note;
-							const actual = getCorrectGuess($level);
+							const actual = get_correct_guess($level);
 							void play_note(audio_ctx, guess, NOTE_DURATION);
 							console.log('GUESS', e.note, guess, actual);
 							// if incorrect -> FAILURE -> showingFailureFeedback -> REPROMPT
@@ -246,8 +246,8 @@ export const createLevelStore = (levelDef: LevelDef, audio_ctx: AudioContext): L
 								};
 							}
 							// else if more -> update current response index
-							else if ($level.trial.guessingIndex >= $level.trial.sequence.length - 1) {
-								if ($level.trial.index < $level.def.trialCount - 1) {
+							else if ($level.trial.guessing_index >= $level.trial.sequence.length - 1) {
+								if ($level.trial.index < $level.def.trial_count - 1) {
 									console.log('GUESS CORRECT AND DONE WITH TRIAL!!');
 									// TODO this is really "on enter showingSuccessFeedback state" logic
 									setTimeout(() => send('NEXT_TRIAL'), 1000);
@@ -272,7 +272,7 @@ export const createLevelStore = (levelDef: LevelDef, audio_ctx: AudioContext): L
 									...$level,
 									trial: {
 										...$level.trial,
-										guessingIndex: $level.trial.guessingIndex + 1,
+										guessing_index: $level.trial.guessing_index + 1,
 									},
 								};
 							}
@@ -285,11 +285,11 @@ export const createLevelStore = (levelDef: LevelDef, audio_ctx: AudioContext): L
 				case 'showingSuccessFeedback': {
 					switch (e.type) {
 						case 'NEXT_TRIAL': {
-							const trial = createNextTrial($level);
+							const trial = create_next_trial($level);
 							console.log('TRIAL', trial);
 							// TODO this is really "on enter presentingPrompt state" logic
 							// TODO `s` is stale! so we need the timeout
-							setTimeout(() => presentTrialPrompt(trial.sequence), 0); // TODO do side effects within the xstate api
+							setTimeout(() => present_trial_prompt(trial.sequence), 0); // TODO do side effects within the xstate api
 							return {
 								...$level,
 								status: 'presentingPrompt',
@@ -314,13 +314,13 @@ export const createLevelStore = (levelDef: LevelDef, audio_ctx: AudioContext): L
 						case 'RETRY_TRIAL': {
 							// TODO this is really "on enter presentingPrompt state" logic
 							// TODO `s` is stale! so we need the timeout
-							setTimeout(() => presentTrialPrompt($level.trial!.sequence), 0); // TODO do side effects within the xstate api
+							setTimeout(() => present_trial_prompt($level.trial!.sequence), 0); // TODO do side effects within the xstate api
 							return {
 								...$level,
 								status: 'presentingPrompt',
 								trial: $level.trial && {
 									...$level.trial,
-									retryCount: $level.trial.retryCount + 1,
+									retry_count: $level.trial.retry_count + 1,
 								},
 							};
 						}
@@ -345,28 +345,28 @@ export const createLevelStore = (levelDef: LevelDef, audio_ctx: AudioContext): L
 		reset: () => {
 			// TODO should this be defined as an event?
 			// TODO this causes errors if we have pending async events coming in! they should be canceled!
-			set(defaultState(levelDef));
+			set(default_state(level_def));
 		},
-		isInputDisabled,
+		is_input_disabled,
 
 		// dev and debug methods
-		guessCorrectly: ($level: LevelStoreState): void => {
+		guess_correctly: ($level: LevelStoreState): void => {
 			if ($level.status !== 'waitingForInput') return;
-			const midi = getCorrectGuess($level);
+			const midi = get_correct_guess($level);
 			if (midi === null) return;
 			send({type: 'GUESS', note: midi});
 		},
-		getCorrectGuess,
+		get_correct_guess,
 	};
 };
 
-const isInputDisabled = ($level: LevelStoreState, index: number): boolean => {
+const is_input_disabled = ($level: LevelStoreState, index: number): boolean => {
 	if ($level.status !== 'waitingForInput') return true;
 	if (index === 0) return false;
 	return !$level.def.intervals.includes(index);
 };
 
-const getCorrectGuess = ($level: LevelStoreState): Midi | null => {
-	if (!$level.trial || $level.trial.guessingIndex === null) return null;
-	return $level.trial.sequence[$level.trial.guessingIndex];
+const get_correct_guess = ($level: LevelStoreState): Midi | null => {
+	if (!$level.trial || $level.trial.guessing_index === null) return null;
+	return $level.trial.sequence[$level.trial.guessing_index];
 };

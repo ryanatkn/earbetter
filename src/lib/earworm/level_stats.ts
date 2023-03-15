@@ -8,10 +8,10 @@ export type LevelStatsState = {
 
 export interface LevelStats {
 	subscribe: Writable<LevelStatsState>['subscribe'];
-	registerSuccess: (id: string) => void;
+	register_success: (id: string) => void;
 }
 
-const defaultState = (defs: LevelDef[]): LevelStatsState => {
+const default_state = (defs: LevelDef[]): LevelStatsState => {
 	const completed: {[key: string]: boolean} = {};
 	for (const def of defs) {
 		completed[def.id] = false; // TODO load from localStorage (eventually from the server)
@@ -22,11 +22,11 @@ const defaultState = (defs: LevelDef[]): LevelStatsState => {
 };
 
 export const createLevelStats = (defs: LevelDef[]): LevelStats => {
-	const {subscribe, update} = writable(defaultState(defs));
+	const {subscribe, update} = writable(default_state(defs));
 
 	return {
 		subscribe,
-		registerSuccess: (id: string) => {
+		register_success: (id: string) => {
 			console.log('register success', id);
 			update((s) => {
 				return {

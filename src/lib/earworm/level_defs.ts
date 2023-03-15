@@ -4,16 +4,16 @@ const baseLevelDef = {
 	// TODO support something like this for 3-star accomplishment (or N-star)
 	// we probably additionally want to say for each version not just the number of trials,
 	// but the number of trials that must be correct to count as success (which should probably be 0 for the first level!)
-	// trialCount: [2, 5, 25],
-	trialCount: 2,
+	// trial_count: [2, 5, 25],
+	trial_count: 2,
 	midi_min: 46,
 	midi_max: 84,
-	octaveShiftMin: 0,
-	octaveShiftMax: 0,
-	sequenceLength: 2,
+	octave_shift_min: 0,
+	octave_shift_max: 0,
+	sequence_length: 2,
 } as const;
 
-export const levelDefs: LevelDef[] = [
+export const level_defs: LevelDef[] = [
 	{
 		id: '2,7',
 		...baseLevelDef,
@@ -43,8 +43,8 @@ export const levelDefs: LevelDef[] = [
 		x: 350,
 		y: 175,
 		unlock: ['2,4,7'], // TODO rename
-		octaveShiftMin: -1,
-		octaveShiftMax: 0,
+		octave_shift_min: -1,
+		octave_shift_max: 0,
 	},
 	{
 		id: '2,4,7-c',
@@ -53,8 +53,8 @@ export const levelDefs: LevelDef[] = [
 		x: 500,
 		y: 175,
 		unlock: ['2,4,7'], // TODO rename
-		octaveShiftMin: -1,
-		octaveShiftMax: 1,
+		octave_shift_min: -1,
+		octave_shift_max: 1,
 	},
 	{
 		id: '7,12',
@@ -67,7 +67,7 @@ export const levelDefs: LevelDef[] = [
 	{
 		id: '4,7,12',
 		...baseLevelDef,
-		sequenceLength: 2,
+		sequence_length: 2,
 		intervals: [4, 7, 12],
 		x: 400,
 		y: 600,

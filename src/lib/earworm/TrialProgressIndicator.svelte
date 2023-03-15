@@ -5,13 +5,13 @@
 	export let level: LevelStore;
 
 	$: current_index = $level.trial
-		? $level.trial.presentingIndex === null
-			? $level.trial.guessingIndex
-			: $level.trial.presentingIndex
+		? $level.trial.presenting_index === null
+			? $level.trial.guessing_index
+			: $level.trial.presenting_index
 		: null;
 
 	// TODO colors
-	const getBgColor = ($level: LevelStoreState, index: number): string =>
+	const get_bg_color = ($level: LevelStoreState, index: number): string =>
 		$level.status === 'complete'
 			? 'rgba(255, 255, 255, 0.6)'
 			: index === current_index
@@ -24,7 +24,7 @@
 {#if $level.trial}
 	<div class="trial-progress-indicator">
 		{#each {length: $level.trial.sequence.length} as _, index}
-			<div class="trial" style="background-color: {getBgColor($level, index)}" />
+			<div class="trial" style="background-color: {get_bg_color($level, index)}" />
 		{/each}
 	</div>
 {/if}
