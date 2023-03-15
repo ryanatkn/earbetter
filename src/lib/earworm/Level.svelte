@@ -108,22 +108,20 @@
 	<!-- {#if $level.status === 'presenting_prompt'}
 	{:else if $level.status === 'waiting_for_input'} -->
 
-	<div class="level-progress">
+	<div class="level-progress" title="level progress">
 		<LevelProgressIndicator {level} />
 	</div>
-	<div class="trial-progress">
+	<div class="trial-progress" title="trial progress">
 		<TrialProgressIndicator {level} />
 	</div>
 
 	<div
-		class="feedback success"
+		class="feedback"
 		class:success={$level.status === 'showing_success_feedback'}
 		class:failure={$level.status === 'showing_failure_feedback'}
 	>
 		{#if $level.status === 'complete'}
-			<button class="feedback complete" on:click={() => exit_level_to_map()}>
-				go back to the map
-			</button>
+			<button on:click={() => exit_level_to_map()}> go back to the map </button>
 		{/if}
 	</div>
 
