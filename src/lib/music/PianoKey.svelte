@@ -15,6 +15,8 @@
 
 	$: natural = midi_naturals.has(midi);
 	$: accidental = !natural;
+
+	// TODO BLOCK use primary_color
 </script>
 
 <button

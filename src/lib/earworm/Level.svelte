@@ -42,7 +42,7 @@
 	const emphasized_keys = new Set([60 as Midi]);
 
 	onMount(() => {
-		level.send('START');
+		level.start();
 	});
 
 	const reset = () => level.reset();

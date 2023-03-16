@@ -53,10 +53,10 @@ export type LevelStoreState = {
 
 export interface LevelStore {
 	subscribe: Writable<LevelStoreState>['subscribe'];
-	send: (event: EventName | EventData) => void;
 	reset: () => void;
 	is_input_disabled: ($level: LevelStoreState, index: number) => boolean;
 	// game methods
+	start: () => void;
 	guess: (note: Midi) => void;
 	retry_trial: () => void;
 	next_trial: () => void;
@@ -137,9 +137,6 @@ const create_next_trial = ({def, trial}: LevelStoreState): Trial => {
 	};
 };
 
-export type EventName = 'START';
-export type EventData = {type: 'START'};
-
 const default_state = (level_def: LevelDef): LevelStoreState => ({
 	status: 'initial',
 	def: level_def,
@@ -149,6 +146,23 @@ const default_state = (level_def: LevelDef): LevelStoreState => ({
 
 export const create_level_store = (level_def: LevelDef, audio_ctx: AudioContext): LevelStore => {
 	const {subscribe, update, set} = writable<LevelStoreState>(default_state(level_def));
+
+	const start = (): void => {
+		update(($level) => {
+			if ($level.status !== 'initial') throw Error();
+			const trial = create_next_trial($level);
+			console.log('TRIAL', trial);
+			// TODO this is really "on enter presenting_prompt state" logic
+			// TODO `s` is stale! so we need the timeout
+			setTimeout(() => present_trial_prompt(trial.sequence), 0);
+			return {
+				...$level,
+				status: 'presenting_prompt',
+				trial,
+				trials: [...$level.trials, trial],
+			};
+		});
+	};
 
 	const present_trial_prompt = async (sequence: Midi[]): Promise<void> => {
 		console.log('PRESENT TRIAL PROMPT', sequence);
@@ -284,47 +298,15 @@ export const create_level_store = (level_def: LevelDef, audio_ctx: AudioContext)
 		}));
 	};
 
-	const send = (event: EventName | EventData): void => {
-		const e = typeof event === 'string' ? {type: event} : event;
-		console.log(`send ${e.type}`, e);
-		update(($level) => {
-			// This is a reducer but state-machiney,
-			// first switching on the current status of the store (aka machine).
-			switch ($level.status) {
-				case 'initial': {
-					switch (e.type) {
-						case 'START': {
-							const trial = create_next_trial($level);
-							console.log('TRIAL', trial);
-							// TODO this is really "on enter presenting_prompt state" logic
-							// TODO `s` is stale! so we need the timeout
-							setTimeout(() => present_trial_prompt(trial.sequence), 0);
-							return {
-								...$level,
-								status: 'presenting_prompt',
-								trial,
-								trials: [...$level.trials, trial],
-							};
-						}
-						default: {
-							throw Error(`Unhandled event ${e.type} during status ${$level.status}`);
-						}
-					}
-				}
-			}
-			throw Error();
-		});
-	};
-
 	const store: LevelStore = {
 		subscribe,
-		send,
 		reset: () => {
 			// TODO should this be defined as an event?
 			// TODO this causes errors if we have pending async events coming in! they should be canceled!
 			set(default_state(level_def));
 		},
 		is_input_disabled,
+		start,
 		guess,
 		retry_trial,
 		next_trial,
