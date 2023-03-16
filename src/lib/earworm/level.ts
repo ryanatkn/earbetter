@@ -151,7 +151,7 @@ export const create_level_store = (level_def: LevelDef, audio_ctx: AudioContext)
 			console.log('TRIAL', trial);
 			// TODO this is really "on enter presenting_prompt state" logic
 			// TODO `s` is stale! so we need the timeout
-			setTimeout(() => present_trial_prompt(trial.sequence), 0);
+			setTimeout(() => present_trial_prompt(trial.sequence));
 			return {
 				...$level,
 				status: 'presenting_prompt',
@@ -255,7 +255,7 @@ export const create_level_store = (level_def: LevelDef, audio_ctx: AudioContext)
 			// if ($level.status !== 'showing_failure_feedback') throw Error();
 			// TODO this is really "on enter presenting_prompt state" logic
 			// TODO BLOCK try to remove the timeout
-			setTimeout(() => present_trial_prompt($level.trial!.sequence), 0);
+			setTimeout(() => present_trial_prompt($level.trial!.sequence));
 			return {
 				...$level,
 				status: 'presenting_prompt',
@@ -275,7 +275,7 @@ export const create_level_store = (level_def: LevelDef, audio_ctx: AudioContext)
 			console.log('next trial', trial);
 			// TODO this is really "on enter presenting_prompt state" logic
 			// TODO `s` is stale! so we need the timeout
-			setTimeout(() => present_trial_prompt(trial.sequence), 0);
+			setTimeout(() => present_trial_prompt(trial.sequence));
 			return {
 				...$level,
 				status: 'presenting_prompt',
