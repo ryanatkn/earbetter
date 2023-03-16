@@ -1,6 +1,5 @@
 import {writable, type Writable} from 'svelte/store';
 import {randomItem, randomInt} from '@feltjs/util/random.js';
-import {UnreachableError} from '@feltjs/util/error.js';
 
 import type {Midi} from '$lib/music/midi';
 import {compute_interval, type Semitones} from '$lib/music/notes';
@@ -59,6 +58,7 @@ export interface LevelStore {
 	// game methods
 	guess: (note: Midi) => void;
 	retry_trial: () => void;
+	complete_level: () => void;
 	// dev and debug methods
 	guess_correctly: ($level: LevelStoreState) => void;
 	get_correct_guess: ($level: LevelStoreState) => number | null;
@@ -135,12 +135,8 @@ const create_next_trial = ({def, trial}: LevelStoreState): Trial => {
 	};
 };
 
-export type EventName = 'START' | 'PRESENTED' | 'NEXT_TRIAL' | 'COMPLETE_LEVEL';
-export type EventData =
-	| {type: 'START'}
-	| {type: 'NEXT_TRIAL'}
-	| {type: 'COMPLETE_LEVEL'}
-	| {type: 'PRESENTED'};
+export type EventName = 'START' | 'PRESENTED' | 'NEXT_TRIAL';
+export type EventData = {type: 'START'} | {type: 'NEXT_TRIAL'} | {type: 'PRESENTED'};
 
 const default_state = (level_def: LevelDef): LevelStoreState => ({
 	status: 'initial',
@@ -220,7 +216,7 @@ export const create_level_store = (level_def: LevelDef, audio_ctx: AudioContext)
 				} else {
 					// TODO this is really "on enter showing_success_feedback state" logic
 					console.log('guess CORRECT AND DONE WITH ALL TRIALS!!!!');
-					setTimeout(() => send('COMPLETE_LEVEL'), 1000);
+					setTimeout(() => complete_level(), 1000);
 					return {
 						...$level,
 						status: 'showing_success_feedback',
@@ -255,6 +251,14 @@ export const create_level_store = (level_def: LevelDef, audio_ctx: AudioContext)
 				},
 			};
 		});
+	};
+
+	const complete_level = (): void => {
+		update(($level) => ({
+			...$level,
+			status: 'complete',
+			trial: null,
+		}));
 	};
 
 	const send = (event: EventName | EventData): void => {
@@ -316,13 +320,6 @@ export const create_level_store = (level_def: LevelDef, audio_ctx: AudioContext)
 								trials: [...$level.trials, trial],
 							};
 						}
-						case 'COMPLETE_LEVEL': {
-							return {
-								...$level,
-								status: 'complete',
-								trial: null,
-							};
-						}
 						default: {
 							throw Error(`Unhandled event ${e.type} during status ${$level.status}`);
 						}
@@ -344,6 +341,7 @@ export const create_level_store = (level_def: LevelDef, audio_ctx: AudioContext)
 		is_input_disabled,
 		guess,
 		retry_trial,
+		complete_level,
 		// dev and debug methods
 		guess_correctly: ($level: LevelStoreState): void => {
 			if ($level.status !== 'waiting_for_input') return;
