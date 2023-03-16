@@ -50,3 +50,20 @@ export const start_playing_note = (audio_ctx: AudioContext, note: Midi): StopPla
 		osc.stop(endTime + SMOOTH_GAIN_TIME_CONSTANT * 2);
 	};
 };
+
+// Helpers to play a single note at a time.
+// Maybe this should be put in the main context and wrap `audio_ctx` so it's not accessed directly?
+
+// TODO allow playing notes at different volumes using velocity
+const playing: Map<Midi, StopPlaying> = new Map(); // global cache used to enforce that at most one of each note plays
+export const start_playing = (audio_ctx: AudioContext, note: Midi): void => {
+	const current = playing.get(note);
+	if (current) return;
+	playing.set(note, start_playing_note(audio_ctx, note));
+};
+export const stop_playing = (note: Midi): void => {
+	const stop_playing_note = playing.get(note);
+	if (!stop_playing_note) return;
+	stop_playing_note?.();
+	playing.delete(note);
+};

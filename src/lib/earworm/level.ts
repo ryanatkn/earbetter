@@ -9,11 +9,8 @@ import {play_note} from '$lib/audio/play_note';
 // TODO play a victory sound on complete
 // TODO show feedback on the pressed buttons, regardless of how their interval was input (keyboard, tapping, clicking, debug key, etc)
 
-// TODO convert to xstate
-
-// TODO rename status to state?
-
 const NOTE_DURATION = 500;
+const NOTE_DURATION_FAILED = 50;
 
 export interface LevelDef {
 	id: string;
@@ -194,7 +191,7 @@ export const create_level_store = (level_def: LevelDef, audio_ctx: AudioContext)
 							console.log('TRIAL', trial);
 							// TODO this is really "on enter presenting_prompt state" logic
 							// TODO `s` is stale! so we need the timeout
-							setTimeout(() => present_trial_prompt(trial.sequence), 0); // TODO do side effects within the xstate api
+							setTimeout(() => present_trial_prompt(trial.sequence), 0);
 							return {
 								...$level,
 								status: 'presenting_prompt',
@@ -228,16 +225,20 @@ export const create_level_store = (level_def: LevelDef, audio_ctx: AudioContext)
 					switch (e.type) {
 						case 'GUESS': {
 							if (!$level.trial || $level.trial.guessing_index === null) {
-								throw Error(`Expected a trial and guessing_index`); // TODO how to encode in xstate?
+								throw Error(`Expected a trial and guessing_index`);
 							}
 							console.log('guessing interval', $level.trial.guessing_index);
 							const guess = e.note;
 							const actual = get_correct_guess($level);
-							void play_note(audio_ctx, guess, NOTE_DURATION);
 							console.log('GUESS', e.note, guess, actual);
+
 							// if incorrect -> FAILURE -> showing_failure_feedback -> REPROMPT
 							if (actual !== guess) {
 								console.log('GUESS INCORRECT');
+								void play_note(audio_ctx, guess, NOTE_DURATION_FAILED);
+								if ($level.trial.guessing_index === 0) {
+									return $level; // no penalty or delay if this is the first one
+								}
 								// TODO this is really "on enter showing_failure_feedback state" logic
 								setTimeout(() => send('RETRY_TRIAL'), 1000);
 								return {
@@ -245,8 +246,12 @@ export const create_level_store = (level_def: LevelDef, audio_ctx: AudioContext)
 									status: 'showing_failure_feedback',
 								};
 							}
-							// else if more -> update current response index
-							else if ($level.trial.guessing_index >= $level.trial.sequence.length - 1) {
+
+							// guess is correct
+							void play_note(audio_ctx, guess, NOTE_DURATION);
+
+							if ($level.trial.guessing_index >= $level.trial.sequence.length - 1) {
+								// if more -> update current response index
 								if ($level.trial.index < $level.def.trial_count - 1) {
 									console.log('GUESS CORRECT AND DONE WITH TRIAL!!');
 									// TODO this is really "on enter showing_success_feedback state" logic
@@ -264,9 +269,8 @@ export const create_level_store = (level_def: LevelDef, audio_ctx: AudioContext)
 										status: 'showing_success_feedback',
 									};
 								}
-							}
-							// else -> SUCCESS -> showing_success_feedback
-							else {
+							} else {
+								// SUCCESS -> showing_success_feedback
 								console.log('GUESS CORRECT BUT NOT DONE');
 								return {
 									...$level,
@@ -289,7 +293,7 @@ export const create_level_store = (level_def: LevelDef, audio_ctx: AudioContext)
 							console.log('TRIAL', trial);
 							// TODO this is really "on enter presenting_prompt state" logic
 							// TODO `s` is stale! so we need the timeout
-							setTimeout(() => present_trial_prompt(trial.sequence), 0); // TODO do side effects within the xstate api
+							setTimeout(() => present_trial_prompt(trial.sequence), 0);
 							return {
 								...$level,
 								status: 'presenting_prompt',
@@ -330,7 +334,6 @@ export const create_level_store = (level_def: LevelDef, audio_ctx: AudioContext)
 					}
 				}
 				case 'complete': {
-					// TODO this is a final state in xstate for the level machine
 					throw Error(`Unhandled event ${e.type} during status ${$level.status}`);
 				}
 				default:

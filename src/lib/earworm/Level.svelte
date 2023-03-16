@@ -8,6 +8,7 @@
 	import {get_audio_ctx} from '$lib/audio/audio_ctx';
 	import MidiInput from '$lib/audio/MidiInput.svelte';
 	import type {Midi} from '$lib/music/midi';
+	import {start_playing, stop_playing} from '$lib/audio/play_note';
 
 	/*
 
@@ -122,7 +123,7 @@
 
 	<div class="feedback" class:success class:failure class:complete>
 		{#if complete}
-			<button on:click={() => exit_level_to_map()}> go back to the map </button>
+			<button class="big" on:click={() => exit_level_to_map()}> go back to the map </button>
 		{/if}
 	</div>
 
@@ -132,7 +133,12 @@
 				width={clientWidth - piano_padding}
 				midi_min={$level.def.midi_min}
 				midi_max={$level.def.midi_max}
-				on:press={$level.status === 'waiting_for_input' ? (e) => on_press_key(e.detail) : undefined}
+				on:press={$level.status === 'waiting_for_input'
+					? (e) => on_press_key(e.detail)
+					: $level.status === 'complete'
+					? (e) => start_playing(audio_ctx, e.detail)
+					: undefined}
+				on:release={$level.status === 'complete' ? (e) => stop_playing(e.detail) : undefined}
 				enabled_keys={$level.trial?.valid_notes}
 				{highlighted_keys}
 				{emphasized_keys}
@@ -197,8 +203,5 @@
 	}
 	.feedback.failure {
 		background-color: red;
-	}
-	.feedback.complete {
-		font-size: var(--font_size_xl2);
 	}
 </style>
