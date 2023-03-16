@@ -78,7 +78,7 @@
 
 	const on_press_key = (note: Midi): void => {
 		console.log('press note key', note);
-		level.send({type: 'GUESS', note});
+		level.guess(note);
 	};
 
 	let success: boolean; // TODO why is this needed? appears to be a bug in the Svelte language tools
@@ -93,7 +93,7 @@
 	on:note_start={(e) => {
 		// TODO should this be ignored if it's not an enabled key? should the level itself ignore the guess?
 		console.log(`e`, e);
-		level.send({type: 'GUESS', note: e.detail.note});
+		level.guess(e.detail.note);
 	}}
 />
 <div class="level" bind:clientWidth>

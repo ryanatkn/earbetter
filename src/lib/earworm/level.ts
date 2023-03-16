@@ -56,6 +56,8 @@ export interface LevelStore {
 	send: (event: EventName | EventData) => void;
 	reset: () => void;
 	is_input_disabled: ($level: LevelStoreState, index: number) => boolean;
+	// game methods
+	guess: (note: Midi) => void;
 	// dev and debug methods
 	guess_correctly: ($level: LevelStoreState) => void;
 	get_correct_guess: ($level: LevelStoreState) => number | null;
@@ -138,8 +140,7 @@ export type EventData =
 	| {type: 'NEXT_TRIAL'}
 	| {type: 'RETRY_TRIAL'}
 	| {type: 'COMPLETE_LEVEL'}
-	| {type: 'PRESENTED'}
-	| {type: 'GUESS'; note: Midi};
+	| {type: 'PRESENTED'};
 
 const default_state = (level_def: LevelDef): LevelStoreState => ({
 	status: 'initial',
@@ -175,6 +176,68 @@ export const create_level_store = (level_def: LevelDef, audio_ctx: AudioContext)
 		}));
 		// TODO when presenting is complete, we want to automatically transition to the `waiting_for_input` state
 		send('PRESENTED');
+	};
+
+	// TODO helpful to have a return value?
+	const guess = (note: Midi): void => {
+		update(($level) => {
+			if ($level.status !== 'waiting_for_input') throw Error();
+			if (!$level.trial || $level.trial.guessing_index === null) {
+				throw Error(`Expected a trial and guessing_index`);
+			}
+			console.log('guessing interval', $level.trial.guessing_index);
+			const actual = get_correct_guess($level);
+			console.log('guess', note, actual);
+
+			// if incorrect -> FAILURE -> showing_failure_feedback -> REPROMPT
+			if (actual !== note) {
+				console.log('guess INCORRECT');
+				void play_note(audio_ctx, note, NOTE_DURATION_FAILED);
+				if ($level.trial.guessing_index === 0) {
+					return $level; // no penalty or delay if this is the first one
+				}
+				// TODO this is really "on enter showing_failure_feedback state" logic
+				setTimeout(() => send('RETRY_TRIAL'), 1000);
+				return {
+					...$level,
+					status: 'showing_failure_feedback',
+				};
+			}
+
+			// guess is correct
+			void play_note(audio_ctx, note, NOTE_DURATION);
+
+			if ($level.trial.guessing_index >= $level.trial.sequence.length - 1) {
+				// if more -> update current response index
+				if ($level.trial.index < $level.def.trial_count - 1) {
+					console.log('guess CORRECT AND DONE WITH TRIAL!!');
+					// TODO this is really "on enter showing_success_feedback state" logic
+					setTimeout(() => send('NEXT_TRIAL'), 1000);
+					return {
+						...$level,
+						status: 'showing_success_feedback',
+					};
+				} else {
+					// TODO this is really "on enter showing_success_feedback state" logic
+					console.log('guess CORRECT AND DONE WITH ALL TRIALS!!!!');
+					setTimeout(() => send('COMPLETE_LEVEL'), 1000);
+					return {
+						...$level,
+						status: 'showing_success_feedback',
+					};
+				}
+			} else {
+				// SUCCESS -> showing_success_feedback
+				console.log('guess CORRECT BUT NOT DONE');
+				return {
+					...$level,
+					trial: {
+						...$level.trial,
+						guessing_index: $level.trial.guessing_index + 1,
+					},
+				};
+			}
+		});
 	};
 
 	const send = (event: EventName | EventData): void => {
@@ -215,71 +278,6 @@ export const create_level_store = (level_def: LevelDef, audio_ctx: AudioContext)
 									guessing_index: 0,
 								},
 							};
-						}
-						default: {
-							throw Error(`Unhandled event ${e.type} during status ${$level.status}`);
-						}
-					}
-				}
-				case 'waiting_for_input': {
-					switch (e.type) {
-						case 'GUESS': {
-							if (!$level.trial || $level.trial.guessing_index === null) {
-								throw Error(`Expected a trial and guessing_index`);
-							}
-							console.log('guessing interval', $level.trial.guessing_index);
-							const guess = e.note;
-							const actual = get_correct_guess($level);
-							console.log('GUESS', e.note, guess, actual);
-
-							// if incorrect -> FAILURE -> showing_failure_feedback -> REPROMPT
-							if (actual !== guess) {
-								console.log('GUESS INCORRECT');
-								void play_note(audio_ctx, guess, NOTE_DURATION_FAILED);
-								if ($level.trial.guessing_index === 0) {
-									return $level; // no penalty or delay if this is the first one
-								}
-								// TODO this is really "on enter showing_failure_feedback state" logic
-								setTimeout(() => send('RETRY_TRIAL'), 1000);
-								return {
-									...$level,
-									status: 'showing_failure_feedback',
-								};
-							}
-
-							// guess is correct
-							void play_note(audio_ctx, guess, NOTE_DURATION);
-
-							if ($level.trial.guessing_index >= $level.trial.sequence.length - 1) {
-								// if more -> update current response index
-								if ($level.trial.index < $level.def.trial_count - 1) {
-									console.log('GUESS CORRECT AND DONE WITH TRIAL!!');
-									// TODO this is really "on enter showing_success_feedback state" logic
-									setTimeout(() => send('NEXT_TRIAL'), 1000);
-									return {
-										...$level,
-										status: 'showing_success_feedback',
-									};
-								} else {
-									// TODO this is really "on enter showing_success_feedback state" logic
-									console.log('GUESS CORRECT AND DONE WITH ALL TRIALS!!!!');
-									setTimeout(() => send('COMPLETE_LEVEL'), 1000);
-									return {
-										...$level,
-										status: 'showing_success_feedback',
-									};
-								}
-							} else {
-								// SUCCESS -> showing_success_feedback
-								console.log('GUESS CORRECT BUT NOT DONE');
-								return {
-									...$level,
-									trial: {
-										...$level.trial,
-										guessing_index: $level.trial.guessing_index + 1,
-									},
-								};
-							}
 						}
 						default: {
 							throw Error(`Unhandled event ${e.type} during status ${$level.status}`);
@@ -333,16 +331,12 @@ export const create_level_store = (level_def: LevelDef, audio_ctx: AudioContext)
 						}
 					}
 				}
-				case 'complete': {
-					throw Error(`Unhandled event ${e.type} during status ${$level.status}`);
-				}
-				default:
-					throw new UnreachableError($level.status);
 			}
+			throw Error();
 		});
 	};
 
-	return {
+	const store: LevelStore = {
 		subscribe,
 		send,
 		reset: () => {
@@ -351,16 +345,17 @@ export const create_level_store = (level_def: LevelDef, audio_ctx: AudioContext)
 			set(default_state(level_def));
 		},
 		is_input_disabled,
-
+		guess,
 		// dev and debug methods
 		guess_correctly: ($level: LevelStoreState): void => {
 			if ($level.status !== 'waiting_for_input') return;
 			const midi = get_correct_guess($level);
 			if (midi === null) return;
-			send({type: 'GUESS', note: midi});
+			guess(midi);
 		},
 		get_correct_guess,
 	};
+	return store;
 };
 
 const is_input_disabled = ($level: LevelStoreState, index: number): boolean => {
