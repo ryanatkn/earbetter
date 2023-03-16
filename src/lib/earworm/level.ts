@@ -82,6 +82,7 @@ const create_next_trial = ({def, trial}: LevelStoreState): Trial => {
 	const sequence: Midi[] = [tonic];
 
 	// compute the valid notes
+	// TODO BLOCK need to compute this
 	const intervals = new Set([0, ...def.intervals]); // allow tonic to repeat
 	const valid_notes: Midi[] = [];
 	for (let i = note_min; i <= note_max; i++) {
