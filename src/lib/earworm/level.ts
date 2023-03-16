@@ -24,8 +24,6 @@ export interface LevelDef {
 	octave_shift_max: 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8; // TODO shrink to more realistic values?
 	sequence_length: 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10 | 11 | 12 | 13 | 14 | 15 | 16; // prettier-ignore
 	intervals: Semitones[];
-	x: number;
-	y: number;
 	// TODO probably want to specify a tuple of `[string, LevelRating]`
 	// so things can unlock with 1-star performances
 	// (or even 0-star performances, especially at the very beginning)
