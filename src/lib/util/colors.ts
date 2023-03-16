@@ -1,6 +1,6 @@
 import type {Flavored} from '@feltjs/util';
 
-// TODO copypasted from `@feltcoop/dealt`, maybe upstream to `@feltjs/util`?
+// TODO copypasted from `@feltcoop/dealt`, maybe upstream to `@feltjs/util`? or a new repo?
 
 // https://stackoverflow.com/questions/2353211/hsl-to-rgb-color-conversion
 
@@ -38,12 +38,11 @@ export const hex_string_to_rgb = (hex: string): Rgb => {
 };
 
 export const rgb_to_hex_string = (r: number, g: number, b: number): string =>
-	'#' + toHex(r) + toHex(g) + toHex(b);
+	'#' + to_hex(r) + to_hex(g) + to_hex(b);
 
-const toHex = (v: number): string => {
+export const to_hex = (v: number): string => {
 	const h = v.toString(16);
-	if (h.length === 1) return '0' + h;
-	return h;
+	return h.length === 1 ? '0' + h : h;
 };
 
 /**
