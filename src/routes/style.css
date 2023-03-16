@@ -34,6 +34,9 @@
 	--primary_color_dark: hsl(var(--primary_hue), 80%, 36%);
 	--accent_color: hsl(var(--accent_hue), 80%, 48%);
 
+	--success_color: hsl(95, 80%, 31%);
+	--failure_color: hsl(5, 80%, 40%);
+
 	--icon: '🔮';
 }
 

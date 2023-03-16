@@ -199,9 +199,9 @@
 		height: 50px;
 	}
 	.feedback.success {
-		background-color: green;
+		background-color: var(--success_color, green);
 	}
 	.feedback.failure {
-		background-color: red;
+		background-color: var(--failure_color, red);
 	}
 </style>
