@@ -2,7 +2,7 @@ import {writable, type Writable} from 'svelte/store';
 import {randomItem, randomInt} from '@feltjs/util/random.js';
 
 import type {Midi} from '$lib/music/midi';
-import {compute_interval, type Semitones} from '$lib/music/notes';
+import {compute_distance, compute_interval, type Semitones} from '$lib/music/notes';
 import {play_note} from '$lib/audio/play_note';
 
 // TODO play a victory sound on complete
@@ -22,6 +22,7 @@ export interface LevelDef {
 	note_max: Midi;
 	sequence_length: 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10 | 11 | 12 | 13 | 14 | 15 | 16; // prettier-ignore
 	intervals: readonly Semitones[];
+	octaves: 1 | 2 | 3 | 4;
 	// TODO probably want to specify a tuple of `[string, LevelRating]`
 	// so things can unlock with 1-star performances
 	// (or even 0-star performances, especially at the very beginning)
@@ -82,13 +83,14 @@ const create_next_trial = ({def, trial}: LevelStoreState): Trial => {
 	const sequence: Midi[] = [tonic];
 
 	// compute the valid notes
-	// TODO BLOCK need to compute this
+	// TODO BLOCK need to have a full octave below/above the tonic
 	const intervals = new Set([0, ...def.intervals]); // allow tonic to repeat
 	const valid_notes: Midi[] = [];
 	for (let i = note_min; i <= note_max; i++) {
+		const distance = compute_distance(tonic, i);
+		if (distance >= def.octaves * 12) continue;
 		const interval = compute_interval(tonic, i);
-
-		// is the interval valid? add this note if so
+		console.log(`tonic, i, interval`, tonic, i, interval);
 		if (intervals.has(interval)) {
 			valid_notes.push(i);
 		}

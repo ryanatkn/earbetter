@@ -66,15 +66,21 @@ export const transpose = (midi: Midi, semitones: Semitones): Midi => {
 	return transposed;
 };
 
-// Computes the interval from a to b normalized to a single octave.
-// Note that compound intervals spanning more than an octave
-// are normalized to a single octave, so notes 13 semitones apart
-// are actually an interval of 1.
-export const compute_interval = (a: Midi, b: Midi): Semitones => {
-	let interval = b - a;
-	while (interval < 0) interval += 12; // not the best code, but it works
-	return interval % 12;
-};
+/**
+ * Computes the interval from a to b normalized to a single octave.
+ * @param a
+ * @param b
+ * @returns interval from a to b
+ */
+export const compute_interval = (a: Midi, b: Midi): Semitones => Math.abs((b - a) % 12);
+
+/**
+ * Computes the semitone distance between a to b normalized to a single octave.
+ * @param a
+ * @param b
+ * @returns
+ */
+export const compute_distance = (a: Midi, b: Midi): Semitones => Math.abs(a - b);
 
 // TODO the hue shouldn't be hardcoded from the chroma - this relationship should be user-customizable (`app.colors` or `app.audio.colors` or something)
 export const chroma_to_hue: Map<Chroma, Hue> = new Map(

@@ -12,6 +12,7 @@ const base_level_def = {
 	note_max: 84,
 	sequence_length: dev ? 2 : 4,
 	intervals: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11],
+	octaves: 1,
 } as const;
 
 export const level_defs: LevelDef[] = [
