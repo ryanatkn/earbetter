@@ -3,9 +3,9 @@
 	color-scheme: dark;
 
 	/* TODO force dark mode and remove these when Felt supports it */
-	--bg: hsl(var(--accent_hue), 63%, 11%);
-	--text_color: hsl(var(--accent_hue), 8%, 85%);
-	--text_color_light: hsl(var(--accent_hue), 8%, 65%);
+	--bg: hsl(var(--primary_hue), 63%, 11%);
+	--text_color: hsl(var(--primary_hue), 8%, 85%);
+	--text_color_light: hsl(var(--primary_hue), 8%, 65%);
 	--link_color: var(--accent_text_color);
 	--button_color: var(--bg_color_fg);
 	--button_color_hover: var(--bg);
@@ -14,21 +14,25 @@
 	--input_bg_color: var(--button_color);
 
 	/* felt overrides */
-	--active_hue: var(--accent_hue);
+	--active_hue: var(--primary_hue);
 
 	/* dealt style vars */
-	--primary_hue: 185;
-	--accent_hue: 275;
-	--bg_color_backdrop: hsla(var(--accent_hue), 100%, 2%, 0.8);
-	--bg_color_fg: hsla(var(--accent_hue), 100%, 98%, 0.08);
-	--border_color: hsla(var(--accent_hue), 100%, 98%, 0.2);
-	--font_color_heading: hsl(var(--accent_hue), 17%, 81%);
-	--accent_text_color: hsl(var(--accent_hue), 90%, 60%);
-	--light_text_color: hsl(var(--primary_hue), 80%, 60%);
-	--accent_border_color: hsla(var(--accent_hue), 50%, 50%, 0.4);
-	--light_border_color: hsla(var(--primary_hue), 50%, 50%, 0.4);
+	--accent_hue: 185;
+	--primary_hue: 275;
+	--bg_color_backdrop: hsla(var(--primary_hue), 100%, 2%, 0.8);
+	--bg_color_fg: hsla(var(--primary_hue), 100%, 98%, 0.08);
+	--border_color: hsla(var(--primary_hue), 100%, 98%, 0.2);
+	--font_color_heading: hsl(var(--primary_hue), 17%, 81%);
+	--accent_text_color: hsl(var(--primary_hue), 90%, 60%);
+	--light_text_color: hsl(var(--accent_hue), 80%, 60%);
+	--accent_border_color: hsla(var(--primary_hue), 50%, 50%, 0.4);
+	--light_border_color: hsla(var(--accent_hue), 50%, 50%, 0.4);
 	--spacing_lg: 20px;
 	--font_size_lg: 20px;
+
+	--primary_color: hsl(var(--primary_hue), 80%, 52%);
+	--primary_color_dark: hsl(var(--primary_hue), 80%, 36%);
+	--accent_color: hsl(var(--accent_hue), 80%, 48%);
 
 	--icon: '🔮';
 }

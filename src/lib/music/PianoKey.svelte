@@ -77,7 +77,7 @@
 	}
 
 	.highlighted {
-		background-color: var(--highlighted_key_color, #2e72f1);
+		background-color: var(--highlighted_key_color, var(--accent_color, #2e72f1));
 	}
 
 	.disabled {
