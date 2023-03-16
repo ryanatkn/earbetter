@@ -137,7 +137,7 @@ const create_next_trial = ({def, trial}: LevelStoreState): Trial => {
 	};
 };
 
-const default_state = (level_def: LevelDef): LevelStoreState => ({
+const to_default_state = (level_def: LevelDef): LevelStoreState => ({
 	status: 'initial',
 	def: level_def,
 	trial: null,
@@ -145,7 +145,7 @@ const default_state = (level_def: LevelDef): LevelStoreState => ({
 });
 
 export const create_level_store = (level_def: LevelDef, audio_ctx: AudioContext): LevelStore => {
-	const {subscribe, update, set} = writable<LevelStoreState>(default_state(level_def));
+	const {subscribe, update, set} = writable<LevelStoreState>(to_default_state(level_def));
 
 	const start = (): void => {
 		update(($level) => {
@@ -301,9 +301,9 @@ export const create_level_store = (level_def: LevelDef, audio_ctx: AudioContext)
 	const store: LevelStore = {
 		subscribe,
 		reset: () => {
-			// TODO should this be defined as an event?
 			// TODO this causes errors if we have pending async events coming in! they should be canceled!
-			set(default_state(level_def));
+			set(to_default_state(level_def));
+			start();
 		},
 		is_input_disabled,
 		start,

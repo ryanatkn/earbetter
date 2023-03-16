@@ -45,12 +45,10 @@
 		level.start();
 	});
 
-	const reset = () => level.reset();
-
 	const onDocumentKeyDown = (e: KeyboardEvent) => {
 		switch (e.key) {
 			case 'r': {
-				reset();
+				level.reset();
 				break;
 			}
 			case ' ': {
@@ -124,6 +122,7 @@
 	<div class="feedback" class:success class:failure class:complete>
 		{#if complete}
 			<button class="big" on:click={() => exit_level_to_map()}> go back to the map </button>
+			<button class="big" on:click={() => level.reset()}> replay level </button>
 		{/if}
 	</div>
 
