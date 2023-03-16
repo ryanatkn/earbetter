@@ -58,6 +58,7 @@ export interface LevelStore {
 	is_input_disabled: ($level: LevelStoreState, index: number) => boolean;
 	// game methods
 	guess: (note: Midi) => void;
+	retry_trial: () => void;
 	// dev and debug methods
 	guess_correctly: ($level: LevelStoreState) => void;
 	get_correct_guess: ($level: LevelStoreState) => number | null;
@@ -134,11 +135,10 @@ const create_next_trial = ({def, trial}: LevelStoreState): Trial => {
 	};
 };
 
-export type EventName = 'START' | 'PRESENTED' | 'NEXT_TRIAL' | 'RETRY_TRIAL' | 'COMPLETE_LEVEL';
+export type EventName = 'START' | 'PRESENTED' | 'NEXT_TRIAL' | 'COMPLETE_LEVEL';
 export type EventData =
 	| {type: 'START'}
 	| {type: 'NEXT_TRIAL'}
-	| {type: 'RETRY_TRIAL'}
 	| {type: 'COMPLETE_LEVEL'}
 	| {type: 'PRESENTED'};
 
@@ -197,7 +197,7 @@ export const create_level_store = (level_def: LevelDef, audio_ctx: AudioContext)
 					return $level; // no penalty or delay if this is the first one
 				}
 				// TODO this is really "on enter showing_failure_feedback state" logic
-				setTimeout(() => send('RETRY_TRIAL'), 1000);
+				setTimeout(() => retry_trial(), 1000);
 				return {
 					...$level,
 					status: 'showing_failure_feedback',
@@ -237,6 +237,23 @@ export const create_level_store = (level_def: LevelDef, audio_ctx: AudioContext)
 					},
 				};
 			}
+		});
+	};
+
+	const retry_trial = (): void => {
+		update(($level) => {
+			if ($level.status !== 'showing_failure_feedback') throw Error();
+			// TODO this is really "on enter presenting_prompt state" logic
+			// TODO `s` is stale! so we need the timeout
+			setTimeout(() => present_trial_prompt($level.trial!.sequence), 0);
+			return {
+				...$level,
+				status: 'presenting_prompt',
+				trial: $level.trial && {
+					...$level.trial,
+					retry_count: $level.trial.retry_count + 1,
+				},
+			};
 		});
 	};
 
@@ -311,26 +328,6 @@ export const create_level_store = (level_def: LevelDef, audio_ctx: AudioContext)
 						}
 					}
 				}
-				case 'showing_failure_feedback': {
-					switch (e.type) {
-						case 'RETRY_TRIAL': {
-							// TODO this is really "on enter presenting_prompt state" logic
-							// TODO `s` is stale! so we need the timeout
-							setTimeout(() => present_trial_prompt($level.trial!.sequence), 0);
-							return {
-								...$level,
-								status: 'presenting_prompt',
-								trial: $level.trial && {
-									...$level.trial,
-									retry_count: $level.trial.retry_count + 1,
-								},
-							};
-						}
-						default: {
-							throw Error(`Unhandled event ${e.type} during status ${$level.status}`);
-						}
-					}
-				}
 			}
 			throw Error();
 		});
@@ -346,6 +343,7 @@ export const create_level_store = (level_def: LevelDef, audio_ctx: AudioContext)
 		},
 		is_input_disabled,
 		guess,
+		retry_trial,
 		// dev and debug methods
 		guess_correctly: ($level: LevelStoreState): void => {
 			if ($level.status !== 'waiting_for_input') return;
