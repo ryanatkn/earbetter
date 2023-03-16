@@ -35,7 +35,7 @@
 		try {
 			$midi_access = global_midi_access = await request_midi_access();
 			console.log('requested midi_access', $midi_access);
-			initInputs();
+			init_inputs();
 			console.log('MIDI ready!');
 		} catch (err) {
 			console.error('loadMidiAccess failed', err);
@@ -43,7 +43,7 @@
 		}
 	};
 
-	export const initInputs = (): void => {
+	export const init_inputs = (): void => {
 		if (!$midi_access) {
 			throw Error(`Cannot list midi inputs without access`);
 		}

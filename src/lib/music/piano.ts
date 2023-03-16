@@ -36,9 +36,9 @@ export interface PianoKey {
 	height: number;
 }
 
-export const compute_piano = (width: number, midi_min: Midi, midi_max: Midi): Piano => {
-	const note_count = midi_max - midi_min + 1;
-	const naturals = compute_naturals(midi_min, midi_max);
+export const compute_piano = (width: number, note_min: Midi, note_max: Midi): Piano => {
+	const note_count = note_max - note_min + 1;
+	const naturals = compute_naturals(note_min, note_max);
 	const natural_key_width = Math.floor(width / naturals.length);
 	const accidental_key_width = natural_key_width * ACCIDENTAL_KEY_WIDTH_MULT;
 	const natural_key_height = Math.min(600, accidental_key_width * KEY_HEIGHT_MULT);
@@ -47,7 +47,7 @@ export const compute_piano = (width: number, midi_min: Midi, midi_max: Midi): Pi
 	let natural_index = 0;
 	const piano_keys: PianoKey[] = [];
 	for (let i = 0; i < note_count; i++) {
-		const midi = (i + midi_min) as Midi;
+		const midi = (i + note_min) as Midi;
 		let key_width: number;
 		let key_height: number;
 		let left_offset: number;

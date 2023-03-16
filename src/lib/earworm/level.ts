@@ -15,15 +15,13 @@ const FEEDBACK_DURATION = 1000;
 export interface LevelDef {
 	id: string;
 	trial_count: number;
-	// The midi_min and midi_max define the entire allowable spectrum of notes.
+	// The note_min and note_max define the entire allowable spectrum of notes.
 	// Values like the intervals and octaveShift
 	// may spill over combined with the tonic.
-	midi_min: Midi;
-	midi_max: Midi;
-	octave_shift_min: 0 | -1 | -2 | -3 | -4 | -5 | -6 | -7 | -8 | -9; // TODO shrink to more realistic values?
-	octave_shift_max: 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8; // TODO shrink to more realistic values?
+	note_min: Midi;
+	note_max: Midi;
 	sequence_length: 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10 | 11 | 12 | 13 | 14 | 15 | 16; // prettier-ignore
-	intervals: Semitones[];
+	intervals: readonly Semitones[];
 	// TODO probably want to specify a tuple of `[string, LevelRating]`
 	// so things can unlock with 1-star performances
 	// (or even 0-star performances, especially at the very beginning)
@@ -31,7 +29,7 @@ export interface LevelDef {
 	// and lay out levels in a pattern that combines levels that you beat into new levels
 	// like 1/5/7 + 1/2/4  -> unlocks 1/2/4/5/7
 	// unlock: [1, 2],
-	unlock?: string[];
+	unlock?: readonly string[];
 }
 
 export type Status =
@@ -74,20 +72,18 @@ export interface Trial {
 }
 
 const create_next_trial = ({def, trial}: LevelStoreState): Trial => {
-	const {midi_min, midi_max, octave_shift_min, octave_shift_max} = def;
+	const {note_min, note_max} = def;
 
-	const tonic_max = midi_max - 12;
-	if (tonic_max < midi_min) {
-		throw Error(`tonic_max(${tonic_max}) is bigger than midi_min(${midi_min})`);
+	const tonic_max = note_max - 12;
+	if (tonic_max < note_min) {
+		throw Error(`tonic_max(${tonic_max}) is bigger than note_min(${note_min})`);
 	}
-	const tonic = randomInt(midi_min, tonic_max) as Midi;
+	const tonic = randomInt(note_min, tonic_max) as Midi;
 	const sequence: Midi[] = [tonic];
 
 	// compute the valid notes
 	const intervals = new Set([0, ...def.intervals]); // allow tonic to repeat
 	const valid_notes: Midi[] = [];
-	const note_min = Math.max(midi_min, tonic + octave_shift_min * 12) as Midi;
-	const note_max = Math.min(midi_max, tonic + octave_shift_max * 12 + 11) as Midi; // always span the tonic's octave
 	for (let i = note_min; i <= note_max; i++) {
 		const interval = compute_interval(tonic, i);
 

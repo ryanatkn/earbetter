@@ -4,8 +4,8 @@
 	import {compute_piano} from '$lib/music/piano';
 
 	export let width: number;
-	export let midi_min: Midi = MIDI_MIN;
-	export let midi_max: Midi = MIDI_MAX;
+	export let note_min: Midi = MIDI_MIN;
+	export let note_max: Midi = MIDI_MAX;
 	export let enabled_keys: Set<Midi> | null = null;
 	export let highlighted_keys: Set<Midi> | null = null;
 	export let emphasized_keys: Set<Midi> | null = null;
@@ -25,7 +25,7 @@
 		natural_key_height,
 		accidental_key_width,
 		accidental_key_height,
-	} = compute_piano(width, midi_min, midi_max));
+	} = compute_piano(width, note_min, note_max));
 </script>
 
 <div

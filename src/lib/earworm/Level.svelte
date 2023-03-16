@@ -130,8 +130,8 @@
 		{#if clientWidth}
 			<Piano
 				width={clientWidth - piano_padding}
-				midi_min={$level.def.midi_min}
-				midi_max={$level.def.midi_max}
+				note_min={$level.def.note_min}
+				note_max={$level.def.note_max}
 				on:press={$level.status === 'waiting_for_input'
 					? (e) => on_press_key(e.detail)
 					: $level.status === 'complete'

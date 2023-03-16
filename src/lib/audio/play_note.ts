@@ -1,5 +1,5 @@
-import {SMOOTH_GAIN_TIME_CONSTANT} from '$lib/audio/utils';
-import {type Midi, midiToFreq} from '$lib/music/midi';
+import {SMOOTH_GAIN_TIME_CONSTANT} from '$lib/audio/helpers';
+import {type Midi, midi_to_freq} from '$lib/music/midi';
 
 export const play_note = (
 	audio_ctx: AudioContext,
@@ -7,7 +7,7 @@ export const play_note = (
 	durationMs: number,
 ): Promise<void> => {
 	// TODO
-	const freq = midiToFreq(note);
+	const freq = midi_to_freq(note);
 	console.log('playing note', note, freq);
 
 	const gain = audio_ctx.createGain();
@@ -31,7 +31,7 @@ export interface StopPlaying {
 }
 
 export const start_playing_note = (audio_ctx: AudioContext, note: Midi): StopPlaying => {
-	const freq = midiToFreq(note);
+	const freq = midi_to_freq(note);
 	console.log('start playing note', note, freq);
 
 	const gain = audio_ctx.createGain();
@@ -56,11 +56,13 @@ export const start_playing_note = (audio_ctx: AudioContext, note: Midi): StopPla
 
 // TODO allow playing notes at different volumes using velocity
 const playing: Map<Midi, StopPlaying> = new Map(); // global cache used to enforce that at most one of each note plays
+
 export const start_playing = (audio_ctx: AudioContext, note: Midi): void => {
 	const current = playing.get(note);
 	if (current) return;
 	playing.set(note, start_playing_note(audio_ctx, note));
 };
+
 export const stop_playing = (note: Midi): void => {
 	const stop_playing_note = playing.get(note);
 	if (!stop_playing_note) return;

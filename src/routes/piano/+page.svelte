@@ -17,8 +17,8 @@
 	// emphasize middle C to make it easier to orient oneself on a MIDI keyboard
 	const emphasized_keys = new Set([60 as Midi]);
 
-	let midi_min: Midi = 36;
-	let midi_max: Midi = 96;
+	let note_min: Midi = 36;
+	let note_max: Midi = 96;
 
 	const piano_padding = 20;
 </script>
@@ -33,8 +33,8 @@
 		{#if clientWidth}
 			<Piano
 				width={clientWidth - piano_padding * 2}
-				{midi_min}
-				{midi_max}
+				{note_min}
+				{note_max}
 				on:press={(e) => start_playing(audio_ctx, e.detail)}
 				on:release={(e) => stop_playing(e.detail)}
 				{emphasized_keys}
@@ -45,13 +45,13 @@
 		<fieldset class="row">
 			<label>
 				MIDI min
-				<input type="number" bind:value={midi_min} step={1} min={MIDI_MIN} max={MIDI_MAX} />
-				<input type="range" bind:value={midi_min} step={1} min={MIDI_MIN} max={MIDI_MAX} />
+				<input type="number" bind:value={note_min} step={1} min={MIDI_MIN} max={MIDI_MAX} />
+				<input type="range" bind:value={note_min} step={1} min={MIDI_MIN} max={MIDI_MAX} />
 			</label>
 			<label>
 				MIDI max
-				<input type="number" bind:value={midi_max} step={1} min={MIDI_MIN} max={MIDI_MAX} />
-				<input type="range" bind:value={midi_max} step={1} min={MIDI_MIN} max={MIDI_MAX} />
+				<input type="number" bind:value={note_max} step={1} min={MIDI_MIN} max={MIDI_MAX} />
+				<input type="range" bind:value={note_max} step={1} min={MIDI_MIN} max={MIDI_MAX} />
 			</label>
 		</fieldset>
 		<InitMidiButton {midi_input} />
