@@ -137,8 +137,8 @@ const create_next_trial = ({def, trial}: LevelStoreState): Trial => {
 	};
 };
 
-export type EventName = 'START' | 'PRESENTED';
-export type EventData = {type: 'START'} | {type: 'PRESENTED'};
+export type EventName = 'START';
+export type EventData = {type: 'START'};
 
 const default_state = (level_def: LevelDef): LevelStoreState => ({
 	status: 'initial',
@@ -167,13 +167,13 @@ export const create_level_store = (level_def: LevelDef, audio_ctx: AudioContext)
 		}
 		update(($level) => ({
 			...$level,
+			status: 'waiting_for_input',
 			trial: $level.trial && {
 				...$level.trial,
 				presenting_index: null,
+				guessing_index: 0,
 			},
 		}));
-		// TODO when presenting is complete, we want to automatically transition to the `waiting_for_input` state
-		send('PRESENTED');
 	};
 
 	// TODO helpful to have a return value?
@@ -304,23 +304,6 @@ export const create_level_store = (level_def: LevelDef, audio_ctx: AudioContext)
 								status: 'presenting_prompt',
 								trial,
 								trials: [...$level.trials, trial],
-							};
-						}
-						default: {
-							throw Error(`Unhandled event ${e.type} during status ${$level.status}`);
-						}
-					}
-				}
-				case 'presenting_prompt': {
-					switch (e.type) {
-						case 'PRESENTED': {
-							return {
-								...$level,
-								status: 'waiting_for_input',
-								trial: $level.trial && {
-									...$level.trial,
-									guessing_index: 0,
-								},
 							};
 						}
 						default: {
