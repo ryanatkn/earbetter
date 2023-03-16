@@ -6,7 +6,7 @@ const base_level_def = {
 	// but the number of trials that must be correct to count as success (which should probably be 0 for the first level!)
 	// trial_count: [2, 5, 25],
 	trial_count: 2,
-	midi_min: 46,
+	midi_min: 48,
 	midi_max: 84,
 	octave_shift_min: 0,
 	octave_shift_max: 0,

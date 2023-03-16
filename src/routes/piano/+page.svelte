@@ -17,7 +17,7 @@
 	// emphasize middle C to make it easier to orient oneself on a MIDI keyboard
 	const emphasized_keys = new Set([60 as Midi]);
 
-	let midi_min: Midi = 48;
+	let midi_min: Midi = 36;
 	let midi_max: Midi = 96;
 
 	const piano_padding = 20;
