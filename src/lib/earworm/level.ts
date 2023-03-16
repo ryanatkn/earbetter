@@ -87,7 +87,7 @@ const create_next_trial = ({def, trial}: LevelStoreState): Trial => {
 	const intervals = new Set([0, ...def.intervals]); // allow tonic to repeat
 	const valid_notes: Midi[] = [];
 	const note_min = Math.max(midi_min, tonic + octave_shift_min * 12) as Midi;
-	const note_max = Math.min(midi_max, tonic + octave_shift_max * 12 + 12) as Midi; // always span the tonic's octave
+	const note_max = Math.min(midi_max, tonic + octave_shift_max * 12 + 11) as Midi; // always span the tonic's octave
 	for (let i = note_min; i <= note_max; i++) {
 		const interval = compute_interval(tonic, i);
 
