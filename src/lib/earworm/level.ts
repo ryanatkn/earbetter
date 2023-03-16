@@ -83,7 +83,7 @@ const create_next_trial = ({def, trial}: LevelStoreState): Trial => {
 	const sequence: Midi[] = [tonic];
 
 	// compute the valid notes
-	// TODO BLOCK need to have a full octave below/above the tonic
+	// TODO BLOCK need to have a full octave below/above the tonic .. or no .. that'd make everything on one side -- instead put tonic in the middle? or not worry about it being broken?
 	const intervals = new Set([0, ...def.intervals]); // allow tonic to repeat
 	const valid_notes: Midi[] = [];
 	for (let i = note_min; i <= note_max; i++) {

@@ -17,6 +17,11 @@ const base_level_def = {
 
 export const level_defs: LevelDef[] = [
 	{
+		id: '1,12',
+		...base_level_def,
+		intervals: [1, 12], // TODO BLOCK doesn't work, probably shouldn't force intervals to be in one octave
+	},
+	{
 		id: '2,7',
 		...base_level_def,
 		intervals: [2, 7],
