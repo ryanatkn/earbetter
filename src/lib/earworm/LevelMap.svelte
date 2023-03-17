@@ -23,19 +23,21 @@
 </script>
 
 <div class="map">
-	<h1>levels</h1>
-	<div class="levels column-sm">
-		{#each level_defs as level_def (level_def.id)}
-			<LevelMapItem
-				{level_def}
-				select={select_level_def}
-				edit={edit_level_def}
-				remove={remove_level_def}
-				completed={$level_stats.completed[level_def.id]}
-			/>
-		{/each}
-	</div>
-	<section class="panel padded-md markup">
+	<section class="panel padded-md">
+		<h1>levels</h1>
+		<div class="levels column-sm">
+			{#each level_defs as level_def (level_def.id)}
+				<LevelMapItem
+					{level_def}
+					select={select_level_def}
+					edit={edit_level_def}
+					remove={remove_level_def}
+					completed={$level_stats.completed[level_def.id]}
+				/>
+			{/each}
+		</div>
+	</section>
+	<section class="panel padded-md">
 		<InitMidiButton {midi_input} />
 	</section>
 	<section class="panel padded-md markup">
@@ -56,6 +58,9 @@
 		padding: var(--spacing_md);
 	}
 	section {
+		display: flex;
+		flex-direction: column;
+		align-items: center;
 		margin: var(--spacing_xl5) 0;
 	}
 </style>
