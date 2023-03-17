@@ -14,6 +14,8 @@ export interface LevelDef {
 	intervals: Semitones[];
 	trial_count: number;
 	sequence_length: number;
+	// TODO BLOCK do this? would make defining some levels easier, but might be more complexity than it's worth
+	// sequence_length_multiplier: number;
 	note_min: Midi;
 	note_max: Midi;
 }

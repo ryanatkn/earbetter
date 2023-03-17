@@ -40,20 +40,30 @@ export const level_defs: LevelDef[] = [
 		intervals: [4, 7],
 	},
 	{
+		id: '4 12',
+		...BASE_LEVEL_DEF,
+		intervals: [4, 12],
+	},
+	{
+		id: '7 12',
+		...BASE_LEVEL_DEF,
+		intervals: [7, 12],
+	},
+	{
 		id: '2 4 7',
 		...BASE_LEVEL_DEF,
 		intervals: [2, 4, 7],
 	},
 	{
-		id: '2 4 7 9',
-		...BASE_LEVEL_DEF,
-		intervals: [2, 4, 7],
-		sequence_length: dev ? 2 : 7,
-	},
-	{
 		id: '4 7 12',
 		...BASE_LEVEL_DEF,
 		intervals: [4, 7, 12],
+		sequence_length: dev ? 2 : 7,
+	},
+	{
+		id: '2 4 7 12',
+		...BASE_LEVEL_DEF,
+		intervals: [2, 4, 7],
 		sequence_length: dev ? 2 : 7,
 	},
 	{

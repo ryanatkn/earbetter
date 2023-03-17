@@ -16,9 +16,6 @@
 
 	let clientWidth: number; // `undefined` on first render
 
-	// emphasize middle C to make it easier to orient oneself on a MIDI keyboard
-	const emphasized_keys = new Set([60 as Midi]);
-
 	let note_min: Midi = 36;
 	let note_max: Midi = 96;
 
@@ -39,7 +36,6 @@
 				{note_max}
 				on:press={(e) => start_playing(audio_ctx, e.detail, $volume)}
 				on:release={(e) => stop_playing(e.detail)}
-				{emphasized_keys}
 			/>
 		{/if}
 	</div>
