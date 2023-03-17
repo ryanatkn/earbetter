@@ -31,5 +31,7 @@
 		right: 0;
 		z-index: 10;
 		font-size: var(--font_size_xl3);
+		border-top-right-radius: 0;
+		border-bottom-right-radius: 0;
 	}
 </style>
