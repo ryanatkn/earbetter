@@ -32,7 +32,7 @@
 		{/each}
 	</div>
 	<InitMidiButton {midi_input} />
-	<section class="panel padded-md">
+	<section class="panel padded-md markup">
 		<LevelDefForm on:save={(e) => create_level_def(e.detail)} />
 	</section>
 </div>
