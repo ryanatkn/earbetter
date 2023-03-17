@@ -72,7 +72,11 @@ export const transpose = (midi: Midi, semitones: Semitones): Midi => {
  * @param b
  * @returns interval from a to b
  */
-export const compute_interval = (a: Midi, b: Midi): Semitones => Math.abs((b - a) % 12);
+export const compute_interval = (a: Midi, b: Midi): Semitones => {
+	let interval = b - a;
+	while (interval < 0) interval += 12; // not the best code, but it works
+	return interval % 12;
+};
 
 /**
  * Computes the semitone distance between a to b normalized to a single octave.
