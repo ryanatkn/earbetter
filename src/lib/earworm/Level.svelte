@@ -40,9 +40,6 @@
 	$: highlighted_keys = $level.trial && new Set([$level.trial.sequence[0]]);
 	$: console.log('highlighted', highlighted_keys);
 
-	// emphasize middle C to make it easier to orient oneself on a MIDI keyboard
-	const emphasized_keys = new Set([60 as Midi]);
-
 	onMount(() => {
 		level.start();
 	});
@@ -142,7 +139,6 @@
 				on:release={$level.status === 'complete' ? (e) => stop_playing(e.detail) : undefined}
 				enabled_keys={$level.trial?.valid_notes}
 				{highlighted_keys}
-				{emphasized_keys}
 			/>
 		{/if}
 	</div>

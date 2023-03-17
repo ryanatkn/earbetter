@@ -12,9 +12,11 @@
 	export let enabled = true;
 	export let highlighted = false;
 	export let emphasized = false;
+	export let show_middle_c = true;
 
 	$: natural = midi_naturals.has(midi);
 	$: accidental = !natural;
+	$: middle_c = midi === 60;
 </script>
 
 <button
@@ -31,7 +33,11 @@
 	on:mouseleave={enabled ? () => dispatch('release', midi) : undefined}
 	aria-label="piano key for midi {midi}"
 	style:left="{left_offset}px"
-/>
+>
+	{#if middle_c && show_middle_c}
+		<span class="middle-c">C5</span>
+	{/if}
+</button>
 
 <style>
 	.piano-key {
@@ -40,6 +46,8 @@
 		--accidental_width: var(--piano_accidental_key_width, 35px);
 		--accidental_height: var(--piano_accidental_key_height, 122px);
 		--border_color: var(--piano_border_color, rgba(0, 0, 0, 0.22));
+		/* TODO scale to `piano_key_width` */
+		--emphasized_marker_width: 20px;
 
 		position: absolute;
 		top: 0;
@@ -95,8 +103,6 @@
 	}
 
 	.emphasized::before {
-		/* TODO scale to `piano_key_width` */
-		--emphasized_marker_width: 20px;
 		display: block;
 		position: absolute;
 		left: calc(50% - var(--emphasized_marker_width) / 2);
@@ -106,5 +112,15 @@
 		height: var(--emphasized_marker_width);
 		border-radius: 50%;
 		background-color: rgb(243, 211, 159);
+	}
+
+	.middle-c {
+		color: var(--text_color_dark);
+		text-shadow: var(--text_shadow);
+		position: absolute;
+		left: calc(50% - var(--emphasized_marker_width) / 2);
+		bottom: calc(var(--emphasized_marker_width) / 2);
+		width: var(--emphasized_marker_width);
+		height: var(--emphasized_marker_width);
 	}
 </style>

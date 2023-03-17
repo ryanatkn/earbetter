@@ -63,6 +63,16 @@ export const level_defs: LevelDef[] = [
 		sequence_length: dev ? 2 : 7,
 	},
 	{
+		id: '1 2',
+		...BASE_LEVEL_DEF,
+		intervals: [1, 2],
+	},
+	{
+		id: '2 3',
+		...BASE_LEVEL_DEF,
+		intervals: [2, 3],
+	},
+	{
 		id: 'one full octave',
 		...BASE_LEVEL_DEF,
 		intervals: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12],
