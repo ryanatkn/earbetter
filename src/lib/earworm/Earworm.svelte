@@ -7,14 +7,15 @@
 	import {get_audio_ctx} from '$lib/audio/audio_ctx';
 	import MidiInput from '$lib/audio/MidiInput.svelte';
 
-	console.log('level_defs', level_defs);
+	let default_level_defs = level_defs; // is a bit awkward, doing it this way to allow custom games, and removing both kinds
 
-	let created_level_defs: LevelDef[] = [];
-	$: all_level_defs = level_defs.concat(created_level_defs);
+	let custom_level_defs: LevelDef[] = [];
+	$: all_level_defs = default_level_defs.concat(custom_level_defs);
+	$: console.log(`all_level_defs`, all_level_defs);
 
 	let active_level_def: LevelDef | null = null; // TODO initialize to undefined
 
-	const level_stats = create_level_stats(level_defs);
+	const level_stats = create_level_stats(default_level_defs);
 	$: console.log('stats', $level_stats);
 	console.log($level_stats);
 
@@ -28,8 +29,18 @@
 		active_level_def = level_def;
 	};
 
+	const remove_level_def = (level_def: LevelDef): void => {
+		if (default_level_defs.includes(level_def)) {
+			default_level_defs = default_level_defs.filter((d) => d !== level_def);
+		} else {
+			custom_level_defs = custom_level_defs.filter((d) => d !== level_def);
+		}
+		void audio_ctx.resume(); // TODO where's the best place for this? needs to be synchronous with a click or similar, so this breaks if `select_level_def` is called without a user action
+		active_level_def = level_def;
+	};
+
 	const create_level_def = (level_def: LevelDef): void => {
-		created_level_defs = created_level_defs.concat(level_def);
+		custom_level_defs = custom_level_defs.concat(level_def);
 	};
 
 	const exit_level_to_map = (success = false): void => {
@@ -46,7 +57,13 @@
 	{#if active_level_def}
 		<Level level_def={active_level_def} {exit_level_to_map} />
 	{:else}
-		<LevelMap {midi_input} level_defs={all_level_defs} {select_level_def} {create_level_def} />
+		<LevelMap
+			{midi_input}
+			level_defs={all_level_defs}
+			{select_level_def}
+			{remove_level_def}
+			{create_level_def}
+		/>
 	{/if}
 </div>
 

@@ -84,3 +84,9 @@ button.big {
 	font-size: var(--font_size_xl3);
 	padding: var(--spacing_md) var(--spacing_xl3);
 }
+
+/* TODO fix this class upstream so this is controlled by a variable */
+.plain-button {
+	--button_color_hover: var(--tint_light_1);
+	--button_color_active: var(--tint_light_2);
+}

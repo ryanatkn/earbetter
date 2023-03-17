@@ -10,6 +10,7 @@
 	export let midi_input: MidiInput;
 	export let level_defs: LevelDef[];
 	export let select_level_def: (level_def: LevelDef) => void; // TODO event?
+	export let remove_level_def: (level_def: LevelDef) => void; // TODO event?
 	export let create_level_def: (level_def: LevelDef) => void; // TODO event?
 
 	const level_stats = create_level_stats(level_defs);
@@ -27,6 +28,7 @@
 			<LevelMapItem
 				{level_def}
 				select={select_level_def}
+				remove={remove_level_def}
 				completed={$level_stats.completed[level_def.id]}
 			/>
 		{/each}
