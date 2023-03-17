@@ -12,14 +12,18 @@ const base_level_def = {
 	note_max: 84,
 	sequence_length: dev ? 2 : 4,
 	intervals: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11],
-	octaves: 1,
-} as const;
+} satisfies Partial<LevelDef>;
 
 export const level_defs: LevelDef[] = [
 	{
 		id: '1,12',
 		...base_level_def,
-		intervals: [1, 12], // TODO BLOCK doesn't work, probably shouldn't force intervals to be in one octave
+		intervals: [1, 12],
+	},
+	{
+		id: '1,12,-1,-12',
+		...base_level_def,
+		intervals: [1, 12, -1, -12],
 	},
 	{
 		id: '2,7',

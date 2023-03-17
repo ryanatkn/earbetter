@@ -2,7 +2,7 @@ import {writable, type Writable} from 'svelte/store';
 import {randomItem, randomInt} from '@feltjs/util/random.js';
 
 import type {Midi} from '$lib/music/midi';
-import {compute_distance, compute_interval, type Semitones} from '$lib/music/notes';
+import type {Semitones} from '$lib/music/notes';
 import {play_note} from '$lib/audio/play_note';
 
 // TODO play a victory sound on complete
@@ -22,7 +22,6 @@ export interface LevelDef {
 	note_max: Midi;
 	sequence_length: 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10 | 11 | 12 | 13 | 14 | 15 | 16; // prettier-ignore
 	intervals: readonly Semitones[];
-	octaves: 1 | 2 | 3 | 4;
 	// TODO probably want to specify a tuple of `[string, LevelRating]`
 	// so things can unlock with 1-star performances
 	// (or even 0-star performances, especially at the very beginning)
@@ -75,11 +74,15 @@ export interface Trial {
 const create_next_trial = ({def, trial}: LevelStoreState): Trial => {
 	const {note_min, note_max} = def;
 
-	const tonic_max = note_max - 12;
-	if (tonic_max < note_min) {
-		throw Error(`tonic_max(${tonic_max}) is bigger than note_min(${note_min})`);
-	}
-	const tonic = randomInt(note_min, tonic_max) as Midi;
+	// TODO BLOCK choosing the tonic like this can lead to some broken situations
+	const interval_max = def.intervals.reduce((max, v) => Math.max(max, v));
+	const interval_min = def.intervals.reduce((max, v) => Math.min(max, v));
+	console.log(`interval_max`, interval_max, `interval_min`, interval_min);
+	const tonic_max = Math.min(note_max - interval_max, note_max);
+	const tonic_min = Math.max(note_min - interval_min, note_min);
+	console.log(`tonic_min, tonic_max`, tonic_min, tonic_max);
+	if (tonic_max < tonic_min) throw Error('TODO how to handle this?');
+	const tonic = randomInt(tonic_min, tonic_max) as Midi;
 	const sequence: Midi[] = [tonic];
 
 	// compute the valid notes
@@ -87,10 +90,7 @@ const create_next_trial = ({def, trial}: LevelStoreState): Trial => {
 	const intervals = new Set([0, ...def.intervals]); // allow tonic to repeat
 	const valid_notes: Midi[] = [];
 	for (let i = note_min; i <= note_max; i++) {
-		const distance = compute_distance(tonic, i);
-		if (distance >= def.octaves * 12) continue;
-		const interval = compute_interval(tonic, i);
-		console.log(`tonic, i, interval`, tonic, i, interval);
+		const interval = i - tonic;
 		if (intervals.has(interval)) {
 			valid_notes.push(i);
 		}
