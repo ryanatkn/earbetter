@@ -4,8 +4,10 @@
 
 	import './style.css';
 	import {set_audio_ctx} from '$lib/audio/audio_ctx';
+	import {set_volume} from '$lib/audio/helpers';
 
 	set_audio_ctx();
+	set_volume();
 </script>
 
 <svelte:head>

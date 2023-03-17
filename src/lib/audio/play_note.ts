@@ -1,6 +1,6 @@
 import type {Flavored} from '@feltjs/util';
 
-import {SMOOTH_GAIN_TIME_CONSTANT, volume_to_gain} from '$lib/audio/helpers';
+import {DEFAULT_VOLUME, SMOOTH_GAIN_TIME_CONSTANT, volume_to_gain} from '$lib/audio/helpers';
 import {type Midi, midi_to_freq} from '$lib/music/midi';
 
 export type Milliseconds = Flavored<number, 'Milliseconds'>;
@@ -37,7 +37,7 @@ export interface StopPlaying {
 export const start_playing_note = (
 	audio_ctx: AudioContext,
 	note: Midi,
-	volume = 0.51,
+	volume = DEFAULT_VOLUME,
 ): StopPlaying => {
 	const freq = midi_to_freq(note);
 	console.log('start playing note', note, freq);

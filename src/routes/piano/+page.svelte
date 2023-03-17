@@ -5,15 +5,14 @@
 	import {MIDI_MAX, MIDI_MIN, type Midi} from '$lib/music/midi';
 	import {start_playing, stop_playing} from '$lib/audio/play_note';
 	import InitMidiButton from '$lib/music/InitMidiButton.svelte';
-	import {writable} from 'svelte/store';
 	import VolumeControl from '$lib/audio/VolumeControl.svelte';
 	import Footer from '$routes/Footer.svelte';
+	import {get_volume} from '$lib/audio/helpers';
 
 	const audio_ctx = get_audio_ctx();
+	const volume = get_volume();
 
 	let midi_input: MidiInput | undefined;
-
-	const volume = writable(0.51);
 
 	let clientWidth: number; // `undefined` on first render
 

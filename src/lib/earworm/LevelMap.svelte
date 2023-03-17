@@ -6,6 +6,8 @@
 	import type MidiInput from '$lib/audio/MidiInput.svelte';
 	import InitMidiButton from '$lib/music/InitMidiButton.svelte';
 	import LevelDefForm from '$lib/earworm/LevelDefForm.svelte';
+	import VolumeControl from '$lib/audio/VolumeControl.svelte';
+	import {get_volume} from '$lib/audio/helpers';
 
 	export let midi_input: MidiInput;
 	export let level_defs: LevelDef[];
@@ -22,6 +24,7 @@
 
 	const audio_ctx = get_audio_ctx();
 	(window as any).audio = audio_ctx;
+	const volume = get_volume();
 
 	let set_level_def: (leve_def: LevelDef) => void;
 	$: level_def && set_level_def?.(level_def);
@@ -48,6 +51,7 @@
 	<section class="panel padded-md markup">
 		<h2>controls</h2>
 		<p><code>Escape</code>: exit level</p>
+		<VolumeControl {volume} />
 		<InitMidiButton {midi_input} />
 	</section>
 	<section class="panel padded-md markup">

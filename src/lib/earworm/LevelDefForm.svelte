@@ -42,28 +42,46 @@
 		{#if editing}editing{:else}create a{/if} custom level
 	</header>
 	<fieldset>
-		<label>id<input bind:value={id} /></label>
-		<label>trial_count<input type="number" bind:value={trial_count} /></label>
-		<fieldset class="row">
-			<label>
-				<div>MIDI min</div>
-				<div>{midi_names[note_min]}</div>
-				<input type="number" bind:value={note_min} step={1} min={MIDI_MIN} max={MIDI_MAX} />
-				<input type="range" bind:value={note_min} step={1} min={MIDI_MIN} max={MIDI_MAX} />
-			</label>
-			<label>
-				<div>MIDI max</div>
-				<div>{midi_names[note_max]}</div>
-				<input type="number" bind:value={note_max} step={1} min={MIDI_MIN} max={MIDI_MAX} />
-				<input type="range" bind:value={note_max} step={1} min={MIDI_MIN} max={MIDI_MAX} />
-			</label>
-		</fieldset>
-		<label> sequence_length<input bind:value={sequence_length} /> </label>
 		<label>
-			intervals<input
+			<div class="title">id</div>
+			<input bind:value={id} />
+		</label>
+	</fieldset>
+	<fieldset>
+		<label>
+			<div class="title">intervals</div>
+			<input
 				value={serialize_intervals(intervals)}
 				on:input={(e) => parse_intervals(e.currentTarget.value)}
 			/>
+		</label>
+	</fieldset>
+	<fieldset>
+		<label>
+			<div class="title">trial_count</div>
+			<input type="number" bind:value={trial_count} min={1} />
+			<input type="range" bind:value={trial_count} min={1} max={30} />
+		</label>
+	</fieldset>
+	<fieldset>
+		<label>
+			<div class="title">sequence_length</div>
+			<input bind:value={sequence_length} min={2} />
+			<input type="range" bind:value={sequence_length} min={2} max={20} />
+		</label>
+	</fieldset>
+	<fieldset class="row">
+		<label>
+			<div class="title">MIDI min</div>
+			<div>{midi_names[note_min]}</div>
+			<input type="number" bind:value={note_min} step={1} min={MIDI_MIN} max={MIDI_MAX} />
+			<input type="range" bind:value={note_min} step={1} min={MIDI_MIN} max={MIDI_MAX} />
+		</label>
+		<label>
+			<div class="title">MIDI max</div>
+			<div>{midi_names[note_max]}</div>
+			<input type="number" bind:value={note_max} step={1} min={MIDI_MIN} max={MIDI_MAX} />
+			<input type="range" bind:value={note_max} step={1} min={MIDI_MIN} max={MIDI_MAX} />
 		</label>
 	</fieldset>
 	<button type="button" on:click={() => dispatch('create', to_data())}>

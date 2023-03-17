@@ -1,6 +1,5 @@
 <script lang="ts">
 	import {onMount} from 'svelte';
-	import {writable} from 'svelte/store';
 
 	import {create_level_store, type LevelDef} from '$lib/earworm/level';
 	import Piano from '$lib/music/Piano.svelte';
@@ -10,6 +9,7 @@
 	import MidiInput from '$lib/audio/MidiInput.svelte';
 	import type {Midi} from '$lib/music/midi';
 	import {start_playing, stop_playing} from '$lib/audio/play_note';
+	import {get_volume} from '$lib/audio/helpers';
 
 	/*
 
@@ -32,8 +32,7 @@
 	let clientWidth; // `undefined` on first render
 
 	const audio_ctx = get_audio_ctx();
-
-	const volume = writable(0.51);
+	const volume = get_volume();
 
 	const level = create_level_store(level_def, audio_ctx);
 	// $: level.setDef(level_def); // TODO update if level_def prop changes
