@@ -50,11 +50,20 @@
 	</section>
 	<section class="panel padded-md markup">
 		<h2>controls</h2>
-		<p><code>Escape</code>: exit level</p>
+		<table>
+			<tr>
+				<td><code>Escape</code></td>
+				<td>exit level</td>
+			</tr>
+			<tr>
+				<td><code>` Backtick</code></td>
+				<td>cheat</td>
+			</tr>
+		</table>
 		<VolumeControl {volume} />
 		<InitMidiButton {midi_input} />
 	</section>
-	<section class="panel padded-md markup">
+	<section class="panel padded-md markup column-sm">
 		<LevelDefForm
 			{editing}
 			bind:id

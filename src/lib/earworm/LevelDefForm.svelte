@@ -55,6 +55,20 @@
 				on:input={(e) => parse_intervals(e.currentTarget.value)}
 			/>
 		</label>
+		<p>
+			a comma-separated list of numbers representing the <a
+				href="https://wikipedia.org/wiki/Interval_(music)">musical intervals</a
+			>, the number of piano keys (<a href="https://wikipedia.org/wiki/Semitone">semitones</a>)
+			separating each note from the
+			<a href="https://wikipedia.org/wiki/Tonic_(music)">tonic</a> (the base note)
+		</p>
+		<p>
+			for example, to train to distinguish between the <a
+				href="https://wikipedia.org/wiki/Perfect_fourth">perfect fourth</a
+			>
+			and <a href="https://wikipedia.org/wiki/Perfect_fifth">perfect fifth</a>, enter
+			<code>"5, 7"</code>
+		</p>
 	</fieldset>
 	<fieldset>
 		<label>
