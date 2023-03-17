@@ -12,7 +12,7 @@
 	let removing = false;
 </script>
 
-<li class="level-map-item" in:slide>
+<li class="level-map-item" out:slide>
 	{#if select}
 		<button class="level-button" on:click={() => select?.(level_def)} class:selected={completed}>
 			{level_def.id}
