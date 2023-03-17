@@ -3,6 +3,8 @@
 
 	export let midi_input: MidiInput | undefined;
 
+	// TODO move MIDI initialization to some other action, like the button to start a level
+
 	$: midi_access = midi_input?.midi_access;
 	$: disabled = !midi_input || !!$midi_access;
 </script>

@@ -11,65 +11,59 @@ const base_level_def = {
 	note_min: 48,
 	note_max: 84,
 	sequence_length: dev ? 2 : 4,
-	intervals: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11],
 } satisfies Partial<LevelDef>;
 
 export const level_defs: LevelDef[] = [
 	{
-		id: '1,12',
+		id: '1 12',
 		...base_level_def,
 		intervals: [1, 12],
 	},
 	{
-		id: '1,12,-1,-12',
+		id: '1 12 -1 -12',
 		...base_level_def,
 		intervals: [1, 12, -1, -12],
 	},
 	{
-		id: '2,7',
+		id: '2 7',
 		...base_level_def,
 		intervals: [2, 7],
 	},
 	{
-		id: '4,7',
+		id: '4 7',
 		...base_level_def,
 		intervals: [4, 7],
 	},
 	{
-		id: '2,4,7',
+		id: '2 4 7',
 		...base_level_def,
 		intervals: [2, 4, 7],
-		unlock: ['2,7', '4,7'], // TODO rename
+		unlock: ['2 7', '4 7'], // TODO rename
 	},
 	{
-		id: '2,4,7-b',
-		...base_level_def,
-		intervals: [2, 4, 7],
-		unlock: ['2,4,7'], // TODO rename
-	},
-	{
-		id: '2,4,7-c',
-		...base_level_def,
-		intervals: [2, 4, 7],
-		unlock: ['2,4,7'], // TODO rename
-	},
-	{
-		id: '2,4,7,9',
+		id: '2 4 7 9',
 		...base_level_def,
 		sequence_length: dev ? 2 : 7,
 		intervals: [2, 4, 7],
-		unlock: ['4,7,12'], // TODO rename
+		unlock: ['4 7 12'], // TODO rename
 	},
 	{
-		id: '4,7,12',
+		id: '4 7 12',
 		...base_level_def,
 		sequence_length: dev ? 2 : 7,
 		intervals: [4, 7, 12],
-		unlock: ['all'], // TODO rename
+		unlock: ['one full octave'], // TODO rename
 	},
 	{
-		id: 'all',
+		id: 'one full octave',
 		...base_level_def,
 		sequence_length: dev ? 2 : 10,
+		intervals: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12],
+	},
+	{
+		id: 'one full octave in both directions',
+		...base_level_def,
+		sequence_length: dev ? 2 : 10,
+		intervals: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, -1, -2, -3, -4, -5, -6, -7, -8, -9, -10, -11, -12], // prettier-ignore
 	},
 ];
