@@ -73,6 +73,7 @@ export interface Trial {
 
 const create_next_trial = ({def, trial}: LevelStoreState): Trial => {
 	const {note_min, note_max} = def;
+	console.log(`note_min, note_max`, note_min, note_max);
 
 	const interval_max = def.intervals.reduce((max, v) => Math.max(max, v));
 	const interval_min = def.intervals.reduce((max, v) => Math.min(max, v));
@@ -80,8 +81,10 @@ const create_next_trial = ({def, trial}: LevelStoreState): Trial => {
 	const tonic_max = Math.min(note_max - interval_max, note_max);
 	const tonic_min = Math.max(note_min - interval_min, note_min);
 	console.log(`tonic_min, tonic_max`, tonic_min, tonic_max);
-	if (tonic_max < tonic_min) throw Error('TODO how to handle this?');
-	const tonic = randomInt(tonic_min, tonic_max) as Midi;
+	const tonic = (
+		tonic_min < tonic_max ? randomInt(tonic_min, tonic_max) : to_fallback_tonic(note_min, note_max)
+	) as Midi;
+	console.log(`tonic`, tonic);
 	const sequence: Midi[] = [tonic];
 
 	// compute the valid notes
@@ -92,25 +95,6 @@ const create_next_trial = ({def, trial}: LevelStoreState): Trial => {
 		if (intervals.has(interval)) {
 			valid_notes.push(i);
 		}
-	}
-
-	if (valid_notes.length <= 2) {
-		// TODO use TS invariant helper!
-		console.log({
-			def,
-			trial,
-			tonic,
-			sequence,
-			intervals,
-			valid_notes,
-			note_min,
-			note_max,
-		});
-		throw Error(
-			`valid_notes aren't valid! [${valid_notes.join(
-				', ',
-			)}]. Is the code buggy or is the def data bad?`,
-		);
 	}
 
 	// create the random sequence of notes
@@ -327,4 +311,11 @@ const is_input_disabled = ($level: LevelStoreState, index: number): boolean => {
 const get_correct_guess = ($level: LevelStoreState): Midi | null => {
 	if (!$level.trial || $level.trial.guessing_index === null) return null;
 	return $level.trial.sequence[$level.trial.guessing_index];
+};
+
+// If there's possible tonic range that fits with all of the intervals within the bounds,
+// fall back to a reasonable default.
+const to_fallback_tonic = (note_min: Midi, note_max: Midi): Midi => {
+	const offset = ((note_max - note_min) / 4) | 0;
+	return randomInt(note_min + offset, note_max - offset) as Midi;
 };
