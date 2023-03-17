@@ -6,7 +6,7 @@
 	import {MIDI_MAX, MIDI_MIN} from '$lib/music/midi';
 	import {midi_names} from '$lib/music/notes';
 
-	const dispatch = createEventDispatcher<{save: LevelDef}>();
+	const dispatch = createEventDispatcher<{create: LevelDef}>();
 
 	export let id = 'new custom level';
 	export let intervals = [4, 7, 12];
@@ -52,7 +52,7 @@
 			/>
 		</label>
 	</fieldset>
-	<button on:click={() => dispatch('save', to_data())}>save</button>
+	<button on:click={() => dispatch('create', to_data())}>create level</button>
 </form>
 
 <style>

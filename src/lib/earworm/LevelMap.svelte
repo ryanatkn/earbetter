@@ -35,7 +35,7 @@
 	</div>
 	<InitMidiButton {midi_input} />
 	<section class="panel padded-md markup">
-		<LevelDefForm on:save={(e) => create_level_def(e.detail)} />
+		<LevelDefForm on:create={(e) => create_level_def(e.detail)} />
 	</section>
 </div>
 
