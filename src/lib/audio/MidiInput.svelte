@@ -35,21 +35,17 @@
 		try {
 			$midi_access = global_midi_access = await request_midi_access();
 			console.log('requested midi_access', $midi_access);
-			init_inputs();
+			if (!$midi_access) {
+				throw Error(`Cannot list midi inputs without access`);
+			}
+			for (const input of $midi_access.inputs.values()) {
+				log('midi input', input);
+				input.onmidimessage = on_midi_message;
+			}
 			console.log('MIDI ready!');
 		} catch (err) {
 			console.error('loadMidiAccess failed', err);
 			alert('Failed to request MIDI access: ' + err.message); // eslint-disable-line no-alert
-		}
-	};
-
-	export const init_inputs = (): void => {
-		if (!$midi_access) {
-			throw Error(`Cannot list midi inputs without access`);
-		}
-		for (const input of $midi_access.inputs.values()) {
-			log('midi input', input);
-			input.onmidimessage = on_midi_message;
 		}
 	};
 
