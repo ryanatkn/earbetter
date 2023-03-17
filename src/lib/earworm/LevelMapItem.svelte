@@ -6,6 +6,8 @@
 	export let edit: ((level_def: LevelDef) => void) | null = null; // TODO event? or is the ability to have a return value for ephemeral state desired?
 	export let remove: ((level_def: LevelDef) => void) | null = null; // TODO event? or is the ability to have a return value for ephemeral state desired?
 	export let completed: boolean;
+
+	/* eslint-disable no-alert */
 </script>
 
 <li class="level-map-item">
@@ -18,7 +20,12 @@
 		<button class="icon-button plain-button" on:click={() => edit?.(level_def)}> ✎ </button>
 	{/if}
 	{#if remove}
-		<button class="icon-button plain-button" on:click={() => remove?.(level_def)}> ✕ </button>
+		<button
+			class="icon-button plain-button"
+			on:click={() => confirm(`remove level "${level_def.id}"? can't undo`) && remove?.(level_def)}
+		>
+			✕
+		</button>
 	{/if}
 </li>
 

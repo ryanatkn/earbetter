@@ -61,23 +61,30 @@
 </script>
 
 <MidiInput bind:this={midi_input} />
-<div class="earworm">
-	{#if active_level_def}
+{#if active_level_def}
+	<div class="level">
 		<Level level_def={active_level_def} {exit_level_to_map} />
-	{:else}
-		<LevelMap
-			{midi_input}
-			level_defs={all_level_defs}
-			{select_level_def}
-			{edit_level_def}
-			{remove_level_def}
-			{create_level_def}
-		/>
-	{/if}
-</div>
+	</div>
+{:else}
+	<slot name="header" />
+	<LevelMap
+		{midi_input}
+		level_defs={all_level_defs}
+		{select_level_def}
+		{edit_level_def}
+		{remove_level_def}
+		{create_level_def}
+	/>
+	<slot name="footer" />
+{/if}
 
 <style>
-	.earworm {
+	:global(html, body) {
+		width: 100%;
+		height: 100%;
+	}
+
+	.level {
 		width: 100%;
 		height: 100%;
 	}
