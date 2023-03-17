@@ -9,6 +9,7 @@
 
 	export let midi_input: MidiInput;
 	export let level_defs: LevelDef[];
+	export let level_def: LevelDef | null = null;
 	export let select_level_def: ((level_def: LevelDef) => void) | null = null; // TODO event? or is the ability to have a return value for ephemeral state desired?
 	export let edit_level_def: ((level_def: LevelDef) => void) | null = null; // TODO event? or is the ability to have a return value for ephemeral state desired?
 	export let remove_level_def: ((level_def: LevelDef) => void) | null = null; // TODO event? or is the ability to have a return value for ephemeral state desired?
@@ -22,6 +23,9 @@
 	(window as any).audio = audio_ctx;
 
 	// TODO BLOCK {level_def} below with LevelDefForm
+
+	let set_level_def;
+	$: level_def && set_level_def?.(level_def);
 </script>
 
 <div class="map">
@@ -45,7 +49,7 @@
 		<InitMidiButton {midi_input} />
 	</section>
 	<section class="panel padded-md markup">
-		<LevelDefForm on:create={(e) => create_level_def?.(e.detail)} />
+		<LevelDefForm bind:set_level_def on:create={(e) => create_level_def?.(e.detail)} />
 	</section>
 </div>
 

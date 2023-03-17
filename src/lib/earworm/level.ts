@@ -16,10 +16,7 @@ export interface LevelDef {
 	id: string;
 	intervals: readonly Semitones[];
 	trial_count: number;
-	sequence_length: 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10 | 11 | 12 | 13 | 14 | 15 | 16; // prettier-ignore
-	// The note_min and note_max define the entire allowable spectrum of notes.
-	// Values like the intervals and octaveShift
-	// may spill over combined with the tonic.
+	sequence_length: number;
 	note_min: Midi;
 	note_max: Midi;
 }

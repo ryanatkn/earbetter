@@ -3,17 +3,17 @@
 
 	import {parse_intervals, serialize_intervals, type LevelDef} from '$lib/earworm/level';
 	import {BASE_LEVEL_DEF} from '$lib/earworm/level_defs';
-	import {MIDI_MAX, MIDI_MIN} from '$lib/music/midi';
+	import {MIDI_MAX, MIDI_MIN, type Midi} from '$lib/music/midi';
 	import {midi_names} from '$lib/music/notes';
 
 	const dispatch = createEventDispatcher<{create: LevelDef}>();
 
 	export let id = 'new custom level';
 	export let intervals = [4, 7, 12];
-	export let trial_count = BASE_LEVEL_DEF.trial_count;
-	export let sequence_length = BASE_LEVEL_DEF.sequence_length;
-	export let note_min = BASE_LEVEL_DEF.note_min;
-	export let note_max = BASE_LEVEL_DEF.note_max;
+	export let trial_count: number = BASE_LEVEL_DEF.trial_count;
+	export let sequence_length: number = BASE_LEVEL_DEF.sequence_length;
+	export let note_min: Midi = BASE_LEVEL_DEF.note_min;
+	export let note_max: Midi = BASE_LEVEL_DEF.note_max;
 
 	const to_data = (): LevelDef => ({
 		id,
@@ -23,6 +23,15 @@
 		note_min,
 		note_max,
 	});
+
+	export const set_level_def = (level_def: LevelDef): void => {
+		id = level_def.id;
+		intervals = level_def.intervals;
+		trial_count = level_def.trial_count;
+		sequence_length = level_def.sequence_length;
+		note_min = level_def.note_min;
+		note_max = level_def.note_max;
+	};
 </script>
 
 <form class="level-def-form">
