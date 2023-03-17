@@ -18,6 +18,7 @@
 </script>
 
 <button
+	type="button"
 	class="piano-key"
 	class:natural
 	class:accidental

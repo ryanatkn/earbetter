@@ -1,4 +1,6 @@
 <script lang="ts">
+	import {slide} from 'svelte/transition';
+
 	import type {LevelDef} from '$lib/earworm/level';
 
 	export let level_def: LevelDef;
@@ -10,7 +12,7 @@
 	let removing = false;
 </script>
 
-<li class="level-map-item">
+<li class="level-map-item" in:slide>
 	{#if select}
 		<button class="level-button" on:click={() => select?.(level_def)} class:selected={completed}>
 			{level_def.id}
@@ -21,7 +23,7 @@
 			class="icon-button plain-button"
 			on:click={() => (removing ? remove?.(level_def) : edit?.(level_def))}
 		>
-			{#if removing}☠{:else}✎{/if}
+			{#if removing}⨂{:else}✎{/if}
 		</button>
 	{/if}
 	{#if remove}
@@ -38,5 +40,8 @@
 	}
 	.level-button {
 		flex: 1;
+	}
+	.icon-button {
+		font-size: var(--font_size_xl);
 	}
 </style>

@@ -52,7 +52,7 @@
 			/>
 		</label>
 	</fieldset>
-	<button on:click={() => dispatch('create', to_data())}>create level</button>
+	<button type="button" on:click={() => dispatch('create', to_data())}>create level</button>
 </form>
 
 <style>

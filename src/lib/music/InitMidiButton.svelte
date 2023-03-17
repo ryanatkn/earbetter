@@ -12,6 +12,7 @@
 </script>
 
 <button
+	type="button"
 	class="big"
 	on:click={() => void midi_input?.init()}
 	{disabled}
