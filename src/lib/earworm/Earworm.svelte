@@ -34,7 +34,8 @@
 
 	const edit_level_def = (level_def: LevelDef): void => {
 		editing_level_def = level_def;
-		level_def;
+		const el = document.getElementsByClassName('level-def-form').item(0); // TODO hacky
+		if (el) window.scrollTo({top: el.getBoundingClientRect().y, behavior: 'smooth'});
 	};
 
 	const remove_level_def = (level_def: LevelDef): void => {
