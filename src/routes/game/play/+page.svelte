@@ -11,7 +11,6 @@
 
 	const go_back = () => goto(`${base}/game`);
 
-	// TODO read the query
 	$: active_level_def = parse_from_hash<LevelDef>($page.url.hash);
 	$: if (active_level_def === null) void go_back();
 </script>
