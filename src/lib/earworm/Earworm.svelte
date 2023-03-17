@@ -40,7 +40,13 @@
 	};
 
 	const create_level_def = (level_def: LevelDef): void => {
-		custom_level_defs = custom_level_defs.concat(level_def);
+		let id = level_def.id;
+		let n = 2;
+		while (all_level_defs.find((d) => d.id === id)) {
+			id = level_def.id + ' ' + n;
+			n++;
+		}
+		custom_level_defs = custom_level_defs.concat({...level_def, id});
 	};
 
 	const exit_level_to_map = (success = false): void => {

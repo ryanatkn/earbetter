@@ -24,7 +24,7 @@
 <div class="map">
 	<h1>levels</h1>
 	<div class="levels">
-		{#each level_defs as level_def}
+		{#each level_defs as level_def (level_def.id)}
 			<LevelMapItem
 				{level_def}
 				select={select_level_def}

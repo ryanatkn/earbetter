@@ -8,11 +8,11 @@
 </script>
 
 <li>
-	<button class="level-button" on:click={() => select(level_def)} class:selected={completed}
-		>{level_def.id}</button
-	>
+	<button class="level-button" on:click={() => select(level_def)} class:selected={completed}>
+		{level_def.id}
+	</button>
 	{#if remove}
-		<button class="icon-button plain-button" on:click={() => remove?.(level_def)}>✕</button>
+		<button class="icon-button plain-button" on:click={() => remove?.(level_def)}> ✕ </button>
 	{/if}
 </li>
 
