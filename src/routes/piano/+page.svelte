@@ -76,8 +76,4 @@
 	.piano-wrapper {
 		padding: var(--spacing_md);
 	}
-	/* TODO this hack shouldn't be needed */
-	.row label {
-		margin-bottom: 0;
-	}
 </style>

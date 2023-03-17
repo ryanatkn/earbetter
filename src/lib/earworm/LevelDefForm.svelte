@@ -14,6 +14,7 @@
 	export let sequence_length: number = BASE_LEVEL_DEF.sequence_length;
 	export let note_min: Midi = BASE_LEVEL_DEF.note_min;
 	export let note_max: Midi = BASE_LEVEL_DEF.note_max;
+	export let editing = false;
 
 	const to_data = (): LevelDef => ({
 		id,
@@ -37,7 +38,9 @@
 </script>
 
 <form class="level-def-form">
-	<header>create a custom level</header>
+	<header>
+		{#if editing}editing{:else}create a{/if} custom level
+	</header>
 	<fieldset>
 		<label>id<input bind:value={id} /></label>
 		<label>trial_count<input type="number" bind:value={trial_count} /></label>
@@ -63,7 +66,9 @@
 			/>
 		</label>
 	</fieldset>
-	<button type="button" on:click={() => dispatch('create', to_data())}>create level</button>
+	<button type="button" on:click={() => dispatch('create', to_data())}>
+		{#if editing}update{:else}create{/if} level
+	</button>
 </form>
 
 <style>

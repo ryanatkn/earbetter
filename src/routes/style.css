@@ -94,3 +94,8 @@ button.big {
 code {
 	background-color: var(--tint_light_1);
 }
+
+/* TODO this hack shouldn't be needed */
+.row label {
+	margin-bottom: 0 !important;
+}
