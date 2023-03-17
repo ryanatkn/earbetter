@@ -66,8 +66,9 @@
 			for example, to train to distinguish between the <a
 				href="https://wikipedia.org/wiki/Perfect_fourth">perfect fourth</a
 			>
-			and <a href="https://wikipedia.org/wiki/Perfect_fifth">perfect fifth</a>, enter
-			<code>"5, 7"</code>
+			and <a href="https://wikipedia.org/wiki/Perfect_fifth">perfect fifth</a>, enter "<code
+				>5, 7</code
+			>"
 		</p>
 	</fieldset>
 	<fieldset>
