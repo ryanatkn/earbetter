@@ -9,9 +9,10 @@
 
 	export let midi_input: MidiInput;
 	export let level_defs: LevelDef[];
-	export let select_level_def: (level_def: LevelDef) => void; // TODO event?
-	export let remove_level_def: (level_def: LevelDef) => void; // TODO event?
-	export let create_level_def: (level_def: LevelDef) => void; // TODO event?
+	export let select_level_def: ((level_def: LevelDef) => void) | null = null; // TODO event? or is the ability to have a return value for ephemeral state desired?
+	export let edit_level_def: ((level_def: LevelDef) => void) | null = null; // TODO event? or is the ability to have a return value for ephemeral state desired?
+	export let remove_level_def: ((level_def: LevelDef) => void) | null = null; // TODO event? or is the ability to have a return value for ephemeral state desired?
+	export let create_level_def: ((level_def: LevelDef) => void) | null = null; // TODO event? or is the ability to have a return value for ephemeral state desired?
 
 	const level_stats = create_level_stats(level_defs);
 	$: console.log('stats', $level_stats);
@@ -23,19 +24,22 @@
 
 <div class="map">
 	<h1>levels</h1>
-	<div class="levels">
+	<div class="levels column-sm">
 		{#each level_defs as level_def (level_def.id)}
 			<LevelMapItem
 				{level_def}
 				select={select_level_def}
+				edit={edit_level_def}
 				remove={remove_level_def}
 				completed={$level_stats.completed[level_def.id]}
 			/>
 		{/each}
 	</div>
-	<InitMidiButton {midi_input} />
 	<section class="panel padded-md markup">
-		<LevelDefForm on:create={(e) => create_level_def(e.detail)} />
+		<InitMidiButton {midi_input} />
+	</section>
+	<section class="panel padded-md markup">
+		<LevelDefForm on:create={(e) => create_level_def?.(e.detail)} />
 	</section>
 </div>
 

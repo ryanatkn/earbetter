@@ -29,6 +29,10 @@
 		active_level_def = level_def;
 	};
 
+	const edit_level_def = (level_def: LevelDef): void => {
+		console.log(`edit`, level_def);
+	};
+
 	const remove_level_def = (level_def: LevelDef): void => {
 		if (default_level_defs.includes(level_def)) {
 			default_level_defs = default_level_defs.filter((d) => d !== level_def);
@@ -65,6 +69,7 @@
 			{midi_input}
 			level_defs={all_level_defs}
 			{select_level_def}
+			{edit_level_def}
 			{remove_level_def}
 			{create_level_def}
 		/>
