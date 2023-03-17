@@ -48,8 +48,9 @@
 			{/each}
 		</div>
 	</section>
-	<section class="panel padded-md markup">
+	<section class="panel padded-md markup column-sm">
 		<h2>controls</h2>
+		<p>Earworm may not function well on devices with smaller screens.</p>
 		<table>
 			<tr>
 				<td><code>Escape</code></td>
@@ -61,6 +62,10 @@
 			</tr>
 		</table>
 		<VolumeControl {volume} />
+		<p>
+			Earworm supports MIDI devices like piano keyboards. Connect a device and click the button
+			below to get started.
+		</p>
 		<InitMidiButton {midi_input} />
 	</section>
 	<section class="panel padded-md markup column-sm">

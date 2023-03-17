@@ -8,7 +8,7 @@ export const BASE_LEVEL_DEF = {
 	// but the number of trials that must be correct to count as success (which should probably be 0 for the first level!)
 	// trial_count: [2, 5, 25],
 	trial_count: dev ? 2 : 5,
-	sequence_length: dev ? 2 : 4,
+	sequence_length: dev ? 3 : 4,
 	note_min: 48,
 	note_max: 84,
 } satisfies Partial<LevelDef>;
