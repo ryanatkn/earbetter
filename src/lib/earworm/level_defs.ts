@@ -53,6 +53,7 @@ export const level_defs: LevelDef[] = [
 		id: '2 4 7',
 		...BASE_LEVEL_DEF,
 		intervals: [2, 4, 7],
+		sequence_length: DEFAULT_SEQUENCE_LENGTH * 2,
 	},
 	{
 		id: '4 7 12',
@@ -70,28 +71,27 @@ export const level_defs: LevelDef[] = [
 		id: '4 7 12 -4 -7 -12',
 		...BASE_LEVEL_DEF,
 		intervals: [4, 7, 12, -4, -7, -12],
-		sequence_length: DEFAULT_SEQUENCE_LENGTH * 2,
 	},
 	{
 		id: '1 2',
 		...BASE_LEVEL_DEF,
 		intervals: [1, 2],
+		sequence_length: DEFAULT_SEQUENCE_LENGTH * 2,
 	},
 	{
 		id: '2 3',
 		...BASE_LEVEL_DEF,
 		intervals: [2, 3],
+		sequence_length: DEFAULT_SEQUENCE_LENGTH * 2,
 	},
 	{
 		id: 'one full octave',
 		...BASE_LEVEL_DEF,
 		intervals: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12],
-		sequence_length: DEFAULT_SEQUENCE_LENGTH * 2,
 	},
 	{
 		id: 'one full octave in both directions',
 		...BASE_LEVEL_DEF,
 		intervals: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, -1, -2, -3, -4, -5, -6, -7, -8, -9, -10, -11, -12], // prettier-ignore
-		sequence_length: DEFAULT_SEQUENCE_LENGTH * 2,
 	},
 ];

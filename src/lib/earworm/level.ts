@@ -9,7 +9,7 @@ import {play_note} from '$lib/audio/play_note';
 export const DEFAULT_NOTE_DURATION = 500;
 export const DEFAULT_NOTE_DURATION_FAILED = 50;
 export const DEFAULT_FEEDBACK_DURATION = 1000;
-export const DEFAULT_SEQUENCE_LENGTH = dev ? 3 : 4;
+export const DEFAULT_SEQUENCE_LENGTH = dev ? 2 : 4;
 export const DEFAULT_TRIAL_COUNT = dev ? 2 : 5;
 
 export interface LevelDef {
