@@ -1,21 +1,22 @@
 import {writable, type Writable} from 'svelte/store';
 import {randomItem, randomInt} from '@feltjs/util/random.js';
+import {dev} from '$app/environment';
 
 import type {Midi} from '$lib/music/midi';
 import type {Semitones} from '$lib/music/notes';
 import {play_note} from '$lib/audio/play_note';
 
-const NOTE_DURATION = 500;
-const NOTE_DURATION_FAILED = 50;
-const FEEDBACK_DURATION = 1000;
+export const DEFAULT_NOTE_DURATION = 500;
+export const DEFAULT_NOTE_DURATION_FAILED = 50;
+export const DEFAULT_FEEDBACK_DURATION = 1000;
+export const DEFAULT_SEQUENCE_LENGTH = dev ? 3 : 4;
+export const DEFAULT_TRIAL_COUNT = dev ? 2 : 5;
 
 export interface LevelDef {
 	id: string;
 	intervals: Semitones[];
 	trial_count: number;
 	sequence_length: number;
-	// TODO BLOCK do this? would make defining some levels easier, but might be more complexity than it's worth
-	// sequence_length_multiplier: number;
 	note_min: Midi;
 	note_max: Midi;
 }
@@ -139,7 +140,7 @@ export const create_level_store = (level_def: LevelDef, audio_ctx: AudioContext)
 					presenting_index: i,
 				},
 			}));
-			await play_note(audio_ctx, note, NOTE_DURATION); // eslint-disable-line no-await-in-loop
+			await play_note(audio_ctx, note, DEFAULT_NOTE_DURATION); // eslint-disable-line no-await-in-loop
 		}
 		update(($level) => ({
 			...$level,
@@ -166,12 +167,12 @@ export const create_level_store = (level_def: LevelDef, audio_ctx: AudioContext)
 			// if incorrect -> FAILURE -> showing_failure_feedback -> REPROMPT
 			if (actual !== note) {
 				console.log('guess INCORRECT');
-				void play_note(audio_ctx, note, NOTE_DURATION_FAILED);
+				void play_note(audio_ctx, note, DEFAULT_NOTE_DURATION_FAILED);
 				if ($level.trial.guessing_index === 0) {
 					return $level; // no penalty or delay if this is the first one
 				}
 				// TODO this is really "on enter showing_failure_feedback state" logic
-				setTimeout(() => retry_trial(), FEEDBACK_DURATION);
+				setTimeout(() => retry_trial(), DEFAULT_FEEDBACK_DURATION);
 				return {
 					...$level,
 					status: 'showing_failure_feedback',
@@ -179,14 +180,14 @@ export const create_level_store = (level_def: LevelDef, audio_ctx: AudioContext)
 			}
 
 			// guess is correct
-			void play_note(audio_ctx, note, NOTE_DURATION);
+			void play_note(audio_ctx, note, DEFAULT_NOTE_DURATION);
 
 			if ($level.trial.guessing_index >= $level.trial.sequence.length - 1) {
 				// if more -> update current response index
 				if ($level.trial.index < $level.def.trial_count - 1) {
 					console.log('guess CORRECT AND DONE WITH TRIAL!!');
 					// TODO this is really "on enter showing_success_feedback state" logic
-					setTimeout(() => next_trial(), FEEDBACK_DURATION);
+					setTimeout(() => next_trial(), DEFAULT_FEEDBACK_DURATION);
 					return {
 						...$level,
 						status: 'showing_success_feedback',
@@ -194,7 +195,7 @@ export const create_level_store = (level_def: LevelDef, audio_ctx: AudioContext)
 				} else {
 					// TODO this is really "on enter showing_success_feedback state" logic
 					console.log('guess CORRECT AND DONE WITH ALL TRIALS!!!!');
-					setTimeout(() => complete_level(), FEEDBACK_DURATION);
+					setTimeout(() => complete_level(), DEFAULT_FEEDBACK_DURATION);
 					return {
 						...$level,
 						status: 'showing_success_feedback',

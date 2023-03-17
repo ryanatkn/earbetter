@@ -1,14 +1,14 @@
 import {dev} from '$app/environment';
 
-import type {LevelDef} from '$lib/earworm/level';
+import {DEFAULT_SEQUENCE_LENGTH, DEFAULT_TRIAL_COUNT, type LevelDef} from '$lib/earworm/level';
 
 export const BASE_LEVEL_DEF = {
 	// TODO support something like this for 3-star accomplishment (or N-star)
 	// we probably additionally want to say for each version not just the number of trials,
 	// but the number of trials that must be correct to count as success (which should probably be 0 for the first level!)
 	// trial_count: [2, 5, 25],
-	trial_count: dev ? 2 : 5,
-	sequence_length: dev ? 3 : 4,
+	trial_count: DEFAULT_TRIAL_COUNT,
+	sequence_length: DEFAULT_SEQUENCE_LENGTH,
 	note_min: 48,
 	note_max: 84,
 } satisfies Partial<LevelDef>;
@@ -58,19 +58,19 @@ export const level_defs: LevelDef[] = [
 		id: '4 7 12',
 		...BASE_LEVEL_DEF,
 		intervals: [4, 7, 12],
-		sequence_length: dev ? 2 : 7,
+		sequence_length: DEFAULT_SEQUENCE_LENGTH * 2,
 	},
 	{
 		id: '2 4 7 12',
 		...BASE_LEVEL_DEF,
 		intervals: [2, 4, 7],
-		sequence_length: dev ? 2 : 7,
+		sequence_length: DEFAULT_SEQUENCE_LENGTH * 2,
 	},
 	{
 		id: '4 7 12 -4 -7 -12',
 		...BASE_LEVEL_DEF,
 		intervals: [4, 7, 12, -4, -7, -12],
-		sequence_length: dev ? 2 : 7,
+		sequence_length: DEFAULT_SEQUENCE_LENGTH * 2,
 	},
 	{
 		id: '1 2',
@@ -86,12 +86,12 @@ export const level_defs: LevelDef[] = [
 		id: 'one full octave',
 		...BASE_LEVEL_DEF,
 		intervals: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12],
-		sequence_length: dev ? 2 : 10,
+		sequence_length: DEFAULT_SEQUENCE_LENGTH * 2,
 	},
 	{
 		id: 'one full octave in both directions',
 		...BASE_LEVEL_DEF,
 		intervals: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, -1, -2, -3, -4, -5, -6, -7, -8, -9, -10, -11, -12], // prettier-ignore
-		sequence_length: dev ? 2 : 10,
+		sequence_length: DEFAULT_SEQUENCE_LENGTH * 2,
 	},
 ];
