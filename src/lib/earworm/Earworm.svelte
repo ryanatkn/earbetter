@@ -10,14 +10,13 @@
 	import {get_audio_ctx} from '$lib/audio/audio_ctx';
 	import MidiInput from '$lib/audio/MidiInput.svelte';
 
-	let default_level_defs = level_defs; // is a bit awkward, doing it this way to allow custom games, and removing both kinds
+	export let default_level_defs = level_defs; // is a bit awkward, doing it this way to allow custom games, and removing both kinds
+	export let active_level_def: LevelDef | null = null;
+	export let editing_level_def: LevelDef | null = null;
 
 	let custom_level_defs: LevelDef[] = [];
 	$: all_level_defs = default_level_defs.concat(custom_level_defs);
 	$: console.log(`all_level_defs`, all_level_defs);
-
-	let active_level_def: LevelDef | null = null;
-	let editing_level_def: LevelDef | null = null;
 
 	const level_stats = create_level_stats(default_level_defs);
 	$: console.log('stats', $level_stats);
@@ -30,7 +29,7 @@
 
 	const select_level_def = async (level_def: LevelDef): Promise<void> => {
 		void audio_ctx.resume(); // TODO where's the best place for this? needs to be synchronous with a click or similar, so this breaks if `select_level_def` is called without a user action
-		await goto(`${base}/game/play#` + JSON.stringify(level_def));
+		await goto(`${base}/game/play#` + encodeURIComponent(JSON.stringify(level_def)));
 	};
 
 	const edit_level_def = (level_def: LevelDef): void => {
@@ -55,12 +54,13 @@
 		custom_level_defs = custom_level_defs.concat({...level_def, id});
 	};
 
-	const exit_level_to_map = (success = false): void => {
+	const exit_level_to_map = async (success = false): Promise<void> => {
 		if (!active_level_def) return;
 		if (success) {
 			level_stats.register_success(active_level_def.id);
 		}
 		active_level_def = null;
+		await goto('#');
 	};
 </script>
 
