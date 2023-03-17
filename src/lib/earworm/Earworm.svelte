@@ -13,7 +13,8 @@
 	$: all_level_defs = default_level_defs.concat(custom_level_defs);
 	$: console.log(`all_level_defs`, all_level_defs);
 
-	let active_level_def: LevelDef | null = null; // TODO initialize to undefined
+	let active_level_def: LevelDef | null = null;
+	let editing_level_def: LevelDef | null = null;
 
 	const level_stats = create_level_stats(default_level_defs);
 	$: console.log('stats', $level_stats);
@@ -30,7 +31,7 @@
 	};
 
 	const edit_level_def = (level_def: LevelDef): void => {
-		console.log(`edit`, level_def);
+		editing_level_def = level_def;
 	};
 
 	const remove_level_def = (level_def: LevelDef): void => {
