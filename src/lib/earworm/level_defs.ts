@@ -55,6 +55,13 @@ export const level_defs: LevelDef[] = [
 		unlock: ['one full octave'], // TODO rename
 	},
 	{
+		id: '4 7 12 -4 -7 -12',
+		...base_level_def,
+		sequence_length: dev ? 2 : 7,
+		intervals: [4, 7, 12, -4, -7, -12],
+		unlock: ['one full octave in both directions'], // TODO rename
+	},
+	{
 		id: 'one full octave',
 		...base_level_def,
 		sequence_length: dev ? 2 : 10,
