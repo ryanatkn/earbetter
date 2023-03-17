@@ -5,16 +5,13 @@ import type {Midi} from '$lib/music/midi';
 import type {Semitones} from '$lib/music/notes';
 import {play_note} from '$lib/audio/play_note';
 
-// TODO play a victory sound on complete
-// TODO show feedback on the pressed buttons, regardless of how their interval was input (keyboard, tapping, clicking, debug key, etc)
-
 const NOTE_DURATION = 500;
 const NOTE_DURATION_FAILED = 50;
 const FEEDBACK_DURATION = 1000;
 
 export interface LevelDef {
 	id: string;
-	intervals: readonly Semitones[];
+	intervals: Semitones[];
 	trial_count: number;
 	sequence_length: number;
 	note_min: Midi;
@@ -220,7 +217,7 @@ export const create_level_store = (level_def: LevelDef, audio_ctx: AudioContext)
 			// TODO check this?
 			// if ($level.status !== 'showing_failure_feedback') throw Error();
 			// TODO this is really "on enter presenting_prompt state" logic
-			// TODO BLOCK try to remove the timeout
+			// TODO try to remove the timeout
 			setTimeout(() => present_trial_prompt($level.trial!.sequence));
 			return {
 				...$level,

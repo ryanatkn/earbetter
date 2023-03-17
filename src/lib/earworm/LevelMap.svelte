@@ -22,9 +22,7 @@
 	const audio_ctx = get_audio_ctx();
 	(window as any).audio = audio_ctx;
 
-	// TODO BLOCK {level_def} below with LevelDefForm
-
-	let set_level_def;
+	let set_level_def: (leve_def: LevelDef) => void;
 	$: level_def && set_level_def?.(level_def);
 </script>
 
