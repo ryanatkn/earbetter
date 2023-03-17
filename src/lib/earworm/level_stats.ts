@@ -11,7 +11,7 @@ export interface LevelStats {
 	register_success: (id: string) => void;
 }
 
-const default_state = (defs: LevelDef[]): LevelStatsState => {
+const to_default_state = (defs: LevelDef[]): LevelStatsState => {
 	const completed: {[key: string]: boolean} = {};
 	for (const def of defs) {
 		completed[def.id] = false; // TODO load from localStorage (eventually from the server)
@@ -22,7 +22,7 @@ const default_state = (defs: LevelDef[]): LevelStatsState => {
 };
 
 export const create_level_stats = (defs: LevelDef[]): LevelStats => {
-	const {subscribe, update} = writable(default_state(defs));
+	const {subscribe, update} = writable(to_default_state(defs));
 
 	return {
 		subscribe,

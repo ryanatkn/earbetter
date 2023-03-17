@@ -1,6 +1,5 @@
 <script lang="ts">
-	import LevelMap from './LevelMap.svelte';
-
+	import LevelMap from '$lib/earworm/LevelMap.svelte';
 	import {level_defs} from '$lib/earworm/level_defs';
 	import type {LevelDef} from '$lib/earworm/level';
 	import {create_level_stats} from '$lib/earworm/level_stats';
@@ -9,6 +8,9 @@
 	import MidiInput from '$lib/audio/MidiInput.svelte';
 
 	console.log('level_defs', level_defs);
+
+	let created_level_defs: LevelDef[] = [];
+	$: all_level_defs = level_defs.concat(created_level_defs);
 
 	let active_level_def: LevelDef | null = null; // TODO initialize to undefined
 
@@ -26,6 +28,10 @@
 		active_level_def = level_def;
 	};
 
+	const create_level_def = (level_def: LevelDef): void => {
+		created_level_defs = created_level_defs.concat(level_def);
+	};
+
 	const exit_level_to_map = (success = false): void => {
 		if (!active_level_def) return;
 		if (success) {
@@ -40,7 +46,7 @@
 	{#if active_level_def}
 		<Level level_def={active_level_def} {exit_level_to_map} />
 	{:else}
-		<LevelMap {midi_input} {select_level_def} />
+		<LevelMap {midi_input} level_defs={all_level_defs} {select_level_def} {create_level_def} />
 	{/if}
 </div>
 

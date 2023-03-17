@@ -1,16 +1,16 @@
 <script lang="ts">
-	import {level_defs} from '$lib/earworm/level_defs';
 	import type {LevelDef} from '$lib/earworm/level';
 	import {create_level_stats} from '$lib/earworm/level_stats';
 	import LevelMapItem from '$lib/earworm/LevelMapItem.svelte';
 	import {get_audio_ctx} from '$lib/audio/audio_ctx';
 	import type MidiInput from '$lib/audio/MidiInput.svelte';
 	import InitMidiButton from '$lib/music/InitMidiButton.svelte';
-
-	console.log('level_defs', level_defs);
+	import LevelDefForm from '$lib/earworm/LevelDefForm.svelte';
 
 	export let midi_input: MidiInput;
+	export let level_defs: LevelDef[];
 	export let select_level_def: (level_def: LevelDef) => void; // TODO event?
+	export let create_level_def: (level_def: LevelDef) => void; // TODO event?
 
 	const level_stats = create_level_stats(level_defs);
 	$: console.log('stats', $level_stats);
@@ -32,6 +32,9 @@
 		{/each}
 	</div>
 	<InitMidiButton {midi_input} />
+	<section class="panel padded-md">
+		<LevelDefForm on:save={(e) => create_level_def(e.detail)} />
+	</section>
 </div>
 
 <style>
@@ -45,5 +48,8 @@
 		flex-direction: column;
 		align-items: stretch;
 		padding: var(--spacing_md);
+	}
+	section {
+		margin: var(--spacing_xl5) 0;
 	}
 </style>

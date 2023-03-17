@@ -14,15 +14,15 @@ const FEEDBACK_DURATION = 1000;
 
 export interface LevelDef {
 	id: string;
+	intervals: readonly Semitones[];
 	trial_count: number;
+	sequence_length: 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10 | 11 | 12 | 13 | 14 | 15 | 16; // prettier-ignore
 	// The note_min and note_max define the entire allowable spectrum of notes.
 	// Values like the intervals and octaveShift
 	// may spill over combined with the tonic.
 	note_min: Midi;
 	note_max: Midi;
-	sequence_length: 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10 | 11 | 12 | 13 | 14 | 15 | 16; // prettier-ignore
-	intervals: readonly Semitones[];
-	// TODO probably want to specify a tuple of `[string, LevelRating]`
+	// TODO maybe specify a tuple of `[string, LevelRating]`
 	// so things can unlock with 1-star performances
 	// (or even 0-star performances, especially at the very beginning)
 	// TODO support something like this,
@@ -307,3 +307,7 @@ const to_fallback_tonic = (note_min: Midi, note_max: Midi): Midi => {
 	const offset = ((note_max - note_min) / 4) | 0;
 	return randomInt(note_min + offset, note_max - offset) as Midi;
 };
+
+export const serialize_intervals = (intervals: number[]): string => intervals.join(', ');
+export const parse_intervals = (value: string): number[] =>
+	value.split(',').map((v) => Number(v.trim()));
