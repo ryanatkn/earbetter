@@ -22,14 +22,6 @@ export interface LevelDef {
 	// may spill over combined with the tonic.
 	note_min: Midi;
 	note_max: Midi;
-	// TODO maybe specify a tuple of `[string, LevelRating]`
-	// so things can unlock with 1-star performances
-	// (or even 0-star performances, especially at the very beginning)
-	// TODO support something like this,
-	// and lay out levels in a pattern that combines levels that you beat into new levels
-	// like 1/5/7 + 1/2/4  -> unlocks 1/2/4/5/7
-	// unlock: [1, 2],
-	unlock?: readonly string[];
 }
 
 export type Status =

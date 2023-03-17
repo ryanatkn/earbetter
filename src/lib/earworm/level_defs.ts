@@ -38,28 +38,24 @@ export const level_defs: LevelDef[] = [
 		id: '2 4 7',
 		...BASE_LEVEL_DEF,
 		intervals: [2, 4, 7],
-		unlock: ['2 7', '4 7'], // TODO rename
 	},
 	{
 		id: '2 4 7 9',
 		...BASE_LEVEL_DEF,
 		intervals: [2, 4, 7],
 		sequence_length: dev ? 2 : 7,
-		unlock: ['4 7 12'], // TODO rename
 	},
 	{
 		id: '4 7 12',
 		...BASE_LEVEL_DEF,
 		intervals: [4, 7, 12],
 		sequence_length: dev ? 2 : 7,
-		unlock: ['one full octave'], // TODO rename
 	},
 	{
 		id: '4 7 12 -4 -7 -12',
 		...BASE_LEVEL_DEF,
 		intervals: [4, 7, 12, -4, -7, -12],
 		sequence_length: dev ? 2 : 7,
-		unlock: ['one full octave in both directions'], // TODO rename
 	},
 	{
 		id: 'one full octave',
