@@ -1,4 +1,7 @@
 <script lang="ts">
+	import {goto} from '$app/navigation';
+	import {base} from '$app/paths';
+
 	import LevelMap from '$lib/earworm/LevelMap.svelte';
 	import {level_defs} from '$lib/earworm/level_defs';
 	import type {LevelDef} from '$lib/earworm/level';
@@ -6,8 +9,6 @@
 	import Level from '$lib/earworm/Level.svelte';
 	import {get_audio_ctx} from '$lib/audio/audio_ctx';
 	import MidiInput from '$lib/audio/MidiInput.svelte';
-	import {goto} from '$app/navigation';
-	import {base} from '$app/paths';
 
 	let default_level_defs = level_defs; // is a bit awkward, doing it this way to allow custom games, and removing both kinds
 
@@ -29,8 +30,6 @@
 
 	const select_level_def = async (level_def: LevelDef): Promise<void> => {
 		void audio_ctx.resume(); // TODO where's the best place for this? needs to be synchronous with a click or similar, so this breaks if `select_level_def` is called without a user action
-		// TODO BLOCK remove this stuff
-		// active_level_def = level_def;
 		await goto(`${base}/game/play#` + JSON.stringify(level_def));
 	};
 
