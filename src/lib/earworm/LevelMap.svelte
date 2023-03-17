@@ -26,7 +26,7 @@
 
 <div class="map">
 	<section class="panel padded-md">
-		<h1>levels</h1>
+		<h2>ear training levels</h2>
 		<div class="levels column-sm">
 			{#each level_defs as level_def (level_def.id)}
 				<LevelMapItem
@@ -40,9 +40,9 @@
 		</div>
 	</section>
 	<section class="panel padded-md markup">
-		<InitMidiButton {midi_input} />
 		<h2>controls</h2>
 		<p><code>Escape</code>: exit level</p>
+		<InitMidiButton {midi_input} />
 	</section>
 	<section class="panel padded-md markup">
 		<LevelDefForm on:create={(e) => create_level_def?.(e.detail)} />

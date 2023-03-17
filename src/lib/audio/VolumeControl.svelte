@@ -13,7 +13,5 @@
 </div>
 
 <style>
-	.volume-control {
-		/*  */
-	}
+	/* .volume-control {} */
 </style>
