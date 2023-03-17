@@ -24,6 +24,8 @@
 		note_max,
 	});
 
+	// TODO BLOCK need so say `update level` somehow
+
 	export const set_level_def = (level_def: LevelDef): void => {
 		id = level_def.id;
 		intervals = level_def.intervals;
