@@ -55,6 +55,17 @@
 		custom_level_defs = custom_level_defs.concat({...level_def, id});
 	};
 
+	const update_level_def = (level_def: LevelDef): void => {
+		const {id} = level_def;
+		const found = level_defs.findIndex((d) => d.id === id);
+		// TODO BLOCK
+		console.log(`update_level_def found`, found);
+		if (found === -1) {
+			console.error('not found', level_def);
+			return;
+		}
+	};
+
 	const exit_level_to_map = async (success = false): Promise<void> => {
 		if (!active_level_def) return;
 		if (success) {
@@ -80,6 +91,7 @@
 		{edit_level_def}
 		{remove_level_def}
 		{create_level_def}
+		{update_level_def}
 	/>
 	<slot name="footer" />
 {/if}

@@ -14,6 +14,7 @@
 	export let edit_level_def: ((level_def: LevelDef) => void) | null = null; // TODO event? or is the ability to have a return value for ephemeral state desired?
 	export let remove_level_def: ((level_def: LevelDef) => void) | null = null; // TODO event? or is the ability to have a return value for ephemeral state desired?
 	export let create_level_def: ((level_def: LevelDef) => void) | null = null; // TODO event? or is the ability to have a return value for ephemeral state desired?
+	export let update_level_def: ((level_def: LevelDef) => void) | null = null; // TODO event? or is the ability to have a return value for ephemeral state desired?
 
 	const level_stats = create_level_stats(level_defs);
 	$: console.log('stats', $level_stats);
@@ -24,6 +25,9 @@
 
 	let set_level_def: (leve_def: LevelDef) => void;
 	$: level_def && set_level_def?.(level_def);
+
+	let id: string;
+	$: editing = level_defs.some((d) => d.id === id);
 </script>
 
 <div class="map">
@@ -47,7 +51,12 @@
 		<InitMidiButton {midi_input} />
 	</section>
 	<section class="panel padded-md markup">
-		<LevelDefForm bind:set_level_def on:create={(e) => create_level_def?.(e.detail)} />
+		<LevelDefForm
+			{editing}
+			bind:id
+			bind:set_level_def
+			on:create={(e) => (editing ? update_level_def : create_level_def)?.(e.detail)}
+		/>
 	</section>
 </div>
 
