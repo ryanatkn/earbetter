@@ -50,7 +50,6 @@ export type LevelStoreState = {
 export interface LevelStore {
 	subscribe: Writable<LevelStoreState>['subscribe'];
 	reset: () => void;
-	is_input_disabled: ($level: LevelStoreState, index: number) => boolean;
 	// game methods
 	start: () => void;
 	guess: (note: Midi) => void;
@@ -73,18 +72,14 @@ export interface Trial {
 
 const create_next_trial = ({def, trial}: LevelStoreState): Trial => {
 	const {note_min, note_max} = def;
-	console.log(`note_min, note_max`, note_min, note_max);
 
 	const interval_max = def.intervals.reduce((max, v) => Math.max(max, v));
 	const interval_min = def.intervals.reduce((max, v) => Math.min(max, v));
-	console.log(`interval_max`, interval_max, `interval_min`, interval_min);
 	const tonic_max = Math.min(note_max - interval_max, note_max);
 	const tonic_min = Math.max(note_min - interval_min, note_min);
-	console.log(`tonic_min, tonic_max`, tonic_min, tonic_max);
 	const tonic = (
 		tonic_min < tonic_max ? randomInt(tonic_min, tonic_max) : to_fallback_tonic(note_min, note_max)
 	) as Midi;
-	console.log(`tonic`, tonic);
 	const sequence: Midi[] = [tonic];
 
 	// compute the valid notes
@@ -284,7 +279,6 @@ export const create_level_store = (level_def: LevelDef, audio_ctx: AudioContext)
 			set(to_default_state(level_def));
 			start();
 		},
-		is_input_disabled,
 		start,
 		guess,
 		retry_trial,
@@ -300,12 +294,6 @@ export const create_level_store = (level_def: LevelDef, audio_ctx: AudioContext)
 		get_correct_guess,
 	};
 	return store;
-};
-
-const is_input_disabled = ($level: LevelStoreState, index: number): boolean => {
-	if ($level.status !== 'waiting_for_input') return true;
-	if (index === 0) return false;
-	return !$level.def.intervals.includes(index);
 };
 
 const get_correct_guess = ($level: LevelStoreState): Midi | null => {
