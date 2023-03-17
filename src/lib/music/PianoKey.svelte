@@ -35,7 +35,7 @@
 	style:left="{left_offset}px"
 >
 	{#if middle_c && show_middle_c}
-		<span class="middle-c">C5</span>
+		<span class="middle-c">C4</span>
 	{/if}
 </button>
 
