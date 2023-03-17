@@ -8,7 +8,7 @@
 
 	const dispatch = createEventDispatcher<{save: LevelDef}>();
 
-	export let id = 'new level';
+	export let id = 'new custom level';
 	export let intervals = [4, 7, 12];
 	export let trial_count = BASE_LEVEL_DEF.trial_count;
 	export let sequence_length = BASE_LEVEL_DEF.sequence_length;
@@ -26,7 +26,7 @@
 </script>
 
 <form class="level-def-form">
-	<header>create a new level</header>
+	<header>create a custom level</header>
 	<fieldset>
 		<label>id<input bind:value={id} /></label>
 		<label>trial_count<input type="number" bind:value={trial_count} /></label>
