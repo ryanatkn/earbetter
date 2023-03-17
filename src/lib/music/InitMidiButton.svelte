@@ -7,6 +7,8 @@
 
 	$: midi_access = midi_input?.midi_access;
 	$: disabled = !midi_input || !!$midi_access;
+
+	$: midi_inputs = $midi_access && Array.from($midi_access.inputs.values());
 </script>
 
 <button
@@ -15,5 +17,16 @@
 	{disabled}
 	title={midi_input ? ($midi_access ? 'MIDI is ready!' : 'connect your MIDI device') : 'loading...'}
 >
-	{#if $midi_access}🎶{:else}init MIDI{/if}
+	{#if $midi_access}
+		{#if midi_inputs?.length}
+			🎶
+			{#each midi_inputs as midi_input}
+				{midi_input.name} ({midi_input.type}, {midi_input.manufacturer}, {midi_input.id})
+			{/each}
+		{:else}
+			no MIDI devices found
+		{/if}
+	{:else}
+		init MIDI
+	{/if}
 </button>
