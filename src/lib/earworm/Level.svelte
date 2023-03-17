@@ -1,5 +1,6 @@
 <script lang="ts">
 	import {onMount} from 'svelte';
+	import {writable} from 'svelte/store';
 
 	import {create_level_store, type LevelDef} from '$lib/earworm/level';
 	import Piano from '$lib/music/Piano.svelte';
@@ -31,6 +32,8 @@
 	let clientWidth; // `undefined` on first render
 
 	const audio_ctx = get_audio_ctx();
+
+	const volume = writable(0.51);
 
 	const level = create_level_store(level_def, audio_ctx);
 	// $: level.setDef(level_def); // TODO update if level_def prop changes
@@ -135,7 +138,7 @@
 				on:press={$level.status === 'waiting_for_input'
 					? (e) => on_press_key(e.detail)
 					: $level.status === 'complete'
-					? (e) => start_playing(audio_ctx, e.detail)
+					? (e) => start_playing(audio_ctx, e.detail, $volume)
 					: undefined}
 				on:release={$level.status === 'complete' ? (e) => stop_playing(e.detail) : undefined}
 				enabled_keys={$level.trial?.valid_notes}

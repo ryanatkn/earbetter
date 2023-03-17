@@ -7,10 +7,14 @@
 	import {MIDI_MAX, MIDI_MIN, type Midi} from '$lib/music/midi';
 	import {start_playing, stop_playing} from '$lib/audio/play_note';
 	import InitMidiButton from '$lib/music/InitMidiButton.svelte';
+	import {writable} from 'svelte/store';
+	import VolumeControl from '$lib/audio/VolumeControl.svelte';
 
 	const audio_ctx = get_audio_ctx();
 
 	let midi_input: MidiInput | undefined;
+
+	const volume = writable(0.51);
 
 	let clientWidth: number; // `undefined` on first render
 
@@ -26,7 +30,7 @@
 <main bind:clientWidth>
 	<MidiInput
 		bind:this={midi_input}
-		on:note_start={(e) => start_playing(audio_ctx, e.detail.note)}
+		on:note_start={(e) => start_playing(audio_ctx, e.detail.note, $volume)}
 		on:note_stop={(e) => stop_playing(e.detail.note)}
 	/>
 	<div class="piano-wrapper" style:padding="{piano_padding}px">
@@ -35,7 +39,7 @@
 				width={clientWidth - piano_padding * 2}
 				{note_min}
 				{note_max}
-				on:press={(e) => start_playing(audio_ctx, e.detail)}
+				on:press={(e) => start_playing(audio_ctx, e.detail, $volume)}
 				on:release={(e) => stop_playing(e.detail)}
 				{emphasized_keys}
 			/>
@@ -55,6 +59,7 @@
 			</label>
 		</fieldset>
 		<InitMidiButton {midi_input} />
+		<VolumeControl {volume} />
 	</form>
 	<Breadcrumbs basePath="" />
 </main>
