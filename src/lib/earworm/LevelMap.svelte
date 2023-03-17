@@ -37,8 +37,10 @@
 			{/each}
 		</div>
 	</section>
-	<section class="panel padded-md">
+	<section class="panel padded-md markup">
 		<InitMidiButton {midi_input} />
+		<h2>controls</h2>
+		<p><code>Escape</code>: exit level</p>
 	</section>
 	<section class="panel padded-md markup">
 		<LevelDefForm on:create={(e) => create_level_def?.(e.detail)} />
