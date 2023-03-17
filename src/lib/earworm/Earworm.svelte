@@ -35,8 +35,6 @@
 		} else {
 			custom_level_defs = custom_level_defs.filter((d) => d !== level_def);
 		}
-		void audio_ctx.resume(); // TODO where's the best place for this? needs to be synchronous with a click or similar, so this breaks if `select_level_def` is called without a user action
-		active_level_def = level_def;
 	};
 
 	const create_level_def = (level_def: LevelDef): void => {
