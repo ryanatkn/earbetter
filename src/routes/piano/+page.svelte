@@ -1,6 +1,4 @@
 <script lang="ts">
-	import Breadcrumbs from '@feltjs/felt-ui/Breadcrumbs.svelte';
-
 	import Piano from '$lib/music/Piano.svelte';
 	import {get_audio_ctx} from '$lib/audio/audio_ctx';
 	import MidiInput from '$lib/audio/MidiInput.svelte';
@@ -9,6 +7,7 @@
 	import InitMidiButton from '$lib/music/InitMidiButton.svelte';
 	import {writable} from 'svelte/store';
 	import VolumeControl from '$lib/audio/VolumeControl.svelte';
+	import Footer from '$routes/Footer.svelte';
 
 	const audio_ctx = get_audio_ctx();
 
@@ -45,7 +44,7 @@
 			/>
 		{/if}
 	</div>
-	<form class="column-sm">
+	<form class="column-sm markup">
 		<fieldset class="row">
 			<label>
 				MIDI min
@@ -58,10 +57,14 @@
 				<input type="range" bind:value={note_max} step={1} min={MIDI_MIN} max={MIDI_MAX} />
 			</label>
 		</fieldset>
-		<InitMidiButton {midi_input} />
-		<VolumeControl {volume} />
+		<fieldset>
+			<VolumeControl {volume} />
+		</fieldset>
+		<fieldset>
+			<InitMidiButton {midi_input} />
+		</fieldset>
 	</form>
-	<Breadcrumbs basePath="" />
+	<Footer />
 </main>
 
 <style>
@@ -72,5 +75,9 @@
 	}
 	.piano-wrapper {
 		padding: var(--spacing_md);
+	}
+	/* TODO this hack shouldn't be needed */
+	.row label {
+		margin-bottom: 0;
 	}
 </style>
