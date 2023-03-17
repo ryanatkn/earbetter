@@ -30,6 +30,11 @@ export const level_defs: LevelDef[] = [
 		intervals: [2, 7],
 	},
 	{
+		id: '2 4',
+		...BASE_LEVEL_DEF,
+		intervals: [2, 4],
+	},
+	{
 		id: '4 7',
 		...BASE_LEVEL_DEF,
 		intervals: [4, 7],
