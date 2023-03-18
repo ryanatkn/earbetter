@@ -10,5 +10,6 @@ wow cool welcome ok:
 1. we use GitHub [issues](https://github.com/ryanatkn/earworm/issues) and
    [discussions](https://github.com/ryanatkn/earworm/discussions)
 1. [PRs](https://github.com/ryanatkn/earworm/pulls)
-   are welcome but may be declined, everything is public domain and forking is encouraged
+   are welcome but may be declined for opinionated or other reasons,
+   everything is public domain and forking is encouraged
 1. please be kind and curious
