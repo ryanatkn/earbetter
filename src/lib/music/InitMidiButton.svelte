@@ -25,7 +25,7 @@
 				{midi_input.name} ({midi_input.type}, {midi_input.manufacturer}, {midi_input.id})
 			{/each}
 		{:else}
-			no MIDI devices found
+			no MIDI devices found :[
 		{/if}
 	{:else}
 		init MIDI
