@@ -4,7 +4,7 @@
 
 	import LevelMap from '$lib/earworm/LevelMap.svelte';
 	import {level_defs} from '$lib/earworm/level_defs';
-	import type {LevelDef} from '$lib/earworm/level';
+	import type {LevelDef, LevelId} from '$lib/earworm/level';
 	import {create_level_stats} from '$lib/earworm/level_stats';
 	import Level from '$lib/earworm/Level.svelte';
 	import {get_audio_ctx} from '$lib/audio/audio_ctx';
@@ -27,7 +27,12 @@
 
 	let midi_input: MidiInput;
 
-	const select_level_def = async (level_def: LevelDef): Promise<void> => {
+	const select_level_def = async (id: LevelId): Promise<void> => {
+		const level_def = level_defs.find((d) => d.id === id);
+		if (!level_def) {
+			console.error('cannot find level_def with id', id);
+			return;
+		}
 		void audio_ctx.resume(); // TODO where's the best place for this? needs to be synchronous with a click or similar, so this breaks if `select_level_def` is called without a user action
 		await goto(`${base}/game/play#` + encodeURIComponent(JSON.stringify(level_def)));
 	};
@@ -38,7 +43,12 @@
 		if (el) window.scrollTo({top: el.getBoundingClientRect().y, behavior: 'smooth'});
 	};
 
-	const remove_level_def = (level_def: LevelDef): void => {
+	const remove_level_def = (id: LevelId): void => {
+		const level_def = level_defs.find((d) => d.id === id);
+		if (!level_def) {
+			console.error('cannot find level_def with id', id);
+			return;
+		}
 		if (default_level_defs.includes(level_def)) {
 			default_level_defs = default_level_defs.filter((d) => d !== level_def);
 		} else {
@@ -47,13 +57,8 @@
 	};
 
 	const create_level_def = (level_def: LevelDef): void => {
-		let id = level_def.id;
-		let n = 2;
-		while (all_level_defs.find((d) => d.id === id)) {
-			id = level_def.id + ' ' + n;
-			n++;
-		}
-		custom_level_defs = custom_level_defs.concat({...level_def, id});
+		custom_level_defs = custom_level_defs.concat(level_def);
+		editing_level_def = level_def;
 	};
 
 	const update_level_def = (level_def: LevelDef): void => {

@@ -1,6 +1,9 @@
-import {dev} from '$app/environment';
-
-import {DEFAULT_SEQUENCE_LENGTH, DEFAULT_TRIAL_COUNT, type LevelDef} from '$lib/earworm/level';
+import {
+	create_id,
+	DEFAULT_SEQUENCE_LENGTH,
+	DEFAULT_TRIAL_COUNT,
+	type LevelDef,
+} from '$lib/earworm/level';
 
 export const BASE_LEVEL_DEF = {
 	// TODO support something like this for 3-star accomplishment (or N-star)
@@ -15,83 +18,68 @@ export const BASE_LEVEL_DEF = {
 
 export const level_defs: LevelDef[] = [
 	{
-		id: '1 12',
-		...BASE_LEVEL_DEF,
+		name: '1 12',
 		intervals: [1, 12],
 	},
 	{
-		id: '1 12 -1 -12',
-		...BASE_LEVEL_DEF,
+		name: '1 12 -1 -12',
 		intervals: [1, 12, -1, -12],
 	},
 	{
-		id: '2 7',
-		...BASE_LEVEL_DEF,
+		name: '2 7',
 		intervals: [2, 7],
 	},
 	{
-		id: '2 4',
-		...BASE_LEVEL_DEF,
+		name: '2 4',
 		intervals: [2, 4],
 	},
 	{
-		id: '4 7',
-		...BASE_LEVEL_DEF,
+		name: '4 7',
 		intervals: [4, 7],
 	},
 	{
-		id: '4 12',
-		...BASE_LEVEL_DEF,
+		name: '4 12',
 		intervals: [4, 12],
 	},
 	{
-		id: '7 12',
-		...BASE_LEVEL_DEF,
+		name: '7 12',
 		intervals: [7, 12],
 	},
 	{
-		id: '2 4 7',
-		...BASE_LEVEL_DEF,
+		name: '2 4 7',
 		intervals: [2, 4, 7],
 		sequence_length: DEFAULT_SEQUENCE_LENGTH * 2,
 	},
 	{
-		id: '4 7 12',
-		...BASE_LEVEL_DEF,
+		name: '4 7 12',
 		intervals: [4, 7, 12],
 		sequence_length: DEFAULT_SEQUENCE_LENGTH * 2,
 	},
 	{
-		id: '2 4 7 12',
-		...BASE_LEVEL_DEF,
+		name: '2 4 7 12',
 		intervals: [2, 4, 7],
 		sequence_length: DEFAULT_SEQUENCE_LENGTH * 2,
 	},
 	{
-		id: '4 7 12 -4 -7 -12',
-		...BASE_LEVEL_DEF,
+		name: '4 7 12 -4 -7 -12',
 		intervals: [4, 7, 12, -4, -7, -12],
 	},
 	{
-		id: '1 2',
-		...BASE_LEVEL_DEF,
+		name: '1 2',
 		intervals: [1, 2],
 		sequence_length: DEFAULT_SEQUENCE_LENGTH * 2,
 	},
 	{
-		id: '2 3',
-		...BASE_LEVEL_DEF,
+		name: '2 3',
 		intervals: [2, 3],
 		sequence_length: DEFAULT_SEQUENCE_LENGTH * 2,
 	},
 	{
-		id: 'one full octave',
-		...BASE_LEVEL_DEF,
+		name: 'one full octave',
 		intervals: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12],
 	},
 	{
-		id: 'one full octave in both directions',
-		...BASE_LEVEL_DEF,
+		name: 'one full octave in both directions',
 		intervals: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, -1, -2, -3, -4, -5, -6, -7, -8, -9, -10, -11, -12], // prettier-ignore
 	},
-];
+].map((d) => ({...BASE_LEVEL_DEF, ...d, id: create_id()}));

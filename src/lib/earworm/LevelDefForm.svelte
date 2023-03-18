@@ -1,14 +1,22 @@
 <script lang="ts">
 	import {createEventDispatcher} from 'svelte';
 
-	import {parse_intervals, serialize_intervals, type LevelDef} from '$lib/earworm/level';
+	import {
+		create_id,
+		parse_intervals,
+		serialize_intervals,
+		type LevelDef,
+		type LevelId,
+	} from '$lib/earworm/level';
 	import {BASE_LEVEL_DEF} from '$lib/earworm/level_defs';
 	import {MIDI_MAX, MIDI_MIN, type Midi} from '$lib/music/midi';
 	import {midi_names} from '$lib/music/notes';
 
-	const dispatch = createEventDispatcher<{create: LevelDef}>();
+	const dispatch = createEventDispatcher<{submit: LevelDef; remove: LevelId}>();
 
-	export let id = 'new custom level';
+	// TODO BLOCK how should the id be handled? immutable
+	export let id = create_id();
+	export let name = 'new custom level';
 	export let intervals = [4, 7, 12];
 	export let trial_count: number = BASE_LEVEL_DEF.trial_count;
 	export let sequence_length: number = BASE_LEVEL_DEF.sequence_length;
@@ -18,6 +26,7 @@
 
 	const to_data = (): LevelDef => ({
 		id,
+		name,
 		intervals,
 		trial_count,
 		sequence_length,
@@ -29,6 +38,7 @@
 
 	export const set_level_def = (level_def: LevelDef): void => {
 		id = level_def.id;
+		name = level_def.name;
 		intervals = level_def.intervals;
 		trial_count = level_def.trial_count;
 		sequence_length = level_def.sequence_length;
@@ -43,8 +53,8 @@
 	</header>
 	<fieldset>
 		<label>
-			<div class="title">id</div>
-			<input bind:value={id} />
+			<div class="title">name</div>
+			<input bind:value={name} />
 		</label>
 	</fieldset>
 	<fieldset>
@@ -55,21 +65,25 @@
 				on:input={(e) => parse_intervals(e.currentTarget.value)}
 			/>
 		</label>
-		<p>
-			a comma-separated list of numbers representing the <a
-				href="https://wikipedia.org/wiki/Interval_(music)">musical intervals</a
-			>, the number of piano keys (<a href="https://wikipedia.org/wiki/Semitone">semitones</a>)
-			separating each note from the
-			<a href="https://wikipedia.org/wiki/Tonic_(music)">tonic</a> (the base note)
-		</p>
-		<p>
-			for example, to train to distinguish between the <a
-				href="https://wikipedia.org/wiki/Perfect_fourth">perfect fourth</a
-			>
-			and <a href="https://wikipedia.org/wiki/Perfect_fifth">perfect fifth</a>, enter "<code
-				>5, 7</code
-			>"
-		</p>
+		<details>
+			<summary>more info</summary>
+			<p>
+				a comma-separated list of numbers representing the
+				<a href="https://wikipedia.org/wiki/Interval_(music)">musical intervals</a>, the number of
+				piano keys (<a href="https://wikipedia.org/wiki/Semitone">semitones</a>) separating each
+				note from the
+				<a href="https://wikipedia.org/wiki/Tonic_(music)">tonic</a> (the base note)
+			</p>
+			<p>
+				for example, to train to distinguish between the <a
+					href="https://wikipedia.org/wiki/Perfect_fourth">perfect fourth</a
+				>
+				and <a href="https://wikipedia.org/wiki/Perfect_fifth">perfect fifth</a>, enter "<code
+					>5, 7</code
+				>"
+			</p>
+			<p>negative numbers are allowed</p>
+		</details>
 	</fieldset>
 	<fieldset>
 		<label>
@@ -99,9 +113,18 @@
 			<input type="range" bind:value={note_max} step={1} min={MIDI_MIN} max={MIDI_MAX} />
 		</label>
 	</fieldset>
-	<button type="button" on:click={() => dispatch('create', to_data())}>
+	<fieldset>
+		<label>
+			<div class="title">id</div>
+			<input disabled value={id} />
+		</label>
+	</fieldset>
+	<button type="button" on:click={() => dispatch('submit', to_data())}>
 		{#if editing}update{:else}create{/if} level
 	</button>
+	{#if editing}
+		<button type="button" on:click={() => dispatch('remove', id)}> remove level </button>
+	{/if}
 </form>
 
 <style>

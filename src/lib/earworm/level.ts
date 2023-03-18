@@ -5,6 +5,7 @@ import {dev} from '$app/environment';
 import type {Midi} from '$lib/music/midi';
 import type {Semitones} from '$lib/music/notes';
 import {play_note} from '$lib/audio/play_note';
+import type {Flavored} from '@feltjs/util';
 
 export const DEFAULT_NOTE_DURATION = 500;
 export const DEFAULT_NOTE_DURATION_FAILED = 50;
@@ -14,6 +15,7 @@ export const DEFAULT_TRIAL_COUNT = dev ? 2 : 5;
 
 export interface LevelDef {
 	id: string;
+	name: string;
 	intervals: Semitones[];
 	trial_count: number;
 	sequence_length: number;
@@ -58,6 +60,10 @@ export interface Trial {
 	guessing_index: number | null; // index of interval being guessed
 	retry_count: number;
 }
+
+export type LevelId = Flavored<string, 'Level'>;
+
+export const create_id = (): LevelId => crypto.randomUUID();
 
 const create_next_trial = ({def, trial}: LevelStoreState): Trial => {
 	const {note_min, note_max} = def;
@@ -297,6 +303,10 @@ const to_fallback_tonic = (note_min: Midi, note_max: Midi): Midi => {
 	return randomInt(note_min + offset, note_max - offset) as Midi;
 };
 
+// TODO zod
 export const serialize_intervals = (intervals: number[]): string => intervals.join(', ');
 export const parse_intervals = (value: string): number[] =>
-	value.split(',').map((v) => Number(v.trim()));
+	value
+		.split(',')
+		.map((v) => Number(v.trim()) | 0)
+		.filter(Boolean); // exclude 0 intentionally

@@ -1,12 +1,13 @@
 <script lang="ts">
 	import {slide} from 'svelte/transition';
 
-	import type {LevelDef} from '$lib/earworm/level';
+	import type {LevelDef, LevelId} from '$lib/earworm/level';
 
 	export let level_def: LevelDef;
-	export let select: ((level_def: LevelDef) => void) | null = null; // TODO event? or is the ability to have a return value for ephemeral state desired?
+	export let select: ((id: LevelId) => void) | null = null; // TODO event? or is the ability to have a return value for ephemeral state desired?
 	export let edit: ((level_def: LevelDef) => void) | null = null; // TODO event? or is the ability to have a return value for ephemeral state desired?
-	export let remove: ((level_def: LevelDef) => void) | null = null; // TODO event? or is the ability to have a return value for ephemeral state desired?
+	export let remove: ((id: LevelId) => void) | null = null; // TODO event? or is the ability to have a return value for ephemeral state desired?
+	export let selected: boolean;
 	export let completed: boolean;
 
 	let removing = false;
@@ -14,14 +15,19 @@
 
 <li class="level-map-item" out:slide|local>
 	{#if select}
-		<button class="level-button" on:click={() => select?.(level_def)} class:selected={completed}>
-			{level_def.id}
+		<button
+			class="level-button"
+			on:click={() => select?.(level_def.id)}
+			class:selected
+			class:completed
+		>
+			{level_def.name}
 		</button>
 	{/if}
 	{#if edit}
 		<button
 			class="icon-button plain-button"
-			on:click={() => (removing ? remove?.(level_def) : edit?.(level_def))}
+			on:click={() => (removing ? remove?.(level_def.id) : edit?.(level_def))}
 		>
 			{#if removing}⨂{:else}✎{/if}
 		</button>

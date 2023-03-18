@@ -1,5 +1,5 @@
 <script lang="ts">
-	import type {LevelDef} from '$lib/earworm/level';
+	import type {LevelDef, LevelId} from '$lib/earworm/level';
 	import {create_level_stats} from '$lib/earworm/level_stats';
 	import LevelMapItem from '$lib/earworm/LevelMapItem.svelte';
 	import {get_audio_ctx} from '$lib/audio/audio_ctx';
@@ -12,9 +12,9 @@
 	export let midi_input: MidiInput;
 	export let level_defs: LevelDef[];
 	export let level_def: LevelDef | null = null;
-	export let select_level_def: ((level_def: LevelDef) => void) | null = null; // TODO event? or is the ability to have a return value for ephemeral state desired?
+	export let select_level_def: ((id: LevelId) => void) | null = null; // TODO event? or is the ability to have a return value for ephemeral state desired?
 	export let edit_level_def: ((level_def: LevelDef) => void) | null = null; // TODO event? or is the ability to have a return value for ephemeral state desired?
-	export let remove_level_def: ((level_def: LevelDef) => void) | null = null; // TODO event? or is the ability to have a return value for ephemeral state desired?
+	export let remove_level_def: ((id: LevelId) => void) | null = null; // TODO event? or is the ability to have a return value for ephemeral state desired?
 	export let create_level_def: ((level_def: LevelDef) => void) | null = null; // TODO event? or is the ability to have a return value for ephemeral state desired?
 	export let update_level_def: ((level_def: LevelDef) => void) | null = null; // TODO event? or is the ability to have a return value for ephemeral state desired?
 
@@ -37,13 +37,14 @@
 	<section class="panel padded-md">
 		<h2>ear training levels</h2>
 		<div class="levels column-sm">
-			{#each level_defs as level_def (level_def.id)}
+			{#each level_defs as d (d.id)}
 				<LevelMapItem
-					{level_def}
+					level_def={d}
 					select={select_level_def}
 					edit={edit_level_def}
 					remove={remove_level_def}
-					completed={$level_stats.completed[level_def.id]}
+					selected={d === level_def}
+					completed={$level_stats.completed[d.id]}
 				/>
 			{/each}
 		</div>
@@ -73,7 +74,10 @@
 			{editing}
 			bind:id
 			bind:set_level_def
-			on:create={(e) => (editing ? update_level_def : create_level_def)?.(e.detail)}
+			on:submit={(editing ? update_level_def : create_level_def)
+				? (e) => (editing ? update_level_def : create_level_def)?.(e.detail)
+				: undefined}
+			on:remove={remove_level_def ? (e) => remove_level_def?.(e.detail) : undefined}
 		/>
 	</section>
 </div>
