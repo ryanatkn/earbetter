@@ -64,7 +64,7 @@
 		</p>
 		<InitMidiButton {midi_input} />
 	</section>
-	<section class="panel padded-md">
+	<section class="panel padded-md column-sm">
 		<header class="markup">
 			<h2>ear training levels</h2>
 		</header>

@@ -13,7 +13,7 @@
 	let removing = false;
 </script>
 
-<li class="level-map-item" out:slide|local>
+<li class="level-map-item" transition:slide|local>
 	{#if select}
 		<button
 			class="level-button"
