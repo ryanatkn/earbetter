@@ -118,4 +118,13 @@
 		align-items: center;
 		margin: var(--spacing_xl5) var(--spacing_xl);
 	}
+	@media (max-width: 1111px) {
+		.map {
+			flex-direction: column;
+			align-items: center;
+		}
+		section {
+			margin: var(--spacing_xl5) 0;
+		}
+	}
 </style>
