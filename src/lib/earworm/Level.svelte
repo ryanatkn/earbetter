@@ -106,7 +106,7 @@
 
 <svelte:window on:keydown={keydown} />
 <MidiAccess bind:this={midi_access} />
-{#if $ma}
+{#if ma}
 	<MidiInput
 		{ma}
 		on:note_start={(e) => {

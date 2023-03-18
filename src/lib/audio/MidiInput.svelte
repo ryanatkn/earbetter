@@ -18,7 +18,7 @@
 		mod_wheel: number; // velocity
 	}>();
 
-	export let midi_access: Writable<MIDIAccess | null>;
+	export let ma: Writable<MIDIAccess | null>;
 
 	const midimessage = (event: MIDIMessageEvent): void => {
 		const message = parse_midi_message(event);
@@ -81,10 +81,10 @@
 	};
 	onDestroy(unsubscribe);
 
-	const subscribe = ($midi_access: MIDIAccess | null) => {
+	const subscribe = ($ma: MIDIAccess | null) => {
 		if (unsubscribers.length) unsubscribe();
-		if (!$midi_access) return;
-		for (const input of $midi_access.inputs.values()) {
+		if (!$ma) return;
+		for (const input of $ma.inputs.values()) {
 			log('subscribing to midi input', input);
 			input.addEventListener('midimessage', midimessage as any);
 			unsubscribers.push(() => {
@@ -94,5 +94,5 @@
 		}
 	};
 
-	$: subscribe($midi_access);
+	$: subscribe($ma);
 </script>

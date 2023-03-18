@@ -1,6 +1,7 @@
 <script lang="ts">
 	import Piano from '$lib/music/Piano.svelte';
 	import {get_audio_ctx} from '$lib/audio/audio_ctx';
+	import MidiAccess from '$lib/audio/MidiAccess.svelte';
 	import MidiInput from '$lib/audio/MidiInput.svelte';
 	import {MIDI_MAX, MIDI_MIN, type Midi} from '$lib/music/midi';
 	import {start_playing, stop_playing} from '$lib/audio/play_note';
@@ -13,7 +14,8 @@
 	const audio_ctx = get_audio_ctx();
 	const volume = get_volume();
 
-	let midi_input: MidiInput | undefined;
+	let midi_access: MidiAccess | undefined;
+	$: ma = midi_access?.ma;
 
 	let clientWidth: number; // `undefined` on first render
 
@@ -27,13 +29,16 @@
 	<title>earworm: piano</title>
 </svelte:head>
 
-<main bind:clientWidth>
-	<Header />
+<MidiAccess bind:this={midi_access} />
+{#if ma}
 	<MidiInput
-		bind:this={midi_input}
+		{ma}
 		on:note_start={(e) => start_playing(audio_ctx, e.detail.note, $volume)}
 		on:note_stop={(e) => stop_playing(e.detail.note)}
 	/>
+{/if}
+<main bind:clientWidth>
+	<Header />
 	<div class="piano-wrapper" style:padding="{piano_padding}px">
 		{#if clientWidth}
 			<Piano
@@ -62,7 +67,7 @@
 			<VolumeControl {volume} />
 		</fieldset>
 		<fieldset>
-			<InitMidiButton midi_access={midi_input} />
+			<InitMidiButton {midi_access} />
 		</fieldset>
 	</form>
 	<Footer />
