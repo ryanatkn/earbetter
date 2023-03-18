@@ -20,10 +20,15 @@
 >
 	{#if $ma}
 		{#if midi_inputs?.length}
-			🎶
-			{#each midi_inputs as midi_input}
-				{midi_input.name} ({midi_input.type}, {midi_input.manufacturer}, {midi_input.id})
-			{/each}
+			<div>🎶</div>
+			<table>
+				{#each midi_inputs as midi_input}
+					<tr>
+						<th><small>{midi_input.name}</small></th>
+						<th><small>{midi_input.id}</small></th>
+					</tr>
+				{/each}
+			</table>
 		{:else}
 			no MIDI devices found :[
 		{/if}
@@ -31,3 +36,9 @@
 		init MIDI
 	{/if}
 </button>
+
+<style>
+	th {
+		padding: 0 var(--spacing_sm);
+	}
+</style>
