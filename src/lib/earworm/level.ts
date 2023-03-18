@@ -1,4 +1,4 @@
-import {writable, type Writable} from 'svelte/store';
+import {get, writable, type Writable} from 'svelte/store';
 import {randomItem, randomInt} from '@feltjs/util/random.js';
 import {dev} from '$app/environment';
 
@@ -113,7 +113,11 @@ const to_default_state = (level_def: LevelDef): LevelStoreState => ({
 	trials: [],
 });
 
-export const create_level_store = (level_def: LevelDef, audio_ctx: AudioContext): LevelStore => {
+export const create_level_store = (
+	level_def: LevelDef,
+	audio_ctx: AudioContext,
+	volume: Writable<number>,
+): LevelStore => {
 	const {subscribe, update, set} = writable<LevelStoreState>(to_default_state(level_def));
 
 	const start = (): void => {
@@ -145,7 +149,7 @@ export const create_level_store = (level_def: LevelDef, audio_ctx: AudioContext)
 					presenting_index: i,
 				},
 			}));
-			await play_note(audio_ctx, note, DEFAULT_NOTE_DURATION); // eslint-disable-line no-await-in-loop
+			await play_note(audio_ctx, note, DEFAULT_NOTE_DURATION, get(volume)); // eslint-disable-line no-await-in-loop
 		}
 		update(($level) => ({
 			...$level,
@@ -172,7 +176,7 @@ export const create_level_store = (level_def: LevelDef, audio_ctx: AudioContext)
 			// if incorrect -> FAILURE -> showing_failure_feedback -> REPROMPT
 			if (actual !== note) {
 				console.log('guess INCORRECT');
-				void play_note(audio_ctx, note, DEFAULT_NOTE_DURATION_FAILED);
+				void play_note(audio_ctx, note, DEFAULT_NOTE_DURATION_FAILED, get(volume));
 				if ($level.trial.guessing_index === 0) {
 					return $level; // no penalty or delay if this is the first one
 				}
@@ -185,7 +189,7 @@ export const create_level_store = (level_def: LevelDef, audio_ctx: AudioContext)
 			}
 
 			// guess is correct
-			void play_note(audio_ctx, note, DEFAULT_NOTE_DURATION);
+			void play_note(audio_ctx, note, DEFAULT_NOTE_DURATION, get(volume));
 
 			if ($level.trial.guessing_index >= $level.trial.sequence.length - 1) {
 				// if more -> update current response index

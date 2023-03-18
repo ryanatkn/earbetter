@@ -9,13 +9,13 @@ export const play_note = (
 	audio_ctx: AudioContext,
 	note: Midi,
 	duration: Milliseconds,
+	volume: number,
 ): Promise<void> => {
-	// TODO
 	const freq = midi_to_freq(note);
 	console.log('playing note', note, freq);
 
 	const gain = audio_ctx.createGain();
-	gain.gain.value = 0.1; // TODO volume variable
+	gain.gain.value = volume_to_gain(volume);
 	gain.connect(audio_ctx.destination);
 	const osc = audio_ctx.createOscillator();
 	osc.type = 'sine';
@@ -23,11 +23,20 @@ export const play_note = (
 	osc.start();
 	osc.connect(gain);
 
+	stop_osc(audio_ctx, duration, gain, osc);
+
+	return new Promise((r) => setTimeout(r, duration));
+};
+
+const stop_osc = (
+	audio_ctx: AudioContext,
+	duration: Milliseconds,
+	gain: GainNode,
+	osc: OscillatorNode,
+) => {
 	const endTime = audio_ctx.currentTime + duration / 1000;
 	gain.gain.setTargetAtTime(0, endTime, SMOOTH_GAIN_TIME_CONSTANT);
 	osc.stop(endTime + SMOOTH_GAIN_TIME_CONSTANT * 2);
-
-	return new Promise((r) => setTimeout(r, duration));
 };
 
 export interface StopPlaying {
@@ -53,9 +62,7 @@ export const start_playing_note = (
 
 	return () => {
 		console.log(`stop playing note`, note);
-		const endTime = audio_ctx.currentTime + 10 / 1000;
-		gain.gain.setTargetAtTime(0, endTime, SMOOTH_GAIN_TIME_CONSTANT);
-		osc.stop(endTime + SMOOTH_GAIN_TIME_CONSTANT * 2);
+		stop_osc(audio_ctx, 10, gain, osc);
 	};
 };
 

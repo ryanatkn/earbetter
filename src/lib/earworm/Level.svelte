@@ -35,7 +35,7 @@
 	const audio_ctx = get_audio_ctx();
 	const volume = get_volume();
 
-	const level = create_level_store(level_def, audio_ctx);
+	const level = create_level_store(level_def, audio_ctx, volume);
 	// $: level.setDef(level_def); // TODO update if level_def prop changes
 
 	$: highlighted_keys = $level.trial && new Set([$level.trial.sequence[0]]);
