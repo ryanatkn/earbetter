@@ -10,22 +10,20 @@
 	--text_color_lighter: hsl(var(--primary_hue), 8%, 45%);
 	--text_color_dark: hsl(var(--primary_hue), 8%, 91%);
 	--link_color: var(--accent_text_color);
-	--button_color: var(--bg_color_fg);
-	--button_color_hover: var(--bg);
-	--button_color_active: var(--bg);
+	--button_color: var(--tint_light_1);
+	--button_color_hover: var(--tint_dark_1);
+	--button_color_active: var(--tint_dark_3);
 	--button_color_disabled: transparent;
 	--input_bg_color: var(--button_color);
 
 	/* felt overrides */
+	/* TODO hacky */
 	--active_hue: var(--primary_hue);
 
 	/* dealt style vars */
 	--accent_hue: 185;
 	--primary_hue: 275;
-	--bg_color_backdrop: hsla(var(--primary_hue), 100%, 2%, 0.8);
-	--bg_color_fg: hsla(var(--primary_hue), 100%, 98%, 0.08);
 	--border_color: hsla(var(--primary_hue), 100%, 98%, 0.2);
-	--font_color_heading: hsl(var(--primary_hue), 17%, 81%);
 	--accent_text_color: hsl(var(--primary_hue), 90%, 60%);
 	--light_text_color: hsl(var(--accent_hue), 80%, 60%);
 	--accent_border_color: hsla(var(--primary_hue), 50%, 50%, 0.4);
