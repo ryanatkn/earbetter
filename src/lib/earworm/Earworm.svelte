@@ -75,7 +75,7 @@
 		let index = default_level_defs.findIndex((d) => d.id === id);
 		const update_defs = (ds: LevelDef[]): LevelDef[] => {
 			const updated = ds.slice();
-			updated.splice(index, 1, level_def);
+			updated[index] = level_def;
 			return updated;
 		};
 		if (index === -1) {
