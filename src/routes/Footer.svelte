@@ -6,7 +6,7 @@
 	<div class="panel padded-md column-sm">
 		<div>public domain</div>
 		<a href="https://github.com/ryanatkn/earworm">source code on GitHub</a>
-		<Breadcrumbs />
+		<Breadcrumbs>🪱🎶</Breadcrumbs>
 	</div>
 </footer>
 
