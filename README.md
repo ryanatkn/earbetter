@@ -1,6 +1,7 @@
 # earworm
 
-> ear training game 🪱🎶 [earworm.ryanatkn.com](https://earworm.ryanatkn.com/)
+> ear training game and tools for programming music and audio 🪱🎶
+> [earworm.ryanatkn.com](https://earworm.ryanatkn.com/)
 
 see [contributing.md](contributing.md)
 
