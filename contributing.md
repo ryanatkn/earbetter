@@ -1,5 +1,7 @@
 # contributing to earworm
 
+wow cool welcome ok:
+
 1. we follow the [Contributor Covenant](https://www.contributor-covenant.org/),
    [@ryanatkn](https://github.com/ryanatkn) is the organizer
 2. we use GitHub [issues](https://github.com/ryanatkn/earworm/issues) and
