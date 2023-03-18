@@ -68,14 +68,15 @@
 		<details>
 			<summary>more info</summary>
 			<p>
-				a comma-separated list of numbers representing the
-				<a href="https://wikipedia.org/wiki/Interval_(music)">musical intervals</a>, the number of
-				piano keys (<a href="https://wikipedia.org/wiki/Semitone">semitones</a>) separating each
-				note from the
+				this is a comma-separated list of numbers representing the
+				<a href="https://wikipedia.org/wiki/Interval_(music)">musical intervals</a> used in the
+				level, aka the number of piano keys (<a href="https://wikipedia.org/wiki/Semitone"
+					>semitones</a
+				>) separating each note from the
 				<a href="https://wikipedia.org/wiki/Tonic_(music)">tonic</a> (the base note)
 			</p>
 			<p>
-				for example, to train to distinguish between the <a
+				for example, to practice distinguishing between the <a
 					href="https://wikipedia.org/wiki/Perfect_fourth">perfect fourth</a
 				>
 				and <a href="https://wikipedia.org/wiki/Perfect_fifth">perfect fifth</a>, enter "<code
