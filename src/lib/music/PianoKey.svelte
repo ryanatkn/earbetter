@@ -28,9 +28,9 @@
 	class:clickable={clickable && enabled}
 	class:highlighted
 	class:emphasized
-	on:mousedown={enabled ? () => dispatch('press', midi) : undefined}
-	on:mouseup={enabled ? () => dispatch('release', midi) : undefined}
-	on:mouseleave={enabled ? () => dispatch('release', midi) : undefined}
+	on:pointerdown={enabled ? () => dispatch('press', midi) : undefined}
+	on:pointerup={enabled ? () => dispatch('release', midi) : undefined}
+	on:pointerleave={enabled ? () => dispatch('release', midi) : undefined}
 	aria-label="piano key for midi {midi}"
 	style:left="{left_offset}px"
 >
