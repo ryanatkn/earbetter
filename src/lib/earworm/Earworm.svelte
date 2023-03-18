@@ -44,8 +44,9 @@
 			return;
 		}
 		editing_level_def = level_def;
-		const el = document.getElementsByClassName('level-def-form').item(0); // TODO hacky
-		if (el) window.scrollTo({top: el.getBoundingClientRect().y, behavior: 'smooth'});
+		// TODO for mobile
+		// const el = document.getElementsByClassName('level-def-form').item(0);
+		// if (el) window.scrollTo({top: el.getBoundingClientRect().y, behavior: 'smooth'});
 	};
 
 	const remove_level_def = (id: LevelId): void => {

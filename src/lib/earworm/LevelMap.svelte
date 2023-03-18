@@ -34,21 +34,6 @@
 </script>
 
 <div class="map">
-	<section class="panel padded-md">
-		<h2>ear training levels</h2>
-		<div class="levels column-sm">
-			{#each level_defs as d (d.id)}
-				<LevelMapItem
-					level_def={d}
-					select={select_level_def}
-					edit={edit_level_def}
-					remove={remove_level_def}
-					selected={d === level_def}
-					completed={$level_stats.completed[d.id]}
-				/>
-			{/each}
-		</div>
-	</section>
 	<section class="panel padded-md markup column-sm">
 		<h2>controls</h2>
 		<p>Earworm may not function well on devices with smaller screens.</p>
@@ -76,6 +61,23 @@
 			below:
 		</p>
 		<InitMidiButton {midi_input} />
+	</section>
+	<section class="panel padded-md">
+		<div class="markup">
+			<h2>ear training levels</h2>
+		</div>
+		<div class="levels column-sm">
+			{#each level_defs as d (d.id)}
+				<LevelMapItem
+					level_def={d}
+					select={select_level_def}
+					edit={edit_level_def}
+					remove={remove_level_def}
+					selected={d === level_def}
+					completed={$level_stats.completed[d.id]}
+				/>
+			{/each}
+		</div>
 	</section>
 	<section class="panel padded-md markup column-sm">
 		<LevelDefForm
