@@ -6,6 +6,7 @@
 	import {start_playing, stop_playing} from '$lib/audio/play_note';
 	import InitMidiButton from '$lib/music/InitMidiButton.svelte';
 	import VolumeControl from '$lib/audio/VolumeControl.svelte';
+	import Header from '$routes/Header.svelte';
 	import Footer from '$routes/Footer.svelte';
 	import {get_volume} from '$lib/audio/helpers';
 
@@ -27,6 +28,7 @@
 </svelte:head>
 
 <main bind:clientWidth>
+	<Header />
 	<MidiInput
 		bind:this={midi_input}
 		on:note_start={(e) => start_playing(audio_ctx, e.detail.note, $volume)}
