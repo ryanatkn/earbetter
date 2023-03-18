@@ -27,7 +27,7 @@ export const level_defs: LevelDef[] = [
 		name: 'perfect fourth vs perfect octave',
 		intervals: [5, 12],
 		sequence_length: 2,
-		// TODO BLOCK I think this would be best as multiple levels within the above name,
+		// TODO I think this would be best as multiple levels within the above name,
 		// so you can start simple, then add 2 variants, double the sequence length and "up and down",
 		// then both at once for the finale
 	},
