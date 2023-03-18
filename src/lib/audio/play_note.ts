@@ -9,7 +9,7 @@ import {type Midi, midi_to_freq} from '$lib/music/midi';
 import {writable, type Writable} from 'svelte/store';
 
 // TODO this API is haphazard, in particular `play_note` versus `start_playing` and `stop_playing`,
-// and we need to support more options
+// and we need to support more options like `velocity`
 
 export const play_note = (
 	audio_ctx: AudioContext,
