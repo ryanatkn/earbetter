@@ -18,8 +18,8 @@ export const BASE_LEVEL_DEF = {
 
 export const level_defs: LevelDef[] = [
 	{
-		name: '1 12',
-		intervals: [1, 12],
+		name: '5 12',
+		intervals: [5, 12],
 	},
 	{
 		name: '1 12 -1 -12',
@@ -48,16 +48,19 @@ export const level_defs: LevelDef[] = [
 	{
 		name: '2 4 7',
 		intervals: [2, 4, 7],
+	},
+	{
+		name: '2 4 7 (long)',
+		intervals: [2, 4, 7],
 		sequence_length: DEFAULT_SEQUENCE_LENGTH * 2,
 	},
 	{
 		name: '4 7 12',
 		intervals: [4, 7, 12],
-		sequence_length: DEFAULT_SEQUENCE_LENGTH * 2,
 	},
 	{
-		name: '2 4 7 12',
-		intervals: [2, 4, 7],
+		name: '4 7 12 (long)',
+		intervals: [4, 7, 12],
 		sequence_length: DEFAULT_SEQUENCE_LENGTH * 2,
 	},
 	{
@@ -65,21 +68,35 @@ export const level_defs: LevelDef[] = [
 		intervals: [4, 7, 12, -4, -7, -12],
 	},
 	{
-		name: '1 2',
+		name: '4 7 12 -4 -7 -12 (long)',
+		intervals: [4, 7, 12, -4, -7, -12],
+		sequence_length: DEFAULT_SEQUENCE_LENGTH * 2,
+	},
+	{
+		name: '2 4 7 12 (long',
+		intervals: [2, 4, 7],
+		sequence_length: DEFAULT_SEQUENCE_LENGTH * 2,
+	},
+	{
+		name: '1 2 (long',
 		intervals: [1, 2],
 		sequence_length: DEFAULT_SEQUENCE_LENGTH * 2,
 	},
 	{
-		name: '2 3',
+		name: '2 3 (long',
 		intervals: [2, 3],
 		sequence_length: DEFAULT_SEQUENCE_LENGTH * 2,
 	},
 	{
-		name: 'one full octave',
-		intervals: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12],
+		name: 'major scale',
+		intervals: [2, 4, 5, 7, 9, 11, 12],
 	},
 	{
-		name: 'one full octave in both directions',
-		intervals: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, -1, -2, -3, -4, -5, -6, -7, -8, -9, -10, -11, -12], // prettier-ignore
+		name: 'major scale in both directions',
+		intervals: [2, 4, 5, 7, 9, 11, 12, -1, -3, -5, -7, -8, -10, -12],
+	},
+	{
+		name: 'major scale up two octaves',
+		intervals: [2, 4, 5, 7, 9, 11, 12, 14, 16, 17, 19, 21, 23, 24],
 	},
 ].map((d) => ({...BASE_LEVEL_DEF, ...d, id: create_id()}));

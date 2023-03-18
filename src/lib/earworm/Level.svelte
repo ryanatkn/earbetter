@@ -209,6 +209,7 @@
 	.feedback {
 		position: absolute;
 		top: 50px;
+		min-height: 50px;
 		right: 0;
 		width: 100%;
 		display: flex;
