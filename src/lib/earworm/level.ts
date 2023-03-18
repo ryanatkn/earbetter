@@ -148,7 +148,7 @@ export const create_level_store = (
 					presenting_index: i,
 				},
 			}));
-			await play_note(audio_ctx, note, DEFAULT_NOTE_DURATION, get(volume)); // eslint-disable-line no-await-in-loop
+			await play_note(audio_ctx, note, get(volume), DEFAULT_NOTE_DURATION); // eslint-disable-line no-await-in-loop
 		}
 		update(($level) => ({
 			...$level,
@@ -175,7 +175,7 @@ export const create_level_store = (
 			// if incorrect -> FAILURE -> showing_failure_feedback -> REPROMPT
 			if (actual !== note) {
 				console.log('guess INCORRECT');
-				void play_note(audio_ctx, note, DEFAULT_NOTE_DURATION_FAILED, get(volume));
+				void play_note(audio_ctx, note, get(volume), DEFAULT_NOTE_DURATION_FAILED);
 				if ($level.trial.guessing_index === 0) {
 					return $level; // no penalty or delay if this is the first one
 				}
@@ -188,7 +188,7 @@ export const create_level_store = (
 			}
 
 			// guess is correct
-			void play_note(audio_ctx, note, DEFAULT_NOTE_DURATION, get(volume));
+			void play_note(audio_ctx, note, get(volume), DEFAULT_NOTE_DURATION);
 
 			if ($level.trial.guessing_index >= $level.trial.sequence.length - 1) {
 				// if more -> update current response index

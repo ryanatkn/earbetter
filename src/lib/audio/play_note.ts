@@ -4,30 +4,23 @@ import {DEFAULT_VOLUME, SMOOTH_GAIN_TIME_CONSTANT, volume_to_gain} from '$lib/au
 import {type Midi, midi_to_freq} from '$lib/music/midi';
 
 export type Milliseconds = Flavored<number, 'Milliseconds'>;
+export type Volume = Flavored<number, 'Volume'>;
 
 // TODO this API is haphazard, rethink all of it
 
 export const play_note = (
 	audio_ctx: AudioContext,
 	note: Midi,
+	volume: Volume,
 	duration: Milliseconds,
-	volume: number,
 ): Promise<void> => {
-	const freq = midi_to_freq(note);
-	console.log('playing note', note, freq);
-
-	const gain = audio_ctx.createGain();
-	gain.gain.value = volume_to_gain(volume);
-	gain.connect(audio_ctx.destination);
-	const osc = audio_ctx.createOscillator();
-	osc.type = 'sine'; // TODO "custom" | "sawtooth" | "sine" | "square" | "triangle"
-	osc.frequency.setValueAtTime(freq, audio_ctx.currentTime);
-	osc.start();
-	osc.connect(gain);
-
-	stop_osc(audio_ctx, duration, gain, osc);
-
-	return new Promise((r) => setTimeout(r, duration));
+	const stop = start_playing_note(audio_ctx, note, volume);
+	return new Promise((resolve) =>
+		setTimeout(() => {
+			stop();
+			resolve();
+		}, duration),
+	);
 };
 
 const stop_osc = (
