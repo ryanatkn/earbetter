@@ -29,6 +29,7 @@
 		} catch (err) {
 			console.error('loadMidiAccess failed', err);
 			alert('Failed to request MIDI access: ' + err.message); // eslint-disable-line no-alert
+			// TODO resolve a failure value?
 		}
 		return inited;
 	};

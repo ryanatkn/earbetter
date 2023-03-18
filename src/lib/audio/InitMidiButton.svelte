@@ -5,7 +5,7 @@
 
 	// TODO move MIDI initialization to some other action, like the button to start a level
 
-	$: ma = midi_access?.midi_access;
+	$: ma = midi_access?.ma;
 	$: disabled = !midi_access || !!$ma;
 
 	$: midi_inputs = $ma && Array.from($ma.inputs.values());

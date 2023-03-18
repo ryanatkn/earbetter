@@ -20,6 +20,8 @@
 
 	export let ma: Writable<MIDIAccess | null>;
 
+	console.log('ma', ma);
+
 	const midimessage = (event: MIDIMessageEvent): void => {
 		const message = parse_midi_message(event);
 		const {command, channel, note, velocity} = message;
@@ -82,6 +84,7 @@
 	onDestroy(unsubscribe);
 
 	const subscribe = ($ma: MIDIAccess | null) => {
+		log(`subscribe $ma`, $ma);
 		if (unsubscribers.length) unsubscribe();
 		if (!$ma) return;
 		for (const input of $ma.inputs.values()) {

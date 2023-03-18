@@ -4,7 +4,7 @@
 	import LevelMapItem from '$lib/earworm/LevelMapItem.svelte';
 	import {get_audio_ctx} from '$lib/audio/audio_ctx';
 	import type MidiAccess from '$lib/audio/MidiAccess.svelte';
-	import InitMidiButton from '$lib/music/InitMidiButton.svelte';
+	import InitMidiButton from '$lib/audio/InitMidiButton.svelte';
 	import LevelDefForm from '$lib/earworm/LevelDefForm.svelte';
 	import VolumeControl from '$lib/audio/VolumeControl.svelte';
 	import {get_volume} from '$lib/audio/helpers';

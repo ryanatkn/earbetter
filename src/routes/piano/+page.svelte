@@ -5,7 +5,7 @@
 	import MidiInput from '$lib/audio/MidiInput.svelte';
 	import {MIDI_MAX, MIDI_MIN, type Midi} from '$lib/music/midi';
 	import {start_playing, stop_playing} from '$lib/audio/play_note';
-	import InitMidiButton from '$lib/music/InitMidiButton.svelte';
+	import InitMidiButton from '$lib/audio/InitMidiButton.svelte';
 	import VolumeControl from '$lib/audio/VolumeControl.svelte';
 	import Header from '$routes/Header.svelte';
 	import Footer from '$routes/Footer.svelte';
