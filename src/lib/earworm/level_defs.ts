@@ -100,4 +100,12 @@ export const level_defs: LevelDef[] = [
 		intervals: [2, 4, 5, 7, 9, 11, 12, 14, 16, 17, 19, 21, 23, 24],
 		sequence_length: DEFAULT_SEQUENCE_LENGTH * 2,
 	},
+	{
+		name: 'two octaves',
+		intervals: Array.from({length: 25}, (_, i) => i - 12),
+	},
+	{
+		name: 'four octaves',
+		intervals: Array.from({length: 49}, (_, i) => i - 24),
+	},
 ].map((d) => ({...BASE_LEVEL_DEF, ...d, id: create_id()}));
