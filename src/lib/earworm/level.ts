@@ -223,17 +223,24 @@ export const create_level_store = (level_def: LevelDef, audio_ctx: AudioContext)
 
 	const retry_trial = (): void => {
 		update(($level) => {
-			// TODO check this?
-			// if ($level.status !== 'showing_failure_feedback') throw Error();
+			const {status, trial} = $level;
+			if (
+				status !== 'waiting_for_input' &&
+				status !== 'showing_success_feedback' &&
+				status !== 'showing_failure_feedback'
+			) {
+				return $level;
+			}
+
 			// TODO this is really "on enter presenting_prompt state" logic
 			// TODO try to remove the timeout
-			setTimeout(() => present_trial_prompt($level.trial!.sequence));
+			setTimeout(() => trial && present_trial_prompt(trial.sequence));
 			return {
 				...$level,
 				status: 'presenting_prompt',
-				trial: $level.trial && {
-					...$level.trial,
-					retry_count: $level.trial.retry_count + 1,
+				trial: trial && {
+					...trial,
+					retry_count: trial.retry_count + 1,
 				},
 			};
 		});
