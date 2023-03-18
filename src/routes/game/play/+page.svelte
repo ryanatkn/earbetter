@@ -15,6 +15,10 @@
 	$: if (active_level_def === null) void go_back();
 </script>
 
+<svelte:head>
+	<title>earworm: play game</title>
+</svelte:head>
+
 <main>
 	<button class="go-back icon-button plain-button" on:click={go_back}>←</button>
 	<Earworm {active_level_def}>

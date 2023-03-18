@@ -5,6 +5,9 @@
 	import Footer from '$routes/Footer.svelte';
 </script>
 
+<svelte:head>
+	<title>earworm</title>
+</svelte:head>
 <main>
 	<Header />
 	<menu>

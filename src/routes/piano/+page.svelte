@@ -22,6 +22,10 @@
 	const piano_padding = 20;
 </script>
 
+<svelte:head>
+	<title>earworm: piano</title>
+</svelte:head>
+
 <main bind:clientWidth>
 	<MidiInput
 		bind:this={midi_input}

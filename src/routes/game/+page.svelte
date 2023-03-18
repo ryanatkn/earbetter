@@ -4,6 +4,10 @@
 	import Footer from '$routes/Footer.svelte';
 </script>
 
+<svelte:head>
+	<title>earworm: game</title>
+</svelte:head>
+
 <main>
 	<Earworm>
 		<svelte:fragment slot="header"><Header /></svelte:fragment>
