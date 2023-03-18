@@ -4,6 +4,22 @@
   "homepage": "https://earworm.ryanatkn.com/",
   "license": "Unlicense",
   "version": "0.0.1",
+  "author": {
+    "name": "Ryan Atkinson",
+    "email": "mail@ryanatkn.com",
+    "url": "https://www.ryanatkn.com/"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ryanatkn/earworm.git"
+  },
+  "bugs": "https://github.com/ryanatkn/earworm/issues",
+  "keywords": [
+    "ear training",
+    "game",
+    "music",
+    "audio"
+  ],
   "type": "module",
   "engines": {
     "node": ">=18.6"
