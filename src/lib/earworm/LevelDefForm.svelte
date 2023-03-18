@@ -113,14 +113,14 @@
 		<label>
 			<div class="title">trial_count</div>
 			<input type="number" bind:value={trial_count} min={1} />
-			<input type="range" bind:value={trial_count} min={1} max={30} />
+			<input type="range" bind:value={trial_count} min={1} max={20} />
 		</label>
 	</fieldset>
 	<fieldset>
 		<label>
 			<div class="title">sequence_length</div>
 			<input bind:value={sequence_length} min={2} />
-			<input type="range" bind:value={sequence_length} min={2} max={20} />
+			<input type="range" bind:value={sequence_length} min={2} max={16} />
 		</label>
 	</fieldset>
 	<fieldset class="row">

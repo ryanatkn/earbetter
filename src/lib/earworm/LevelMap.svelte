@@ -65,7 +65,7 @@
 		<VolumeControl {volume} />
 		<p>
 			Earworm supports MIDI devices like piano keyboards. Connect a device and click the button
-			below to get started.
+			below:
 		</p>
 		<InitMidiButton {midi_input} />
 	</section>
