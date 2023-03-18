@@ -10,4 +10,12 @@ export default {
 		files: {assets: 'src/static'},
 		alias: {$routes: 'src/routes'},
 	},
+	vitePlugin: {
+		experimental: {
+			inspector: {
+				holdMode: true,
+				toggleKeyCombo: 'meta-shift',
+			},
+		},
+	},
 };
