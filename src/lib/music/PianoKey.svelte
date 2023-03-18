@@ -20,21 +20,39 @@
 	$: accidental = !natural;
 	$: middle_c = midi === 60;
 
-	// TODO BLOCK do we want to focus here or reactively to the state of notes playing? maybe take the first of `playing_notes`?
-
-	const focus_previous_button = (node: Node): void => {
+	export const query_previous_sibling = <T extends ChildNode>(
+		node: ChildNode,
+		matches: (n: ChildNode) => boolean,
+	): T | null => {
 		let s: ChildNode | null | undefined = node.previousSibling;
-		// TODO hacky
-		if (!(s instanceof HTMLButtonElement)) s = s?.previousSibling;
-		if (!(s instanceof HTMLButtonElement)) s = s?.previousSibling;
-		if (s instanceof HTMLButtonElement) s.focus();
+		while (s) {
+			if (matches(s)) return s as T;
+			s = s.previousSibling;
+		}
+		return null;
 	};
-	const focus_next_button = (node: Node): void => {
+	export const query_next_sibling = <T extends ChildNode>(
+		node: ChildNode,
+		matches: (n: ChildNode) => boolean,
+	): T | null => {
 		let s: ChildNode | null | undefined = node.nextSibling;
-		// TODO hacky
-		if (!(s instanceof HTMLButtonElement)) s = s?.nextSibling;
-		if (!(s instanceof HTMLButtonElement)) s = s?.nextSibling;
-		if (s instanceof HTMLButtonElement) s.focus();
+		while (s) {
+			if (matches(s)) return s as T;
+			s = s.nextSibling;
+		}
+		return null;
+	};
+
+	const focus_previous_button = (node: ChildNode): void => {
+		const s = query_previous_sibling<HTMLButtonElement>(
+			node,
+			(n) => n instanceof HTMLButtonElement,
+		);
+		s?.focus();
+	};
+	const focus_next_button = (node: ChildNode): void => {
+		const s = query_next_sibling<HTMLButtonElement>(node, (n) => n instanceof HTMLButtonElement);
+		s?.focus();
 	};
 
 	const keydown = (
@@ -153,6 +171,9 @@
 		--z_index_offset: 1;
 		outline-width: var(--border_width_4);
 	}
+	.piano-key:focus {
+		outline-width: var(--border_width_3);
+	}
 
 	.piano-key:last-child {
 		border-right: 1px solid var(--border_color);
@@ -167,7 +188,6 @@
 	.clickable:active,
 	.clickable.active {
 		background-color: var(--primary_color_dark, #007700);
-		outline-width: var(--border_width_3);
 	}
 
 	.natural {
