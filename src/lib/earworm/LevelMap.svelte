@@ -35,7 +35,9 @@
 
 <div class="map">
 	<section class="panel padded-md markup column-sm">
-		<h2>controls</h2>
+		<header>
+			<h2>controls</h2>
+		</header>
 		<p>Earworm may not function well on devices with smaller screens.</p>
 		<table>
 			<tr>
@@ -63,9 +65,9 @@
 		<InitMidiButton {midi_input} />
 	</section>
 	<section class="panel padded-md">
-		<div class="markup">
+		<header class="markup">
 			<h2>ear training levels</h2>
-		</div>
+		</header>
 		<div class="levels column-sm">
 			{#each level_defs as d (d.id)}
 				<LevelMapItem
