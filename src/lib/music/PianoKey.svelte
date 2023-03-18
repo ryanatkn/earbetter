@@ -1,5 +1,6 @@
 <script lang="ts">
 	import {createEventDispatcher} from 'svelte';
+	import {swallow} from '@feltjs/util/dom.js';
 
 	import {midi_naturals} from '$lib/music/notes';
 	import type {Midi} from '$lib/music/midi';
@@ -10,6 +11,7 @@
 	export let left_offset: number;
 	export let clickable = true;
 	export let enabled = true;
+	export let pressed = false;
 	export let highlighted = false;
 	export let emphasized = false;
 	export let show_middle_c = true;
@@ -26,11 +28,27 @@
 	class:accidental
 	class:disabled={!enabled}
 	class:clickable={clickable && enabled}
+	class:active={pressed}
 	class:highlighted
 	class:emphasized
-	on:pointerdown={enabled ? () => dispatch('press', midi) : undefined}
-	on:pointerup={enabled ? () => dispatch('release', midi) : undefined}
-	on:pointerleave={enabled ? () => dispatch('release', midi) : undefined}
+	on:mousedown={enabled
+		? (e) => {
+				swallow(e);
+				dispatch('press', midi);
+		  }
+		: undefined}
+	on:mouseup={enabled
+		? (e) => {
+				swallow(e);
+				dispatch('release', midi);
+		  }
+		: undefined}
+	on:mouseleave={enabled
+		? (e) => {
+				swallow(e);
+				dispatch('release', midi);
+		  }
+		: undefined}
 	aria-label="piano key for midi {midi}"
 	style:left="{left_offset}px"
 >
@@ -66,7 +84,8 @@
 	.clickable:hover {
 		background-color: var(--primary_color, #00bb00);
 	}
-	.clickable:active {
+	.clickable:active,
+	.clickable.active {
 		background-color: var(--primary_color_dark, #007700);
 	}
 

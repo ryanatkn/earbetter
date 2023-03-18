@@ -9,7 +9,7 @@
 	import {get_audio_ctx} from '$lib/audio/audio_ctx';
 	import MidiInput from '$lib/audio/MidiInput.svelte';
 	import type {Midi} from '$lib/music/midi';
-	import {start_playing, stop_playing} from '$lib/audio/play_note';
+	import {playing_notes, start_playing, stop_playing} from '$lib/audio/play_note';
 	import {get_volume} from '$lib/audio/helpers';
 	import MidiAccess from '$lib/audio/MidiAccess.svelte';
 
@@ -38,10 +38,12 @@
 
 	const level = create_level_store(level_def, audio_ctx, volume);
 	// $: level.setDef(level_def); // TODO update if level_def prop changes
+	$: ({status} = $level);
 
 	let midi_access: MidiAccess;
 	$: ma = midi_access?.ma;
 
+	$: pressed_keys = status === 'presenting_prompt' ? null : $playing_notes;
 	$: highlighted_keys = $level.trial && new Set([$level.trial.sequence[0]]);
 
 	onMount(() => {
@@ -54,9 +56,9 @@
 	};
 
 	let success: boolean; // TODO why is this needed? appears to be a bug in the Svelte language tools
-	$: success = $level.status === 'showing_success_feedback';
-	$: failure = $level.status === 'showing_failure_feedback';
-	$: complete = $level.status === 'complete';
+	$: success = status === 'showing_success_feedback';
+	$: failure = status === 'showing_failure_feedback';
+	$: complete = status === 'complete';
 
 	const piano_padding = 20;
 
@@ -77,7 +79,7 @@
 				return;
 			}
 			case ' ': {
-				switch ($level.status) {
+				switch (status) {
 					case 'complete': {
 						swallow(e);
 						exit_level_to_map(true);
@@ -111,7 +113,7 @@
 		{ma}
 		on:note_start={(e) => {
 			// TODO should this be ignored if it's not an enabled key? should the level itself ignore the guess?
-			if ($level.status === 'complete') {
+			if (status === 'complete') {
 				start_playing(audio_ctx, e.detail.note, $volume);
 			} else {
 				level.guess(e.detail.note);
@@ -125,7 +127,7 @@
 <!-- hide from screen readers, see keyboard commands -->
 <div class="level" bind:clientWidth on:click={click} bind:this={el} aria-hidden="true">
 	<!-- <div class="debug">
-		<div>status: {$level.status}</div>
+		<div>status: {status}</div>
 		<div>trials created: {$level.trials.length}</div>
 		{#if $level.trial}
 			<div>trial: {$level.trial.index + 1} of {$level.def.trial_count}</div>
@@ -138,8 +140,8 @@
 		{:else}no trial{/if}
 	</div> -->
 
-	<!-- {#if $level.status === 'presenting_prompt'}
-	{:else if $level.status === 'waiting_for_input'} -->
+	<!-- {#if status === 'presenting_prompt'}
+	{:else if status === 'waiting_for_input'} -->
 
 	<div class="level-progress" title="level progress">
 		<LevelProgressIndicator {level} />
@@ -165,14 +167,15 @@
 				width={clientWidth - piano_padding * 2}
 				note_min={$level.def.note_min}
 				note_max={$level.def.note_max}
-				on:press={$level.status === 'waiting_for_input'
+				enabled_keys={$level.trial?.valid_notes}
+				{pressed_keys}
+				{highlighted_keys}
+				on:press={status === 'waiting_for_input'
 					? (e) => on_press_key(e.detail)
-					: $level.status === 'complete'
+					: status === 'complete'
 					? (e) => start_playing(audio_ctx, e.detail, $volume)
 					: undefined}
-				on:release={$level.status === 'complete' ? (e) => stop_playing(e.detail) : undefined}
-				enabled_keys={$level.trial?.valid_notes}
-				{highlighted_keys}
+				on:release={status === 'complete' ? (e) => stop_playing(e.detail) : undefined}
 			/>
 		{/if}
 	</div>

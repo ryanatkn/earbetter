@@ -37,9 +37,16 @@ export const level_defs: LevelDef[] = [
 		sequence_length: 2,
 	},
 	{
-		name: 'major third vs perfect fourth vs perfect fifth vs perfect octave',
-		intervals: [4, 5, 7, 12],
+		name: 'major third vs perfect fourth vs perfect fifth',
+		intervals: [4, 5, 7],
 		sequence_length: 2,
+	},
+	{
+		name: 'major second vs major third',
+		intervals: [2, 4],
+		// TODO variants: ['up_and_down']
+		// {up_and_down: {options}} (allows options)
+		// {type: 'up_and_down', options}} (allows multiple of each variant with options)
 	},
 	{
 		name: 'major second vs perfect octave up and down',

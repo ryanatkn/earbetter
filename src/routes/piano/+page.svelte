@@ -4,7 +4,7 @@
 	import MidiAccess from '$lib/audio/MidiAccess.svelte';
 	import MidiInput from '$lib/audio/MidiInput.svelte';
 	import {MIDI_MAX, MIDI_MIN, type Midi} from '$lib/music/midi';
-	import {start_playing, stop_playing} from '$lib/audio/play_note';
+	import {playing_notes, start_playing, stop_playing} from '$lib/audio/play_note';
 	import InitMidiButton from '$lib/audio/InitMidiButton.svelte';
 	import VolumeControl from '$lib/audio/VolumeControl.svelte';
 	import Header from '$routes/Header.svelte';
@@ -16,6 +16,8 @@
 
 	let midi_access: MidiAccess | undefined;
 	$: ma = midi_access?.ma;
+
+	$: pressed_keys = $playing_notes;
 
 	let clientWidth: number; // `undefined` on first render
 
@@ -45,6 +47,7 @@
 				width={clientWidth - piano_padding * 2}
 				{note_min}
 				{note_max}
+				{pressed_keys}
 				on:press={(e) => start_playing(audio_ctx, e.detail, $volume)}
 				on:release={(e) => stop_playing(e.detail)}
 			/>
