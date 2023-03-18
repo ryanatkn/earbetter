@@ -74,6 +74,7 @@
 			{editing}
 			bind:id
 			bind:set_level_def
+			{level_def}
 			on:submit={(editing ? update_level_def : create_level_def)
 				? (e) => (editing ? update_level_def : create_level_def)?.(e.detail)
 				: undefined}

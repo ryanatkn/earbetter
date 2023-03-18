@@ -17,7 +17,7 @@
 	const DEFAULT_NAME = 'new custom level';
 	const DEFAULT_INTERVALS = [4, 7, 12];
 
-	// TODO BLOCK how should the id be handled? immutable
+	export let level_def: LevelDef | null = null;
 	export let id = create_id();
 	export let name = DEFAULT_NAME;
 	export let intervals = DEFAULT_INTERVALS;
@@ -58,6 +58,16 @@
 			note_max = BASE_LEVEL_DEF.note_max;
 		}
 	};
+
+	$: changed =
+		!level_def ||
+		id !== level_def.id ||
+		name !== level_def.name ||
+		trial_count !== level_def.trial_count ||
+		sequence_length !== level_def.sequence_length ||
+		note_min !== level_def.note_min ||
+		note_max !== level_def.note_max ||
+		intervals.toString() !== level_def.intervals.toString(); // TODO use a proper library
 </script>
 
 <form class="level-def-form">
@@ -133,7 +143,11 @@
 			<input disabled value={id} />
 		</label>
 	</fieldset>
-	<button type="button" on:click={() => dispatch('submit', to_data())}>
+	<button
+		type="button"
+		on:click={() => dispatch('submit', to_data())}
+		disabled={editing && !changed}
+	>
 		{#if editing}update{:else}create{/if} level
 	</button>
 	{#if editing}

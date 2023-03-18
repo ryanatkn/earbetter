@@ -86,6 +86,7 @@
 		} else {
 			default_level_defs = update_defs(default_level_defs);
 		}
+		editing_level_def = level_def;
 		// TODO BLOCK maybe this should show a message, "updated", and a button, ""
 	};
 
