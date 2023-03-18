@@ -16,27 +16,38 @@ export const BASE_LEVEL_DEF = {
 	note_max: 84,
 } satisfies Partial<LevelDef>;
 
+// TODO programmatic dimensions
+// "up and down" (duplicate the intervals below the tonic)
+// "long" (sequent_length multiplier)
+// which keys can be used
+// present_duration
+
 export const level_defs: LevelDef[] = [
 	{
-		name: '5 12',
+		name: 'perfect fourth vs perfect octave',
 		intervals: [5, 12],
 		sequence_length: 2,
 	},
 	{
-		name: '4 7',
+		name: 'major third vs perfect fifth',
 		intervals: [4, 7],
 		sequence_length: 2,
 	},
 	{
-		name: '2 12 -1 -12',
-		intervals: [2, 12, -1, -12],
+		name: 'major third vs perfect fourth vs perfect fifth vs perfect octave',
+		intervals: [4, 5, 7, 12],
+		sequence_length: 2,
 	},
 	{
-		name: '2 4 7',
+		name: 'major second vs perfect octave up and down',
+		intervals: [2, 12, -10, -12],
+	},
+	{
+		name: 'major second vs major third vs perfect fifth',
 		intervals: [2, 4, 7],
 	},
 	{
-		name: '2 4 7 (long)',
+		name: 'major second vs major third vs perfect fifth (long)',
 		intervals: [2, 4, 7],
 		sequence_length: DEFAULT_SEQUENCE_LENGTH * 2,
 	},
@@ -50,12 +61,12 @@ export const level_defs: LevelDef[] = [
 		sequence_length: DEFAULT_SEQUENCE_LENGTH * 2,
 	},
 	{
-		name: '4 7 12 -4 -7 -12',
-		intervals: [4, 7, 12, -4, -7, -12],
+		name: '4 7 12 -5 -8 -12',
+		intervals: [4, 7, 12, -5, -8, -12],
 	},
 	{
-		name: '4 7 12 -4 -7 -12 (long)',
-		intervals: [4, 7, 12, -4, -7, -12],
+		name: '4 7 12 -5 -8 -12 (long)',
+		intervals: [4, 7, 12, -5, -8, -12],
 		sequence_length: DEFAULT_SEQUENCE_LENGTH * 2,
 	},
 	{
@@ -64,13 +75,13 @@ export const level_defs: LevelDef[] = [
 		sequence_length: DEFAULT_SEQUENCE_LENGTH * 2,
 	},
 	{
-		name: '1 2 (long)',
-		intervals: [1, 2],
+		name: '2 4 (long)',
+		intervals: [2, 4],
 		sequence_length: DEFAULT_SEQUENCE_LENGTH * 2,
 	},
 	{
-		name: '2 3 (long)',
-		intervals: [2, 3],
+		name: '2 4 5 (long)',
+		intervals: [2, 4, 5],
 		sequence_length: DEFAULT_SEQUENCE_LENGTH * 2,
 	},
 	{
@@ -99,5 +110,13 @@ export const level_defs: LevelDef[] = [
 		name: 'major scale up two octaves (long)',
 		intervals: [2, 4, 5, 7, 9, 11, 12, 14, 16, 17, 19, 21, 23, 24],
 		sequence_length: DEFAULT_SEQUENCE_LENGTH * 2,
+	},
+	{
+		name: 'two octaves',
+		intervals: Array.from({length: 25}, (_, i) => i - 12),
+	},
+	{
+		name: 'four octaves',
+		intervals: Array.from({length: 49}, (_, i) => i - 24),
 	},
 ].map((d) => ({...BASE_LEVEL_DEF, ...d, id: create_id()}));

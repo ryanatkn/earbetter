@@ -3,13 +3,13 @@
 	import {create_level_stats} from '$lib/earworm/level_stats';
 	import LevelMapItem from '$lib/earworm/LevelMapItem.svelte';
 	import {get_audio_ctx} from '$lib/audio/audio_ctx';
-	import type MidiInput from '$lib/audio/MidiInput.svelte';
-	import InitMidiButton from '$lib/music/InitMidiButton.svelte';
+	import type MidiAccess from '$lib/audio/MidiAccess.svelte';
+	import InitMidiButton from '$lib/audio/InitMidiButton.svelte';
 	import LevelDefForm from '$lib/earworm/LevelDefForm.svelte';
 	import VolumeControl from '$lib/audio/VolumeControl.svelte';
 	import {get_volume} from '$lib/audio/helpers';
 
-	export let midi_input: MidiInput;
+	export let midi_access: MidiAccess;
 	export let level_def: LevelDef | null = null;
 	export let level_defs: LevelDef[];
 	export let select_level_def: ((id: LevelId) => void) | null = null; // TODO event? or is the ability to have a return value for ephemeral state desired?
@@ -62,7 +62,7 @@
 			Earworm supports MIDI devices like piano keyboards. Connect a device and click the button
 			below:
 		</p>
-		<InitMidiButton {midi_input} />
+		<InitMidiButton {midi_access} />
 	</section>
 	<section class="panel padded-md column-sm">
 		<header class="markup">

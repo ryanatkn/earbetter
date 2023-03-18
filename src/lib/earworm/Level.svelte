@@ -11,6 +11,7 @@
 	import type {Midi} from '$lib/music/midi';
 	import {start_playing, stop_playing} from '$lib/audio/play_note';
 	import {get_volume} from '$lib/audio/helpers';
+	import MidiAccess from '$lib/audio/MidiAccess.svelte';
 
 	/*
 
@@ -37,6 +38,9 @@
 
 	const level = create_level_store(level_def, audio_ctx, volume);
 	// $: level.setDef(level_def); // TODO update if level_def prop changes
+
+	let midi_access: MidiAccess;
+	$: ma = midi_access?.ma;
 
 	$: highlighted_keys = $level.trial && new Set([$level.trial.sequence[0]]);
 
@@ -101,13 +105,23 @@
 </script>
 
 <svelte:window on:keydown={keydown} />
-<MidiInput
-	on:note_start={(e) => {
-		// TODO should this be ignored if it's not an enabled key? should the level itself ignore the guess?
-		console.log(`e`, e);
-		level.guess(e.detail.note);
-	}}
-/>
+<MidiAccess bind:this={midi_access} />
+{#if ma}
+	<MidiInput
+		{ma}
+		on:note_start={(e) => {
+			// TODO should this be ignored if it's not an enabled key? should the level itself ignore the guess?
+			if ($level.status === 'complete') {
+				start_playing(audio_ctx, e.detail.note, $volume);
+			} else {
+				level.guess(e.detail.note);
+			}
+		}}
+		on:note_stop={(e) => {
+			stop_playing(e.detail.note);
+		}}
+	/>
+{/if}
 <!-- hide from screen readers, see keyboard commands -->
 <div class="level" bind:clientWidth on:click={click} bind:this={el} aria-hidden="true">
 	<!-- <div class="debug">

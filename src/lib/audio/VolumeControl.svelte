@@ -1,7 +1,9 @@
 <script lang="ts">
 	import type {Writable} from 'svelte/store';
 
-	export let volume: Writable<number>;
+	import type {Volume} from '$lib/audio/helpers';
+
+	export let volume: Writable<Volume>;
 </script>
 
 <div class="volume-control">

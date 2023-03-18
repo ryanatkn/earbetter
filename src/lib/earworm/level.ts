@@ -5,6 +5,7 @@ import type {Midi} from '$lib/music/midi';
 import type {Semitones} from '$lib/music/notes';
 import {play_note} from '$lib/audio/play_note';
 import type {Flavored} from '@feltjs/util';
+import type {Volume} from '$lib/audio/helpers';
 
 export const DEFAULT_NOTE_DURATION = 500;
 export const DEFAULT_NOTE_DURATION_FAILED = 50;
@@ -115,7 +116,7 @@ const to_default_state = (level_def: LevelDef): LevelStoreState => ({
 export const create_level_store = (
 	level_def: LevelDef,
 	audio_ctx: AudioContext,
-	volume: Writable<number>,
+	volume: Writable<Volume>,
 ): LevelStore => {
 	const {subscribe, update, set} = writable<LevelStoreState>(to_default_state(level_def));
 
@@ -148,7 +149,7 @@ export const create_level_store = (
 					presenting_index: i,
 				},
 			}));
-			await play_note(audio_ctx, note, DEFAULT_NOTE_DURATION, get(volume)); // eslint-disable-line no-await-in-loop
+			await play_note(audio_ctx, note, get(volume), DEFAULT_NOTE_DURATION); // eslint-disable-line no-await-in-loop
 		}
 		update(($level) => ({
 			...$level,
@@ -164,7 +165,7 @@ export const create_level_store = (
 	// TODO helpful to have a return value?
 	const guess = (note: Midi): void => {
 		update(($level) => {
-			if ($level.status !== 'waiting_for_input') throw Error();
+			if ($level.status !== 'waiting_for_input') return $level;
 			if (!$level.trial || $level.trial.guessing_index === null) {
 				throw Error(`Expected a trial and guessing_index`);
 			}
@@ -175,7 +176,7 @@ export const create_level_store = (
 			// if incorrect -> FAILURE -> showing_failure_feedback -> REPROMPT
 			if (actual !== note) {
 				console.log('guess INCORRECT');
-				void play_note(audio_ctx, note, DEFAULT_NOTE_DURATION_FAILED, get(volume));
+				void play_note(audio_ctx, note, get(volume), DEFAULT_NOTE_DURATION_FAILED);
 				if ($level.trial.guessing_index === 0) {
 					return $level; // no penalty or delay if this is the first one
 				}
@@ -188,7 +189,7 @@ export const create_level_store = (
 			}
 
 			// guess is correct
-			void play_note(audio_ctx, note, DEFAULT_NOTE_DURATION, get(volume));
+			void play_note(audio_ctx, note, get(volume), DEFAULT_NOTE_DURATION);
 
 			if ($level.trial.guessing_index >= $level.trial.sequence.length - 1) {
 				// if more -> update current response index
