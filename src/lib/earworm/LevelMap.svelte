@@ -12,7 +12,7 @@
 	export let midi_access: MidiAccess;
 	export let level_def: LevelDef | null = null;
 	export let level_defs: LevelDef[];
-	export let select_level_def: ((id: LevelId) => void) | null = null; // TODO event? or is the ability to have a return value for ephemeral state desired?
+	export let play_level_def: ((id: LevelId) => void) | null = null; // TODO event? or is the ability to have a return value for ephemeral state desired?
 	export let edit_level_def: ((level_def: LevelDef | null) => void) | null = null; // TODO event? or is the ability to have a return value for ephemeral state desired?
 	export let remove_level_def: ((id: LevelId) => void) | null = null; // TODO event? or is the ability to have a return value for ephemeral state desired?
 	export let create_level_def: ((level_def: LevelDef) => void) | null = null; // TODO event? or is the ability to have a return value for ephemeral state desired?
@@ -72,7 +72,7 @@
 			{#each level_defs as d (d.id)}
 				<LevelMapItem
 					level_def={d}
-					select={select_level_def}
+					select={play_level_def}
 					edit={edit_level_def}
 					remove={remove_level_def}
 					selected={d === level_def}
@@ -94,6 +94,7 @@
 		>
 			<svelte:fragment slot="footer">
 				{#if editing && edit_level_def}
+					<button type="button" on:click={() => play_level_def?.(id)}> play! </button>
 					<button type="button" on:click={() => edit_level_def?.(null)}>
 						stop editing this level
 					</button>

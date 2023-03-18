@@ -27,13 +27,13 @@
 
 	let midi_access: MidiAccess | undefined;
 
-	const select_level_def = async (id: LevelId): Promise<void> => {
+	const play_level_def = async (id: LevelId): Promise<void> => {
 		const level_def = all_level_defs.find((d) => d.id === id);
 		if (!level_def) {
 			console.error('cannot find level_def with id', id);
 			return;
 		}
-		void audio_ctx.resume(); // TODO where's the best place for this? needs to be synchronous with a click or similar, so this breaks if `select_level_def` is called without a user action
+		void audio_ctx.resume(); // TODO where's the best place for this? needs to be synchronous with a click or similar, so this breaks if `play_level_def` is called without a user action
 		await goto(`${base}/game/play#` + encodeURIComponent(JSON.stringify(level_def)));
 	};
 
@@ -114,7 +114,7 @@
 		{midi_access}
 		level_def={editing_level_def}
 		level_defs={all_level_defs}
-		{select_level_def}
+		{play_level_def}
 		{edit_level_def}
 		{remove_level_def}
 		{create_level_def}

@@ -29,11 +29,13 @@
 			class="icon-button plain-button"
 			on:click={() => (removing ? remove?.(level_def.id) : edit?.(level_def))}
 		>
-			{#if removing}⨂{:else}✎{/if}
+			{#if removing}✖{:else}✎{/if}
 		</button>
 	{/if}
 	{#if remove}
-		<button class="icon-button plain-button" on:click={() => (removing = !removing)}> ✕ </button>
+		<button class="icon-button plain-button" on:click={() => (removing = !removing)}>
+			{#if removing}×{:else}✕{/if}
+		</button>
 	{/if}
 </li>
 

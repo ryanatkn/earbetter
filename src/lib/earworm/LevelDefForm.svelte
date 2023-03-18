@@ -11,6 +11,7 @@
 	import {BASE_LEVEL_DEF} from '$lib/earworm/level_defs';
 	import {MIDI_MAX, MIDI_MIN, type Midi} from '$lib/music/midi';
 	import {midi_names} from '$lib/music/notes';
+	import {slide} from 'svelte/transition';
 
 	const dispatch = createEventDispatcher<{submit: LevelDef; remove: LevelId}>();
 
@@ -26,6 +27,8 @@
 	export let note_min: Midi = BASE_LEVEL_DEF.note_min;
 	export let note_max: Midi = BASE_LEVEL_DEF.note_max;
 	export let editing = false;
+
+	let removing = false;
 
 	const to_data = (): LevelDef => ({
 		id,
@@ -151,7 +154,21 @@
 		{#if editing}save changes to level{:else}create level{/if}
 	</button>
 	{#if editing}
-		<button type="button" on:click={() => dispatch('remove', id)}> remove level </button>
+		<button type="button" on:click={() => (removing = !removing)}> remove level </button>
+		{#if removing}
+			<div transition:slide|local>
+				<button
+					class="w-full"
+					type="button"
+					on:click={() => {
+						removing = false;
+						dispatch('remove', id);
+					}}
+				>
+					✖ confirm remove
+				</button>
+			</div>
+		{/if}
 	{/if}
 	<slot name="footer" />
 </form>
