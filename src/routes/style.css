@@ -1,9 +1,106 @@
-/* global stylesheet imported by `src/routes/__layout.svelte */
-
-/*
-
+/* TODO copypasted from dealt, most of this can be deleted when felt-ui supports dark mode */
 :root {
-  --some_stylish_property: 100%;
+	color-scheme: dark;
+
+	/* TODO force dark mode and remove these when Felt supports it */
+	--bg: hsl(var(--primary_hue), 63%, 11%);
+	--text_color: hsl(var(--primary_hue), 8%, 85%);
+	/* TODO "light" and "ligher" are actually getting darker, should they be renamed? */
+	--text_color_light: hsl(var(--primary_hue), 8%, 65%);
+	--text_color_lighter: hsl(var(--primary_hue), 8%, 45%);
+	--text_color_dark: hsl(var(--primary_hue), 8%, 91%);
+	--link_color: var(--accent_text_color);
+	--button_color: var(--bg_color_fg);
+	--button_color_hover: var(--bg);
+	--button_color_active: var(--bg);
+	--button_color_disabled: transparent;
+	--input_bg_color: var(--button_color);
+
+	/* felt overrides */
+	--active_hue: var(--primary_hue);
+
+	/* dealt style vars */
+	--accent_hue: 185;
+	--primary_hue: 275;
+	--bg_color_backdrop: hsla(var(--primary_hue), 100%, 2%, 0.8);
+	--bg_color_fg: hsla(var(--primary_hue), 100%, 98%, 0.08);
+	--border_color: hsla(var(--primary_hue), 100%, 98%, 0.2);
+	--font_color_heading: hsl(var(--primary_hue), 17%, 81%);
+	--accent_text_color: hsl(var(--primary_hue), 90%, 60%);
+	--light_text_color: hsl(var(--accent_hue), 80%, 60%);
+	--accent_border_color: hsla(var(--primary_hue), 50%, 50%, 0.4);
+	--light_border_color: hsla(var(--accent_hue), 50%, 50%, 0.4);
+	--spacing_lg: 20px;
+	--font_size_lg: 20px;
+
+	--primary_color: hsl(var(--primary_hue), 80%, 52%);
+	--primary_color_dark: hsl(var(--primary_hue), 80%, 36%);
+	--accent_color: hsl(var(--accent_hue), 80%, 48%);
+
+	--success_color: hsl(95, 80%, 31%);
+	--failure_color: hsl(5, 80%, 40%);
+
+	--icon: '🔮';
+
+	--text_shadow: 1px 1px 15px #000, 1px 1px 7px #000, 1px 1px #000;
 }
 
-*/
+.panel {
+	background-color: var(--tint_light_0);
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+	color: var(--font_color_heading);
+}
+
+section {
+	/* TODO from Felt */
+	margin-bottom: 60px;
+}
+
+a:hover {
+	color: var(--light_text_color);
+}
+a:active {
+	color: var(--accent_text_color);
+}
+
+/* TODO maybe upstream? */
+.clickable {
+	cursor: pointer;
+	transition: transform var(--duration_1) ease;
+}
+.clickable:focus {
+	transform: scale3d(var(--scale, 1.015), var(--scale, 1.015), var(--scale, 1.015)) skew(0.6deg);
+}
+.clickable:hover {
+	transform: scale3d(var(--scale, 1.03), var(--scale, 1.03), var(--scale, 1.03)) skew(0.6deg);
+}
+.clickable:active {
+	transform: scale3d(var(--scale, 0.94), var(--scale, 0.94), var(--scale, 0.94));
+}
+
+button.big {
+	font-size: var(--font_size_xl3);
+	padding: var(--spacing_md) var(--spacing_xl3);
+}
+
+/* TODO fix this class upstream so this is controlled by a variable */
+.plain-button {
+	--button_color_hover: var(--tint_light_1);
+	--button_color_active: var(--tint_light_2);
+}
+
+code {
+	background-color: var(--tint_light_1);
+}
+
+/* TODO this hack shouldn't be needed */
+.row label {
+	margin-bottom: 0 !important;
+}

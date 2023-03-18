@@ -7,7 +7,6 @@ export default {
 	compilerOptions: {immutable: true},
 	kit: {
 		adapter: adapter(),
-		paths: {base: '/earworm'},
 		files: {assets: 'src/static'},
 		alias: {$routes: 'src/routes'},
 	},

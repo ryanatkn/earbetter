@@ -1,6 +1,6 @@
 # earworm
 
-> ear training game 🪱🎶 [ryanatkn.github.io/earworm](https://ryanatkn.github.io/earworm)
+> ear training game 🪱🎶 [earworm.ryanatkn.com](https://earworm.ryanatkn.com/)
 
 **status**: pre-alpha
 
@@ -9,11 +9,10 @@
 In 2016 I made a simple ear training game named
 [`ear-sharpener`](https://github.com/ryanatkn/ear-sharpener).
 This is a followup with a new design.
-The goal is to make an ear training experience that's fun and useful,
-and I'm crossing my fingers that at least one of those works out.
+The goal is to make an ear training experience that's fun and useful.
 
-It's designed for MIDI input like a piano keyboard, and it works without MIDI,
-but the experience probably won't be as good for most people.
+It's designed to be played with a MIDI device like a piano keyboard.
+It also works without them, but it's recommended.
 
 ## develop
 

@@ -1,7 +1,7 @@
 {
   "name": "@ryanatkn/earworm",
   "description": "ear training game 🪱🎶",
-  "homepage": "https://ryanatkn.github.io/earworm",
+  "homepage": "https://earworm.ryanatkn.com/",
   "license": "Unlicense",
   "version": "0.0.1",
   "type": "module",
@@ -17,7 +17,7 @@
   },
   "devDependencies": {
     "@feltjs/eslint-config": "^0.2.1",
-    "@feltjs/felt-ui": "^0.51.1",
+    "@feltjs/felt-ui": "^0.52.0",
     "@feltjs/gro": "^0.72.0",
     "@feltjs/util": "^0.7.5",
     "@sveltejs/adapter-static": "^2.0.1",
@@ -37,7 +37,11 @@
   },
   "eslintConfig": {
     "root": true,
-    "extends": "@feltjs"
+    "extends": "@feltjs",
+    "ignorePatterns": [
+      "svelte.config.js",
+      "vite.config.js"
+    ]
   },
   "prettier": {
     "useTabs": true,
