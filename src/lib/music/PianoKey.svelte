@@ -19,6 +19,75 @@
 	$: natural = midi_naturals.has(midi);
 	$: accidental = !natural;
 	$: middle_c = midi === 60;
+
+	// TODO BLOCK do we want to focus here or reactively to the state of notes playing? maybe take the first of `playing_notes`?
+
+	const focus_previous_button = (node: Node): void => {
+		let s: ChildNode | null | undefined = node.previousSibling;
+		// TODO hacky
+		if (!(s instanceof HTMLButtonElement)) s = s?.previousSibling;
+		if (!(s instanceof HTMLButtonElement)) s = s?.previousSibling;
+		if (s instanceof HTMLButtonElement) s.focus();
+	};
+	const focus_next_button = (node: Node): void => {
+		let s: ChildNode | null | undefined = node.nextSibling;
+		// TODO hacky
+		if (!(s instanceof HTMLButtonElement)) s = s?.nextSibling;
+		if (!(s instanceof HTMLButtonElement)) s = s?.nextSibling;
+		if (s instanceof HTMLButtonElement) s.focus();
+	};
+
+	const keydown = (
+		e: KeyboardEvent & {
+			currentTarget: EventTarget & HTMLButtonElement;
+		},
+	): void => {
+		const {key} = e;
+		switch (key) {
+			case ' ':
+			case 'Enter': {
+				swallow(e);
+				dispatch('press', midi);
+				e.currentTarget.focus();
+				break;
+			}
+			case 'ArrowLeft': {
+				if (e.currentTarget instanceof Node) {
+					console.log(
+						`((e.currentTarget as Node).nextSibling`,
+						(e.currentTarget as Node).nextSibling,
+					);
+					focus_previous_button(e.currentTarget);
+				}
+				break;
+			}
+			case 'ArrowRight': {
+				if (e.currentTarget instanceof Node) {
+					console.log(
+						`((e.currentTarget as Node).nextSibling`,
+						(e.currentTarget as Node).nextSibling,
+					);
+					focus_next_button(e.currentTarget);
+				}
+				break;
+			}
+		}
+	};
+	const keyup = (
+		e: KeyboardEvent & {
+			currentTarget: EventTarget & HTMLButtonElement;
+		},
+	): void => {
+		const {key} = e;
+		switch (key) {
+			case ' ':
+			case 'Enter': {
+				swallow(e);
+				dispatch('release', midi);
+				break;
+			}
+		}
+	};
 </script>
 
 <button
@@ -31,10 +100,13 @@
 	class:active={pressed}
 	class:highlighted
 	class:emphasized
+	on:keydown={enabled ? keydown : undefined}
+	on:keyup={enabled ? keyup : undefined}
 	on:mousedown={enabled
 		? (e) => {
 				swallow(e);
 				dispatch('press', midi);
+				e.currentTarget.focus();
 		  }
 		: undefined}
 	on:mouseup={enabled
@@ -59,6 +131,7 @@
 
 <style>
 	.piano-key {
+		/* custom */
 		--natural_width: var(--piano_natural_key_width, 60px);
 		--natural_height: var(--piano_natural_key_height, 175px);
 		--accidental_width: var(--piano_accidental_key_width, 35px);
@@ -66,12 +139,19 @@
 		--border_color: var(--piano_border_color, rgba(0, 0, 0, 0.22));
 		/* TODO scale to `piano_key_width` */
 		--emphasized_marker_width: 20px;
+		--z_index_offset: 0;
 
 		position: absolute;
 		top: 0;
 		border-radius: var(--border_radius_xs);
 		padding: 0;
 		min-height: 0;
+		z-index: var(--z_index_offset);
+	}
+
+	.piano-key:focus {
+		--z_index_offset: 1;
+		outline-width: var(--border_width_4);
 	}
 
 	.piano-key:last-child {
@@ -87,19 +167,19 @@
 	.clickable:active,
 	.clickable.active {
 		background-color: var(--primary_color_dark, #007700);
+		outline-width: var(--border_width_3);
 	}
 
 	.natural {
 		width: var(--natural_width);
 		height: var(--natural_height);
 		background-color: var(--piano_natural_key_color, #fff);
-		z-index: 1;
 	}
 	.accidental {
 		width: var(--accidental_width);
 		height: var(--accidental_height);
 		background-color: var(--piano_accidental_key_color, #333);
-		z-index: 2;
+		z-index: calc(2 + var(--z_index_offset));
 	}
 
 	.highlighted {
@@ -141,5 +221,6 @@
 		bottom: calc(var(--emphasized_marker_width) / 2);
 		width: var(--emphasized_marker_width);
 		height: var(--emphasized_marker_width);
+		user-select: none;
 	}
 </style>
