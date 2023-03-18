@@ -134,11 +134,10 @@ export const create_level_store = (level_def: LevelDef, audio_ctx: AudioContext)
 	};
 
 	const present_trial_prompt = async (sequence: Midi[]): Promise<void> => {
-		console.log('PRESENT TRIAL PROMPT', sequence);
+		console.log('present_trial_prompt', sequence);
 		// audio_ctx
 		for (let i = 0; i < sequence.length; i++) {
 			const note = sequence[i];
-			console.log('SET INTERVAL', note);
 			update(($level) => ({
 				...$level,
 				trial: $level.trial && {

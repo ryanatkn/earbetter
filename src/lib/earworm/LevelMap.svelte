@@ -54,6 +54,14 @@
 		<p>Earworm may not function well on devices with smaller screens.</p>
 		<table>
 			<tr>
+				<td><code>Spacebar</code></td>
+				<td>replay trial</td>
+			</tr>
+			<tr>
+				<td><code>r</code></td>
+				<td>restart level</td>
+			</tr>
+			<tr>
 				<td><code>Escape</code></td>
 				<td>exit level</td>
 			</tr>

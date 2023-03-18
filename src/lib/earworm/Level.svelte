@@ -39,7 +39,6 @@
 	// $: level.setDef(level_def); // TODO update if level_def prop changes
 
 	$: highlighted_keys = $level.trial && new Set([$level.trial.sequence[0]]);
-	$: console.log('highlighted', highlighted_keys);
 
 	onMount(() => {
 		level.start();
@@ -137,15 +136,19 @@
 
 	<div class="feedback" class:success class:failure class:complete>
 		{#if complete}
-			<button class="big" on:click={() => exit_level_to_map()}> go back to the map </button>
-			<button class="big" on:click={() => level.reset()}> replay level </button>
+			<button class="big" on:click={() => exit_level_to_map()}>
+				go back to the map &nbsp;<code>Escape</code></button
+			>
+			<button class="big" on:click={() => level.reset()}>
+				replay level &nbsp;<code>r</code>
+			</button>
 		{/if}
 	</div>
 
 	<div class="piano-wrapper" style:padding="{piano_padding}px">
 		{#if clientWidth}
 			<Piano
-				width={clientWidth - piano_padding}
+				width={clientWidth - piano_padding * 2}
 				note_min={$level.def.note_min}
 				note_max={$level.def.note_max}
 				on:press={$level.status === 'waiting_for_input'
@@ -208,7 +211,9 @@
 		top: 50px;
 		right: 0;
 		width: 100%;
-		height: 50px;
+		display: flex;
+		align-items: center;
+		flex-direction: column;
 	}
 	.feedback.success {
 		background-color: var(--success_color, green);
