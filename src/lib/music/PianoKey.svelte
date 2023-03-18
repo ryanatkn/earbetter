@@ -17,6 +17,8 @@
 	$: natural = midi_naturals.has(midi);
 	$: accidental = !natural;
 	$: middle_c = midi === 60;
+
+	// TODO BLOCK `pressed` -- how? as a prop or hook into the audio system?
 </script>
 
 <button
