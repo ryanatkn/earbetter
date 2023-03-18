@@ -102,8 +102,8 @@
 <style>
 	.map {
 		display: flex;
-		flex-direction: column;
-		align-items: center;
+		flex-direction: row;
+		justify-content: center;
 	}
 	.levels {
 		display: flex;
@@ -115,6 +115,6 @@
 		display: flex;
 		flex-direction: column;
 		align-items: center;
-		margin: var(--spacing_xl5) 0;
+		margin: var(--spacing_xl5) var(--spacing_xl);
 	}
 </style>
