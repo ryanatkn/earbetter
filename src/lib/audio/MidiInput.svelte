@@ -1,14 +1,9 @@
-<script lang="ts" context="module">
-	let global_midi_access: MIDIAccess | null = null;
-	let inited: Promise<void> | undefined;
-</script>
-
 <script lang="ts" accessors>
-	import {createEventDispatcher} from 'svelte';
-	import {writable} from 'svelte/store';
+	import {createEventDispatcher, onDestroy} from 'svelte';
+	import type {Writable} from 'svelte/store';
 
-	import {type MIDIAccess, type MIDIMessageEvent, MIDICommand} from '$lib/audio/WebMIDI';
-	import {request_midi_access, parse_midi_message} from '$lib/audio/midi_helpers';
+	import {type MIDIMessageEvent, MIDICommand, type MIDIAccess} from '$lib/audio/WebMIDI';
+	import {parse_midi_message} from '$lib/audio/midi_helpers';
 	import type {Midi} from '$lib/music/midi';
 
 	// This component uses
@@ -23,39 +18,12 @@
 		mod_wheel: number; // velocity
 	}>();
 
-	export const midi_access = writable(global_midi_access);
+	export let midi_access: Writable<MIDIAccess | null>;
 
-	export const init = async (): Promise<void> => {
-		if (inited) return inited;
-		inited = Promise.resolve();
-		if (global_midi_access) {
-			$midi_access = global_midi_access;
-			return inited;
-		}
-		// TODO how to call this better? needs to be a user-initiated action right?
-		// do we need to present a screen to users that lets them opt into midi?
-		try {
-			$midi_access = global_midi_access = await request_midi_access();
-			console.log('requested midi_access', $midi_access);
-			if (!$midi_access) {
-				throw Error(`Cannot list midi inputs without access`);
-			}
-			for (const input of $midi_access.inputs.values()) {
-				log('midi input', input);
-				input.onmidimessage = on_midi_message;
-			}
-			console.log('MIDI ready!');
-		} catch (err) {
-			console.error('loadMidiAccess failed', err);
-			alert('Failed to request MIDI access: ' + err.message); // eslint-disable-line no-alert
-		}
-		return inited;
-	};
-
-	const on_midi_message = (event: MIDIMessageEvent): void => {
+	const midimessage = (event: MIDIMessageEvent): void => {
 		const message = parse_midi_message(event);
 		const {command, channel, note, velocity} = message;
-		log('on_midi_message', command, message);
+		log('midimessage', command, message);
 
 		switch (command) {
 			case MIDICommand.Stop: {
@@ -105,4 +73,26 @@
 			}
 		}
 	};
+
+	const unsubscribers: Array<() => void> = [];
+	const unsubscribe = (): void => {
+		for (const u of unsubscribers) u();
+		unsubscribers.length = 0;
+	};
+	onDestroy(unsubscribe);
+
+	const subscribe = ($midi_access: MIDIAccess | null) => {
+		if (unsubscribers.length) unsubscribe();
+		if (!$midi_access) return;
+		for (const input of $midi_access.inputs.values()) {
+			log('subscribing to midi input', input);
+			input.addEventListener('midimessage', midimessage as any);
+			unsubscribers.push(() => {
+				log('unsubscribing to midi input', input);
+				input.removeEventListener('midimessage', midimessage as any);
+			});
+		}
+	};
+
+	$: subscribe($midi_access);
 </script>

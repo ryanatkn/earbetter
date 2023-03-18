@@ -5,6 +5,8 @@ import {type Midi, midi_to_freq} from '$lib/music/midi';
 
 export type Milliseconds = Flavored<number, 'Milliseconds'>;
 
+// TODO this API is haphazard, rethink all of it
+
 export const play_note = (
 	audio_ctx: AudioContext,
 	note: Midi,

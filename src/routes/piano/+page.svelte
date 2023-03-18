@@ -62,7 +62,7 @@
 			<VolumeControl {volume} />
 		</fieldset>
 		<fieldset>
-			<InitMidiButton {midi_input} />
+			<InitMidiButton midi_access={midi_input} />
 		</fieldset>
 	</form>
 	<Footer />

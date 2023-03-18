@@ -8,7 +8,7 @@
 	import {create_level_stats} from '$lib/earworm/level_stats';
 	import Level from '$lib/earworm/Level.svelte';
 	import {get_audio_ctx} from '$lib/audio/audio_ctx';
-	import MidiInput from '$lib/audio/MidiInput.svelte';
+	import MidiAccess from '$lib/audio/MidiAccess.svelte';
 
 	export let default_level_defs = level_defs; // is a bit awkward, doing it this way to allow custom games, and removing both kinds
 	export let active_level_def: LevelDef | null = null;
@@ -25,7 +25,7 @@
 	const audio_ctx = get_audio_ctx();
 	(window as any).audio = audio_ctx;
 
-	let midi_input: MidiInput;
+	let midi_access: MidiAccess | undefined;
 
 	const select_level_def = async (id: LevelId): Promise<void> => {
 		const level_def = all_level_defs.find((d) => d.id === id);
@@ -103,15 +103,15 @@
 	};
 </script>
 
-<MidiInput bind:this={midi_input} />
+<MidiAccess bind:this={midi_access} />
 {#if active_level_def}
 	<div class="level">
 		<Level level_def={active_level_def} {exit_level_to_map} />
 	</div>
-{:else}
+{:else if midi_access}
 	<slot name="header" />
 	<LevelMap
-		{midi_input}
+		{midi_access}
 		level_def={editing_level_def}
 		level_defs={all_level_defs}
 		{select_level_def}

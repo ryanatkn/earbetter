@@ -1,24 +1,24 @@
 <script lang="ts">
-	import type MidiInput from '$lib/audio/MidiInput.svelte';
+	import type MidiAccess from '$lib/audio/MidiAccess.svelte';
 
-	export let midi_input: MidiInput | undefined;
+	export let midi_access: MidiAccess | undefined;
 
 	// TODO move MIDI initialization to some other action, like the button to start a level
 
-	$: midi_access = midi_input?.midi_access;
-	$: disabled = !midi_input || !!$midi_access;
+	$: ma = midi_access?.midi_access;
+	$: disabled = !midi_access || !!$ma;
 
-	$: midi_inputs = $midi_access && Array.from($midi_access.inputs.values());
+	$: midi_inputs = $ma && Array.from($ma.inputs.values());
 </script>
 
 <button
 	type="button"
 	class="big"
-	on:click={() => void midi_input?.init()}
+	on:click={() => void midi_access?.init()}
 	{disabled}
-	title={midi_input ? ($midi_access ? 'MIDI is ready!' : 'connect your MIDI device') : 'loading...'}
+	title={midi_access ? ($ma ? 'MIDI is ready!' : 'connect your MIDI device') : 'loading...'}
 >
-	{#if $midi_access}
+	{#if $ma}
 		{#if midi_inputs?.length}
 			🎶
 			{#each midi_inputs as midi_input}
