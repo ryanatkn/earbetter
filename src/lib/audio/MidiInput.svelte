@@ -1,4 +1,4 @@
-<script lang="ts" accessors>
+<script lang="ts">
 	import {createEventDispatcher, onDestroy} from 'svelte';
 	import type {Writable} from 'svelte/store';
 
