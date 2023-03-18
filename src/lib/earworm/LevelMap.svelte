@@ -10,8 +10,8 @@
 	import {get_volume} from '$lib/audio/helpers';
 
 	export let midi_input: MidiInput;
-	export let level_defs: LevelDef[];
 	export let level_def: LevelDef | null = null;
+	export let level_defs: LevelDef[];
 	export let select_level_def: ((id: LevelId) => void) | null = null; // TODO event? or is the ability to have a return value for ephemeral state desired?
 	export let edit_level_def: ((level_def: LevelDef | null) => void) | null = null; // TODO event? or is the ability to have a return value for ephemeral state desired?
 	export let remove_level_def: ((id: LevelId) => void) | null = null; // TODO event? or is the ability to have a return value for ephemeral state desired?

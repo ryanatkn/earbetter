@@ -109,8 +109,8 @@
 	<slot name="header" />
 	<LevelMap
 		{midi_input}
-		level_defs={all_level_defs}
 		level_def={editing_level_def}
+		level_defs={all_level_defs}
 		{select_level_def}
 		{edit_level_def}
 		{remove_level_def}
