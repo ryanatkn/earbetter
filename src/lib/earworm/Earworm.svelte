@@ -63,12 +63,23 @@
 
 	const update_level_def = (level_def: LevelDef): void => {
 		const {id} = level_def;
-		const found = level_defs.findIndex((d) => d.id === id);
-		// TODO BLOCK
-		console.log(`update_level_def found`, found);
-		if (found === -1) {
-			console.error('not found', level_def);
-			return;
+		// TODO this is trickier than it should be because of the two collections
+		let index = default_level_defs.findIndex((d) => d.id === id);
+		const update_defs = (ds: LevelDef[]): LevelDef[] => {
+			const updated = ds.slice();
+			updated.splice(index, 1, level_def);
+			return updated;
+		};
+		if (index === -1) {
+			index = custom_level_defs.findIndex((d) => d.id === id);
+			if (index === -1) {
+				console.error('cannot find level def to update', level_def);
+				return;
+			} else {
+				custom_level_defs = update_defs(custom_level_defs);
+			}
+		} else {
+			default_level_defs = update_defs(default_level_defs);
 		}
 		// TODO BLOCK maybe this should show a message, "updated", and a button, ""
 	};
