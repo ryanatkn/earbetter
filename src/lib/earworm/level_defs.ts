@@ -19,6 +19,8 @@ export const BASE_LEVEL_DEF = {
 // TODO programmatic dimensions
 // "up and down" (duplicate the intervals below the tonic)
 // "long" (sequent_length multiplier)
+// which keys can be used
+// present_duration
 
 export const level_defs: LevelDef[] = [
 	{
