@@ -19,11 +19,6 @@
 	$: natural = midi_naturals.has(midi);
 	$: accidental = !natural;
 	$: middle_c = midi === 60;
-
-	// TODO BLOCK `pressed` -- how? as a prop or hook into the audio system?
-	// return a store for `midi`? but we want to decouple it so `PianoKey` can be controlled however
-	// or should there be a `$pressed_keys.has(key)`?
-	// $: pressed =
 </script>
 
 <button
