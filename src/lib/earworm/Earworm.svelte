@@ -28,7 +28,7 @@
 	let midi_input: MidiInput;
 
 	const select_level_def = async (id: LevelId): Promise<void> => {
-		const level_def = level_defs.find((d) => d.id === id);
+		const level_def = all_level_defs.find((d) => d.id === id);
 		if (!level_def) {
 			console.error('cannot find level_def with id', id);
 			return;
@@ -49,7 +49,7 @@
 	};
 
 	const remove_level_def = (id: LevelId): void => {
-		const level_def = level_defs.find((d) => d.id === id);
+		const level_def = all_level_defs.find((d) => d.id === id);
 		if (!level_def) {
 			console.error('cannot find level_def with id', id);
 			return;
