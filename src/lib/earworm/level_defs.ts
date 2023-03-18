@@ -20,30 +20,16 @@ export const level_defs: LevelDef[] = [
 	{
 		name: '5 12',
 		intervals: [5, 12],
-	},
-	{
-		name: '1 12 -1 -12',
-		intervals: [1, 12, -1, -12],
-	},
-	{
-		name: '2 7',
-		intervals: [2, 7],
-	},
-	{
-		name: '2 4',
-		intervals: [2, 4],
+		sequence_length: 2,
 	},
 	{
 		name: '4 7',
 		intervals: [4, 7],
+		sequence_length: 2,
 	},
 	{
-		name: '4 12',
-		intervals: [4, 12],
-	},
-	{
-		name: '7 12',
-		intervals: [7, 12],
+		name: '2 12 -1 -12',
+		intervals: [2, 12, -1, -12],
 	},
 	{
 		name: '2 4 7',

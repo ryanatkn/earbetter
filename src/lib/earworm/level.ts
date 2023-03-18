@@ -1,6 +1,5 @@
 import {get, writable, type Writable} from 'svelte/store';
 import {randomItem, randomInt} from '@feltjs/util/random.js';
-import {dev} from '$app/environment';
 
 import type {Midi} from '$lib/music/midi';
 import type {Semitones} from '$lib/music/notes';
@@ -10,8 +9,8 @@ import type {Flavored} from '@feltjs/util';
 export const DEFAULT_NOTE_DURATION = 500;
 export const DEFAULT_NOTE_DURATION_FAILED = 50;
 export const DEFAULT_FEEDBACK_DURATION = 1000;
-export const DEFAULT_SEQUENCE_LENGTH = dev ? 2 : 4;
-export const DEFAULT_TRIAL_COUNT = dev ? 2 : 5;
+export const DEFAULT_SEQUENCE_LENGTH = 4;
+export const DEFAULT_TRIAL_COUNT = 5;
 
 export interface LevelDef {
 	id: string;
