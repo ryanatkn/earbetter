@@ -104,6 +104,7 @@
 		display: flex;
 		flex-direction: row;
 		justify-content: center;
+		align-items: flex-start;
 	}
 	.levels {
 		display: flex;
