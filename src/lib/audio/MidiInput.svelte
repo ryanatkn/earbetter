@@ -1,5 +1,6 @@
 <script lang="ts" context="module">
 	let global_midi_access: MIDIAccess | null = null;
+	let inited: Promise<void> | undefined;
 </script>
 
 <script lang="ts" accessors>
@@ -24,14 +25,12 @@
 
 	export const midi_access = writable(global_midi_access);
 
-	let inited = false;
-
 	export const init = async (): Promise<void> => {
-		if ($midi_access || inited) return;
-		inited = true;
+		if (inited) return inited;
+		inited = Promise.resolve();
 		if (global_midi_access) {
 			$midi_access = global_midi_access;
-			return;
+			return inited;
 		}
 		// TODO how to call this better? needs to be a user-initiated action right?
 		// do we need to present a screen to users that lets them opt into midi?
@@ -50,6 +49,7 @@
 			console.error('loadMidiAccess failed', err);
 			alert('Failed to request MIDI access: ' + err.message); // eslint-disable-line no-alert
 		}
+		return inited;
 	};
 
 	const on_midi_message = (event: MIDIMessageEvent): void => {
