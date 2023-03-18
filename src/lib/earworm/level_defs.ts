@@ -53,6 +53,7 @@ export const level_defs: LevelDef[] = [
 		// groups: ['major second vs major third']
 		// think about:
 		// `transform_to_up_and_down(level_def)`
+		// `with_up_and_down(level_def)`
 	},
 	{
 		name: 'major second vs perfect octave up and down',
