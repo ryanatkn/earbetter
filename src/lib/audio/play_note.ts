@@ -18,7 +18,7 @@ export const play_note = (
 	gain.gain.value = volume_to_gain(volume);
 	gain.connect(audio_ctx.destination);
 	const osc = audio_ctx.createOscillator();
-	osc.type = 'sine';
+	osc.type = 'sine'; // TODO "custom" | "sawtooth" | "sine" | "square" | "triangle"
 	osc.frequency.setValueAtTime(freq, audio_ctx.currentTime);
 	osc.start();
 	osc.connect(gain);
@@ -55,7 +55,7 @@ export const start_playing_note = (
 	gain.gain.value = volume_to_gain(volume);
 	gain.connect(audio_ctx.destination);
 	const osc = audio_ctx.createOscillator();
-	osc.type = 'sine';
+	osc.type = 'sine'; // TODO "custom" | "sawtooth" | "sine" | "square" | "triangle"
 	osc.frequency.setValueAtTime(freq, audio_ctx.currentTime);
 	osc.start();
 	osc.connect(gain);
