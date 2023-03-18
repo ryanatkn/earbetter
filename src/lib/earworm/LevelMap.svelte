@@ -38,7 +38,7 @@
 		<header>
 			<h2>controls</h2>
 		</header>
-		<p>Earworm may not function well on devices with smaller screens.</p>
+		<p>Earworm does not yet function well on devices with smaller screens.</p>
 		<table>
 			<tr>
 				<td><code>Spacebar</code></td>
