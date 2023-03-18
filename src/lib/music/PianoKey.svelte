@@ -185,10 +185,6 @@
 	.clickable:hover {
 		background-color: var(--primary_color, #00bb00);
 	}
-	.clickable:active,
-	.clickable.active {
-		background-color: var(--primary_color_dark, #007700);
-	}
 
 	.natural {
 		width: var(--natural_width);
@@ -219,6 +215,12 @@
 	.accidental.disabled:hover,
 	.accidental.disabled:active {
 		background-color: var(--accidental_key_disabled_color, #777);
+	}
+
+	/* this is order-sensitive, makes the MIDI input override any disabled state */
+	.clickable:active,
+	.piano-key.active {
+		background-color: var(--primary_color_dark, #007700);
 	}
 
 	.emphasized::before {
