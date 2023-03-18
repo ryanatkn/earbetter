@@ -1,10 +1,11 @@
-import type {Flavored} from '@feltjs/util';
-
-import {DEFAULT_VOLUME, SMOOTH_GAIN_TIME_CONSTANT, volume_to_gain} from '$lib/audio/helpers';
+import {
+	DEFAULT_VOLUME,
+	SMOOTH_GAIN_TIME_CONSTANT,
+	volume_to_gain,
+	type Milliseconds,
+	type Volume,
+} from '$lib/audio/helpers';
 import {type Midi, midi_to_freq} from '$lib/music/midi';
-
-export type Milliseconds = Flavored<number, 'Milliseconds'>;
-export type Volume = Flavored<number, 'Volume'>;
 
 // TODO this API is haphazard, rethink all of it
 
@@ -41,7 +42,7 @@ export interface StopPlaying {
 export const start_playing_note = (
 	audio_ctx: AudioContext,
 	note: Midi,
-	volume = DEFAULT_VOLUME,
+	volume: Volume = DEFAULT_VOLUME,
 ): StopPlaying => {
 	const freq = midi_to_freq(note);
 	console.log('start playing note', note, freq);
@@ -66,7 +67,7 @@ export const start_playing_note = (
 
 const playing: Map<Midi, StopPlaying> = new Map(); // global cache used to enforce that at most one of each note plays
 
-export const start_playing = (audio_ctx: AudioContext, note: Midi, volume?: number): void => {
+export const start_playing = (audio_ctx: AudioContext, note: Midi, volume?: Volume): void => {
 	const current = playing.get(note);
 	if (current) return;
 	playing.set(note, start_playing_note(audio_ctx, note, volume));

@@ -5,6 +5,7 @@ import type {Midi} from '$lib/music/midi';
 import type {Semitones} from '$lib/music/notes';
 import {play_note} from '$lib/audio/play_note';
 import type {Flavored} from '@feltjs/util';
+import type {Volume} from '$lib/audio/helpers';
 
 export const DEFAULT_NOTE_DURATION = 500;
 export const DEFAULT_NOTE_DURATION_FAILED = 50;
@@ -115,7 +116,7 @@ const to_default_state = (level_def: LevelDef): LevelStoreState => ({
 export const create_level_store = (
 	level_def: LevelDef,
 	audio_ctx: AudioContext,
-	volume: Writable<number>,
+	volume: Writable<Volume>,
 ): LevelStore => {
 	const {subscribe, update, set} = writable<LevelStoreState>(to_default_state(level_def));
 

@@ -1,5 +1,6 @@
 import {getContext, setContext} from 'svelte';
 import {writable, type Writable} from 'svelte/store';
+import type {Flavored} from '@feltjs/util';
 
 /**
  * Convert a user-facing volume value [0,1] to the actual gain value.
@@ -14,11 +15,13 @@ export const volume_to_gain = (volume: number): number => {
 
 export const SMOOTH_GAIN_TIME_CONSTANT = 0.03;
 
-export type Frequency = number;
+export type Frequency = Flavored<number, 'Frequency'>;
+export type Milliseconds = Flavored<number, 'Milliseconds'>;
+export type Volume = Flavored<number, 'Volume'>;
 
-export const DEFAULT_VOLUME = 0.51;
+export const DEFAULT_VOLUME: Volume = 0.51;
 
 const KEY = Symbol('volume');
-export const get_volume = (): Writable<number> => getContext(KEY);
-export const set_volume = (store = writable(DEFAULT_VOLUME)): Writable<number> =>
+export const get_volume = (): Writable<Volume> => getContext(KEY);
+export const set_volume = (store = writable(DEFAULT_VOLUME)): Writable<Volume> =>
 	setContext(KEY, store);
