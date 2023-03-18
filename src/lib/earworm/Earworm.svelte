@@ -37,7 +37,12 @@
 		await goto(`${base}/game/play#` + encodeURIComponent(JSON.stringify(level_def)));
 	};
 
-	const edit_level_def = (level_def: LevelDef): void => {
+	const edit_level_def = (level_def: LevelDef | null): void => {
+		if (level_def === null) {
+			editing_level_def = null;
+			console.log(`editing_level_def`, editing_level_def);
+			return;
+		}
 		editing_level_def = level_def;
 		const el = document.getElementsByClassName('level-def-form').item(0); // TODO hacky
 		if (el) window.scrollTo({top: el.getBoundingClientRect().y, behavior: 'smooth'});

@@ -14,10 +14,13 @@
 
 	const dispatch = createEventDispatcher<{submit: LevelDef; remove: LevelId}>();
 
+	const DEFAULT_NAME = 'new custom level';
+	const DEFAULT_INTERVALS = [4, 7, 12];
+
 	// TODO BLOCK how should the id be handled? immutable
 	export let id = create_id();
-	export let name = 'new custom level';
-	export let intervals = [4, 7, 12];
+	export let name = DEFAULT_NAME;
+	export let intervals = DEFAULT_INTERVALS;
 	export let trial_count: number = BASE_LEVEL_DEF.trial_count;
 	export let sequence_length: number = BASE_LEVEL_DEF.sequence_length;
 	export let note_min: Midi = BASE_LEVEL_DEF.note_min;
@@ -36,14 +39,24 @@
 
 	// TODO BLOCK update level button should be disabled when no changes
 
-	export const set_level_def = (level_def: LevelDef): void => {
-		id = level_def.id;
-		name = level_def.name;
-		intervals = level_def.intervals;
-		trial_count = level_def.trial_count;
-		sequence_length = level_def.sequence_length;
-		note_min = level_def.note_min;
-		note_max = level_def.note_max;
+	export const set_level_def = (level_def: LevelDef | null): void => {
+		if (level_def) {
+			id = level_def.id;
+			name = level_def.name;
+			intervals = level_def.intervals;
+			trial_count = level_def.trial_count;
+			sequence_length = level_def.sequence_length;
+			note_min = level_def.note_min;
+			note_max = level_def.note_max;
+		} else {
+			id = create_id();
+			name = DEFAULT_NAME;
+			intervals = DEFAULT_INTERVALS;
+			trial_count = BASE_LEVEL_DEF.trial_count;
+			sequence_length = BASE_LEVEL_DEF.sequence_length;
+			note_min = BASE_LEVEL_DEF.note_min;
+			note_max = BASE_LEVEL_DEF.note_max;
+		}
 	};
 </script>
 
@@ -126,6 +139,7 @@
 	{#if editing}
 		<button type="button" on:click={() => dispatch('remove', id)}> remove level </button>
 	{/if}
+	<slot name="footer" />
 </form>
 
 <style>

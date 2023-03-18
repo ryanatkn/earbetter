@@ -13,7 +13,7 @@
 	export let level_defs: LevelDef[];
 	export let level_def: LevelDef | null = null;
 	export let select_level_def: ((id: LevelId) => void) | null = null; // TODO event? or is the ability to have a return value for ephemeral state desired?
-	export let edit_level_def: ((level_def: LevelDef) => void) | null = null; // TODO event? or is the ability to have a return value for ephemeral state desired?
+	export let edit_level_def: ((level_def: LevelDef | null) => void) | null = null; // TODO event? or is the ability to have a return value for ephemeral state desired?
 	export let remove_level_def: ((id: LevelId) => void) | null = null; // TODO event? or is the ability to have a return value for ephemeral state desired?
 	export let create_level_def: ((level_def: LevelDef) => void) | null = null; // TODO event? or is the ability to have a return value for ephemeral state desired?
 	export let update_level_def: ((level_def: LevelDef) => void) | null = null; // TODO event? or is the ability to have a return value for ephemeral state desired?
@@ -26,8 +26,8 @@
 	(window as any).audio = audio_ctx;
 	const volume = get_volume();
 
-	let set_level_def: (leve_def: LevelDef) => void;
-	$: level_def && set_level_def?.(level_def);
+	let set_level_def: (leve_def: LevelDef | null) => void;
+	$: set_level_def?.(level_def);
 
 	let id: string;
 	$: editing = level_defs.some((d) => d.id === id);
@@ -78,7 +78,15 @@
 				? (e) => (editing ? update_level_def : create_level_def)?.(e.detail)
 				: undefined}
 			on:remove={remove_level_def ? (e) => remove_level_def?.(e.detail) : undefined}
-		/>
+		>
+			<svelte:fragment slot="footer">
+				{#if editing && edit_level_def}
+					<button type="button" on:click={() => edit_level_def?.(null)}>
+						stop editing level
+					</button>
+				{/if}
+			</svelte:fragment>
+		</LevelDefForm>
 	</section>
 </div>
 
