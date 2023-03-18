@@ -59,6 +59,7 @@
 		} else {
 			custom_level_defs = custom_level_defs.filter((d) => d !== level_def);
 		}
+		// TODO BLOCK this is breaking
 	};
 
 	const create_level_def = (level_def: LevelDef): void => {
