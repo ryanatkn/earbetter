@@ -72,7 +72,7 @@
 
 <form class="level-def-form">
 	<header>
-		{#if editing}editing{:else}create a{/if} custom level
+		{#if editing}editing level{:else}create a custom level{/if}
 	</header>
 	<fieldset>
 		<label>
@@ -148,7 +148,7 @@
 		on:click={() => dispatch('submit', to_data())}
 		disabled={editing && !changed}
 	>
-		{#if editing}update{:else}create{/if} level
+		{#if editing}save changes to level{:else}create level{/if}
 	</button>
 	{#if editing}
 		<button type="button" on:click={() => dispatch('remove', id)}> remove level </button>

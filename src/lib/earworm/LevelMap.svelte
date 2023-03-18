@@ -83,7 +83,7 @@
 			<svelte:fragment slot="footer">
 				{#if editing && edit_level_def}
 					<button type="button" on:click={() => edit_level_def?.(null)}>
-						stop editing level
+						stop editing this level
 					</button>
 				{/if}
 			</svelte:fragment>

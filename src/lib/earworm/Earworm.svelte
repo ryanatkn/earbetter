@@ -54,6 +54,9 @@
 			console.error('cannot find level_def with id', id);
 			return;
 		}
+		if (id === editing_level_def?.id) {
+			editing_level_def = null;
+		}
 		if (default_level_defs.includes(level_def)) {
 			default_level_defs = default_level_defs.filter((d) => d !== level_def);
 		} else {
