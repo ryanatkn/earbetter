@@ -9,7 +9,7 @@
 	import {get_audio_ctx} from '$lib/audio/audio_ctx';
 	import MidiInput from '$lib/audio/MidiInput.svelte';
 	import type {Midi} from '$lib/music/midi';
-	import {start_playing, stop_playing} from '$lib/audio/play_note';
+	import {playing_notes, start_playing, stop_playing} from '$lib/audio/play_note';
 	import {get_volume} from '$lib/audio/helpers';
 	import MidiAccess from '$lib/audio/MidiAccess.svelte';
 
@@ -42,6 +42,7 @@
 	let midi_access: MidiAccess;
 	$: ma = midi_access?.ma;
 
+	$: pressed_keys = $playing_notes;
 	$: highlighted_keys = $level.trial && new Set([$level.trial.sequence[0]]);
 
 	onMount(() => {
@@ -165,14 +166,15 @@
 				width={clientWidth - piano_padding * 2}
 				note_min={$level.def.note_min}
 				note_max={$level.def.note_max}
+				enabled_keys={$level.trial?.valid_notes}
+				{pressed_keys}
+				{highlighted_keys}
 				on:press={$level.status === 'waiting_for_input'
 					? (e) => on_press_key(e.detail)
 					: $level.status === 'complete'
 					? (e) => start_playing(audio_ctx, e.detail, $volume)
 					: undefined}
 				on:release={$level.status === 'complete' ? (e) => stop_playing(e.detail) : undefined}
-				enabled_keys={$level.trial?.valid_notes}
-				{highlighted_keys}
 			/>
 		{/if}
 	</div>

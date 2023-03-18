@@ -6,8 +6,10 @@ import {
 	type Volume,
 } from '$lib/audio/helpers';
 import {type Midi, midi_to_freq} from '$lib/music/midi';
+import {writable, type Writable} from 'svelte/store';
 
-// TODO this API is haphazard, rethink all of it
+// TODO this API is haphazard, in particular `play_note` versus `start_playing` and `stop_playing`,
+// and we need to support more options
 
 export const play_note = (
 	audio_ctx: AudioContext,
@@ -39,6 +41,9 @@ export interface StopPlaying {
 	(): void;
 }
 
+// TODO is redundant with `playing` and manually updated
+export const playing_notes: Writable<Set<Midi>> = writable(new Set());
+
 export const start_playing_note = (
 	audio_ctx: AudioContext,
 	note: Midi,
@@ -56,9 +61,19 @@ export const start_playing_note = (
 	osc.start();
 	osc.connect(gain);
 
+	playing_notes.update((v) => {
+		const v2 = new Set(v);
+		v2.add(note);
+		return v2;
+	});
 	return () => {
 		console.log(`stop playing note`, note);
 		stop_osc(audio_ctx, 10, gain, osc);
+		playing_notes.update((v) => {
+			const v2 = new Set(v);
+			v2.delete(note);
+			return v2;
+		});
 	};
 };
 

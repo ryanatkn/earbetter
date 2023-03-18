@@ -7,17 +7,9 @@
 	export let note_min: Midi = MIDI_MIN;
 	export let note_max: Midi = MIDI_MAX;
 	export let enabled_keys: Set<Midi> | null = null;
+	export let pressed_keys: Set<Midi> | null = null;
 	export let highlighted_keys: Set<Midi> | null = null;
 	export let emphasized_keys: Set<Midi> | null = null;
-
-	const is_key_enabled = (key: Midi, enabled_keys: Set<Midi> | null): boolean =>
-		!enabled_keys || enabled_keys.has(key);
-
-	const is_key_highlighted = (key: Midi, highlighted_keys: Set<Midi> | null): boolean =>
-		!!highlighted_keys?.has(key);
-
-	const is_key_emphasized = (key: Midi, emphasized_keys: Set<Midi> | null): boolean =>
-		!!emphasized_keys?.has(key);
 
 	$: ({
 		piano_keys,
@@ -43,9 +35,10 @@
 				on:release
 				{midi}
 				{left_offset}
-				enabled={is_key_enabled(midi, enabled_keys)}
-				highlighted={is_key_highlighted(midi, highlighted_keys)}
-				emphasized={is_key_emphasized(midi, emphasized_keys)}
+				enabled={!enabled_keys || enabled_keys.has(midi)}
+				pressed={pressed_keys?.has(midi)}
+				highlighted={highlighted_keys?.has(midi)}
+				emphasized={emphasized_keys?.has(midi)}
 			/>
 		{/each}
 	</div>
