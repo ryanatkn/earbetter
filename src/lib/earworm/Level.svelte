@@ -111,8 +111,14 @@
 		{ma}
 		on:note_start={(e) => {
 			// TODO should this be ignored if it's not an enabled key? should the level itself ignore the guess?
-			console.log(`e`, e);
-			level.guess(e.detail.note);
+			if ($level.status === 'complete') {
+				start_playing(audio_ctx, e.detail.note, $volume);
+			} else {
+				level.guess(e.detail.note);
+			}
+		}}
+		on:note_stop={(e) => {
+			stop_playing(e.detail.note);
 		}}
 	/>
 {/if}

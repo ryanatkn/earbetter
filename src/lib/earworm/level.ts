@@ -164,7 +164,7 @@ export const create_level_store = (
 	// TODO helpful to have a return value?
 	const guess = (note: Midi): void => {
 		update(($level) => {
-			if ($level.status !== 'waiting_for_input') throw Error();
+			if ($level.status !== 'waiting_for_input') return $level;
 			if (!$level.trial || $level.trial.guessing_index === null) {
 				throw Error(`Expected a trial and guessing_index`);
 			}
