@@ -1,5 +1,6 @@
 <script lang="ts">
 	import {onMount} from 'svelte';
+	import {isEditable, swallow} from '@feltjs/util/dom.js';
 
 	import {create_level_store, type LevelDef} from '$lib/earworm/level';
 	import Piano from '$lib/music/Piano.svelte';
@@ -44,35 +45,6 @@
 		level.start();
 	});
 
-	const onDocumentKeyDown = (e: KeyboardEvent) => {
-		switch (e.key) {
-			case 'r': {
-				level.reset();
-				break;
-			}
-			case ' ': {
-				switch ($level.status) {
-					case 'complete': {
-						exit_level_to_map(true);
-						break;
-					}
-					default: {
-						break;
-					}
-				}
-				break;
-			}
-			case '`': {
-				level.guess_correctly($level);
-				break;
-			}
-			case 'Escape': {
-				exit_level_to_map(); // TODO confirmation dialog
-				break;
-			}
-		}
-	};
-
 	const on_press_key = (note: Midi): void => {
 		console.log('press note key', note);
 		level.guess(note);
@@ -84,8 +56,52 @@
 	$: complete = $level.status === 'complete';
 
 	const piano_padding = 20;
+
+	let el: HTMLElement;
+
+	const click = (e: MouseEvent) => {
+		if (e.target === el) {
+			swallow(e);
+			level.retry_trial();
+		}
+	};
+	const keydown = (e: KeyboardEvent) => {
+		if (isEditable(e.target)) return;
+		switch (e.key) {
+			case 'r': {
+				swallow(e);
+				level.reset();
+				return;
+			}
+			case ' ': {
+				switch ($level.status) {
+					case 'complete': {
+						swallow(e);
+						exit_level_to_map(true);
+						return;
+					}
+					default: {
+						swallow(e);
+						level.retry_trial();
+						return;
+					}
+				}
+			}
+			case '`': {
+				swallow(e);
+				level.guess_correctly($level);
+				return;
+			}
+			case 'Escape': {
+				swallow(e);
+				exit_level_to_map(); // TODO confirmation dialog
+				return;
+			}
+		}
+	};
 </script>
 
+<svelte:window on:keydown={keydown} />
 <MidiInput
 	on:note_start={(e) => {
 		// TODO should this be ignored if it's not an enabled key? should the level itself ignore the guess?
@@ -93,7 +109,8 @@
 		level.guess(e.detail.note);
 	}}
 />
-<div class="level" bind:clientWidth>
+<!-- hide from screen readers, see keyboard commands -->
+<div class="level" bind:clientWidth on:click={click} bind:this={el} aria-hidden="true">
 	<!-- <div class="debug">
 		<div>status: {$level.status}</div>
 		<div>trials created: {$level.trials.length}</div>
@@ -143,8 +160,6 @@
 		{/if}
 	</div>
 </div>
-
-<svelte:window on:keydown={onDocumentKeyDown} />
 
 <style>
 	.level {
