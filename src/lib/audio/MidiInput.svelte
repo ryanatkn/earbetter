@@ -24,8 +24,11 @@
 
 	export const midi_access = writable(global_midi_access);
 
+	let inited = false;
+
 	export const init = async (): Promise<void> => {
-		if ($midi_access) return;
+		if ($midi_access || inited) return;
+		inited = true;
 		if (global_midi_access) {
 			$midi_access = global_midi_access;
 			return;
