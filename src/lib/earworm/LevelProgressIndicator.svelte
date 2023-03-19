@@ -1,14 +1,16 @@
 <script lang="ts">
-	import type {LevelStore, LevelStoreState} from '$lib/earworm/level';
+	import type {Level, Status, Trial} from '$lib/earworm/level';
 
-	export let level: LevelStore;
+	export let level: Level;
+
+	$: ({def, trial, status, trials} = level);
 
 	// TODO colors
-	const get_bg_color = ($level: LevelStoreState, index: number) => {
-		return $level.status === 'complete'
+	const get_bg_color = (s: Status, t: Trial | null, ts: Trial[], index: number) => {
+		return s === 'complete'
 			? 'rgba(255, 255, 255, 0.6)'
-			: $level.trials[index] // trials are created when needed, not ahead of time
-			? $level.trial && index === $level.trial.index
+			: ts[index] // trials are created when needed, not ahead of time
+			? t && index === t.index
 				? 'rgba(255, 255, 255, 0.4)'
 				: 'rgba(255, 255, 255, 0.2)'
 			: 'transparent';
@@ -16,8 +18,8 @@
 </script>
 
 <div class="level-progress-indicator">
-	{#each {length: $level.def.trial_count} as _, index}
-		<div class="level" style="background-color: {get_bg_color($level, index)}" />
+	{#each {length: $def.trial_count} as _, index}
+		<div class="level" style="background-color: {get_bg_color($status, $trial, $trials, index)}" />
 	{/each}
 </div>
 
