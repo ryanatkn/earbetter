@@ -1,8 +1,9 @@
 import {get, writable, type Writable} from 'svelte/store';
 import {randomItem, randomInt} from '@feltjs/util/random.js';
+import {z} from 'zod';
 
 import type {Midi} from '$lib/music/midi';
-import type {Semitones} from '$lib/music/notes';
+// import type {Semitones} from '$lib/music/notes';
 import {play_note} from '$lib/audio/play_note';
 import type {Flavored} from '@feltjs/util';
 import type {Volume} from '$lib/audio/helpers';
@@ -13,15 +14,31 @@ export const DEFAULT_FEEDBACK_DURATION = 1000;
 export const DEFAULT_SEQUENCE_LENGTH = 4;
 export const DEFAULT_TRIAL_COUNT = 5;
 
-export interface LevelDef {
-	id: string;
-	name: string;
-	intervals: Semitones[];
-	trial_count: number;
-	sequence_length: number;
-	note_min: Midi;
-	note_max: Midi;
-}
+// TODO refactor/move
+const z_midi = () =>
+	z
+		.number()
+		.gte(0)
+		.lte(127)
+		.transform((t) => t as Midi);
+
+const z_uuid = () =>
+	z
+		.string()
+		.uuid()
+		.transform((t) => t as LevelId);
+
+// TODO add restrictions to the below def
+export const LevelDef = z.object({
+	id: z_uuid(),
+	name: z.string(),
+	intervals: z.array(z.number()), // TODO `Semitones`
+	trial_count: z.number(),
+	sequence_length: z.number(),
+	note_min: z_midi(),
+	note_max: z_midi(),
+});
+export type LevelDef = z.infer<typeof LevelDef>;
 
 export type Status =
 	| 'initial'
