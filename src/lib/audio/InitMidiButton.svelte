@@ -14,6 +14,8 @@
 	$: disabled = !midi_access || !!$ma || request_status === 'pending';
 
 	$: midi_inputs = $ma && Array.from($ma.inputs.values());
+
+	let request_error: string | undefined;
 </script>
 
 <button
@@ -28,6 +30,7 @@
 		} catch (err) {
 			console.error('failed to request midi access', err);
 			request_status = 'failure';
+			request_error = err.message;
 		}
 	}}
 	{disabled}
@@ -45,11 +48,14 @@
 				{/each}
 			</table>
 		{:else}
-			no MIDI devices found :[
+			<span in:fade|local>no MIDI devices found :[</span>
 		{/if}
 	{:else if request_status === 'pending'}
-		<!-- fade in because it may be replaced immediately -->
 		<span in:fade|local>requesting MIDI access</span>
+	{:else if request_status === 'failure'}
+		<span in:fade|local
+			>failed to request MIDI access{#if request_error}: {request_error}{/if}</span
+		>
 	{:else}
 		init MIDI
 	{/if}
