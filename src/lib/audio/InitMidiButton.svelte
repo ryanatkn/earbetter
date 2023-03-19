@@ -22,8 +22,13 @@
 	on:click={async () => {
 		if (!midi_access) return;
 		request_status = 'pending';
-		await midi_access.request_access();
-		request_status = 'success';
+		try {
+			await midi_access.request_access();
+			request_status = 'success';
+		} catch (err) {
+			console.error('failed to request midi access', err);
+			request_status = 'failure';
+		}
 	}}
 	{disabled}
 	title={midi_access ? ($ma ? 'MIDI is ready!' : 'connect your MIDI device') : 'loading...'}
