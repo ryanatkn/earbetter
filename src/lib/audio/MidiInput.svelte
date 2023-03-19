@@ -6,8 +6,6 @@
 	import {parse_midi_message} from '$lib/audio/midi_helpers';
 	import type {Midi} from '$lib/music/midi';
 
-	// This component uses
-
 	const log = console.log.bind(console);
 
 	const dispatch = createEventDispatcher<{
