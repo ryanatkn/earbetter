@@ -70,23 +70,11 @@
 				break;
 			}
 			case 'ArrowLeft': {
-				if (e.currentTarget instanceof Node) {
-					console.log(
-						`((e.currentTarget as Node).nextSibling`,
-						(e.currentTarget as Node).nextSibling,
-					);
-					focus_previous_button(e.currentTarget);
-				}
+				focus_previous_button(e.currentTarget);
 				break;
 			}
 			case 'ArrowRight': {
-				if (e.currentTarget instanceof Node) {
-					console.log(
-						`((e.currentTarget as Node).nextSibling`,
-						(e.currentTarget as Node).nextSibling,
-					);
-					focus_next_button(e.currentTarget);
-				}
+				focus_next_button(e.currentTarget);
 				break;
 			}
 		}

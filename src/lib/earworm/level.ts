@@ -1,12 +1,18 @@
-import {get, writable, type Writable} from 'svelte/store';
+import {get, type Writable} from 'svelte/store';
 import {randomItem, randomInt} from '@feltjs/util/random.js';
 import {z} from 'zod';
 import type {Flavored} from '@feltjs/util';
+import {Logger} from '@feltjs/util/log.js';
+import {signal, batch, Signal} from '@preact/signals-core';
 
 import {z_midi, type Midi} from '$lib/music/midi';
 import {Intervals} from '$lib/music/notes';
 import {play_note} from '$lib/audio/play_note';
 import type {Volume} from '$lib/audio/helpers';
+
+// TODO this isn't idiomatic signals code yet, uses `peek` too much
+
+const log = new Logger('[level]');
 
 export const DEFAULT_NOTE_DURATION = 500;
 export const DEFAULT_NOTE_DURATION_FAILED = 50;
@@ -40,15 +46,13 @@ export type Status =
 	| 'showing_failure_feedback'
 	| 'complete';
 
-export type LevelStoreState = {
-	status: Status;
-	def: LevelDef;
-	trial: Trial | null; // TODO these nullable values are unfortunate - maybe make this a type union based on status
-	trials: Trial[];
-};
-
-export interface LevelStore {
-	subscribe: Writable<LevelStoreState>['subscribe'];
+// TODO ambiguity with `Level.svelte` -- consider combining the two? or renaming the component, maybe it's the `LevelScene`
+// (hm not sure about that, but the ergnomics of components may be worth it)
+export interface Level {
+	def: Signal<LevelDef>;
+	status: Signal<Status>;
+	trial: Signal<Trial | null>;
+	trials: Signal<Trial[]>;
 	reset: () => void;
 	// game methods
 	start: () => void;
@@ -57,10 +61,11 @@ export interface LevelStore {
 	next_trial: () => void;
 	complete_level: () => void;
 	// dev and debug methods
-	guess_correctly: ($level: LevelStoreState) => void;
-	get_correct_guess: ($level: LevelStoreState) => number | null;
+	guess_correctly: () => void;
+	get_correct_guess: () => number | null;
 }
 
+// TODO extract into its own module? decompose into signals?
 export interface Trial {
 	index: number;
 	valid_notes: Set<Midi>;
@@ -72,7 +77,7 @@ export interface Trial {
 
 export const create_id = (): LevelId => crypto.randomUUID();
 
-const create_next_trial = ({def, trial}: LevelStoreState): Trial => {
+const create_next_trial = (def: LevelDef, current_trial: Trial | null): Trial => {
 	const {note_min, note_max} = def;
 
 	const interval_max = def.intervals.reduce((max, v) => Math.max(max, v));
@@ -104,7 +109,7 @@ const create_next_trial = ({def, trial}: LevelStoreState): Trial => {
 	}
 
 	return {
-		index: (trial && trial.index + 1) || 0,
+		index: (current_trial && current_trial.index + 1) || 0,
 		valid_notes: new Set(valid_notes),
 		sequence,
 		presenting_index: null,
@@ -113,183 +118,166 @@ const create_next_trial = ({def, trial}: LevelStoreState): Trial => {
 	};
 };
 
-const to_default_state = (level_def: LevelDef): LevelStoreState => ({
-	status: 'initial',
-	def: level_def,
-	trial: null,
-	trials: [],
-});
+const DEFAULT_STATUS: Status = 'initial';
+const DEFAULT_TRIAL: Trial | null = null;
+const DEFAULT_TRIALS: Trial[] = [];
 
-export const create_level_store = (
-	level_def: LevelDef,
+export const create_level = (
+	level_def: LevelDef, // TODO maybe make optional?
 	audio_ctx: AudioContext,
 	volume: Writable<Volume>,
-): LevelStore => {
-	const {subscribe, update, set} = writable<LevelStoreState>(to_default_state(level_def));
+): Level => {
+	const def: Signal<LevelDef> = signal(level_def);
+	const status: Signal<Status> = signal(DEFAULT_STATUS);
+	const trial: Signal<Trial | null> = signal(DEFAULT_TRIAL);
+	const trials: Signal<Trial[]> = signal(DEFAULT_TRIALS);
 
 	const start = (): void => {
-		update(($level) => {
-			if ($level.status !== 'initial') throw Error();
-			const trial = create_next_trial($level);
-			console.log('TRIAL', trial);
+		if (status.peek() !== 'initial') return;
+		batch(() => {
+			const next_trial = create_next_trial(def.peek(), trial.peek());
+			log.trace('start level', trial);
 			// TODO this is really "on enter presenting_prompt state" logic
 			// TODO `s` is stale! so we need the timeout
-			setTimeout(() => present_trial_prompt(trial.sequence));
-			return {
-				...$level,
-				status: 'presenting_prompt',
-				trial,
-				trials: [...$level.trials, trial],
-			};
+			setTimeout(() => present_trial_prompt(next_trial.sequence));
+			status.value = 'presenting_prompt';
+			trial.value = next_trial;
+			trials.value = [...trials.peek(), next_trial];
 		});
 	};
 
 	const present_trial_prompt = async (sequence: Midi[]): Promise<void> => {
-		console.log('present_trial_prompt', sequence);
+		log.trace('present_trial_prompt', sequence);
+		const $trial = trial.peek();
+		if (!$trial) return;
 		// audio_ctx
 		for (let i = 0; i < sequence.length; i++) {
 			const note = sequence[i];
-			update(($level) => ({
-				...$level,
-				trial: $level.trial && {
-					...$level.trial,
-					presenting_index: i,
-				},
-			}));
+			trial.value = {
+				...trial.peek()!,
+				presenting_index: i,
+			};
 			await play_note(audio_ctx, note, get(volume), DEFAULT_NOTE_DURATION); // eslint-disable-line no-await-in-loop
 		}
-		update(($level) => ({
-			...$level,
-			status: 'waiting_for_input',
-			trial: $level.trial && {
-				...$level.trial,
+		batch(() => {
+			status.value = 'waiting_for_input';
+			trial.value = {
+				...trial.peek()!,
 				presenting_index: null,
 				guessing_index: 0,
-			},
-		}));
+			};
+		});
 	};
 
 	// TODO helpful to have a return value?
 	const guess = (note: Midi): void => {
-		update(($level) => {
-			if ($level.status !== 'waiting_for_input') return $level;
-			if (!$level.trial || $level.trial.guessing_index === null) {
-				throw Error(`Expected a trial and guessing_index`);
-			}
-			console.log('guessing interval', $level.trial.guessing_index);
-			const actual = get_correct_guess($level);
-			console.log('guess', note, actual);
+		if (status.peek() !== 'waiting_for_input') return;
+		const $trial = trial.peek();
+		const guessing_index = $trial?.guessing_index;
+		if (!$trial || guessing_index == null) return;
+		batch(() => {
+			const actual = get_correct_guess($trial);
+			log.trace('guess', guessing_index, note, actual);
 
 			// if incorrect -> FAILURE -> showing_failure_feedback -> REPROMPT
 			if (actual !== note) {
-				console.log('guess INCORRECT');
+				log.trace('guess incorrect');
 				void play_note(audio_ctx, note, get(volume), DEFAULT_NOTE_DURATION_FAILED);
-				if ($level.trial.guessing_index === 0) {
-					return $level; // no penalty or delay if this is the first one
+				if (guessing_index === 0) {
+					return; // no penalty or delay if this is the first one
 				}
 				// TODO this is really "on enter showing_failure_feedback state" logic
 				setTimeout(() => retry_trial(), DEFAULT_FEEDBACK_DURATION);
-				return {
-					...$level,
-					status: 'showing_failure_feedback',
-				};
+				status.value = 'showing_failure_feedback';
 			}
 
 			// guess is correct
 			void play_note(audio_ctx, note, get(volume), DEFAULT_NOTE_DURATION);
 
-			if ($level.trial.guessing_index >= $level.trial.sequence.length - 1) {
+			if (guessing_index >= $trial.sequence.length - 1) {
 				// if more -> update current response index
-				if ($level.trial.index < $level.def.trial_count - 1) {
-					console.log('guess CORRECT AND DONE WITH TRIAL!!');
+				if ($trial.index < def.peek().trial_count - 1) {
+					log.trace('guess correct and done with trial');
 					// TODO this is really "on enter showing_success_feedback state" logic
 					setTimeout(() => next_trial(), DEFAULT_FEEDBACK_DURATION);
-					return {
-						...$level,
-						status: 'showing_success_feedback',
-					};
+					status.value = 'showing_success_feedback';
 				} else {
 					// TODO this is really "on enter showing_success_feedback state" logic
-					console.log('guess CORRECT AND DONE WITH ALL TRIALS!!!!');
+					log.trace('guess correct and done with all trials!');
 					setTimeout(() => complete_level(), DEFAULT_FEEDBACK_DURATION);
-					return {
-						...$level,
-						status: 'showing_success_feedback',
-					};
+					status.value = 'showing_success_feedback';
 				}
 			} else {
 				// SUCCESS -> showing_success_feedback
-				console.log('guess CORRECT BUT NOT DONE');
-				return {
-					...$level,
-					trial: {
-						...$level.trial,
-						guessing_index: $level.trial.guessing_index + 1,
-					},
+				log.trace('guess correct BUT NOT DONE');
+				trial.value = {
+					...$trial,
+					guessing_index: guessing_index + 1,
 				};
 			}
 		});
 	};
 
 	const retry_trial = (): void => {
-		update(($level) => {
-			const {status, trial} = $level;
-			if (
-				status !== 'waiting_for_input' &&
-				status !== 'showing_success_feedback' &&
-				status !== 'showing_failure_feedback'
-			) {
-				return $level;
-			}
-
+		const $status = status.peek();
+		if (
+			$status !== 'waiting_for_input' &&
+			$status !== 'showing_success_feedback' &&
+			$status !== 'showing_failure_feedback'
+		) {
+			return;
+		}
+		const $trial = trial.peek();
+		if (!$trial) return;
+		batch(() => {
 			// TODO this is really "on enter presenting_prompt state" logic
 			// TODO try to remove the timeout
-			setTimeout(() => trial && present_trial_prompt(trial.sequence));
-			return {
-				...$level,
-				status: 'presenting_prompt',
-				trial: trial && {
-					...trial,
-					retry_count: trial.retry_count + 1,
-				},
+			setTimeout(() => present_trial_prompt($trial.sequence));
+			status.value = 'presenting_prompt';
+			trial.value = {
+				...$trial,
+				retry_count: $trial.retry_count + 1,
 			};
 		});
 	};
 
 	const next_trial = (): void => {
-		update(($level) => {
+		batch(() => {
 			// TODO check this?
-			// if ($level.status !== 'showing_success_feedback') throw Error();
-			const trial = create_next_trial($level);
-			console.log('next trial', trial);
+			// if (status !== 'showing_success_feedback') throw Error();
+			const next_trial = create_next_trial(def.peek(), trial.peek());
+			log.trace('next trial', next_trial);
 			// TODO this is really "on enter presenting_prompt state" logic
 			// TODO `s` is stale! so we need the timeout
-			setTimeout(() => present_trial_prompt(trial.sequence));
-			return {
-				...$level,
-				status: 'presenting_prompt',
-				trial,
-				trials: [...$level.trials, trial],
-			};
+			setTimeout(() => present_trial_prompt(next_trial.sequence));
+			status.value = 'presenting_prompt';
+			trial.value = next_trial;
+			trials.value = [...trials.peek(), next_trial];
 		});
 	};
 
 	const complete_level = (): void => {
 		// TODO check this?
-		// if ($level.status !== 'showing_success_feedback') throw Error();
-		update(($level) => ({
-			...$level,
-			status: 'complete',
-			trial: null,
-		}));
+		// if (status !== 'showing_success_feedback') throw Error();
+		batch(() => {
+			status.value = 'complete';
+			trial.value = null;
+		});
 	};
 
-	const store: LevelStore = {
-		subscribe,
+	const level: Level = {
+		def,
+		status,
+		trial,
+		trials,
 		reset: () => {
-			// TODO this causes errors if we have pending async events coming in! they should be canceled!
-			set(to_default_state(level_def));
-			start();
+			batch(() => {
+				def.value = level_def;
+				status.value = DEFAULT_STATUS;
+				trial.value = DEFAULT_TRIAL;
+				trials.value = DEFAULT_TRIALS;
+				start();
+			});
 		},
 		start,
 		guess,
@@ -297,20 +285,20 @@ export const create_level_store = (
 		next_trial,
 		complete_level,
 		// dev and debug methods
-		guess_correctly: ($level: LevelStoreState): void => {
-			if ($level.status !== 'waiting_for_input') return;
-			const midi = get_correct_guess($level);
+		guess_correctly: () => {
+			if (status.peek() !== 'waiting_for_input') return;
+			const midi = get_correct_guess(trial.peek());
 			if (midi === null) return;
 			guess(midi);
 		},
-		get_correct_guess,
+		get_correct_guess: () => get_correct_guess(trial.peek()),
 	};
-	return store;
+	return level;
 };
 
-const get_correct_guess = ($level: LevelStoreState): Midi | null => {
-	if (!$level.trial || $level.trial.guessing_index === null) return null;
-	return $level.trial.sequence[$level.trial.guessing_index];
+const get_correct_guess = (trial: Trial | null): Midi | null => {
+	if (!trial || trial.guessing_index === null) return null;
+	return trial.sequence[trial.guessing_index];
 };
 
 // If there's possible tonic range that fits with all of the intervals within the bounds,

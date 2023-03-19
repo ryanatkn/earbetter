@@ -2,7 +2,7 @@
 	import {onMount} from 'svelte';
 	import {isEditable, swallow} from '@feltjs/util/dom.js';
 
-	import {create_level_store, type LevelDef} from '$lib/earworm/level';
+	import {create_level, type LevelDef} from '$lib/earworm/level';
 	import Piano from '$lib/music/Piano.svelte';
 	import LevelProgressIndicator from '$lib/earworm/LevelProgressIndicator.svelte';
 	import TrialProgressIndicator from '$lib/earworm/TrialProgressIndicator.svelte';
@@ -36,15 +36,16 @@
 	const audio_ctx = get_audio_ctx();
 	const volume = get_volume();
 
-	const level = create_level_store(level_def, audio_ctx, volume);
+	const level = create_level(level_def, audio_ctx, volume);
 	// $: level.setDef(level_def); // TODO update if level_def prop changes
-	$: ({status, trial} = $level);
+	$: ({def, status, trial} = level);
+	$: guessing_index = $trial?.guessing_index;
 
 	let midi_access: MidiAccess;
 	$: ma = midi_access?.ma;
 
-	$: pressed_keys = status === 'presenting_prompt' ? null : $playing_notes;
-	$: highlighted_keys = trial && new Set([trial.sequence[0]]);
+	$: pressed_keys = $status === 'presenting_prompt' ? null : $playing_notes;
+	$: highlighted_keys = $trial && new Set([$trial.sequence[0]]);
 
 	onMount(() => {
 		level.start();
@@ -56,12 +57,12 @@
 	};
 
 	let success: boolean; // TODO why is this needed? appears to be a bug in the Svelte language tools
-	$: success = status === 'showing_success_feedback';
-	$: failure = status === 'showing_failure_feedback';
-	$: complete = status === 'complete';
-	$: waiting = status === 'waiting_for_input';
+	$: success = $status === 'showing_success_feedback';
+	$: failure = $status === 'showing_failure_feedback';
+	$: complete = $status === 'complete';
+	$: waiting = $status === 'waiting_for_input';
 
-	$: initial = waiting && trial?.guessing_index === 0;
+	$: initial = waiting && guessing_index === 0; // the initial user-prompting trial state before any inputs have been entered by the player (related, "prompting")
 
 	const piano_padding = 20;
 
@@ -82,7 +83,7 @@
 				return;
 			}
 			case ' ': {
-				switch (status) {
+				switch ($status) {
 					case 'complete': {
 						swallow(e);
 						exit_level_to_map(true);
@@ -97,7 +98,7 @@
 			}
 			case '`': {
 				swallow(e);
-				level.guess_correctly($level);
+				level.guess_correctly();
 				return;
 			}
 			case 'Escape': {
@@ -116,7 +117,7 @@
 		{ma}
 		on:note_start={(e) => {
 			// TODO should this be ignored if it's not an enabled key? should the level itself ignore the guess?
-			if (status === 'complete') {
+			if ($status === 'complete') {
 				start_playing(audio_ctx, e.detail.note, $volume);
 			} else {
 				// TODO should we intercept here if disabled, and just play the blip with no penalty? or should that be a param to `guess`?
@@ -176,17 +177,17 @@
 		{#if clientWidth}
 			<Piano
 				width={clientWidth - piano_padding * 2}
-				note_min={$level.def.note_min}
-				note_max={$level.def.note_max}
-				enabled_keys={trial?.valid_notes}
+				note_min={$def.note_min}
+				note_max={$def.note_max}
+				enabled_keys={$trial?.valid_notes}
 				{pressed_keys}
 				{highlighted_keys}
-				on:press={status === 'waiting_for_input'
+				on:press={$status === 'waiting_for_input'
 					? (e) => on_press_key(e.detail)
-					: status === 'complete'
+					: $status === 'complete'
 					? (e) => start_playing(audio_ctx, e.detail, $volume)
 					: undefined}
-				on:release={status === 'complete' ? (e) => stop_playing(e.detail) : undefined}
+				on:release={$status === 'complete' ? (e) => stop_playing(e.detail) : undefined}
 			/>
 		{/if}
 	</div>

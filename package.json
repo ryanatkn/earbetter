@@ -37,6 +37,7 @@
     "@feltjs/felt-ui": "^0.52.0",
     "@feltjs/gro": "^0.72.0",
     "@feltjs/util": "^0.7.5",
+    "@preact/signals-core": "^1.2.3",
     "@sveltejs/adapter-static": "^2.0.1",
     "@sveltejs/kit": "^1.11.0",
     "@typescript-eslint/eslint-plugin": "^5.55.0",
