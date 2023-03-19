@@ -57,6 +57,10 @@
 				<td>exit level</td>
 			</tr>
 			<tr>
+				<td><code>up/down arrows</code></td>
+				<td>adjust volume</td>
+			</tr>
+			<tr>
 				<td><code>` Backtick</code></td>
 				<td>cheat</td>
 			</tr>

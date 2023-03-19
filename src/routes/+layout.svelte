@@ -1,13 +1,31 @@
 <script lang="ts">
 	import '@feltjs/felt-ui/style.css';
 	import {base} from '$app/paths';
+	import {isEditable, swallow} from '@feltjs/util/dom.js';
 
 	import '$routes/style.css';
 	import {set_audio_ctx} from '$lib/audio/audio_ctx';
-	import {set_volume} from '$lib/audio/helpers';
+	import {adjust_volume, set_volume} from '$lib/audio/helpers';
 
 	set_audio_ctx();
-	set_volume();
+	const volume = set_volume();
+
+	const keydown = (e: KeyboardEvent) => {
+		console.log(`e.key`, e.key);
+		if (isEditable(e.target)) return;
+		switch (e.key) {
+			case 'ArrowUp': {
+				swallow(e);
+				adjust_volume(volume);
+				return;
+			}
+			case 'ArrowDown': {
+				swallow(e);
+				adjust_volume(volume, -1);
+				return;
+			}
+		}
+	};
 </script>
 
 <svelte:head>
@@ -15,4 +33,5 @@
 	<link rel="icon" href="{base}/favicon.png" />
 </svelte:head>
 
+<svelte:window on:keydown={keydown} />
 <slot />
