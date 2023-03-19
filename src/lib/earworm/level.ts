@@ -12,6 +12,8 @@ import type {Volume} from '$lib/audio/helpers';
 
 // TODO this isn't idiomatic signals code yet, uses `peek` too much
 
+// TODO BLOCK cancel presenting if already queued, try using `effect`
+
 const log = new Logger('[level]');
 
 export const DEFAULT_NOTE_DURATION = 500;
