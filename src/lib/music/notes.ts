@@ -35,13 +35,14 @@ export type PitchClass = (typeof pitch_classes)[number];
 export type Octave = -1 | 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9;
 export type Semitones = number;
 
-export const z_semitones = z.number().transform((s) => s as Semitones);
+export const Semitones = z.number().transform((s) => s as Semitones);
 
-export const z_intervals = z.array(z_semitones);
+export const Intervals = z.array(Semitones);
+export type Intervals = z.infer<typeof Intervals>;
 
-// TODO BLOCK replace with zod
-export const serialize_intervals = (intervals: number[]): string => intervals.join(', ');
-export const parse_intervals = (value: string): number[] =>
+// TODO replace with zod? how?
+export const serialize_intervals = (intervals: Intervals): string => intervals.join(', ');
+export const parse_intervals = (value: string): Intervals =>
 	value
 		.split(',')
 		.map((v) => Number(v.trim()) | 0)

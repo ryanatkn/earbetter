@@ -3,7 +3,7 @@ import {randomItem, randomInt} from '@feltjs/util/random.js';
 import {z} from 'zod';
 
 import {z_midi, type Midi} from '$lib/music/midi';
-import {z_intervals} from '$lib/music/notes';
+import {Intervals} from '$lib/music/notes';
 import {play_note} from '$lib/audio/play_note';
 import type {Flavored} from '@feltjs/util';
 import type {Volume} from '$lib/audio/helpers';
@@ -25,7 +25,7 @@ const z_level_id = z
 export const LevelDef = z.object({
 	id: z_level_id,
 	name: z.string(),
-	intervals: z_intervals,
+	intervals: Intervals,
 	trial_count: z.number(),
 	sequence_length: z.number(),
 	note_min: z_midi,
