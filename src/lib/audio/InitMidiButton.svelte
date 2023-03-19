@@ -1,8 +1,8 @@
 <script lang="ts">
 	import type {AsyncStatus} from '@feltjs/util';
+	import {fade} from 'svelte/transition';
 
 	import type MidiAccess from '$lib/audio/MidiAccess.svelte';
-	import {fade} from 'svelte/transition';
 
 	export let midi_access: MidiAccess | undefined;
 

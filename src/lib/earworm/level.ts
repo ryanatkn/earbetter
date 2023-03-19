@@ -1,11 +1,11 @@
 import {get, writable, type Writable} from 'svelte/store';
 import {randomItem, randomInt} from '@feltjs/util/random.js';
 import {z} from 'zod';
+import type {Flavored} from '@feltjs/util';
 
 import {z_midi, type Midi} from '$lib/music/midi';
 import {Intervals} from '$lib/music/notes';
 import {play_note} from '$lib/audio/play_note';
-import type {Flavored} from '@feltjs/util';
 import type {Volume} from '$lib/audio/helpers';
 
 export const DEFAULT_NOTE_DURATION = 500;

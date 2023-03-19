@@ -1,3 +1,5 @@
+import {writable, type Writable} from 'svelte/store';
+
 import {
 	DEFAULT_VOLUME,
 	SMOOTH_GAIN_TIME_CONSTANT,
@@ -6,7 +8,6 @@ import {
 	type Volume,
 } from '$lib/audio/helpers';
 import {type Midi, midi_to_freq} from '$lib/music/midi';
-import {writable, type Writable} from 'svelte/store';
 
 // TODO this API is haphazard, in particular `play_note` versus `start_playing` and `stop_playing`,
 // and we need to support more options like `velocity`, should probably have a single options object
