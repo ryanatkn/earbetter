@@ -1,16 +1,10 @@
 <script lang="ts">
 	import {createEventDispatcher} from 'svelte';
 
-	import {
-		create_id,
-		parse_intervals,
-		serialize_intervals,
-		type LevelDef,
-		type LevelId,
-	} from '$lib/earworm/level';
+	import {create_id, LevelDef, type LevelId} from '$lib/earworm/level';
+	import {parse_intervals, serialize_intervals, midi_names} from '$lib/music/notes';
 	import {BASE_LEVEL_DEF} from '$lib/earworm/level_defs';
 	import {MIDI_MAX, MIDI_MIN, type Midi} from '$lib/music/midi';
-	import {midi_names} from '$lib/music/notes';
 	import {slide} from 'svelte/transition';
 
 	const dispatch = createEventDispatcher<{submit: LevelDef; remove: LevelId}>();
@@ -77,10 +71,7 @@
 		const imported = prompt('data for this level: ', serialized); // eslint-disable-line no-alert
 		if (imported) {
 			try {
-				// TODO zod parser?
-				const parsed = JSON.parse(imported);
-				console.log(`parsed`, parsed);
-				set_level_def(parsed);
+				set_level_def(LevelDef.parse(JSON.parse(imported)));
 			} catch (err) {
 				console.error('failed to parse', err, imported);
 			}

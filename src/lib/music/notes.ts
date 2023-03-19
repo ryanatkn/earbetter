@@ -1,3 +1,5 @@
+import {z} from 'zod';
+
 import {type Midi, midis, is_midi} from '$lib/music/midi';
 import {type Hsl, hsl_to_string, type Hue} from '$lib/util/colors';
 
@@ -32,6 +34,19 @@ export const pitch_classes = Object.freeze(['C', 'C♯', 'D', 'D♯', 'E', 'F', 
 export type PitchClass = (typeof pitch_classes)[number];
 export type Octave = -1 | 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9;
 export type Semitones = number;
+
+export const Semitones = z.number().transform((s) => s as Semitones);
+
+export const Intervals = z.array(Semitones);
+export type Intervals = z.infer<typeof Intervals>;
+
+// TODO replace with zod? how?
+export const serialize_intervals = (intervals: Intervals): string => intervals.join(', ');
+export const parse_intervals = (value: string): Intervals =>
+	value
+		.split(',')
+		.map((v) => Number(v.trim()) | 0)
+		.filter(Boolean); // exclude 0 intentionally
 
 // TODO consider converting all of these to `Map`s
 // TODO do we want to remove the `midi` part of these data array names, or otherwise rename them?
