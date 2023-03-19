@@ -108,3 +108,12 @@ th,
 td {
 	padding: 0 var(--spacing_sm);
 }
+
+@keyframes highlighting {
+	from {
+		filter: drop-shadow(1px 1px 15px var(--tint_light_5));
+	}
+	to {
+		filter: drop-shadow(1px 1px 25px var(--tint_light_7));
+	}
+}

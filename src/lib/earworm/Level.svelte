@@ -38,13 +38,13 @@
 
 	const level = create_level_store(level_def, audio_ctx, volume);
 	// $: level.setDef(level_def); // TODO update if level_def prop changes
-	$: ({status} = $level);
+	$: ({status, trial} = $level);
 
 	let midi_access: MidiAccess;
 	$: ma = midi_access?.ma;
 
 	$: pressed_keys = status === 'presenting_prompt' ? null : $playing_notes;
-	$: highlighted_keys = $level.trial && new Set([$level.trial.sequence[0]]);
+	$: highlighted_keys = trial && new Set([trial.sequence[0]]);
 
 	onMount(() => {
 		level.start();
@@ -59,6 +59,9 @@
 	$: success = status === 'showing_success_feedback';
 	$: failure = status === 'showing_failure_feedback';
 	$: complete = status === 'complete';
+	$: waiting = status === 'waiting_for_input';
+
+	$: initial = waiting && trial?.guessing_index === 0;
 
 	const piano_padding = 20;
 
@@ -126,7 +129,14 @@
 	/>
 {/if}
 <!-- hide from screen readers, see keyboard commands -->
-<div class="level" bind:clientWidth on:click={click} bind:this={el} aria-hidden="true">
+<div
+	class="level"
+	class:initial
+	bind:clientWidth
+	on:click={click}
+	bind:this={el}
+	aria-hidden="true"
+>
 	<!-- <div class="debug">
 		<div>status: {status}</div>
 		<div>trials created: {$level.trials.length}</div>
@@ -168,7 +178,7 @@
 				width={clientWidth - piano_padding * 2}
 				note_min={$level.def.note_min}
 				note_max={$level.def.note_max}
-				enabled_keys={$level.trial?.valid_notes}
+				enabled_keys={trial?.valid_notes}
 				{pressed_keys}
 				{highlighted_keys}
 				on:press={status === 'waiting_for_input'
@@ -194,6 +204,9 @@
 		flex-direction: column;
 		align-items: center;
 		justify-content: center;
+	}
+	.initial {
+		--highlighted_animation: highlighting;
 	}
 	/* .debug {
 		font-size: var(--font_size_xl);

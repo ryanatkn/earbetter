@@ -200,6 +200,7 @@
 
 	.highlighted {
 		background-color: var(--highlighted_key_color, var(--accent_color, #2e72f1));
+		animation: var(--highlighted_animation) 1s ease infinite alternate;
 	}
 
 	.disabled {
