@@ -44,7 +44,7 @@
 		{/if}
 	{:else if request_status === 'pending'}
 		<!-- fade in because it may be replaced immediately -->
-		<div in:fade|local>requesting MIDI access</div>
+		<span in:fade|local>requesting MIDI access</span>
 	{:else}
 		init MIDI
 	{/if}
