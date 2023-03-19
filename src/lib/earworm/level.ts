@@ -16,14 +16,14 @@ export const DEFAULT_TRIAL_COUNT = 5;
 
 // TODO refactor/move
 
-const z_level_id = z
+const LevelId = z
 	.string()
 	.uuid()
 	.transform((t) => t as LevelId);
 
 // TODO add restrictions to the below def
 export const LevelDef = z.object({
-	id: z_level_id,
+	id: LevelId,
 	name: z.string(),
 	intervals: Intervals,
 	trial_count: z.number(),
