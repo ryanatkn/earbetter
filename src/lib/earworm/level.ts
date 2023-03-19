@@ -22,7 +22,7 @@ const z_midi = () =>
 		.lte(127)
 		.transform((t) => t as Midi);
 
-const z_uuid = () =>
+const z_level_id = () =>
 	z
 		.string()
 		.uuid()
@@ -30,7 +30,7 @@ const z_uuid = () =>
 
 // TODO add restrictions to the below def
 export const LevelDef = z.object({
-	id: z_uuid(),
+	id: z_level_id(),
 	name: z.string(),
 	intervals: z.array(z.number()), // TODO `Semitones`
 	trial_count: z.number(),
