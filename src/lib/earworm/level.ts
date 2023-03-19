@@ -2,8 +2,8 @@ import {get, writable, type Writable} from 'svelte/store';
 import {randomItem, randomInt} from '@feltjs/util/random.js';
 import {z} from 'zod';
 
-import type {Midi} from '$lib/music/midi';
-import type {Semitones} from '$lib/music/notes';
+import {z_midi, type Midi} from '$lib/music/midi';
+import {z_intervals} from '$lib/music/notes';
 import {play_note} from '$lib/audio/play_note';
 import type {Flavored} from '@feltjs/util';
 import type {Volume} from '$lib/audio/helpers';
@@ -15,24 +15,17 @@ export const DEFAULT_SEQUENCE_LENGTH = 4;
 export const DEFAULT_TRIAL_COUNT = 5;
 
 // TODO refactor/move
-const z_midi = z
-	.number()
-	.gte(0)
-	.lte(127)
-	.transform((t) => t as Midi);
 
 const z_level_id = z
 	.string()
 	.uuid()
 	.transform((t) => t as LevelId);
 
-const z_semitones = z.number().transform((s) => s as Semitones);
-
 // TODO add restrictions to the below def
 export const LevelDef = z.object({
 	id: z_level_id,
 	name: z.string(),
-	intervals: z.array(z_semitones),
+	intervals: z_intervals,
 	trial_count: z.number(),
 	sequence_length: z.number(),
 	note_min: z_midi,
@@ -329,11 +322,3 @@ const to_fallback_tonic = (note_min: Midi, note_max: Midi): Midi => {
 	const offset = ((note_max - note_min) / 4) | 0;
 	return randomInt(note_min + offset, note_max - offset) as Midi;
 };
-
-// TODO BLOCK replace with zod
-export const serialize_intervals = (intervals: number[]): string => intervals.join(', ');
-export const parse_intervals = (value: string): number[] =>
-	value
-		.split(',')
-		.map((v) => Number(v.trim()) | 0)
-		.filter(Boolean); // exclude 0 intentionally

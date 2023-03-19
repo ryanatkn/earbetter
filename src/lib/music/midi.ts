@@ -1,3 +1,5 @@
+import {z} from 'zod';
+
 import type {Frequency} from '$lib/audio/helpers';
 import {DEFAULT_TUNING} from '$lib/music/helpers';
 
@@ -24,6 +26,12 @@ export type Midi =
   | 100 | 101 | 102 | 103 | 104 | 105 | 106 | 107 | 108 | 109
   | 110 | 111 | 112 | 113 | 114 | 115 | 116 | 117 | 118 | 119
   | 120 | 121 | 122 | 123 | 124 | 125 | 126 | 127; // prettier-ignore
+
+export const z_midi = z
+	.number()
+	.gte(0)
+	.lte(127)
+	.transform((t) => t as Midi);
 
 export const MIDI_MIN = 0;
 export const MIDI_MAX = 127;
