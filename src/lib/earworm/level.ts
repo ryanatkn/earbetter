@@ -46,7 +46,7 @@ export type Status =
 	| 'showing_failure_feedback'
 	| 'complete';
 
-// TODO BLOCK ambiguity with `Level.svelte` -- consider combining the two
+// TODO ambiguity with `Level.svelte` -- consider combining the two? or renaming the component
 // (hm not sure about that, but the ergnomics of components may be worth it)
 export interface Level {
 	def: Signal<LevelDef>;
@@ -65,7 +65,7 @@ export interface Level {
 	get_correct_guess: () => number | null;
 }
 
-// TODO BLOCK decompose into signals?
+// TODO extract into its own module? decompose into signals?
 export interface Trial {
 	index: number;
 	valid_notes: Set<Midi>;
