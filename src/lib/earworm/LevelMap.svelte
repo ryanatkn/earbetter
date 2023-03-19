@@ -38,7 +38,11 @@
 		<header>
 			<h2>controls</h2>
 		</header>
-		<p>Earworm does not yet function well on devices with smaller screens.</p>
+		<p>
+			Earworm does not yet function well on devices with smaller screens. (see <a
+				href="https://github.com/ryanatkn/earworm/issues/2">this issue</a
+			>)
+		</p>
 		<table>
 			<tr>
 				<td><code>Spacebar</code></td>
