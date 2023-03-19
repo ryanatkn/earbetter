@@ -14,9 +14,8 @@ export const DEFAULT_FEEDBACK_DURATION = 1000;
 export const DEFAULT_SEQUENCE_LENGTH = 4;
 export const DEFAULT_TRIAL_COUNT = 5;
 
-// TODO refactor/move
-
-const LevelId = z
+export type LevelId = Flavored<string, 'Level'>;
+export const LevelId = z
 	.string()
 	.uuid()
 	.transform((t) => t as LevelId);
@@ -70,8 +69,6 @@ export interface Trial {
 	guessing_index: number | null; // index of interval being guessed
 	retry_count: number;
 }
-
-export type LevelId = Flavored<string, 'Level'>;
 
 export const create_id = (): LevelId => crypto.randomUUID();
 
