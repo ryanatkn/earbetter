@@ -14,7 +14,7 @@
 <button
 	type="button"
 	class="big"
-	on:click={() => void midi_access?.init()}
+	on:click={() => void midi_access?.request_access()}
 	{disabled}
 	title={midi_access ? ($ma ? 'MIDI is ready!' : 'connect your MIDI device') : 'loading...'}
 >

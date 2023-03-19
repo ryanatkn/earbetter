@@ -11,26 +11,21 @@
 
 	export const ma: Writable<MIDIAccess | null> = writable(global_midi_access);
 
-	export const init = async (): Promise<void> => {
+	/**
+	 * `init` is idempotent so components don't have to worry about colliding with each other.
+	 */
+	export const request_access = async (): Promise<void> => {
 		if (inited) return inited;
-		inited = Promise.resolve();
-		if (global_midi_access) {
-			$ma = global_midi_access;
-			return inited;
-		}
-		// TODO how to call this better? needs to be a user-initiated action right?
-		// do we need to present a screen to users that lets them opt into midi?
+		let resolve!: () => void;
+		inited = new Promise((r) => (resolve = r));
 		try {
 			$ma = global_midi_access = await request_midi_access();
 			console.log('requested midi_access', $ma);
-			if (!$ma) {
-				throw Error(`Cannot list midi inputs without access`);
-			}
 		} catch (err) {
 			console.error('loadMidiAccess failed', err);
 			alert('Failed to request MIDI access: ' + err.message); // eslint-disable-line no-alert
-			// TODO resolve a failure value?
 		}
+		resolve();
 		return inited;
 	};
 </script>
