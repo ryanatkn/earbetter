@@ -40,6 +40,7 @@ export type Status =
 	| 'showing_failure_feedback'
 	| 'complete';
 
+// TODO BLOCK think this is now a code smell -- need more granularity, and use `batch`?
 export type LevelStoreState = {
 	status: Status;
 	def: LevelDef;
