@@ -69,6 +69,23 @@
 		note_min !== level_def.note_min ||
 		note_max !== level_def.note_max ||
 		intervals.toString() !== level_def.intervals.toString(); // TODO use a proper library
+
+	const import_data = () => {
+		const data = to_data();
+		const serialized = JSON.stringify(data);
+		// TODO refactor
+		const imported = prompt('data for this level: ', serialized); // eslint-disable-line no-alert
+		if (imported) {
+			try {
+				// TODO zod parser?
+				const parsed = JSON.parse(imported);
+				console.log(`parsed`, parsed);
+				set_level_def(parsed);
+			} catch (err) {
+				console.error('failed to parse', err, imported);
+			}
+		}
+	};
 </script>
 
 <form class="level-def-form">
@@ -152,6 +169,9 @@
 		disabled={editing && !changed}
 	>
 		{#if editing}save changes to level{:else}create level{/if}
+	</button>
+	<button type="button" on:click={import_data}>
+		{#if editing}import/export data{:else}import data{/if}
 	</button>
 	{#if editing}
 		<button type="button" on:click={() => (removing = !removing)}> remove level </button>
