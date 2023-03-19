@@ -181,7 +181,7 @@
 			</div>
 		{/if}
 	{/if}
-	<slot name="footer" />
+	<slot name="footer" {changed} />
 </form>
 
 <style>

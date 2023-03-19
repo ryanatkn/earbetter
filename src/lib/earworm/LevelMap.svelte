@@ -96,11 +96,11 @@
 				: undefined}
 			on:remove={remove_level_def ? (e) => remove_level_def?.(e.detail) : undefined}
 		>
-			<svelte:fragment slot="footer">
+			<svelte:fragment slot="footer" let:changed>
 				{#if editing && edit_level_def}
 					<button type="button" on:click={() => play_level_def?.(id)}> play! </button>
 					<button type="button" on:click={() => edit_level_def?.(null)}>
-						stop editing this level
+						{#if changed}discard changes and stop editing{:else}stop editing this level{/if}
 					</button>
 				{/if}
 			</svelte:fragment>
