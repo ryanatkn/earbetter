@@ -46,7 +46,7 @@ export type Status =
 	| 'showing_failure_feedback'
 	| 'complete';
 
-// TODO ambiguity with `Level.svelte` -- consider combining the two? or renaming the component
+// TODO ambiguity with `Level.svelte` -- consider combining the two? or renaming the component, maybe it's the `LevelScene`
 // (hm not sure about that, but the ergnomics of components may be worth it)
 export interface Level {
 	def: Signal<LevelDef>;
