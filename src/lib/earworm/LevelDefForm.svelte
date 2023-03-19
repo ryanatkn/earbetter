@@ -62,7 +62,7 @@
 		sequence_length !== level_def.sequence_length ||
 		note_min !== level_def.note_min ||
 		note_max !== level_def.note_max ||
-		intervals.toString() !== level_def.intervals.toString(); // TODO use a proper library
+		intervals.toString() !== level_def.intervals.toString();
 
 	const import_data = () => {
 		const data = to_data();
@@ -96,7 +96,7 @@
 			<div class="title">intervals</div>
 			<input
 				value={serialize_intervals(intervals)}
-				on:input={(e) => parse_intervals(e.currentTarget.value)}
+				on:input={(e) => (intervals = parse_intervals(e.currentTarget.value))}
 			/>
 		</label>
 		<details>
