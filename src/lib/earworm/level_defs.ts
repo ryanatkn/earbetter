@@ -44,16 +44,18 @@ export const level_defs: LevelDef[] = [
 	{
 		name: 'major second vs major third',
 		intervals: [2, 4],
-		// TODO BLOCK variants: ['up_and_down']
+		// TODO variants, how to implement?
+		// as helper functions?
+		// `transform_to_up_and_down(level_def)`
+		// `with_up_and_down(level_def)`
+		// or as data?
+		// ['up_and_down']
 		// {up_and_down: {options}} (allows options)
 		// {type: 'up_and_down', options}} (allows multiple of each variant with options)
 		// or maybe
 		// group: 'major second vs major third'
 		// or
 		// groups: ['major second vs major third']
-		// think about:
-		// `transform_to_up_and_down(level_def)`
-		// `with_up_and_down(level_def)`
 	},
 	{
 		name: 'major second vs perfect octave up and down',

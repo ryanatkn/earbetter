@@ -77,7 +77,7 @@
 		const imported = prompt('data for this level: ', serialized); // eslint-disable-line no-alert
 		if (imported) {
 			try {
-				// TODO BLOCK zod parser?
+				// TODO zod parser?
 				const parsed = JSON.parse(imported);
 				console.log(`parsed`, parsed);
 				set_level_def(parsed);
