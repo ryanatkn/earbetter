@@ -108,6 +108,11 @@ export const level_defs: LevelDef[] = [
 		intervals: [2, 4, 5, 7, 9, 11, 12],
 	},
 	{
+		name: 'minor scale',
+		intervals: [2, 3, 5, 7, 8, 10, 12],
+		// TODO variants
+	},
+	{
 		name: 'major scale (long)',
 		intervals: [2, 4, 5, 7, 9, 11, 12],
 		sequence_length: DEFAULT_SEQUENCE_LENGTH * 2,
