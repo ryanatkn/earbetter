@@ -330,7 +330,7 @@ const to_fallback_tonic = (note_min: Midi, note_max: Midi): Midi => {
 	return randomInt(note_min + offset, note_max - offset) as Midi;
 };
 
-// TODO zod
+// TODO BLOCK replace with zod
 export const serialize_intervals = (intervals: number[]): string => intervals.join(', ');
 export const parse_intervals = (value: string): number[] =>
 	value
