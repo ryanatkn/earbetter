@@ -42,8 +42,8 @@
 			<table>
 				{#each midi_inputs as midi_input}
 					<tr>
-						<th><small>{midi_input.name}</small></th>
-						<th><small>{midi_input.id}</small></th>
+						<td><small>{midi_input.name}</small></td>
+						<td><small>{midi_input.id}</small></td>
 					</tr>
 				{/each}
 			</table>
@@ -60,9 +60,3 @@
 		init MIDI
 	{/if}
 </button>
-
-<style>
-	th {
-		padding: 0 var(--spacing_sm);
-	}
-</style>

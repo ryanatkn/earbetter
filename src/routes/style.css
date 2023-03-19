@@ -103,3 +103,8 @@ code {
 .row label {
 	margin-bottom: 0 !important;
 }
+
+th,
+td {
+	padding: 0 var(--spacing_sm);
+}
