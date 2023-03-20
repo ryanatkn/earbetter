@@ -8,6 +8,7 @@
 	import {get_audio_ctx} from '$lib/audio/audio_ctx';
 	import InitMidiButton from '$lib/audio/InitMidiButton.svelte';
 	import LevelDefForm from '$lib/earbetter/LevelDefForm.svelte';
+	import Projects from '$lib/earbetter/Projects.svelte';
 	import VolumeControl from '$lib/audio/VolumeControl.svelte';
 	import {get_volume} from '$lib/audio/helpers';
 
@@ -37,48 +38,53 @@
 </script>
 
 <div class="map">
-	<section class="panel padded-md markup column-sm">
-		<header>
-			<h2>controls</h2>
-		</header>
-		<p>
-			Earbetter does not yet function well on devices with smaller screens, see <a
-				href="https://github.com/ryanatkn/earbetter/issues/2">issue #2</a
-			>.
-		</p>
-		<table>
-			<tr>
-				<td><code>Spacebar</code></td>
-				<td>replay trial</td>
-			</tr>
-			<tr>
-				<td><code>r</code></td>
-				<td>restart level</td>
-			</tr>
-			<tr>
-				<td><code>Escape</code></td>
-				<td>exit level</td>
-			</tr>
-			<tr>
-				<td><code>c</code></td>
-				<td>connect MIDI</td>
-			</tr>
-			<tr>
-				<td><code>up/down arrows</code></td>
-				<td>adjust volume</td>
-			</tr>
-			<tr>
-				<td><code>` Backtick</code></td>
-				<td>cheat</td>
-			</tr>
-		</table>
-		<VolumeControl {volume} />
-		<p>
-			Earbetter supports MIDI devices like piano keyboards. Connect a device and click the button
-			below:
-		</p>
-		<InitMidiButton {midi_access} />
-	</section>
+	<div>
+		<section class="panel padded-md markup column-sm">
+			<header>
+				<h2>controls</h2>
+			</header>
+			<p>
+				Earbetter does not yet function well on devices with smaller screens, see <a
+					href="https://github.com/ryanatkn/earbetter/issues/2">issue #2</a
+				>.
+			</p>
+			<table>
+				<tr>
+					<td><code>Spacebar</code></td>
+					<td>replay trial</td>
+				</tr>
+				<tr>
+					<td><code>r</code></td>
+					<td>restart level</td>
+				</tr>
+				<tr>
+					<td><code>Escape</code></td>
+					<td>exit level</td>
+				</tr>
+				<tr>
+					<td><code>c</code></td>
+					<td>connect MIDI</td>
+				</tr>
+				<tr>
+					<td><code>up/down arrows</code></td>
+					<td>adjust volume</td>
+				</tr>
+				<tr>
+					<td><code>` Backtick</code></td>
+					<td>cheat</td>
+				</tr>
+			</table>
+			<VolumeControl {volume} />
+			<p>
+				Earbetter supports MIDI devices like piano keyboards. Connect a device and click the button
+				below:
+			</p>
+			<InitMidiButton {midi_access} />
+		</section>
+		<section class="panel padded-md markup column-sm">
+			<Projects />
+		</section>
+	</div>
 	<section class="panel padded-md column-sm">
 		<header class="markup">
 			<h2>ear training levels</h2>
