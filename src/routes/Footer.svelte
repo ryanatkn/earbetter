@@ -2,9 +2,6 @@
 	import Breadcrumbs from '@feltjs/felt-ui/Breadcrumbs.svelte';
 	import {page} from '$app/stores';
 	import {base} from '$app/paths';
-	import {swallow} from '@feltjs/util/dom.js';
-
-	import {goto_random_page} from '$routes/nav';
 
 	$: pathname = $page.url.pathname;
 	$: home = pathname === base + '/';
@@ -15,15 +12,9 @@
 		<a href="https://github.com/ryanatkn/earbetter">source code</a>
 		<div>public domain</div>
 		<div class="breadcrumbs-wrapper">
+			<!-- TODO this awkwardly nests a link -->
 			<Breadcrumbs
-				>{#if home}<button
-						class="plain-button"
-						title="live a spontaneous"
-						on:click={(e) => {
-							swallow(e);
-							void goto_random_page();
-						}}>🪱🎶</button
-					>{:else}🪱🎶{/if}</Breadcrumbs
+				>{#if home}<a href="{base}/index">🪱🎶</a>{:else}🪱🎶{/if}</Breadcrumbs
 			>
 		</div>
 	</div>
