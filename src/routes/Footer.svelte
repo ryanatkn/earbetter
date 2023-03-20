@@ -12,8 +12,8 @@
 
 <footer>
 	<div class="panel padded-md column-sm">
+		<a href="https://github.com/ryanatkn/earbetter">source code</a>
 		<div>public domain</div>
-		<a href="https://github.com/ryanatkn/earbetter">source code on GitHub</a>
 		<div class="breadcrumbs-wrapper">
 			<Breadcrumbs
 				>{#if home}<button
