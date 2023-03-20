@@ -18,6 +18,7 @@
 			<Breadcrumbs
 				>{#if home}<button
 						class="plain-button"
+						title="live a spontaneous"
 						on:click={(e) => {
 							swallow(e);
 							void goto_random_page();
