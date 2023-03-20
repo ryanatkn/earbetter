@@ -195,7 +195,7 @@ export const create_level = (
 				}
 				// TODO this is really "on enter showing_failure_feedback state" logic
 				status.value = 'showing_failure_feedback';
-				setTimeout(() => retry_trial(), DEFAULT_FEEDBACK_DURATION); // TODO BLOCK effects?
+				setTimeout(() => retry_trial(), DEFAULT_FEEDBACK_DURATION); // TODO effects?
 				return;
 			}
 
@@ -208,12 +208,12 @@ export const create_level = (
 					log.trace('guess correct and done with trial');
 					// TODO this is really "on enter showing_success_feedback state" logic
 					status.value = 'showing_success_feedback';
-					setTimeout(() => next_trial(), DEFAULT_FEEDBACK_DURATION); // TODO BLOCK effects?
+					setTimeout(() => next_trial(), DEFAULT_FEEDBACK_DURATION); // TODO effects?
 				} else {
 					// TODO this is really "on enter showing_success_feedback state" logic
 					log.trace('guess correct and done with all trials!');
 					status.value = 'showing_success_feedback';
-					setTimeout(() => complete_level(), DEFAULT_FEEDBACK_DURATION); // TODO BLOCK effects?
+					setTimeout(() => complete_level(), DEFAULT_FEEDBACK_DURATION); // TODO effects?
 				}
 			} else {
 				// SUCCESS -> showing_success_feedback
