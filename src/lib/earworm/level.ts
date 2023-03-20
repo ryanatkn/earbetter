@@ -189,8 +189,8 @@ export const create_level = (
 					return; // no penalty or delay if this is the first one
 				}
 				// TODO this is really "on enter showing_failure_feedback state" logic
-				setTimeout(() => retry_trial(), DEFAULT_FEEDBACK_DURATION);
 				status.value = 'showing_failure_feedback';
+				setTimeout(() => retry_trial(), DEFAULT_FEEDBACK_DURATION);
 			}
 
 			// guess is correct
@@ -201,13 +201,13 @@ export const create_level = (
 				if ($trial.index < def.peek().trial_count - 1) {
 					log.trace('guess correct and done with trial');
 					// TODO this is really "on enter showing_success_feedback state" logic
-					setTimeout(() => next_trial(), DEFAULT_FEEDBACK_DURATION);
 					status.value = 'showing_success_feedback';
+					setTimeout(() => next_trial(), DEFAULT_FEEDBACK_DURATION);
 				} else {
 					// TODO this is really "on enter showing_success_feedback state" logic
 					log.trace('guess correct and done with all trials!');
-					setTimeout(() => complete_level(), DEFAULT_FEEDBACK_DURATION);
 					status.value = 'showing_success_feedback';
+					setTimeout(() => complete_level(), DEFAULT_FEEDBACK_DURATION);
 				}
 			} else {
 				// SUCCESS -> showing_success_feedback
