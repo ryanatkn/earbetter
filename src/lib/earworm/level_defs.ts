@@ -82,8 +82,17 @@ export const level_defs: LevelDef[] = [
 		sequence_length: DEFAULT_SEQUENCE_LENGTH * 2,
 	},
 	{
+		name: 'major pentatonic',
+		intervals: [2, 4, 7, 9, 12, -10, -8, -5, -3, -12],
+	},
+	{
 		name: '2 4 7 12 (long)',
 		intervals: [2, 4, 7],
+		sequence_length: DEFAULT_SEQUENCE_LENGTH * 2,
+	},
+	{
+		name: '2 4 5 7 12 (long)',
+		intervals: [2, 4, 5, 7],
 		sequence_length: DEFAULT_SEQUENCE_LENGTH * 2,
 	},
 	{

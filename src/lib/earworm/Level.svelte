@@ -1,5 +1,5 @@
 <script lang="ts">
-	import {onMount} from 'svelte';
+	import {onDestroy, onMount} from 'svelte';
 	import {isEditable, swallow} from '@feltjs/util/dom.js';
 
 	import {create_level, type LevelDef} from '$lib/earworm/level';
@@ -46,6 +46,9 @@
 
 	onMount(() => {
 		level.start();
+	});
+	onDestroy(() => {
+		level.dispose();
 	});
 
 	const on_press_key = (note: Midi): void => {

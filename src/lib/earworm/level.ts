@@ -56,6 +56,7 @@ export interface Level {
 	reset: () => void;
 	// game methods
 	start: () => void;
+	dispose: () => void;
 	guess: (note: Midi) => void;
 	retry_trial: () => void;
 	next_trial: () => void;
@@ -194,7 +195,7 @@ export const create_level = (
 				}
 				// TODO this is really "on enter showing_failure_feedback state" logic
 				status.value = 'showing_failure_feedback';
-				setTimeout(() => retry_trial(), DEFAULT_FEEDBACK_DURATION);
+				setTimeout(() => retry_trial(), DEFAULT_FEEDBACK_DURATION); // TODO BLOCK effects?
 				return;
 			}
 
@@ -207,12 +208,12 @@ export const create_level = (
 					log.trace('guess correct and done with trial');
 					// TODO this is really "on enter showing_success_feedback state" logic
 					status.value = 'showing_success_feedback';
-					setTimeout(() => next_trial(), DEFAULT_FEEDBACK_DURATION);
+					setTimeout(() => next_trial(), DEFAULT_FEEDBACK_DURATION); // TODO BLOCK effects?
 				} else {
 					// TODO this is really "on enter showing_success_feedback state" logic
 					log.trace('guess correct and done with all trials!');
 					status.value = 'showing_success_feedback';
-					setTimeout(() => complete_level(), DEFAULT_FEEDBACK_DURATION);
+					setTimeout(() => complete_level(), DEFAULT_FEEDBACK_DURATION); // TODO BLOCK effects?
 				}
 			} else {
 				// SUCCESS -> showing_success_feedback
@@ -281,6 +282,9 @@ export const create_level = (
 			});
 		},
 		start,
+		dispose: () => {
+			seq_id++; // cancels anything that's playing
+		},
 		guess,
 		retry_trial,
 		next_trial,
