@@ -10,6 +10,8 @@
 	import {get_audio_ctx} from '$lib/audio/audio_ctx';
 	import {midi_access} from '$lib/audio/midi_access';
 
+	// TODO BLOCK persist levels -- override the defaults? maybe a "project" abstraction?
+
 	export let default_level_defs = level_defs; // is a bit awkward, doing it this way to allow custom games, and removing both kinds
 	export let active_level_def: LevelDef | null = null;
 	export let editing_level_def: LevelDef | null = null;
