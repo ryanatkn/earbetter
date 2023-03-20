@@ -57,7 +57,7 @@
 			>failed to request MIDI access{#if request_error}: {request_error}{/if}</span
 		>
 	{:else}
-		init MIDI &nbsp;<code>c</code>
+		connect MIDI &nbsp;<code>c</code>
 	{/if}
 </button>
 
