@@ -41,9 +41,9 @@
 			<h2>controls</h2>
 		</header>
 		<p>
-			Earworm does not yet function well on devices with smaller screens. (see <a
-				href="https://github.com/ryanatkn/earworm/issues/2">this issue</a
-			>)
+			Earworm does not yet function well on devices with smaller screens, see <a
+				href="https://github.com/ryanatkn/earworm/issues/2">issue #2</a
+			>.
 		</p>
 		<table>
 			<tr>
@@ -57,6 +57,10 @@
 			<tr>
 				<td><code>Escape</code></td>
 				<td>exit level</td>
+			</tr>
+			<tr>
+				<td><code>c</code></td>
+				<td>connect MIDI</td>
 			</tr>
 			<tr>
 				<td><code>up/down arrows</code></td>
