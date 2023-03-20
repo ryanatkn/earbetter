@@ -59,7 +59,7 @@ export const level_defs: LevelDef[] = [
 		// groups: ['major second vs major third']
 	},
 	{
-		name: 'major second vs perfect octave up and down',
+		name: 'major second vs perfect octave (up and down)',
 		intervals: [2, 12, -10, -12],
 	},
 	{
@@ -73,11 +73,11 @@ export const level_defs: LevelDef[] = [
 		sequence_length: DEFAULT_SEQUENCE_LENGTH * 2,
 	},
 	{
-		name: '4 7 12 -5 -8 -12',
+		name: 'major third vs perfect fifth vs perfect octave (up and down)',
 		intervals: [4, 7, 12, -5, -8, -12],
 	},
 	{
-		name: '4 7 12 -5 -8 -12 (long)',
+		name: 'major third vs perfect fifth vs perfect octave (up and down, long)',
 		intervals: [4, 7, 12, -5, -8, -12],
 		sequence_length: DEFAULT_SEQUENCE_LENGTH * 2,
 	},
@@ -90,22 +90,16 @@ export const level_defs: LevelDef[] = [
 		intervals: [2, 4, 7, 9, 12, -10, -8, -5, -3, -12],
 	},
 	{
-		name: '2 4 7 12 (long)',
-		intervals: [2, 4, 7],
-		sequence_length: DEFAULT_SEQUENCE_LENGTH * 2,
+		name: 'minor pentatonic',
+		intervals: [3, 5, 7, 10, 12, -9, -7, -5, -2, -12],
 	},
 	{
-		name: '2 4 5 7 12 (long)',
-		intervals: [2, 4, 5, 7],
-		sequence_length: DEFAULT_SEQUENCE_LENGTH * 2,
-	},
-	{
-		name: '2 4 (long)',
+		name: 'major second vs major third (long)',
 		intervals: [2, 4],
 		sequence_length: DEFAULT_SEQUENCE_LENGTH * 2,
 	},
 	{
-		name: '2 4 5 (long)',
+		name: 'major second vs major third vs perfect fourth (long)',
 		intervals: [2, 4, 5],
 		sequence_length: DEFAULT_SEQUENCE_LENGTH * 2,
 	},
