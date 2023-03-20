@@ -141,10 +141,10 @@ export const create_level = (
 			log.trace('start level', trial);
 			// TODO this is really "on enter presenting_prompt state" logic
 			// TODO `s` is stale! so we need the timeout
-			setTimeout(() => present_trial_prompt(next_trial.sequence));
 			status.value = 'presenting_prompt';
 			trial.value = next_trial;
 			trials.value = [...trials.peek(), next_trial];
+			setTimeout(() => present_trial_prompt(next_trial.sequence));
 		});
 	};
 
@@ -234,12 +234,12 @@ export const create_level = (
 		batch(() => {
 			// TODO this is really "on enter presenting_prompt state" logic
 			// TODO try to remove the timeout
-			setTimeout(() => present_trial_prompt($trial.sequence));
 			status.value = 'presenting_prompt';
 			trial.value = {
 				...$trial,
 				retry_count: $trial.retry_count + 1,
 			};
+			setTimeout(() => present_trial_prompt($trial.sequence));
 		});
 	};
 
@@ -251,10 +251,10 @@ export const create_level = (
 			log.trace('next trial', next_trial);
 			// TODO this is really "on enter presenting_prompt state" logic
 			// TODO `s` is stale! so we need the timeout
-			setTimeout(() => present_trial_prompt(next_trial.sequence));
 			status.value = 'presenting_prompt';
 			trial.value = next_trial;
 			trials.value = [...trials.peek(), next_trial];
+			setTimeout(() => present_trial_prompt(next_trial.sequence));
 		});
 	};
 
