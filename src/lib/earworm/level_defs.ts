@@ -44,6 +44,7 @@ export const level_defs: LevelDef[] = [
 	{
 		name: 'major second vs major third',
 		intervals: [2, 4],
+		sequence_length: 2,
 		// TODO variants, how to implement?
 		// as helper functions?
 		// `transform_to_up_and_down(level_def)`
@@ -64,19 +65,11 @@ export const level_defs: LevelDef[] = [
 	{
 		name: 'major second vs major third vs perfect fifth',
 		intervals: [2, 4, 7],
+		sequence_length: 2,
 	},
 	{
 		name: 'major second vs major third vs perfect fifth (long)',
 		intervals: [2, 4, 7],
-		sequence_length: DEFAULT_SEQUENCE_LENGTH * 2,
-	},
-	{
-		name: '4 7 12',
-		intervals: [4, 7, 12],
-	},
-	{
-		name: '4 7 12 (long)',
-		intervals: [4, 7, 12],
 		sequence_length: DEFAULT_SEQUENCE_LENGTH * 2,
 	},
 	{
@@ -89,8 +82,21 @@ export const level_defs: LevelDef[] = [
 		sequence_length: DEFAULT_SEQUENCE_LENGTH * 2,
 	},
 	{
+		name: 'major pentatonic (easy)',
+		intervals: [2, 4, 7, 9],
+	},
+	{
+		name: 'major pentatonic',
+		intervals: [2, 4, 7, 9, 12, -10, -8, -5, -3, -12],
+	},
+	{
 		name: '2 4 7 12 (long)',
 		intervals: [2, 4, 7],
+		sequence_length: DEFAULT_SEQUENCE_LENGTH * 2,
+	},
+	{
+		name: '2 4 5 7 12 (long)',
+		intervals: [2, 4, 5, 7],
 		sequence_length: DEFAULT_SEQUENCE_LENGTH * 2,
 	},
 	{

@@ -16,9 +16,9 @@
 		mod_wheel: number; // velocity
 	}>();
 
-	export let ma: Writable<MIDIAccess | null>;
+	export let midi_access: Writable<MIDIAccess | null>;
 
-	console.log('ma', ma);
+	$: console.log('midi_access', midi_access);
 
 	const midimessage = (event: MIDIMessageEvent): void => {
 		const message = parse_midi_message(event);
@@ -95,5 +95,5 @@
 		}
 	};
 
-	$: subscribe($ma);
+	$: subscribe($midi_access);
 </script>

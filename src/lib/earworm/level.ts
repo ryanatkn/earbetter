@@ -3,7 +3,7 @@ import {randomItem, randomInt} from '@feltjs/util/random.js';
 import {z} from 'zod';
 import type {Flavored} from '@feltjs/util';
 import {Logger} from '@feltjs/util/log.js';
-import {signal, batch, Signal} from '@preact/signals-core';
+import {signal, batch, Signal, effect} from '@preact/signals-core';
 
 import {z_midi, type Midi} from '$lib/music/midi';
 import {Intervals} from '$lib/music/notes';
@@ -14,7 +14,7 @@ import type {Volume} from '$lib/audio/helpers';
 
 const log = new Logger('[level]');
 
-export const DEFAULT_NOTE_DURATION = 500;
+export const DEFAULT_NOTE_DURATION = 333; // TODO adjust this to make more challenging games
 export const DEFAULT_NOTE_DURATION_FAILED = 50;
 export const DEFAULT_FEEDBACK_DURATION = 1000;
 export const DEFAULT_SEQUENCE_LENGTH = 4;
@@ -56,6 +56,7 @@ export interface Level {
 	reset: () => void;
 	// game methods
 	start: () => void;
+	dispose: () => void;
 	guess: (note: Midi) => void;
 	retry_trial: () => void;
 	next_trial: () => void;
@@ -139,32 +140,38 @@ export const create_level = (
 			log.trace('start level', trial);
 			// TODO this is really "on enter presenting_prompt state" logic
 			// TODO `s` is stale! so we need the timeout
-			setTimeout(() => present_trial_prompt(next_trial.sequence));
 			status.value = 'presenting_prompt';
 			trial.value = next_trial;
 			trials.value = [...trials.peek(), next_trial];
 		});
 	};
 
-	const present_trial_prompt = async (sequence: Midi[]): Promise<void> => {
-		log.trace('present_trial_prompt', sequence);
+	effect(() => {
+		if (status.value === 'presenting_prompt') {
+			void present_trial_prompt();
+		}
+	});
+	let seq_id = 0; // used to track the async note playing sequence for cancellation
+	const present_trial_prompt = async (): Promise<void> => {
 		const $trial = trial.peek();
 		if (!$trial) return;
-		// audio_ctx
-		for (let i = 0; i < sequence.length; i++) {
-			const note = sequence[i];
+		log.trace('present_trial_prompt', $trial.sequence);
+		trial.value = {...$trial, guessing_index: 0};
+		const current_seq_id = ++seq_id;
+		for (let i = 0; i < $trial.sequence.length; i++) {
+			const note = $trial.sequence[i];
 			trial.value = {
 				...trial.peek()!,
 				presenting_index: i,
 			};
 			await play_note(audio_ctx, note, get(volume), DEFAULT_NOTE_DURATION); // eslint-disable-line no-await-in-loop
+			if (current_seq_id !== seq_id) return; // cancel
 		}
 		batch(() => {
 			status.value = 'waiting_for_input';
 			trial.value = {
 				...trial.peek()!,
 				presenting_index: null,
-				guessing_index: 0,
 			};
 		});
 	};
@@ -183,12 +190,13 @@ export const create_level = (
 			if (actual !== note) {
 				log.trace('guess incorrect');
 				void play_note(audio_ctx, note, get(volume), DEFAULT_NOTE_DURATION_FAILED);
-				if (guessing_index === 0) {
+				if (guessing_index === 0 || !$trial.valid_notes.has(note)) {
 					return; // no penalty or delay if this is the first one
 				}
 				// TODO this is really "on enter showing_failure_feedback state" logic
-				setTimeout(() => retry_trial(), DEFAULT_FEEDBACK_DURATION);
 				status.value = 'showing_failure_feedback';
+				setTimeout(() => retry_trial(), DEFAULT_FEEDBACK_DURATION); // TODO effects?
+				return;
 			}
 
 			// guess is correct
@@ -199,17 +207,17 @@ export const create_level = (
 				if ($trial.index < def.peek().trial_count - 1) {
 					log.trace('guess correct and done with trial');
 					// TODO this is really "on enter showing_success_feedback state" logic
-					setTimeout(() => next_trial(), DEFAULT_FEEDBACK_DURATION);
 					status.value = 'showing_success_feedback';
+					setTimeout(() => next_trial(), DEFAULT_FEEDBACK_DURATION); // TODO effects?
 				} else {
 					// TODO this is really "on enter showing_success_feedback state" logic
 					log.trace('guess correct and done with all trials!');
-					setTimeout(() => complete_level(), DEFAULT_FEEDBACK_DURATION);
 					status.value = 'showing_success_feedback';
+					setTimeout(() => complete_level(), DEFAULT_FEEDBACK_DURATION); // TODO effects?
 				}
 			} else {
 				// SUCCESS -> showing_success_feedback
-				log.trace('guess correct BUT NOT DONE');
+				log.trace('guess correct but not done');
 				trial.value = {
 					...$trial,
 					guessing_index: guessing_index + 1,
@@ -232,7 +240,6 @@ export const create_level = (
 		batch(() => {
 			// TODO this is really "on enter presenting_prompt state" logic
 			// TODO try to remove the timeout
-			setTimeout(() => present_trial_prompt($trial.sequence));
 			status.value = 'presenting_prompt';
 			trial.value = {
 				...$trial,
@@ -243,13 +250,10 @@ export const create_level = (
 
 	const next_trial = (): void => {
 		batch(() => {
-			// TODO check this?
-			// if (status !== 'showing_success_feedback') throw Error();
 			const next_trial = create_next_trial(def.peek(), trial.peek());
 			log.trace('next trial', next_trial);
 			// TODO this is really "on enter presenting_prompt state" logic
 			// TODO `s` is stale! so we need the timeout
-			setTimeout(() => present_trial_prompt(next_trial.sequence));
 			status.value = 'presenting_prompt';
 			trial.value = next_trial;
 			trials.value = [...trials.peek(), next_trial];
@@ -257,8 +261,6 @@ export const create_level = (
 	};
 
 	const complete_level = (): void => {
-		// TODO check this?
-		// if (status !== 'showing_success_feedback') throw Error();
 		batch(() => {
 			status.value = 'complete';
 			trial.value = null;
@@ -280,6 +282,9 @@ export const create_level = (
 			});
 		},
 		start,
+		dispose: () => {
+			seq_id++; // cancels anything that's playing
+		},
 		guess,
 		retry_trial,
 		next_trial,

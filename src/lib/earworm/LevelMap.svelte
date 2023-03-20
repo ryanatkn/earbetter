@@ -1,15 +1,17 @@
 <script lang="ts">
+	import type {Writable} from 'svelte/store';
+
+	import type {MIDIAccess} from '$lib/audio/WebMIDI';
 	import type {LevelDef, LevelId} from '$lib/earworm/level';
 	import {create_level_stats} from '$lib/earworm/level_stats';
 	import LevelMapItem from '$lib/earworm/LevelMapItem.svelte';
 	import {get_audio_ctx} from '$lib/audio/audio_ctx';
-	import type MidiAccess from '$lib/audio/MidiAccess.svelte';
 	import InitMidiButton from '$lib/audio/InitMidiButton.svelte';
 	import LevelDefForm from '$lib/earworm/LevelDefForm.svelte';
 	import VolumeControl from '$lib/audio/VolumeControl.svelte';
 	import {get_volume} from '$lib/audio/helpers';
 
-	export let midi_access: MidiAccess;
+	export let midi_access: Writable<MIDIAccess | null>;
 	export let level_def: LevelDef | null = null;
 	export let level_defs: LevelDef[];
 	export let play_level_def: ((id: LevelId) => void) | null = null; // TODO event? or is the ability to have a return value for ephemeral state desired?
@@ -39,9 +41,9 @@
 			<h2>controls</h2>
 		</header>
 		<p>
-			Earworm does not yet function well on devices with smaller screens. (see <a
-				href="https://github.com/ryanatkn/earworm/issues/2">this issue</a
-			>)
+			Earworm does not yet function well on devices with smaller screens, see <a
+				href="https://github.com/ryanatkn/earworm/issues/2">issue #2</a
+			>.
 		</p>
 		<table>
 			<tr>
@@ -55,6 +57,10 @@
 			<tr>
 				<td><code>Escape</code></td>
 				<td>exit level</td>
+			</tr>
+			<tr>
+				<td><code>c</code></td>
+				<td>connect MIDI</td>
 			</tr>
 			<tr>
 				<td><code>up/down arrows</code></td>

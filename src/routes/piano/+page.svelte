@@ -1,7 +1,7 @@
 <script lang="ts">
 	import Piano from '$lib/music/Piano.svelte';
 	import {get_audio_ctx} from '$lib/audio/audio_ctx';
-	import MidiAccess from '$lib/audio/MidiAccess.svelte';
+	import {midi_access} from '$lib/audio/midi_access';
 	import MidiInput from '$lib/audio/MidiInput.svelte';
 	import {MIDI_MAX, MIDI_MIN, type Midi} from '$lib/music/midi';
 	import {playing_notes, start_playing, stop_playing} from '$lib/audio/play_note';
@@ -13,9 +13,6 @@
 
 	const audio_ctx = get_audio_ctx();
 	const volume = get_volume();
-
-	let midi_access: MidiAccess | undefined;
-	$: ma = midi_access?.ma;
 
 	$: pressed_keys = $playing_notes;
 
@@ -31,14 +28,11 @@
 	<title>earworm: piano</title>
 </svelte:head>
 
-<MidiAccess bind:this={midi_access} />
-{#if ma}
-	<MidiInput
-		{ma}
-		on:note_start={(e) => start_playing(audio_ctx, e.detail.note, $volume)}
-		on:note_stop={(e) => stop_playing(e.detail.note)}
-	/>
-{/if}
+<MidiInput
+	{midi_access}
+	on:note_start={(e) => start_playing(audio_ctx, e.detail.note, $volume)}
+	on:note_stop={(e) => stop_playing(e.detail.note)}
+/>
 <main bind:clientWidth>
 	<Header />
 	<div class="piano-wrapper" style:padding="{piano_padding}px">
