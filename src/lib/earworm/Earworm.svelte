@@ -105,7 +105,7 @@
 	<div class="level">
 		<Level level_def={active_level_def} {exit_level_to_map} />
 	</div>
-{:else if $midi_access}
+{:else}
 	<slot name="header" />
 	<LevelMap
 		{midi_access}

@@ -3,7 +3,7 @@ import {randomItem, randomInt} from '@feltjs/util/random.js';
 import {z} from 'zod';
 import type {Flavored} from '@feltjs/util';
 import {Logger} from '@feltjs/util/log.js';
-import {signal, batch, Signal} from '@preact/signals-core';
+import {signal, batch, Signal, effect} from '@preact/signals-core';
 
 import {z_midi, type Midi} from '$lib/music/midi';
 import {Intervals} from '$lib/music/notes';
@@ -11,8 +11,6 @@ import {play_note} from '$lib/audio/play_note';
 import type {Volume} from '$lib/audio/helpers';
 
 // TODO this isn't idiomatic signals code yet, uses `peek` too much
-
-// TODO BLOCK cancel presenting if already queued, try using `effect`
 
 const log = new Logger('[level]');
 
@@ -144,21 +142,23 @@ export const create_level = (
 			status.value = 'presenting_prompt';
 			trial.value = next_trial;
 			trials.value = [...trials.peek(), next_trial];
-			setTimeout(() => present_trial_prompt(next_trial.sequence));
 		});
 	};
 
+	effect(() => {
+		if (status.value === 'presenting_prompt') {
+			void present_trial_prompt();
+		}
+	});
 	let seq_id = 0; // used to track the async note playing sequence for cancellation
-
-	const present_trial_prompt = async (sequence: Midi[]): Promise<void> => {
-		log.trace('present_trial_prompt', sequence);
+	const present_trial_prompt = async (): Promise<void> => {
 		const $trial = trial.peek();
 		if (!$trial) return;
+		log.trace('present_trial_prompt', $trial.sequence);
 		trial.value = {...$trial, guessing_index: 0};
 		const current_seq_id = ++seq_id;
-		console.log(`current_present_id, present_id`, current_seq_id, seq_id);
-		for (let i = 0; i < sequence.length; i++) {
-			const note = sequence[i];
+		for (let i = 0; i < $trial.sequence.length; i++) {
+			const note = $trial.sequence[i];
 			trial.value = {
 				...trial.peek()!,
 				presenting_index: i,
@@ -244,7 +244,6 @@ export const create_level = (
 				...$trial,
 				retry_count: $trial.retry_count + 1,
 			};
-			setTimeout(() => present_trial_prompt($trial.sequence));
 		});
 	};
 
@@ -257,7 +256,6 @@ export const create_level = (
 			status.value = 'presenting_prompt';
 			trial.value = next_trial;
 			trials.value = [...trials.peek(), next_trial];
-			setTimeout(() => present_trial_prompt(next_trial.sequence));
 		});
 	};
 
