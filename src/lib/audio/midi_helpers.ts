@@ -30,12 +30,13 @@ export const parse_midi_message = (e: MIDIMessageEvent): MidiMessage => {
 
 /**
  * Uses `navigator.requestMIDIAccess`, throwing an error on failure.
+ * Callers should normally prefer to use `$lib/audio/midi_access.ts#request_access` instead of this.
  * @param opts - WebMIDI options - https://developer.mozilla.org/en-US/docs/Web/API/Web_MIDI_API
  * @returns
  */
 export const request_midi_access = async (opts?: Partial<MIDIOptions>): Promise<MIDIAccess> => {
-	const request_access: requestMIDIAccess =
-		(navigator as any).requestMIDIAccess && (navigator as any).requestMIDIAccess.bind(navigator);
+	const n = navigator as any;
+	const request_access: requestMIDIAccess = n.requestMIDIAccess?.bind(n);
 	if (!request_access) {
 		throw Error(`Midi is not supported in this browser`);
 	}

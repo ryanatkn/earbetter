@@ -1,19 +1,20 @@
 <script lang="ts">
 	import type {AsyncStatus} from '@feltjs/util';
 	import {fade} from 'svelte/transition';
+	import type {Writable} from 'svelte/store';
 
-	import type MidiAccess from '$lib/audio/MidiAccess.svelte';
+	import type {MIDIAccess} from '$lib/audio/WebMIDI';
+	import {request_access} from '$lib/audio/midi_access';
 
-	export let midi_access: MidiAccess | undefined;
+	export let midi_access: Writable<MIDIAccess | null>;
 
 	// TODO move MIDI initialization to some other action, like the button to start a level
 
 	let request_status: AsyncStatus = 'initial';
 
-	$: ma = midi_access?.ma;
-	$: disabled = !midi_access || !!$ma || request_status === 'pending';
+	$: disabled = !!$midi_access || request_status === 'pending';
 
-	$: midi_inputs = $ma && Array.from($ma.inputs.values());
+	$: midi_inputs = $midi_access && Array.from($midi_access.inputs.values());
 
 	let request_error: string | undefined;
 </script>
@@ -25,7 +26,7 @@
 		if (!midi_access) return;
 		request_status = 'pending';
 		try {
-			await midi_access.request_access();
+			await request_access();
 			request_status = 'success';
 		} catch (err) {
 			console.error('failed to request midi access', err);
@@ -34,9 +35,9 @@
 		}
 	}}
 	{disabled}
-	title={midi_access ? ($ma ? 'MIDI is ready!' : 'connect your MIDI device') : 'loading...'}
+	title={$midi_access ? 'MIDI is ready!' : 'connect your MIDI device [c]'}
 >
-	{#if $ma}
+	{#if $midi_access}
 		{#if midi_inputs?.length}
 			<div>
 				<div>🎶</div>

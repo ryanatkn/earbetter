@@ -6,6 +6,7 @@
 	import '$routes/style.css';
 	import {set_audio_ctx} from '$lib/audio/audio_ctx';
 	import {adjust_volume, set_volume} from '$lib/audio/helpers';
+	import {request_access} from '$lib/audio/midi_access';
 
 	set_audio_ctx();
 	const volume = set_volume();
@@ -14,6 +15,11 @@
 		console.log(`e.key`, e.key);
 		if (isEditable(e.target)) return;
 		switch (e.key) {
+			case 'c': {
+				swallow(e);
+				void request_access();
+				return;
+			}
 			case 'ArrowUp': {
 				swallow(e);
 				adjust_volume(volume);

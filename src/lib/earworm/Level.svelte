@@ -11,7 +11,7 @@
 	import type {Midi} from '$lib/music/midi';
 	import {playing_notes, start_playing, stop_playing} from '$lib/audio/play_note';
 	import {get_volume} from '$lib/audio/helpers';
-	import MidiAccess from '$lib/audio/MidiAccess.svelte';
+	import {midi_access} from '$lib/audio/midi_access';
 
 	/*
 
@@ -40,9 +40,6 @@
 	// $: level.setDef(level_def); // TODO update if level_def prop changes
 	$: ({def, status, trial} = level);
 	$: guessing_index = $trial?.guessing_index;
-
-	let midi_access: MidiAccess;
-	$: ma = midi_access?.ma;
 
 	$: pressed_keys = $status === 'presenting_prompt' ? null : $playing_notes;
 	$: highlighted_keys = $trial && new Set([$trial.sequence[0]]);
@@ -111,25 +108,22 @@
 </script>
 
 <svelte:window on:keydown={keydown} />
-<MidiAccess bind:this={midi_access} />
-{#if ma}
-	<MidiInput
-		{ma}
-		on:note_start={(e) => {
-			// TODO should this be ignored if it's not an enabled key? should the level itself ignore the guess?
-			if ($status === 'complete') {
-				start_playing(audio_ctx, e.detail.note, $volume);
-			} else {
-				console.log(`guessing $status`, $status);
-				// TODO should we intercept here if disabled, and just play the blip with no penalty? or should that be a param to `guess`?
-				level.guess(e.detail.note);
-			}
-		}}
-		on:note_stop={(e) => {
-			stop_playing(e.detail.note);
-		}}
-	/>
-{/if}
+<MidiInput
+	{midi_access}
+	on:note_start={(e) => {
+		// TODO should this be ignored if it's not an enabled key? should the level itself ignore the guess?
+		if ($status === 'complete') {
+			start_playing(audio_ctx, e.detail.note, $volume);
+		} else {
+			console.log(`guessing $status`, $status);
+			// TODO should we intercept here if disabled, and just play the blip with no penalty? or should that be a param to `guess`?
+			level.guess(e.detail.note);
+		}
+	}}
+	on:note_stop={(e) => {
+		stop_playing(e.detail.note);
+	}}
+/>
 <!-- hide from screen readers, see keyboard commands -->
 <div
 	class="level"

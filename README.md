@@ -11,7 +11,7 @@ In 2016 I made a simple ear training game named
 [`ear-sharpener`](https://github.com/ryanatkn/ear-sharpener).
 This is a followup with a new design that's trying more pointedly to be a flexible ear trainer.
 The goal is to make an ear training experience that's fun and useful,
-and also make reusable components for music and audio programming.
+and also make reusable components and helpers for music and audio programming.
 Earworm online at [earworm.ryanatkn.com](https://earworm.ryanatkn.com/),
 and this repo has its public domain open source code.
 

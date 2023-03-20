@@ -148,11 +148,15 @@ export const create_level = (
 		});
 	};
 
+	let seq_id = 0; // used to track the async note playing sequence for cancellation
+
 	const present_trial_prompt = async (sequence: Midi[]): Promise<void> => {
 		log.trace('present_trial_prompt', sequence);
 		const $trial = trial.peek();
 		if (!$trial) return;
-		// audio_ctx
+		trial.value = {...$trial, guessing_index: 0};
+		const current_seq_id = ++seq_id;
+		console.log(`current_present_id, present_id`, current_seq_id, seq_id);
 		for (let i = 0; i < sequence.length; i++) {
 			const note = sequence[i];
 			trial.value = {
@@ -160,13 +164,13 @@ export const create_level = (
 				presenting_index: i,
 			};
 			await play_note(audio_ctx, note, get(volume), DEFAULT_NOTE_DURATION); // eslint-disable-line no-await-in-loop
+			if (current_seq_id !== seq_id) return; // cancel
 		}
 		batch(() => {
 			status.value = 'waiting_for_input';
 			trial.value = {
 				...trial.peek()!,
 				presenting_index: null,
-				guessing_index: 0,
 			};
 		});
 	};
@@ -246,8 +250,6 @@ export const create_level = (
 
 	const next_trial = (): void => {
 		batch(() => {
-			// TODO check this?
-			// if (status !== 'showing_success_feedback') throw Error();
 			const next_trial = create_next_trial(def.peek(), trial.peek());
 			log.trace('next trial', next_trial);
 			// TODO this is really "on enter presenting_prompt state" logic
@@ -260,8 +262,6 @@ export const create_level = (
 	};
 
 	const complete_level = (): void => {
-		// TODO check this?
-		// if (status !== 'showing_success_feedback') throw Error();
 		batch(() => {
 			status.value = 'complete';
 			trial.value = null;
