@@ -86,6 +86,10 @@ export const level_defs: LevelDef[] = [
 		intervals: [2, 4, 7, 9],
 	},
 	{
+		name: 'minor pentatonic (easy)',
+		intervals: [3, 5, 7, 10],
+	},
+	{
 		name: 'major pentatonic',
 		intervals: [2, 4, 7, 9, 12, -10, -8, -5, -3, -12],
 	},
