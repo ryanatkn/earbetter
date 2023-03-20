@@ -48,7 +48,7 @@
 				</ul>
 			</div>
 		{:else}
-			<span in:fade|local>no MIDI devices found :[</span>
+			<span in:fade|local>no MIDI devices found</span>
 		{/if}
 	{:else if request_status === 'pending'}
 		<span in:fade|local>requesting MIDI access</span>
