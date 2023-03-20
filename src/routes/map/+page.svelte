@@ -40,7 +40,4 @@
 		font-size: var(--font_size_xl);
 		padding: var(--spacing_xl);
 	}
-	li {
-		flex-direction: column;
-	}
 </style>
