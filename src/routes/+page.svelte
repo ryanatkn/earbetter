@@ -6,7 +6,7 @@
 </script>
 
 <svelte:head>
-	<title>earworm</title>
+	<title>earbetter</title>
 </svelte:head>
 <main>
 	<Header />

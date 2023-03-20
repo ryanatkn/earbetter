@@ -1,7 +1,7 @@
 {
-  "name": "@ryanatkn/earworm",
+  "name": "@ryanatkn/earbetter",
   "description": "ear training game and tools for programming music and audio 🪱🎶",
-  "homepage": "https://earworm.ryanatkn.com/",
+  "homepage": "https://earbetter.ryanatkn.com/",
   "license": "Unlicense",
   "version": "0.0.1",
   "author": {
@@ -11,9 +11,9 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/ryanatkn/earworm.git"
+    "url": "git+https://github.com/ryanatkn/earbetter.git"
   },
-  "bugs": "https://github.com/ryanatkn/earworm/issues",
+  "bugs": "https://github.com/ryanatkn/earbetter/issues",
   "keywords": [
     "ear training",
     "ear training game",

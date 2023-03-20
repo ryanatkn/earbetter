@@ -2,11 +2,11 @@
 	import {goto} from '$app/navigation';
 	import {base} from '$app/paths';
 
-	import LevelMap from '$lib/earworm/LevelMap.svelte';
-	import {level_defs} from '$lib/earworm/level_defs';
-	import type {LevelDef, LevelId} from '$lib/earworm/level';
-	import {create_level_stats} from '$lib/earworm/level_stats';
-	import Level from '$lib/earworm/Level.svelte';
+	import LevelMap from '$lib/earbetter/LevelMap.svelte';
+	import {level_defs} from '$lib/earbetter/level_defs';
+	import type {LevelDef, LevelId} from '$lib/earbetter/level';
+	import {create_level_stats} from '$lib/earbetter/level_stats';
+	import Level from '$lib/earbetter/Level.svelte';
 	import {get_audio_ctx} from '$lib/audio/audio_ctx';
 	import {midi_access} from '$lib/audio/midi_access';
 

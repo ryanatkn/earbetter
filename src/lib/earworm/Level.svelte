@@ -2,10 +2,10 @@
 	import {onDestroy, onMount} from 'svelte';
 	import {isEditable, swallow} from '@feltjs/util/dom.js';
 
-	import {create_level, type LevelDef} from '$lib/earworm/level';
+	import {create_level, type LevelDef} from '$lib/earbetter/level';
 	import Piano from '$lib/music/Piano.svelte';
-	import LevelProgressIndicator from '$lib/earworm/LevelProgressIndicator.svelte';
-	import TrialProgressIndicator from '$lib/earworm/TrialProgressIndicator.svelte';
+	import LevelProgressIndicator from '$lib/earbetter/LevelProgressIndicator.svelte';
+	import TrialProgressIndicator from '$lib/earbetter/TrialProgressIndicator.svelte';
 	import {get_audio_ctx} from '$lib/audio/audio_ctx';
 	import MidiInput from '$lib/audio/MidiInput.svelte';
 	import type {Midi} from '$lib/music/midi';

@@ -1,6 +1,6 @@
 import {signal, type Signal} from '@preact/signals-core';
 
-import type {LevelDef} from '$lib/earworm/level';
+import type {LevelDef} from '$lib/earbetter/level';
 
 // TODO rethink this
 

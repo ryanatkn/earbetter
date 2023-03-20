@@ -35,7 +35,7 @@
 </script>
 
 <svelte:head>
-	<title>earworm</title>
+	<title>earbetter</title>
 	<link rel="icon" href="{base}/favicon.png" />
 </svelte:head>
 

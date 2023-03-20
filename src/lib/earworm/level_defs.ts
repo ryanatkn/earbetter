@@ -3,7 +3,7 @@ import {
 	DEFAULT_SEQUENCE_LENGTH,
 	DEFAULT_TRIAL_COUNT,
 	type LevelDef,
-} from '$lib/earworm/level';
+} from '$lib/earbetter/level';
 
 export const BASE_LEVEL_DEF = {
 	// TODO support something like this for 3-star accomplishment (or N-star)

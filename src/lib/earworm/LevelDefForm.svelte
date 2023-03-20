@@ -2,9 +2,9 @@
 	import {createEventDispatcher} from 'svelte';
 	import {slide} from 'svelte/transition';
 
-	import {create_id, LevelDef, type LevelId} from '$lib/earworm/level';
+	import {create_id, LevelDef, type LevelId} from '$lib/earbetter/level';
 	import {parse_intervals, serialize_intervals, midi_names} from '$lib/music/notes';
-	import {BASE_LEVEL_DEF} from '$lib/earworm/level_defs';
+	import {BASE_LEVEL_DEF} from '$lib/earbetter/level_defs';
 	import {MIDI_MAX, MIDI_MIN, type Midi} from '$lib/music/midi';
 
 	const dispatch = createEventDispatcher<{submit: LevelDef; remove: LevelId}>();

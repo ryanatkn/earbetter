@@ -2,12 +2,12 @@
 	import type {Signal} from '@preact/signals-core';
 
 	import type {MIDIAccess} from '$lib/audio/WebMIDI';
-	import type {LevelDef, LevelId} from '$lib/earworm/level';
-	import {create_level_stats} from '$lib/earworm/level_stats';
-	import LevelMapItem from '$lib/earworm/LevelMapItem.svelte';
+	import type {LevelDef, LevelId} from '$lib/earbetter/level';
+	import {create_level_stats} from '$lib/earbetter/level_stats';
+	import LevelMapItem from '$lib/earbetter/LevelMapItem.svelte';
 	import {get_audio_ctx} from '$lib/audio/audio_ctx';
 	import InitMidiButton from '$lib/audio/InitMidiButton.svelte';
-	import LevelDefForm from '$lib/earworm/LevelDefForm.svelte';
+	import LevelDefForm from '$lib/earbetter/LevelDefForm.svelte';
 	import VolumeControl from '$lib/audio/VolumeControl.svelte';
 	import {get_volume} from '$lib/audio/helpers';
 
@@ -42,8 +42,8 @@
 			<h2>controls</h2>
 		</header>
 		<p>
-			Earworm does not yet function well on devices with smaller screens, see <a
-				href="https://github.com/ryanatkn/earworm/issues/2">issue #2</a
+			Earbetter does not yet function well on devices with smaller screens, see <a
+				href="https://github.com/ryanatkn/earbetter/issues/2">issue #2</a
 			>.
 		</p>
 		<table>
@@ -74,7 +74,7 @@
 		</table>
 		<VolumeControl {volume} />
 		<p>
-			Earworm supports MIDI devices like piano keyboards. Connect a device and click the button
+			Earbetter supports MIDI devices like piano keyboards. Connect a device and click the button
 			below:
 		</p>
 		<InitMidiButton {midi_access} />

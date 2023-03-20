@@ -25,7 +25,7 @@
 </script>
 
 <svelte:head>
-	<title>earworm: piano</title>
+	<title>earbetter: piano</title>
 </svelte:head>
 
 <MidiInput

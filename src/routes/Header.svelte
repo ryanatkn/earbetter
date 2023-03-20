@@ -4,7 +4,7 @@
 
 <header>
 	<div class="centered panel padded-md">
-		<h1>earworm</h1>
+		<h1>earbetter</h1>
 		<div class="icons">🪱🎶</div>
 	</div>
 </header>

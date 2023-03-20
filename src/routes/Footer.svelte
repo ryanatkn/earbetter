@@ -13,7 +13,7 @@
 <footer>
 	<div class="panel padded-md column-sm">
 		<div>public domain</div>
-		<a href="https://github.com/ryanatkn/earworm">source code on GitHub</a>
+		<a href="https://github.com/ryanatkn/earbetter">source code on GitHub</a>
 		<div class="breadcrumbs-wrapper">
 			<Breadcrumbs
 				>{#if home}<button

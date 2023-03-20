@@ -1,7 +1,7 @@
 <script lang="ts">
 	import {slide} from 'svelte/transition';
 
-	import type {LevelDef, LevelId} from '$lib/earworm/level';
+	import type {LevelDef, LevelId} from '$lib/earbetter/level';
 
 	export let level_def: LevelDef;
 	export let select: ((id: LevelId) => void) | null = null; // TODO event? or is the ability to have a return value for ephemeral state desired?

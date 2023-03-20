@@ -1,7 +1,7 @@
-# earworm
+# earbetter
 
 > ear training game and tools for programming music and audio 🪱🎶
-> [earworm.ryanatkn.com](https://earworm.ryanatkn.com/)
+> [earbetter.ryanatkn.com](https://earbetter.ryanatkn.com/)
 
 see [contributing.md](contributing.md)
 
@@ -12,9 +12,9 @@ In 2016 I made a simple ear training game named
 This is a followup with a new design.
 The goal is to make an ear training experience that's fun and useful,
 and also publish reusable components and helpers for music and audio programming.
-It's online at [earworm.ryanatkn.com](https://earworm.ryanatkn.com/).
+It's online at [earbetter.ryanatkn.com](https://earbetter.ryanatkn.com/).
 
-Earworm is designed to be ideally played with a MIDI device like a piano keyboard.
+Earbetter is designed to be ideally played with a MIDI device like a piano keyboard.
 It also works without them.
 
 ## develop

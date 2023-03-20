@@ -1,5 +1,5 @@
 <script lang="ts">
-	import type {Level, Status} from '$lib/earworm/level';
+	import type {Level, Status} from '$lib/earbetter/level';
 
 	export let level: Level;
 

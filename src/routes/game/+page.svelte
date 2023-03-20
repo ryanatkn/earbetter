@@ -1,16 +1,16 @@
 <script lang="ts">
-	import Earworm from '$lib/earworm/Earworm.svelte';
+	import Earbetter from '$lib/earbetter/Earbetter.svelte';
 	import Header from '$routes/Header.svelte';
 	import Footer from '$routes/Footer.svelte';
 </script>
 
 <svelte:head>
-	<title>earworm: game</title>
+	<title>earbetter: game</title>
 </svelte:head>
 
 <main>
-	<Earworm>
+	<Earbetter>
 		<svelte:fragment slot="header"><Header /></svelte:fragment>
 		<svelte:fragment slot="footer"><Footer /></svelte:fragment>
-	</Earworm>
+	</Earbetter>
 </main>
