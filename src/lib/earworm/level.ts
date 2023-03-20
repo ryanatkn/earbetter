@@ -185,12 +185,13 @@ export const create_level = (
 			if (actual !== note) {
 				log.trace('guess incorrect');
 				void play_note(audio_ctx, note, get(volume), DEFAULT_NOTE_DURATION_FAILED);
-				if (guessing_index === 0) {
+				if (guessing_index === 0 || !$trial.valid_notes.has(note)) {
 					return; // no penalty or delay if this is the first one
 				}
 				// TODO this is really "on enter showing_failure_feedback state" logic
 				status.value = 'showing_failure_feedback';
 				setTimeout(() => retry_trial(), DEFAULT_FEEDBACK_DURATION);
+				return;
 			}
 
 			// guess is correct
@@ -211,7 +212,7 @@ export const create_level = (
 				}
 			} else {
 				// SUCCESS -> showing_success_feedback
-				log.trace('guess correct BUT NOT DONE');
+				log.trace('guess correct but not done');
 				trial.value = {
 					...$trial,
 					guessing_index: guessing_index + 1,

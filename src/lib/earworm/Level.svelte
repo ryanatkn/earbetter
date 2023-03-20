@@ -120,6 +120,7 @@
 			if ($status === 'complete') {
 				start_playing(audio_ctx, e.detail.note, $volume);
 			} else {
+				console.log(`guessing $status`, $status);
 				// TODO should we intercept here if disabled, and just play the blip with no penalty? or should that be a param to `guess`?
 				level.guess(e.detail.note);
 			}
