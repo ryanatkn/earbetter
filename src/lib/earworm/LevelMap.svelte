@@ -1,5 +1,5 @@
 <script lang="ts">
-	import type {Writable} from 'svelte/store';
+	import type {Signal} from '@preact/signals-core';
 
 	import type {MIDIAccess} from '$lib/audio/WebMIDI';
 	import type {LevelDef, LevelId} from '$lib/earworm/level';
@@ -11,7 +11,7 @@
 	import VolumeControl from '$lib/audio/VolumeControl.svelte';
 	import {get_volume} from '$lib/audio/helpers';
 
-	export let midi_access: Writable<MIDIAccess | null>;
+	export let midi_access: Signal<MIDIAccess | null>;
 	export let level_def: LevelDef | null = null;
 	export let level_defs: LevelDef[];
 	export let play_level_def: ((id: LevelId) => void) | null = null; // TODO event? or is the ability to have a return value for ephemeral state desired?
@@ -21,8 +21,9 @@
 	export let update_level_def: ((level_def: LevelDef) => void) | null = null; // TODO event? or is the ability to have a return value for ephemeral state desired?
 
 	const level_stats = create_level_stats(level_defs);
-	$: console.log('stats', $level_stats);
-	console.log($level_stats);
+	$: ({stats} = level_stats);
+	$: console.log('stats', $stats);
+	console.log($stats);
 
 	const audio_ctx = get_audio_ctx();
 	(window as any).audio = audio_ctx;
@@ -90,7 +91,7 @@
 					edit={edit_level_def}
 					remove={remove_level_def}
 					selected={d === level_def}
-					completed={$level_stats.completed[d.id]}
+					completed={$stats.completed[d.id]}
 				/>
 			{/each}
 		</div>

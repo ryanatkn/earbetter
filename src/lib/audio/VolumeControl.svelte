@@ -1,9 +1,9 @@
 <script lang="ts">
-	import type {Writable} from 'svelte/store';
+	import type {Signal} from '@preact/signals-core';
 
 	import type {Volume} from '$lib/audio/helpers';
 
-	export let volume: Writable<Volume>;
+	export let volume: Signal<Volume>;
 </script>
 
 <div class="volume-control">

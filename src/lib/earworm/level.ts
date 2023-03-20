@@ -1,4 +1,3 @@
-import {get, type Writable} from 'svelte/store';
 import {randomItem, randomInt} from '@feltjs/util/random.js';
 import {z} from 'zod';
 import type {Flavored} from '@feltjs/util';
@@ -15,6 +14,7 @@ import type {Volume} from '$lib/audio/helpers';
 const log = new Logger('[level]');
 
 export const DEFAULT_NOTE_DURATION = 333; // TODO adjust this to make more challenging games
+export const DEFAULT_NOTE_DURATION_2 = 500; // TODO adjust this to make more challenging games
 export const DEFAULT_NOTE_DURATION_FAILED = 50;
 export const DEFAULT_FEEDBACK_DURATION = 1000; // TODO configurable
 export const DEFAULT_SEQUENCE_LENGTH = 4;
@@ -126,7 +126,7 @@ const DEFAULT_TRIALS: Trial[] = [];
 export const create_level = (
 	level_def: LevelDef, // TODO maybe make optional?
 	audio_ctx: AudioContext,
-	volume: Writable<Volume>,
+	volume: Signal<Volume>,
 ): Level => {
 	const def: Signal<LevelDef> = signal(level_def);
 	const status: Signal<Status> = signal(DEFAULT_STATUS);
@@ -158,13 +158,16 @@ export const create_level = (
 		log.trace('present_trial_prompt', $trial.sequence);
 		trial.value = {...$trial, guessing_index: 0};
 		const current_seq_id = ++seq_id;
-		for (let i = 0; i < $trial.sequence.length; i++) {
+		const sequence_length = $trial.sequence.length;
+		for (let i = 0; i < sequence_length; i++) {
 			const note = $trial.sequence[i];
 			trial.value = {
 				...trial.peek()!,
 				presenting_index: i,
 			};
-			await play_note(audio_ctx, note, get(volume), DEFAULT_NOTE_DURATION); // eslint-disable-line no-await-in-loop
+			const duration =
+				sequence_length < DEFAULT_SEQUENCE_LENGTH ? DEFAULT_NOTE_DURATION_2 : DEFAULT_NOTE_DURATION; // TODO refactor, see elsewhere
+			await play_note(audio_ctx, note, volume.peek(), duration); // eslint-disable-line no-await-in-loop
 			if (current_seq_id !== seq_id) return; // cancel
 		}
 		batch(() => {
@@ -189,7 +192,7 @@ export const create_level = (
 			// if incorrect -> FAILURE -> showing_failure_feedback -> REPROMPT
 			if (actual !== note) {
 				log.trace('guess incorrect');
-				void play_note(audio_ctx, note, get(volume), DEFAULT_NOTE_DURATION_FAILED);
+				void play_note(audio_ctx, note, volume.peek(), DEFAULT_NOTE_DURATION_FAILED);
 				if (guessing_index === 0 || !$trial.valid_notes.has(note)) {
 					return; // no penalty or delay if this is the first one
 				}
@@ -200,9 +203,12 @@ export const create_level = (
 			}
 
 			// guess is correct
-			void play_note(audio_ctx, note, get(volume), DEFAULT_NOTE_DURATION);
+			const sequence_length = $trial.sequence.length;
+			const duration =
+				sequence_length < DEFAULT_SEQUENCE_LENGTH ? DEFAULT_NOTE_DURATION_2 : DEFAULT_NOTE_DURATION; // TODO refactor, see elsewhere
+			void play_note(audio_ctx, note, volume.peek(), duration);
 
-			if (guessing_index >= $trial.sequence.length - 1) {
+			if (guessing_index >= sequence_length - 1) {
 				// if more -> update current response index
 				if ($trial.index < def.peek().trial_count - 1) {
 					log.trace('guess correct and done with trial');

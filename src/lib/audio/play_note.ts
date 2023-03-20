@@ -1,4 +1,4 @@
-import {writable, type Writable} from 'svelte/store';
+import {signal, type Signal} from '@preact/signals-core';
 
 import {
 	DEFAULT_VOLUME,
@@ -43,7 +43,7 @@ export interface StopPlaying {
 }
 
 // TODO is redundant with `playing` and manually updated
-export const playing_notes: Writable<Set<Midi>> = writable(new Set());
+export const playing_notes: Signal<Set<Midi>> = signal(new Set());
 
 export const start_playing_note = (
 	audio_ctx: AudioContext,
@@ -62,25 +62,28 @@ export const start_playing_note = (
 	osc.start();
 	osc.connect(gain);
 
-	playing_notes.update((v) => {
-		const v2 = new Set(v);
-		v2.add(note);
-		return v2;
-	});
+	const next_playing_notes = new Set(playing_notes.peek());
+	next_playing_notes.add(note);
+	playing_notes.value = next_playing_notes;
+
+	let disposed = false;
 	return () => {
+		if (disposed) return;
+		disposed = true;
+
 		console.log(`stop playing note`, note);
 		stop_osc(audio_ctx, 10, gain, osc);
-		playing_notes.update((v) => {
-			const v2 = new Set(v);
-			v2.delete(note);
-			return v2;
-		});
+
+		const next_playing_notes = new Set(playing_notes.peek());
+		next_playing_notes.delete(note);
+		playing_notes.value = next_playing_notes;
 	};
 };
 
 // Helpers to play a single note at a time.
 // Maybe this should be put in the main context and wrap `audio_ctx` so it's not accessed directly?
 
+// TODO is redundant with `playing_notes` and manually updated
 const playing: Map<Midi, StopPlaying> = new Map(); // global cache used to enforce that at most one of each note plays
 
 export const start_playing = (audio_ctx: AudioContext, note: Midi, volume?: Volume): void => {

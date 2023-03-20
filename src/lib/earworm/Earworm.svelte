@@ -19,8 +19,8 @@
 	$: console.log(`all_level_defs`, all_level_defs);
 
 	const level_stats = create_level_stats(default_level_defs);
-	$: console.log('stats', $level_stats);
-	console.log($level_stats);
+	$: ({stats} = level_stats);
+	$: console.log('stats', $stats);
 
 	const audio_ctx = get_audio_ctx();
 	(window as any).audio = audio_ctx;

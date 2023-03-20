@@ -1,5 +1,5 @@
 import {getContext, setContext} from 'svelte';
-import {writable, type Writable} from 'svelte/store';
+import {signal, type Signal} from '@preact/signals-core';
 import {z} from 'zod';
 import type {Flavored} from '@feltjs/util';
 import {round} from '@feltjs/util/maths.js';
@@ -17,22 +17,20 @@ export const DEFAULT_VOLUME: Volume = 0.51;
 export const DEFAULT_VOLUME_INCREMENT: Volume = 0.01;
 
 const KEY = Symbol('volume');
-export const get_volume = (): Writable<Volume> => getContext(KEY);
-export const set_volume = (store = writable(DEFAULT_VOLUME)): Writable<Volume> =>
+export const get_volume = (): Signal<Volume> => getContext(KEY);
+export const set_volume = (store = signal(DEFAULT_VOLUME)): Signal<Volume> =>
 	setContext(KEY, store);
 
 export const adjust_volume = (
-	volume: Writable<Volume>,
+	volume: Signal<Volume>,
 	multiplier = 1,
 	amount = DEFAULT_VOLUME_INCREMENT,
-): void =>
-	volume.update((v) => {
-		try {
-			return Volume.parse(v + amount * multiplier);
-		} catch (err) {
-			return v;
-		}
-	});
+): void => {
+	// TODO awkward try/catch, but idk about `safeParse`
+	try {
+		volume.value = Volume.parse(volume.peek() + amount * multiplier);
+	} catch (err) {}
+};
 
 /**
  * Convert a user-facing volume value [0,1] to the actual gain value.

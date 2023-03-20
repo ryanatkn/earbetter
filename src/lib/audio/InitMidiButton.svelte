@@ -1,12 +1,12 @@
 <script lang="ts">
 	import type {AsyncStatus} from '@feltjs/util';
 	import {fade} from 'svelte/transition';
-	import type {Writable} from 'svelte/store';
+	import type {Signal} from '@preact/signals-core';
 
 	import type {MIDIAccess} from '$lib/audio/WebMIDI';
 	import {request_access} from '$lib/audio/midi_access';
 
-	export let midi_access: Writable<MIDIAccess | null>;
+	export let midi_access: Signal<MIDIAccess | null>;
 
 	// TODO move MIDI initialization to some other action, like the button to start a level
 

@@ -1,6 +1,6 @@
 <script lang="ts">
 	import {createEventDispatcher, onDestroy} from 'svelte';
-	import type {Writable} from 'svelte/store';
+	import type {Signal} from '@preact/signals-core';
 
 	import {type MIDIMessageEvent, MIDICommand, type MIDIAccess} from '$lib/audio/WebMIDI';
 	import {parse_midi_message} from '$lib/audio/midi_helpers';
@@ -16,7 +16,7 @@
 		mod_wheel: number; // velocity
 	}>();
 
-	export let midi_access: Writable<MIDIAccess | null>;
+	export let midi_access: Signal<MIDIAccess | null>;
 
 	$: console.log('midi_access', midi_access);
 
