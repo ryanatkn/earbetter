@@ -9,14 +9,13 @@ see [contributing.md](contributing.md)
 
 In 2016 I made a simple ear training game named
 [`ear-sharpener`](https://github.com/ryanatkn/ear-sharpener).
-This is a followup with a new design that's trying more pointedly to be a flexible ear trainer.
+This is a followup with a new design.
 The goal is to make an ear training experience that's fun and useful,
-and also make reusable components and helpers for music and audio programming.
-Earworm online at [earworm.ryanatkn.com](https://earworm.ryanatkn.com/),
-and this repo has its public domain open source code.
+and also publish reusable components and helpers for music and audio programming.
+It's online at [earworm.ryanatkn.com](https://earworm.ryanatkn.com/).
 
-Earworm is designed to be played with a MIDI device like a piano keyboard.
-It also works without them, but the experience with a MIDI device can be pretty cool.
+Earworm is designed to be ideally played with a MIDI device like a piano keyboard.
+It also works without them.
 
 ## develop
 
