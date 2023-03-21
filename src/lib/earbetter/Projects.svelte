@@ -1,9 +1,9 @@
 <script lang="ts">
 	import type {ProjectDef, ProjectId} from '$lib/earbetter/project';
-	import ProjectItem from '$lib/earbetter/ProjectItem.svelte';
 	import {load_from_storage, set_in_storage} from '$lib/util/storage';
 	import {AppData, DEFAULT_APP_DATA} from '$lib/earbetter/app';
-	import ProjectForm from './ProjectForm.svelte';
+	import ProjectForm from '$lib/earbetter/ProjectForm.svelte';
+	import ProjectsList from '$lib/earbetter/ProjectsList.svelte';
 
 	// TODO make this more controllable with props, was implemented hastily for functionality
 
@@ -56,17 +56,13 @@
 		<header class="markup">
 			<h2>projects</h2>
 		</header>
-		<menu class="projects column-sm">
-			{#each project_defs as project_def (project_def.id)}
-				<ProjectItem
-					{project_def}
-					select={select_project}
-					edit={edit_project}
-					remove={remove_project}
-					selected={project_def === selected_project_def}
-				/>
-			{/each}
-		</menu>
+		<ProjectsList
+			{selected_project_def}
+			{project_defs}
+			{select_project}
+			{edit_project}
+			{remove_project}
+		/>
 	</section>
 	<section class="panel padded-md column-sm markup">
 		<ProjectForm
