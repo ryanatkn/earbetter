@@ -14,7 +14,7 @@
 		<div class="breadcrumbs-wrapper">
 			<!-- TODO this awkwardly nests a link -->
 			<Breadcrumbs
-				>{#if home}<a href="{base}/map">🪱🎶</a>{:else}🪱🎶{/if}</Breadcrumbs
+				>{#if home}<a href="{base}/map">🦜🎶</a>{:else}🦜🎶{/if}</Breadcrumbs
 			>
 		</div>
 	</div>
