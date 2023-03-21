@@ -108,14 +108,18 @@ export const level_defs: LevelDef[] = [
 		sequence_length: DEFAULT_SEQUENCE_LENGTH * 2,
 	},
 	{
-		name: 'major scale',
+		name: 'major scale (Ionian mode)',
 		intervals: [2, 4, 5, 7, 9, 11, 12],
 	},
 	{
-		name: 'minor scale',
+		name: 'minor scale (Aeolian mode)',
 		intervals: [2, 3, 5, 7, 8, 10, 12],
-		// TODO variants
 	},
+	{name: 'Dorian mode', intervals: [2, 3, 5, 7, 9, 10, 12]},
+	{name: 'Phrygian mode', intervals: [1, 3, 5, 7, 8, 10, 12]},
+	{name: 'Lydian mode', intervals: [2, 4, 6, 7, 9, 11, 12]},
+	{name: 'Mixolydian mode', intervals: [2, 4, 5, 7, 9, 10, 12]},
+	{name: 'Locrian mode', intervals: [1, 3, 5, 6, 8, 10, 12]},
 	{
 		name: 'major scale (long)',
 		intervals: [2, 4, 5, 7, 9, 11, 12],
