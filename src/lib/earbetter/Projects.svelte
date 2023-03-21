@@ -7,6 +7,7 @@
 	// TODO make this more controllable with props, was implemented hastily for functionality
 
 	// TODO BLOCK refactor
+	// TODO BLOCK maybe `new App(App.load())` ?
 	const app_data = load_from_storage(
 		'app',
 		() => DEFAULT_APP_DATA,
