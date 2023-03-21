@@ -11,6 +11,7 @@
 </svelte:head>
 <main>
 	<Header />
+	<div class="title panel padded-lg"><h2>website map</h2></div>
 	<nav>
 		<menu>
 			{#each pages as page (page.slug)}
@@ -33,7 +34,8 @@
 		flex-direction: column;
 		align-items: center;
 	}
-	menu li:not(:last-child) {
+	menu li:not(:last-child),
+	.title {
 		margin-bottom: var(--spacing_md);
 	}
 	menu a {
