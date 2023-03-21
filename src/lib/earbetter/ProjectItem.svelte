@@ -3,9 +3,9 @@
 
 	import type {ProjectDef, ProjectId} from '$lib/earbetter/project';
 
-	export let level_def: ProjectDef;
+	export let project_def: ProjectDef;
 	export let select: ((id: ProjectId) => void) | null = null; // TODO event? or is the ability to have a return value for ephemeral state desired?
-	export let edit: ((level_def: ProjectDef) => void) | null = null; // TODO event? or is the ability to have a return value for ephemeral state desired?
+	export let edit: ((project_def: ProjectDef) => void) | null = null; // TODO event? or is the ability to have a return value for ephemeral state desired?
 	export let remove: ((id: ProjectId) => void) | null = null; // TODO event? or is the ability to have a return value for ephemeral state desired?
 	export let selected: boolean;
 	export let completed: boolean;
@@ -16,18 +16,18 @@
 <li class="project-item" transition:slide|local>
 	{#if select}
 		<button
-			class="level-button"
-			on:click={() => select?.(level_def.id)}
+			class="project-button"
+			on:click={() => select?.(project_def.id)}
 			class:selected
 			class:completed
 		>
-			{level_def.name}
+			{project_def.name}
 		</button>
 	{/if}
 	{#if edit}
 		<button
 			class="icon-button plain-button"
-			on:click={() => (removing ? remove?.(level_def.id) : edit?.(level_def))}
+			on:click={() => (removing ? remove?.(project_def.id) : edit?.(project_def))}
 		>
 			{#if removing}✖{:else}✎{/if}
 		</button>
@@ -46,7 +46,7 @@
 	.project-item:hover .plain-button {
 		visibility: visible;
 	}
-	.level-button {
+	.project-button {
 		flex: 1;
 	}
 	.icon-button {

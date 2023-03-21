@@ -48,9 +48,9 @@
 </script>
 
 <form class="project-def-form">
-	<header>
+	<header class="markup">
 		<h2>
-			{#if editing}editing project{:else}create a custom project{/if}
+			{#if editing}editing project{:else}create a new project{/if}
 		</h2>
 	</header>
 	<fieldset>

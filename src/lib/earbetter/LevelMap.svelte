@@ -81,7 +81,7 @@
 			</p>
 			<InitMidiButton {midi_access} />
 		</section>
-		<section class="panel padded-md markup column-sm">
+		<section class="column-sm">
 			<Projects />
 		</section>
 	</div>
@@ -89,7 +89,7 @@
 		<header class="markup">
 			<h2>ear training levels</h2>
 		</header>
-		<div class="levels column-sm">
+		<ul class="levels column-sm">
 			{#each level_defs as d (d.id)}
 				<LevelMapItem
 					level_def={d}
@@ -100,7 +100,7 @@
 					completed={$stats.completed[d.id]}
 				/>
 			{/each}
-		</div>
+		</ul>
 	</section>
 	<section class="panel padded-md markup column-sm">
 		<LevelDefForm
