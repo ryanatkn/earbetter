@@ -53,7 +53,7 @@
 		<header class="markup">
 			<h2>projects</h2>
 		</header>
-		<div class="levels column-sm">
+		<div class="projects column-sm">
 			{#each project_defs as project_def (project_def.id)}
 				<ProjectItem
 					{project_def}
@@ -80,7 +80,7 @@
 				{#if editing && edit_project}
 					<button type="button" on:click={() => play_project?.(id)}> play! </button>
 					<button type="button" on:click={() => edit_project?.(null)}>
-						{#if changed}discard changes and stop editing{:else}stop editing this level{/if}
+						{#if changed}discard changes and stop editing{:else}stop editing this project{/if}
 					</button>
 				{/if}
 			</svelte:fragment>
@@ -95,7 +95,7 @@
 		justify-content: center;
 		align-items: flex-start;
 	}
-	.levels {
+	.projects {
 		display: flex;
 		flex-direction: column;
 		align-items: stretch;
