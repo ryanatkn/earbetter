@@ -34,6 +34,9 @@
 </li>
 
 <style>
+	li {
+		width: 100%;
+	}
 	.plain-button {
 		visibility: hidden;
 	}

@@ -90,7 +90,7 @@
 		<header class="markup">
 			<h2>ear training levels</h2>
 		</header>
-		<ul class="levels column-sm">
+		<menu class="levels column-sm">
 			{#each level_defs as d (d.id)}
 				<LevelMapItem
 					level_def={d}
@@ -101,7 +101,7 @@
 					completed={$stats.completed[d.id]}
 				/>
 			{/each}
-		</ul>
+		</menu>
 	</section>
 	<section class="panel padded-md markup column-sm">
 		<LevelDefForm

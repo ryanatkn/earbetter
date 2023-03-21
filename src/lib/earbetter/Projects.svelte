@@ -56,7 +56,7 @@
 		<header class="markup">
 			<h2>projects</h2>
 		</header>
-		<div class="projects column-sm">
+		<menu class="projects column-sm">
 			{#each project_defs as project_def (project_def.id)}
 				<ProjectItem
 					{project_def}
@@ -66,7 +66,7 @@
 					selected={project_def === selected_project_def}
 				/>
 			{/each}
-		</div>
+		</menu>
 	</section>
 	<section class="panel padded-md column-sm markup">
 		<ProjectForm
