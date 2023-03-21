@@ -48,7 +48,7 @@
 </script>
 
 <form class="project-def-form">
-	<header class="markup">
+	<header>
 		<h2>
 			{#if editing}editing project{:else}create a new project{/if}
 		</h2>

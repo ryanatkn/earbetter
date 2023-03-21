@@ -80,7 +80,7 @@
 </script>
 
 <form class="level-def-form">
-	<header class="markup">
+	<header>
 		<h2>
 			{#if editing}editing level{:else}create a custom level{/if}
 		</h2>

@@ -65,7 +65,7 @@
 			{/each}
 		</div>
 	</section>
-	<section class="panel padded-md column-sm">
+	<section class="panel padded-md column-sm markup">
 		<ProjectForm
 			{editing}
 			bind:id
