@@ -9,37 +9,42 @@
 
 	// TODO BLOCK refactor
 	// TODO BLOCK maybe `new App(App.load())` ?
-	let app_data = load_from_storage(
+	let app_data: AppData = load_from_storage(
 		'app',
 		() => DEFAULT_APP_DATA,
-		(v) => AppData.parse(v), // TODO can we remove the fn wrapper or does it mess up `this`?
+		(v) => AppData.parse(v),
 	);
-	set_in_storage('app', {projects: ['ab']});
-	console.log(`app_data`, app_data);
 
 	let selected_project_def: ProjectDef | null = null;
 	let project_defs: ProjectDef[] = [];
+	// TODO BLOCK refactor, make more efficient (save button?)
+	$: set_in_storage('app', (app_data = {projects: project_defs.map((p) => p.id)}));
+	$: console.log(`app_data`, app_data);
 
-	// TODO BLOCK use zod schemas to validate
 	// let project: ProjectDef | null = load_from_storage();
-	let select_project = (id: ProjectId): void => {
+	const select_project = (id: ProjectId): void => {
 		selected_project_def = project_defs.find((d) => d.id === id) || null;
 	};
-	let edit_project = (project_def: ProjectDef | null): void => {
+	const edit_project = (project_def: ProjectDef | null): void => {
 		selected_project_def = project_def;
 	};
-	let remove_project = (id: ProjectId): void => {
+	const remove_project = (id: ProjectId): void => {
 		if (selected_project_def?.id === id) selected_project_def = null;
 		project_defs = project_defs.filter((d) => d.id !== id);
 	};
-	let create_project = (p: ProjectDef): void => {
+	const create_project = (p: ProjectDef): void => {
 		app_data = {...app_data, projects: app_data.projects.concat(p.id)};
 		set_in_storage(p.id, p);
 		project_defs = project_defs.concat(p);
 		selected_project_def = p;
 	};
-	let update_project = (project_def: ProjectDef): void => {
-		//
+	const update_project = (project_def: ProjectDef): void => {
+		const {id} = project_def;
+		const index = project_defs.findIndex((p) => p.id === id);
+		if (index === -1) return;
+		const next_project_defs = project_defs.slice();
+		next_project_defs[index] = project_def;
+		project_defs = next_project_defs;
 		console.log(`update_project project_def`, project_def);
 	};
 

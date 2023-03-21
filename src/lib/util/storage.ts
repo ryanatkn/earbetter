@@ -13,15 +13,13 @@ import {browser} from '$app/environment';
 export const load_from_storage = <T>(
 	key: string,
 	to_default_value: () => T,
-	validate?: (value: any) => asserts value is T,
+	parse: (value: unknown) => T,
 ): T => {
 	if (!browser) return to_default_value();
 	const stored = localStorage.getItem(key);
 	if (!stored) return to_default_value();
 	try {
-		const parsed = JSON.parse(stored);
-		validate?.(parsed);
-		return parsed;
+		return parse(JSON.parse(stored));
 	} catch (err) {
 		localStorage.removeItem(key);
 		return to_default_value();
