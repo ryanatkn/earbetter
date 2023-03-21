@@ -14,10 +14,10 @@
 	);
 	set_in_storage('app', {projects: ['ab']});
 	console.log(`app_data`, app_data);
+	$: ({projects} = app_data);
 
 	// TODO BLOCK use zod schemas to validate
 	// let project: ProjectDef | null = load_from_storage();
-	let projects: ProjectDef[];
 	let select_project = (id: ProjectId): void => {
 		//
 	};
