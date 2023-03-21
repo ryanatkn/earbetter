@@ -46,6 +46,7 @@
 		const next_project_defs = project_defs.slice();
 		next_project_defs[index] = project_def;
 		project_defs = next_project_defs;
+		if (selected_project_def?.id === id) selected_project_def = project_def; // TODO hacky (store/signal wrapper?)
 		console.log(`update_project project_def`, project_def);
 	};
 
