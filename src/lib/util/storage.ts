@@ -15,6 +15,7 @@ export const load_from_storage = <T>(
 	to_default_value: () => T,
 	parse: (value: unknown) => T,
 ): T => {
+	console.log(`load_from_storage key`, key);
 	if (!browser) return to_default_value();
 	const stored = localStorage.getItem(key);
 	if (!stored) return to_default_value();
@@ -38,6 +39,7 @@ export const set_in_storage = (key: string, value: any): void => {
 	if (value === undefined) {
 		localStorage.removeItem(key);
 	} else {
+		console.log(`set_in_storage`, key, value);
 		localStorage.setItem(key, JSON.stringify(value));
 	}
 };

@@ -9,17 +9,18 @@
 
 	// TODO BLOCK refactor
 	// TODO BLOCK maybe `new App(App.load())` ?
+	const APP_STORAGE_KEY = 'app';
 	let app_data: AppData = load_from_storage(
-		'app',
+		APP_STORAGE_KEY,
 		() => DEFAULT_APP_DATA,
 		(v) => AppData.parse(v),
 	);
+	$: console.log(`app_data`, app_data);
 
 	let selected_project_def: ProjectDef | null = null;
 	let project_defs: ProjectDef[] = [];
 	// TODO BLOCK refactor, make more efficient (save button?)
-	$: set_in_storage('app', (app_data = {projects: project_defs.map((p) => p.id)}));
-	$: console.log(`app_data`, app_data);
+	$: set_in_storage(APP_STORAGE_KEY, (app_data = {projects: project_defs.map((p) => p.id)}));
 
 	// let project: ProjectDef | null = load_from_storage();
 	const select_project = (id: ProjectId): void => {
