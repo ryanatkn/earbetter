@@ -92,15 +92,10 @@
 
 <style>
 	.projects {
+		width: 100%;
 		display: flex;
 		flex-direction: column;
 		justify-content: center;
 		align-items: flex-start;
-	}
-	.projects {
-		display: flex;
-		flex-direction: column;
-		align-items: stretch;
-		padding: var(--spacing_md);
 	}
 </style>
