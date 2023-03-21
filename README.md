@@ -1,6 +1,6 @@
 # earbetter
 
-> ear training game and tools for programming music and audio 🦜🎶
+> ear training game and tools for programming music and audio 🎶🦜
 > [earbetter.ryanatkn.com](https://earbetter.ryanatkn.com/)
 
 see [contributing.md](contributing.md)
