@@ -94,11 +94,3 @@
 	{/if}
 	<slot name="footer" {changed} />
 </form>
-
-<style>
-	header {
-		font-size: var(--font_size_xl);
-		text-align: center;
-		margin-bottom: var(--spacing_md);
-	}
-</style>
