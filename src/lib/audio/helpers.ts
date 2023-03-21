@@ -13,7 +13,7 @@ export const Volume = z
 	.max(1)
 	.transform((v) => round(v, 2));
 
-export const DEFAULT_VOLUME: Volume = 0.51;
+export const DEFAULT_VOLUME: Volume = 0.42;
 export const DEFAULT_VOLUME_INCREMENT: Volume = 0.01;
 
 const KEY = Symbol('volume');
