@@ -1,6 +1,4 @@
 <script lang="ts">
-	import {writable} from 'svelte/store';
-
 	import Piano from '$lib/music/Piano.svelte';
 	import {get_audio_ctx} from '$lib/audio/audio_ctx';
 	import {midi_access} from '$lib/audio/midi_access';
@@ -11,12 +9,12 @@
 	import VolumeControl from '$lib/audio/VolumeControl.svelte';
 	import Header from '$routes/Header.svelte';
 	import Footer from '$routes/Footer.svelte';
-	import {get_volume} from '$lib/audio/helpers';
+	import {get_instrument, get_volume} from '$lib/audio/helpers';
 	import OscTypeControl from '$lib/audio/OscTypeControl.svelte';
 
 	const audio_ctx = get_audio_ctx();
 	const volume = get_volume();
-	const osc_type = writable<OscillatorType>('sine');
+	const instrument = get_instrument();
 
 	$: pressed_keys = $playing_notes;
 
@@ -34,7 +32,7 @@
 
 <MidiInput
 	{midi_access}
-	on:note_start={(e) => start_playing(audio_ctx, e.detail.note, $volume, $osc_type)}
+	on:note_start={(e) => start_playing(audio_ctx, e.detail.note, $volume, $instrument)}
 	on:note_stop={(e) => stop_playing(e.detail.note)}
 />
 <main bind:clientWidth>
@@ -46,7 +44,7 @@
 				{note_min}
 				{note_max}
 				{pressed_keys}
-				on:press={(e) => start_playing(audio_ctx, e.detail, $volume, $osc_type)}
+				on:press={(e) => start_playing(audio_ctx, e.detail, $volume, $instrument)}
 				on:release={(e) => stop_playing(e.detail)}
 			/>
 		{/if}
@@ -66,7 +64,7 @@
 		</fieldset>
 		<fieldset>
 			<VolumeControl {volume} />
-			<OscTypeControl {osc_type} />
+			<OscTypeControl {instrument} />
 		</fieldset>
 		<fieldset>
 			<InitMidiButton {midi_access} />

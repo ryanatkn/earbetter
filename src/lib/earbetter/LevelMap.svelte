@@ -10,7 +10,8 @@
 	import LevelDefForm from '$lib/earbetter/LevelDefForm.svelte';
 	import Projects from '$lib/earbetter/Projects.svelte';
 	import VolumeControl from '$lib/audio/VolumeControl.svelte';
-	import {get_volume} from '$lib/audio/helpers';
+	import {get_instrument, get_volume} from '$lib/audio/helpers';
+	import OscTypeControl from '$lib/audio/OscTypeControl.svelte';
 
 	export let midi_access: Signal<MIDIAccess | null>;
 	export let level_def: LevelDef | null = null;
@@ -28,7 +29,9 @@
 
 	const audio_ctx = get_audio_ctx();
 	(window as any).audio = audio_ctx;
+
 	const volume = get_volume();
+	const instrument = get_instrument();
 
 	// TODO this or props? currently both..?
 	let set_level_def: (leve_def: LevelDef | null) => void;
@@ -67,6 +70,10 @@
 					<td>connect MIDI</td>
 				</tr>
 				<tr>
+					<td><code>keys 1-4</code></td>
+					<td>set instrument</td>
+				</tr>
+				<tr>
 					<td><code>up/down arrows</code></td>
 					<td>adjust volume</td>
 				</tr>
@@ -76,6 +83,7 @@
 				</tr>
 			</table>
 			<VolumeControl {volume} />
+			<OscTypeControl {instrument} />
 			<p>
 				Earbetter supports MIDI devices like piano keyboards. Connect a device and click the button
 				below:

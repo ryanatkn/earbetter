@@ -17,9 +17,9 @@ export const play_note = (
 	note: Midi,
 	volume: Volume,
 	duration: Milliseconds,
-	osc_type?: OscillatorType,
+	instrument?: OscillatorType,
 ): Promise<void> => {
-	const stop = start_playing_note(audio_ctx, note, volume, osc_type);
+	const stop = start_playing_note(audio_ctx, note, volume, instrument);
 	return new Promise((resolve) =>
 		setTimeout(() => {
 			stop();
@@ -50,7 +50,7 @@ export const start_playing_note = (
 	audio_ctx: AudioContext,
 	note: Midi,
 	volume: Volume = DEFAULT_VOLUME,
-	osc_type: OscillatorType = 'sine',
+	instrument: OscillatorType = 'sine',
 ): StopPlaying => {
 	const freq = midi_to_freq(note);
 	console.log('start playing note', note, freq);
@@ -59,7 +59,7 @@ export const start_playing_note = (
 	gain.gain.value = volume_to_gain(volume);
 	gain.connect(audio_ctx.destination);
 	const osc = audio_ctx.createOscillator();
-	osc.type = osc_type;
+	osc.type = instrument;
 	osc.frequency.setValueAtTime(freq, audio_ctx.currentTime);
 	osc.start();
 	osc.connect(gain);
@@ -92,11 +92,11 @@ export const start_playing = (
 	audio_ctx: AudioContext,
 	note: Midi,
 	volume?: Volume,
-	osc_type?: OscillatorType,
+	instrument?: OscillatorType,
 ): void => {
 	const current = playing.get(note);
 	if (current) return;
-	playing.set(note, start_playing_note(audio_ctx, note, volume, osc_type));
+	playing.set(note, start_playing_note(audio_ctx, note, volume, instrument));
 };
 
 export const stop_playing = (note: Midi): void => {

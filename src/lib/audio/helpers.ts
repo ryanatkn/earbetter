@@ -3,6 +3,7 @@ import {signal, type Signal} from '@preact/signals-core';
 import {z} from 'zod';
 import type {Flavored} from '@feltjs/util';
 import {round} from '@feltjs/util/maths.js';
+import {writable, type Writable} from 'svelte/store';
 
 export type Frequency = Flavored<number, 'Frequency'>;
 export type Milliseconds = Flavored<number, 'Milliseconds'>;
@@ -13,13 +14,13 @@ export const Volume = z
 	.max(1)
 	.transform((v) => round(v, 2));
 
-export const DEFAULT_VOLUME: Volume = 0.42;
+export const DEFAULT_VOLUME: Volume = 0.43;
 export const DEFAULT_VOLUME_INCREMENT: Volume = 0.01;
 
-const KEY = Symbol('volume');
-export const get_volume = (): Signal<Volume> => getContext(KEY);
+const VOLUME_KEY = Symbol('volume');
+export const get_volume = (): Signal<Volume> => getContext(VOLUME_KEY);
 export const set_volume = (store = signal(DEFAULT_VOLUME)): Signal<Volume> =>
-	setContext(KEY, store);
+	setContext(VOLUME_KEY, store);
 
 export const adjust_volume = (
 	volume: Signal<Volume>,
@@ -43,4 +44,9 @@ export const volume_to_gain = (volume: Volume): number => volume ** VOLUME_TO_GA
 
 export const SMOOTH_GAIN_TIME_CONSTANT = 0.03;
 
-export const osc_types: OscillatorType[] = ['sawtooth', 'sine', 'square', 'triangle']; // TODO support "custom"
+export const instruments: OscillatorType[] = ['sawtooth', 'sine', 'square', 'triangle']; // TODO support "custom"
+export const DEFAULT_OSC_TYPE: OscillatorType = 'sine';
+const OSC_TYPE_KEY = Symbol('instrument');
+export const get_instrument = (): Writable<OscillatorType> => getContext(OSC_TYPE_KEY);
+export const set_instrument = (store = writable(DEFAULT_OSC_TYPE)): Writable<OscillatorType> =>
+	setContext(OSC_TYPE_KEY, store);
