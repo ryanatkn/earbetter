@@ -23,13 +23,14 @@
 	// TODO BLOCK use zod schemas to validate
 	// let project: ProjectDef | null = load_from_storage();
 	let select_project = (id: ProjectId): void => {
-		//
+		selected_project_def = project_defs.find((d) => d.id === id) || null;
 	};
 	let edit_project = (project_def: ProjectDef | null): void => {
-		//
+		selected_project_def = project_def;
 	};
 	let remove_project = (id: ProjectId): void => {
-		//
+		if (selected_project_def?.id === id) selected_project_def = null;
+		project_defs = project_defs.filter((d) => d.id !== id);
 	};
 	let create_project = (p: ProjectDef): void => {
 		app_data = {...app_data, projects: app_data.projects.concat(p.id)};
@@ -39,10 +40,12 @@
 	};
 	let update_project = (project_def: ProjectDef): void => {
 		//
+		console.log(`update_project project_def`, project_def);
 	};
 
-	let set_project: (project_def: ProjectDef | null) => void;
-	$: set_project?.(selected_project_def);
+	// TODO this or props? currently both..?
+	let set_project_def: (project_def: ProjectDef | null) => void;
+	$: set_project_def?.(selected_project_def);
 
 	let id: string;
 	$: editing = project_defs.some((d) => d.id === id);
@@ -69,7 +72,7 @@
 		<ProjectForm
 			{editing}
 			bind:id
-			bind:set_project
+			bind:set_project_def
 			project_def={selected_project_def}
 			on:submit={(editing ? update_project : create_project)
 				? (e) => (editing ? update_project : create_project)?.(e.detail)
@@ -78,7 +81,6 @@
 		>
 			<svelte:fragment slot="footer" let:changed>
 				{#if editing && edit_project}
-					<button type="button" on:click={() => play_project?.(id)}> play! </button>
 					<button type="button" on:click={() => edit_project?.(null)}>
 						{#if changed}discard changes and stop editing{:else}stop editing this project{/if}
 					</button>

@@ -30,6 +30,7 @@
 	(window as any).audio = audio_ctx;
 	const volume = get_volume();
 
+	// TODO this or props? currently both..?
 	let set_level_def: (leve_def: LevelDef | null) => void;
 	$: set_level_def?.(level_def);
 

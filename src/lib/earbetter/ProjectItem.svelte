@@ -8,19 +8,13 @@
 	export let edit: ((project_def: ProjectDef) => void) | null = null; // TODO event? or is the ability to have a return value for ephemeral state desired?
 	export let remove: ((id: ProjectId) => void) | null = null; // TODO event? or is the ability to have a return value for ephemeral state desired?
 	export let selected: boolean;
-	export let completed: boolean;
 
 	let removing = false;
 </script>
 
 <li class="project-item" transition:slide|local>
 	{#if select}
-		<button
-			class="project-button"
-			on:click={() => select?.(project_def.id)}
-			class:selected
-			class:completed
-		>
+		<button class="project-button" on:click={() => select?.(project_def.id)} class:selected>
 			{project_def.name}
 		</button>
 	{/if}
