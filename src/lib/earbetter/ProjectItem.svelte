@@ -5,7 +5,7 @@
 
 	export let project_def: ProjectDef;
 	export let select: ((id: ProjectId) => void) | null = null; // TODO event? or is the ability to have a return value for ephemeral state desired?
-	export let edit: ((project_def: ProjectDef) => void) | null = null; // TODO event? or is the ability to have a return value for ephemeral state desired?
+	export let edit: ((project_def: ProjectDef | null) => void) | null = null; // TODO event? or is the ability to have a return value for ephemeral state desired?
 	export let remove: ((id: ProjectId) => void) | null = null; // TODO event? or is the ability to have a return value for ephemeral state desired?
 	export let selected: boolean;
 
@@ -22,7 +22,7 @@
 		<button
 			class="icon-button plain-button"
 			title={removing ? 'remove project' : 'edit project'}
-			on:click={() => (removing ? remove?.(project_def.id) : edit?.(project_def))}
+			on:click={() => (removing ? remove?.(project_def.id) : edit?.(selected ? null : project_def))}
 		>
 			{#if removing}✖{:else}✎{/if}
 		</button>
