@@ -100,6 +100,9 @@ const create_next_trial = (def: LevelDef, current_trial: Trial | null): Trial =>
 		}
 	}
 
+	// TODO how to handle this? keep going? (if so need to avoid infinite loop below)
+	if (valid_notes.length < 2) throw Error('invalid notes');
+
 	// create the random sequence of notes
 	for (let i = 0; i < def.sequence_length - 1; i++) {
 		let next_note: Midi;
