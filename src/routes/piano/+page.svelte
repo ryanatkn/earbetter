@@ -10,7 +10,7 @@
 	import Header from '$routes/Header.svelte';
 	import Footer from '$routes/Footer.svelte';
 	import {get_instrument, get_volume} from '$lib/audio/helpers';
-	import OscTypeControl from '$lib/audio/OscTypeControl.svelte';
+	import InstrumentControl from '$lib/audio/InstrumentControl.svelte';
 
 	const audio_ctx = get_audio_ctx();
 	const volume = get_volume();
@@ -64,7 +64,7 @@
 		</fieldset>
 		<fieldset>
 			<VolumeControl {volume} />
-			<OscTypeControl {instrument} />
+			<InstrumentControl {instrument} />
 		</fieldset>
 		<fieldset>
 			<InitMidiButton {midi_access} />

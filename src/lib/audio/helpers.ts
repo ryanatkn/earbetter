@@ -3,7 +3,6 @@ import {signal, type Signal} from '@preact/signals-core';
 import {z} from 'zod';
 import type {Flavored} from '@feltjs/util';
 import {round} from '@feltjs/util/maths.js';
-import {writable, type Writable} from 'svelte/store';
 
 export type Frequency = Flavored<number, 'Frequency'>;
 export type Milliseconds = Flavored<number, 'Milliseconds'>;
@@ -44,9 +43,13 @@ export const volume_to_gain = (volume: Volume): number => volume ** VOLUME_TO_GA
 
 export const SMOOTH_GAIN_TIME_CONSTANT = 0.03;
 
-export const instruments: OscillatorType[] = ['sawtooth', 'sine', 'square', 'triangle']; // TODO support "custom"
-export const DEFAULT_OSC_TYPE: OscillatorType = 'sine';
+// TODO this is `OscillatorType` excluding "custom" because it can't be used directly,
+//  and we'll probably add to the type union the data for `createPeriodicWave`
+export type Instrument = 'sawtooth' | 'sine' | 'square' | 'triangle';
+
+export const instruments: Instrument[] = ['sawtooth', 'sine', 'square', 'triangle']; // TODO support "custom"
+export const DEFAULT_OSC_TYPE: Instrument = 'sine';
 const OSC_TYPE_KEY = Symbol('instrument');
-export const get_instrument = (): Writable<OscillatorType> => getContext(OSC_TYPE_KEY);
-export const set_instrument = (store = writable(DEFAULT_OSC_TYPE)): Writable<OscillatorType> =>
+export const get_instrument = (): Signal<Instrument> => getContext(OSC_TYPE_KEY);
+export const set_instrument = (store = signal(DEFAULT_OSC_TYPE)): Signal<Instrument> =>
 	setContext(OSC_TYPE_KEY, store);

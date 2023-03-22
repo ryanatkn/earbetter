@@ -3,7 +3,7 @@
 
 	import type {MIDIAccess} from '$lib/audio/WebMIDI';
 	import type {LevelDef, LevelId} from '$lib/earbetter/level';
-	import {create_level_stats} from '$lib/earbetter/level_stats';
+	import type {LevelStats} from '$lib/earbetter/level_stats';
 	import LevelMapItem from '$lib/earbetter/LevelMapItem.svelte';
 	import {get_audio_ctx} from '$lib/audio/audio_ctx';
 	import InitMidiButton from '$lib/audio/InitMidiButton.svelte';
@@ -11,21 +11,20 @@
 	import Projects from '$lib/earbetter/Projects.svelte';
 	import VolumeControl from '$lib/audio/VolumeControl.svelte';
 	import {get_instrument, get_volume} from '$lib/audio/helpers';
-	import OscTypeControl from '$lib/audio/OscTypeControl.svelte';
+	import InstrumentControl from '$lib/audio/InstrumentControl.svelte';
 
 	export let midi_access: Signal<MIDIAccess | null>;
-	export let level_def: LevelDef | null = null;
-	export let level_defs: LevelDef[];
+	export let level_def: LevelDef | null = null; // TODO make this a signal?
+	export let level_defs: LevelDef[]; // TODO make this a signal?
+	export let level_stats: LevelStats;
 	export let play_level_def: ((id: LevelId) => void) | null = null; // TODO event? or is the ability to have a return value for ephemeral state desired?
 	export let edit_level_def: ((level_def: LevelDef | null) => void) | null = null; // TODO event? or is the ability to have a return value for ephemeral state desired?
 	export let remove_level_def: ((id: LevelId) => void) | null = null; // TODO event? or is the ability to have a return value for ephemeral state desired?
 	export let create_level_def: ((level_def: LevelDef) => void) | null = null; // TODO event? or is the ability to have a return value for ephemeral state desired?
 	export let update_level_def: ((level_def: LevelDef) => void) | null = null; // TODO event? or is the ability to have a return value for ephemeral state desired?
 
-	const level_stats = create_level_stats(level_defs);
 	$: ({stats} = level_stats);
 	$: console.log('stats', $stats);
-	console.log($stats);
 
 	const audio_ctx = get_audio_ctx();
 	(window as any).audio = audio_ctx;
@@ -83,7 +82,7 @@
 				</tr>
 			</table>
 			<VolumeControl {volume} />
-			<OscTypeControl {instrument} />
+			<InstrumentControl {instrument} />
 			<p>
 				Earbetter supports MIDI devices like piano keyboards. Connect a device and click the button
 				below:

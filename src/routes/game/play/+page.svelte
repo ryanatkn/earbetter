@@ -8,11 +8,19 @@
 	import Footer from '$routes/Footer.svelte';
 	import type {LevelDef} from '$lib/earbetter/level';
 	import {parse_from_hash} from '$lib/util/url';
+	import {get_app} from '$lib/earbetter/app';
 
 	const go_back = () => goto(`${base}/game`);
 
+	const app = get_app();
+
+	// TODO BLOCK add this to the app data so it's persisted when we navigate, and can be saved if it's not in the list
 	$: active_level_def = parse_from_hash<LevelDef>($page.url.hash);
-	$: if (active_level_def === null) void go_back();
+	$: if (active_level_def === null) {
+		void go_back();
+	} else {
+		app.active_level_def.value = active_level_def;
+	}
 </script>
 
 <svelte:head>
@@ -21,7 +29,7 @@
 
 <main>
 	<button class="go-back icon-button plain-button" on:click={go_back}>←</button>
-	<Earbetter {active_level_def}>
+	<Earbetter {app}>
 		<svelte:fragment slot="header"><Header /></svelte:fragment>
 		<svelte:fragment slot="footer"><Footer /></svelte:fragment>
 	</Earbetter>

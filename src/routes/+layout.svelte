@@ -7,13 +7,16 @@
 	import {set_audio_ctx} from '$lib/audio/audio_ctx';
 	import {adjust_volume, set_instrument, set_volume} from '$lib/audio/helpers';
 	import {request_access} from '$lib/audio/midi_access';
+	import {App, set_app} from '$lib/earbetter/app';
 
-	set_audio_ctx();
+	const get_ac = set_audio_ctx();
 	const volume = set_volume();
 	const instrument = set_instrument();
 
+	const app = new App(get_ac);
+	set_app(app);
+
 	const keydown = (e: KeyboardEvent) => {
-		console.log(`e.key`, e.key);
 		if (isEditable(e.target)) return;
 		switch (e.key) {
 			case 'c': {

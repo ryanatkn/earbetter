@@ -4,6 +4,7 @@ import {
 	DEFAULT_VOLUME,
 	SMOOTH_GAIN_TIME_CONSTANT,
 	volume_to_gain,
+	type Instrument,
 	type Milliseconds,
 	type Volume,
 } from '$lib/audio/helpers';
@@ -17,7 +18,7 @@ export const play_note = (
 	note: Midi,
 	volume: Volume,
 	duration: Milliseconds,
-	instrument?: OscillatorType,
+	instrument?: Instrument,
 ): Promise<void> => {
 	const stop = start_playing_note(audio_ctx, note, volume, instrument);
 	return new Promise((resolve) =>
@@ -50,7 +51,7 @@ export const start_playing_note = (
 	audio_ctx: AudioContext,
 	note: Midi,
 	volume: Volume = DEFAULT_VOLUME,
-	instrument: OscillatorType = 'sine',
+	instrument: Instrument = 'sine',
 ): StopPlaying => {
 	const freq = midi_to_freq(note);
 	console.log('start playing note', note, freq);
@@ -92,7 +93,7 @@ export const start_playing = (
 	audio_ctx: AudioContext,
 	note: Midi,
 	volume?: Volume,
-	instrument?: OscillatorType,
+	instrument?: Instrument,
 ): void => {
 	const current = playing.get(note);
 	if (current) return;
