@@ -46,14 +46,6 @@ export class App {
 		this.load_project(this.app_data.peek().projects[0] || null);
 
 		// TODO BLOCK delete id from app_data if not loadable -- load_project?
-
-		// TODO BLOCK how to initialize this?
-		console.log(`this.app_data.value.projects`, this.app_data.value.projects);
-		if (!this.app_data.value.projects.length) {
-			console.log('CREATE NEW PROJECT');
-			this.create_project(create_project_def());
-			this.save(); // TODO BLOCK where to do this?
-		}
 	}
 
 	toJSON(): AppData {
@@ -77,12 +69,14 @@ export class App {
 			: null;
 		console.log(`loaded`, loaded);
 		if (loaded) {
+			// TODO batch if this code stays imperative like this
 			this.project_defs.value = this.project_defs.peek().concat(loaded);
 			this.selected_project_def.value = loaded;
+			this.level_defs.value = loaded.level_defs; // TODO BLOCK hacky
 		} else {
-			console.log(`load_project failed id`, id);
-			// TODO BLOCK how?
-			// this.project_defs.value = [];
+			console.log(`load_project failed id, saving`, id);
+			this.create_project(create_project_def());
+			this.save(); // TODO BLOCK where to do this?
 		}
 	};
 
