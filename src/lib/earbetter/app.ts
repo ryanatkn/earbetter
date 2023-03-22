@@ -6,7 +6,7 @@ import {getContext, setContext} from 'svelte';
 
 import {level_defs} from '$lib/earbetter/level_defs';
 import type {LevelDef, LevelId} from '$lib/earbetter/level';
-import {ProjectDef, ProjectId} from '$lib/earbetter/project';
+import {create_project_def, ProjectDef, ProjectId} from '$lib/earbetter/project';
 import {create_level_stats} from '$lib/earbetter/level_stats';
 import {load_from_storage, set_in_storage} from '$lib/util/storage';
 
@@ -33,13 +33,12 @@ export class App {
 
 	level_stats = create_level_stats();
 
-	constructor(public readonly get_ac: () => AudioContext) {
+	constructor(public readonly get_ac: () => AudioContext, public readonly storage_key = 'app') {
 		// TODO BLOCK refactor
 		// TODO BLOCK maybe `new App(App.load())` ?
-		const APP_STORAGE_KEY = 'app';
 		this.app_data = signal(
 			load_from_storage(
-				APP_STORAGE_KEY,
+				storage_key,
 				() => DEFAULT_APP_DATA,
 				(v) => AppData.parse(v),
 			),
@@ -50,10 +49,18 @@ export class App {
 			// TODO BLOCK isn't working, make efficient
 			console.log('SAVING APP DATA');
 			set_in_storage(
-				APP_STORAGE_KEY,
-				(this.app_data.value = {projects: this.project_defs.peek().map((p) => p.id)}),
+				storage_key,
+				(this.app_data.value = {projects: this.project_defs.value.map((p) => p.id)}),
 			);
 		});
+
+		// TODO BLOCK delete id from app_data if not loadable
+
+		// TODO BLOCK how to initialize this?
+		if (!this.app_data.value.projects.length) {
+			console.log('CREATE NEW PROJECT');
+			this.create_project(create_project_def());
+		}
 	}
 
 	// let project: ProjectDef | null = load_from_storage();
@@ -66,18 +73,23 @@ export class App {
 	};
 
 	remove_project = (id: ProjectId): void => {
+		const existing = this.project_defs.peek().find((d) => d.id === id);
+		if (!existing) return;
 		if (this.selected_project_def.peek()?.id === id) {
 			this.selected_project_def.value = null;
 		}
-		this.project_defs.value = this.project_defs.peek().filter((d) => d.id !== id);
+		this.project_defs.value = this.project_defs.peek().filter((d) => d !== existing);
 	};
 
 	create_project = (p: ProjectDef): void => {
+		const {id} = p;
+		const existing = this.project_defs.peek().find((d) => d.id !== id);
+		if (existing) return;
 		this.app_data.value = {
 			...this.app_data.peek(),
-			projects: this.app_data.peek().projects.concat(p.id),
+			projects: this.app_data.peek().projects.concat(id),
 		};
-		set_in_storage(p.id, p);
+		set_in_storage(id, p);
 		this.project_defs.value = this.project_defs.peek().concat(p);
 		this.selected_project_def.value = p;
 	};

@@ -19,7 +19,7 @@ export interface Project {
 	def: Signal<ProjectDef>;
 }
 
-export const create_id = (): ProjectId => crypto.randomUUID();
+export const create_project_id = (): ProjectId => crypto.randomUUID();
 
 export class Project {
 	def: Signal<ProjectDef>;
@@ -28,3 +28,8 @@ export class Project {
 		this.def = signal(def);
 	}
 }
+
+export const create_project_def = (): ProjectDef => ({
+	id: create_project_id(),
+	name: 'new project',
+});

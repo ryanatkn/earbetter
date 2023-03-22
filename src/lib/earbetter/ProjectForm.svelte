@@ -2,14 +2,14 @@
 	import {createEventDispatcher} from 'svelte';
 	import {slide} from 'svelte/transition';
 
-	import {create_id, ProjectDef, type ProjectId} from '$lib/earbetter/project';
+	import {create_project_id, ProjectDef, type ProjectId} from '$lib/earbetter/project';
 
 	const dispatch = createEventDispatcher<{submit: ProjectDef; remove: ProjectId}>();
 
 	const DEFAULT_NAME = 'new project';
 
 	export let project_def: ProjectDef | null = null;
-	export let id = create_id();
+	export let id = create_project_id();
 	export let name = DEFAULT_NAME;
 	export let editing = false;
 
@@ -25,7 +25,7 @@
 			id = project_def.id;
 			name = project_def.name;
 		} else {
-			id = create_id();
+			id = create_project_id();
 			name = DEFAULT_NAME;
 		}
 	};
