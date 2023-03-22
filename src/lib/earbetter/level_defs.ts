@@ -145,11 +145,11 @@ export const level_defs: LevelDef[] = [
 		sequence_length: DEFAULT_SEQUENCE_LENGTH * 2,
 	},
 	{
-		name: 'two octaves',
+		name: 'chromatic scale (two octaves)',
 		intervals: Array.from({length: 25}, (_, i) => i - 12),
 	},
 	{
-		name: 'four octaves',
+		name: 'chromatic scale (four octaves)',
 		intervals: Array.from({length: 49}, (_, i) => i - 24),
 	},
 ].map((d) => ({...BASE_LEVEL_DEF, ...d, id: create_id()}));

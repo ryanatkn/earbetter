@@ -9,6 +9,8 @@ import {create_project_def, ProjectDef, ProjectId} from '$lib/earbetter/project'
 import {create_level_stats} from '$lib/earbetter/level_stats';
 import {load_from_storage, set_in_storage} from '$lib/util/storage';
 
+// TODO refactor all storage calls, and rethink in signals instead of all top-level orchestration (that's less reusable)
+
 export const AppData = z.object({
 	projects: z.array(ProjectId),
 });
@@ -59,6 +61,12 @@ export class App {
 		set_in_storage(this.storage_key, (this.app_data.value = this.toJSON()));
 	}
 
+	// TODO BLOCK reactive?
+	save_project = (id: ProjectId): void => {
+		const project_def = this.project_defs.peek().find((p) => p.id === id);
+		set_in_storage(id, project_def); // correctly deletes the storage key if `undefined`
+	};
+
 	load_project = (id: ProjectId | null): void => {
 		const loaded = id
 			? load_from_storage(
@@ -97,19 +105,23 @@ export class App {
 			this.selected_project_def.value = null;
 		}
 		this.project_defs.value = this.project_defs.peek().filter((d) => d !== existing);
+		this.save_project(id);
 	};
 
 	create_project = (p: ProjectDef): void => {
 		const {id} = p;
 		const existing = this.project_defs.peek().find((d) => d.id !== id);
-		if (existing) return;
+		if (existing) {
+			this.update_project(p);
+			return;
+		}
 		this.app_data.value = {
 			...this.app_data.peek(),
 			projects: this.app_data.peek().projects.concat(id),
 		};
-		set_in_storage(id, p);
 		this.project_defs.value = this.project_defs.peek().concat(p);
 		this.selected_project_def.value = p;
+		this.save_project(id);
 	};
 
 	update_project = (project_def: ProjectDef): void => {
@@ -122,7 +134,7 @@ export class App {
 		if (this.selected_project_def.peek()?.id === id) {
 			this.selected_project_def.value = project_def;
 		}
-		console.log(`update_project project_def`, project_def);
+		this.save_project(id);
 	};
 
 	play_level_def = async (id: LevelId): Promise<void> => {
