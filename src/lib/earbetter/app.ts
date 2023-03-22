@@ -45,27 +45,32 @@ export class App {
 		);
 		console.log(`app_data`, this.app_data.peek());
 
-		effect(() => {
-			// TODO BLOCK isn't working, make efficient
-			console.log('SAVING APP DATA');
-			set_in_storage(
-				storage_key,
-				(this.app_data.value = {projects: this.project_defs.value.map((p) => p.id)}),
-			);
-		});
-
-		// TODO BLOCK delete id from app_data if not loadable
+		// TODO BLOCK delete id from app_data if not loadable -- load_project?
 
 		// TODO BLOCK how to initialize this?
+		console.log(`this.app_data.value.projects`, this.app_data.value.projects);
 		if (!this.app_data.value.projects.length) {
 			console.log('CREATE NEW PROJECT');
 			this.create_project(create_project_def());
+			this.save(); // TODO BLOCK where to do this?
 		}
 	}
 
-	// let project: ProjectDef | null = load_from_storage();
-	select_project = (id: ProjectId): void => {
-		this.selected_project_def.value = this.project_defs.peek().find((d) => d.id === id) || null;
+	toJSON(): AppData {
+		console.log('App.toJSON');
+		return {projects: this.project_defs.peek().map((p) => p.id)};
+	}
+
+	// TODO BLOCK use this
+	save(): void {
+		console.log('App.save');
+		set_in_storage(this.storage_key, (this.app_data.value = this.toJSON()));
+	}
+
+	select_project = (id: ProjectId | null): void => {
+		this.selected_project_def.value = id
+			? this.project_defs.peek().find((d) => d.id === id) || null
+			: null;
 	};
 
 	edit_project = (project_def: ProjectDef | null): void => {
