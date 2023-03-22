@@ -1,14 +1,21 @@
 <script lang="ts">
 	import {base} from '$app/paths';
+	import {page} from '$app/stores';
+	import {stripStart} from '@feltjs/util/string.js';
 
 	import {pages} from '$routes/nav';
+
+	$: selected_slug = stripStart($page.url.pathname, base);
 </script>
 
 <header class="title panel padded-lg"><slot><h2>website map</h2></slot></header>
 <nav>
 	<menu>
-		{#each pages as page (page.slug)}
-			<li><a class="panel" href="{base}{page.slug}">{page.slug}</a></li>
+		{#each pages as p (p.slug)}
+			<li>
+				<a class="panel" href="{base}{p.slug}" class:selected={p.slug === selected_slug}>{p.slug}</a
+				>
+			</li>
 		{/each}
 	</menu>
 </nav>

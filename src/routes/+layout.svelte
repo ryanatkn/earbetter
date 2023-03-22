@@ -82,6 +82,5 @@
 {#if show_main_menu}
 	<Dialog on:close={() => (show_main_menu = false)}>
 		<WebsiteMap><h2>earbetter</h2></WebsiteMap>
-		<Breadcrumbs />
 	</Dialog>
 {/if}

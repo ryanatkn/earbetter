@@ -111,7 +111,7 @@
 	};
 </script>
 
-<svelte:window on:keydown={keydown} />
+<svelte:window on:keydown|capture={keydown} />
 <MidiInput
 	{midi_access}
 	on:note_start={(e) => {
