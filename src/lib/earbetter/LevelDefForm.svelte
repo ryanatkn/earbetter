@@ -34,6 +34,7 @@
 		note_max,
 	});
 
+	// TODO BLOCK multiple sources of truth - should this be a reactive statement from `level_def`? should it set `level_def` locally?
 	export const set_level_def = (level_def: LevelDef | null): void => {
 		if (level_def) {
 			id = level_def.id;

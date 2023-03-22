@@ -16,8 +16,7 @@
 	const volume = set_volume();
 	const instrument = set_instrument();
 
-	const app = new App(get_ac);
-	set_app(app);
+	set_app(new App(get_ac));
 
 	// TODO add to app? context? global store?
 	let show_main_menu = false;

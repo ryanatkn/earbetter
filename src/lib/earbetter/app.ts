@@ -1,7 +1,7 @@
 import {goto} from '$app/navigation';
 import {base} from '$app/paths';
 import {z} from 'zod';
-import {effect, signal, type Signal} from '@preact/signals-core';
+import {signal, type Signal} from '@preact/signals-core';
 import {getContext, setContext} from 'svelte';
 
 import {level_defs} from '$lib/earbetter/level_defs';
