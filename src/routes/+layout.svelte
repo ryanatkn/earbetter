@@ -3,7 +3,6 @@
 	import {base} from '$app/paths';
 	import {isEditable, swallow} from '@feltjs/util/dom.js';
 	import Dialog from '@feltjs/felt-ui/Dialog.svelte';
-	import Breadcrumbs from '@feltjs/felt-ui/Breadcrumbs.svelte';
 
 	import '$routes/style.css';
 	import {set_audio_ctx} from '$lib/audio/audio_ctx';
