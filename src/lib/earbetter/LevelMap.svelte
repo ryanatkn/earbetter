@@ -2,8 +2,7 @@
 	import type {Signal} from '@preact/signals-core';
 
 	import type {MIDIAccess} from '$lib/audio/WebMIDI';
-	import type {LevelDef, LevelId} from '$lib/earbetter/level';
-	import type {LevelStats} from '$lib/earbetter/level_stats';
+	import type {LevelDef} from '$lib/earbetter/level';
 	import LevelMapItem from '$lib/earbetter/LevelMapItem.svelte';
 	import {get_audio_ctx} from '$lib/audio/audio_ctx';
 	import InitMidiButton from '$lib/audio/InitMidiButton.svelte';
@@ -12,16 +11,21 @@
 	import VolumeControl from '$lib/audio/VolumeControl.svelte';
 	import {get_instrument, get_volume} from '$lib/audio/helpers';
 	import InstrumentControl from '$lib/audio/InstrumentControl.svelte';
+	import type {App} from '$lib/earbetter/app';
 
+	export let app: App;
 	export let midi_access: Signal<MIDIAccess | null>;
-	export let level_def: LevelDef | null = null; // TODO make this a signal?
-	export let level_defs: LevelDef[]; // TODO make this a signal?
-	export let level_stats: LevelStats;
-	export let play_level_def: ((id: LevelId) => void) | null = null; // TODO event? or is the ability to have a return value for ephemeral state desired?
-	export let edit_level_def: ((level_def: LevelDef | null) => void) | null = null; // TODO event? or is the ability to have a return value for ephemeral state desired?
-	export let remove_level_def: ((id: LevelId) => void) | null = null; // TODO event? or is the ability to have a return value for ephemeral state desired?
-	export let create_level_def: ((level_def: LevelDef) => void) | null = null; // TODO event? or is the ability to have a return value for ephemeral state desired?
-	export let update_level_def: ((level_def: LevelDef) => void) | null = null; // TODO event? or is the ability to have a return value for ephemeral state desired?
+
+	$: ({
+		editing_level_def,
+		level_defs,
+		level_stats,
+		play_level_def,
+		edit_level_def,
+		remove_level_def,
+		create_level_def,
+		update_level_def,
+	} = app);
 
 	$: ({stats} = level_stats);
 	$: console.log('stats', $stats);
@@ -34,10 +38,10 @@
 
 	// TODO this or props? currently both..?
 	let set_level_def: (leve_def: LevelDef | null) => void;
-	$: set_level_def?.(level_def);
+	$: set_level_def?.($editing_level_def);
 
 	let id: string;
-	$: editing = level_defs.some((d) => d.id === id);
+	$: editing = $level_defs.some((d) => d.id === id);
 </script>
 
 <div class="map">
@@ -65,12 +69,12 @@
 					<td>exit level</td>
 				</tr>
 				<tr>
-					<td><code>c</code></td>
-					<td>connect MIDI</td>
-				</tr>
-				<tr>
 					<td><code>1 to 4</code></td>
 					<td>set instrument</td>
+				</tr>
+				<tr>
+					<td><code>c</code></td>
+					<td>connect MIDI</td>
 				</tr>
 				<tr>
 					<td><code>up/down arrows</code></td>
@@ -90,7 +94,7 @@
 			<InitMidiButton {midi_access} />
 		</section>
 		<section class="column-sm">
-			<Projects />
+			<Projects {app} />
 		</section>
 	</div>
 	<section class="panel padded-md column-sm">
@@ -98,13 +102,13 @@
 			<h2>ear training levels</h2>
 		</header>
 		<menu class="levels column-sm">
-			{#each level_defs as d (d.id)}
+			{#each $level_defs as d (d.id)}
 				<LevelMapItem
 					level_def={d}
 					select={play_level_def}
 					edit={edit_level_def}
 					remove={remove_level_def}
-					editing={d === level_def}
+					editing={d === $editing_level_def}
 					completed={$stats.completed[d.id]}
 				/>
 			{/each}
@@ -115,7 +119,7 @@
 			{editing}
 			bind:id
 			bind:set_level_def
-			{level_def}
+			level_def={$editing_level_def}
 			on:submit={(editing ? update_level_def : create_level_def)
 				? (e) => (editing ? update_level_def : create_level_def)?.(e.detail)
 				: undefined}

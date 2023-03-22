@@ -16,7 +16,7 @@
 <li class="level-map-item" transition:slide|local>
 	{#if select}
 		<button
-			class="level-button"
+			class="level-button deselectable"
 			on:click={() => select?.(level_def.id)}
 			class:selected={editing}
 			class:completed
