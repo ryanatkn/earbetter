@@ -2,12 +2,16 @@
 	import '@feltjs/felt-ui/style.css';
 	import {base} from '$app/paths';
 	import {isEditable, swallow} from '@feltjs/util/dom.js';
+	import Dialog from '@feltjs/felt-ui/Dialog.svelte';
+	import Breadcrumbs from '@feltjs/felt-ui/Breadcrumbs.svelte';
 
 	import '$routes/style.css';
 	import {set_audio_ctx} from '$lib/audio/audio_ctx';
 	import {adjust_volume, set_instrument, set_volume} from '$lib/audio/helpers';
 	import {request_access} from '$lib/audio/midi_access';
 	import {App, set_app} from '$lib/earbetter/app';
+	import WebsiteMap from '$routes/WebsiteMap.svelte';
+	import {afterNavigate} from '$app/navigation';
 
 	const get_ac = set_audio_ctx();
 	const volume = set_volume();
@@ -15,6 +19,10 @@
 
 	const app = new App(get_ac);
 	set_app(app);
+
+	// TODO add to app? context? global store?
+	let show_main_menu = false;
+	afterNavigate(() => (show_main_menu = false));
 
 	const keydown = (e: KeyboardEvent) => {
 		if (isEditable(e.target)) return;
@@ -54,6 +62,11 @@
 				adjust_volume(volume, -1);
 				return;
 			}
+			case 'Escape': {
+				swallow(e);
+				show_main_menu = !show_main_menu;
+				return;
+			}
 		}
 	};
 </script>
@@ -65,3 +78,10 @@
 
 <svelte:window on:keydown={keydown} />
 <slot />
+
+{#if show_main_menu}
+	<Dialog on:close={() => (show_main_menu = false)}>
+		<WebsiteMap><h2>earbetter</h2></WebsiteMap>
+		<Breadcrumbs />
+	</Dialog>
+{/if}
