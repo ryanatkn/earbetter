@@ -43,7 +43,7 @@
 	$: set_level_def?.($editing_level_def);
 
 	let id: string;
-	$: editing = $level_defs.some((d) => d.id === id);
+	$: editing = $level_defs ? $level_defs.some((d) => d.id === id) : false;
 </script>
 
 <div class="map">
@@ -95,21 +95,27 @@
 			</p>
 			<InitMidiButton {midi_access} />
 		</section>
-		<section class="column-sm">
-			<Projects {app} />
-		</section>
+		{#if $level_defs}
+			<section class="column-sm">
+				<Projects {app} />
+			</section>
+		{/if}
 	</div>
-	<section class="panel padded-md column-sm">
-		<header class="markup">
-			<h2>ear training levels</h2>
-		</header>
-		<menu class="levels column-sm">
-			{#each $level_defs as d (d.id)}
-				<LevelMapItem {app} level_def={d} />
-			{:else}
-				this project has no levels
-			{/each}
-		</menu>
+	<section class="column-sm">
+		{#if $level_defs}
+			<div class="panel padded-md">
+				<header class="markup">
+					<h2>ear training levels</h2>
+				</header>
+				<menu class="levels column-sm">
+					{#each $level_defs as d (d.id)}
+						<LevelMapItem {app} level_def={d} />
+					{/each}
+				</menu>
+			</div>
+		{:else}
+			<Projects {app} />
+		{/if}
 	</section>
 	<section class="panel padded-md markup column-sm">
 		<LevelDefForm

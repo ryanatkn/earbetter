@@ -3,6 +3,7 @@ import {z} from 'zod';
 import type {Flavored} from '@feltjs/util';
 import {Logger} from '@feltjs/util/log.js';
 import {signal, batch, Signal, effect} from '@preact/signals-core';
+import {base} from '$app/paths';
 
 import {z_midi, type Midi} from '$lib/music/midi';
 import {Intervals} from '$lib/music/notes';
@@ -328,3 +329,6 @@ const to_fallback_tonic = (note_min: Midi, note_max: Midi): Midi => {
 	const offset = ((note_max - note_min) / 4) | 0;
 	return randomInt(note_min + offset, note_max - offset) as Midi;
 };
+
+export const to_play_level_url = (level_def: LevelDef): string =>
+	`${base}/game/play#` + encodeURIComponent(JSON.stringify(level_def));

@@ -25,18 +25,20 @@
 </script>
 
 <div class="projects">
-	<section class="panel padded-md column-sm">
-		<header class="markup">
-			<h2>projects</h2>
-		</header>
-		<ProjectsList
-			selected_project_def={$selected_project_def}
-			project_defs={$project_defs}
-			{select_project}
-			{edit_project}
-			{remove_project}
-		/>
-	</section>
+	{#if $selected_project_def}
+		<section class="panel padded-md column-sm">
+			<header class="markup">
+				<h2>projects</h2>
+			</header>
+			<ProjectsList
+				selected_project_def={$selected_project_def}
+				project_defs={$project_defs}
+				{select_project}
+				{edit_project}
+				{remove_project}
+			/>
+		</section>
+	{/if}
 	<section class="panel padded-md column-sm markup">
 		<ProjectForm
 			{editing}
