@@ -70,7 +70,7 @@
 					<td>connect MIDI</td>
 				</tr>
 				<tr>
-					<td><code>keys 1-4</code></td>
+					<td><code>1 to 4</code></td>
 					<td>set instrument</td>
 				</tr>
 				<tr>
