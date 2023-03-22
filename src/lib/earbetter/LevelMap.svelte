@@ -104,7 +104,7 @@
 					select={play_level_def}
 					edit={edit_level_def}
 					remove={remove_level_def}
-					selected={d === level_def}
+					editing={d === level_def}
 					completed={$stats.completed[d.id]}
 				/>
 			{/each}

@@ -4,6 +4,8 @@
 	import type {Volume} from '$lib/audio/helpers';
 
 	export let volume: Signal<Volume>;
+
+	// TODO use bind:value when signals adds `set`
 </script>
 
 <div class="volume-control">

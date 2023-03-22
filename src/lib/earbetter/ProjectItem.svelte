@@ -21,13 +21,18 @@
 	{#if edit}
 		<button
 			class="icon-button plain-button"
+			title={removing ? 'remove project' : 'edit project'}
 			on:click={() => (removing ? remove?.(project_def.id) : edit?.(project_def))}
 		>
 			{#if removing}✖{:else}✎{/if}
 		</button>
 	{/if}
 	{#if remove}
-		<button class="icon-button plain-button" on:click={() => (removing = !removing)}>
+		<button
+			class="icon-button plain-button"
+			on:click={() => (removing = !removing)}
+			title={removing ? 'cancel removing' : 'remove project'}
+		>
 			{#if removing}×{:else}✕{/if}
 		</button>
 	{/if}

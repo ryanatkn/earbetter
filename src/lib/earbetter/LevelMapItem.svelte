@@ -5,9 +5,9 @@
 
 	export let level_def: LevelDef;
 	export let select: ((id: LevelId) => void) | null = null; // TODO event? or is the ability to have a return value for ephemeral state desired?
-	export let edit: ((level_def: LevelDef) => void) | null = null; // TODO event? or is the ability to have a return value for ephemeral state desired?
+	export let edit: ((level_def: LevelDef | null) => void) | null = null; // TODO event? or is the ability to have a return value for ephemeral state desired?
 	export let remove: ((id: LevelId) => void) | null = null; // TODO event? or is the ability to have a return value for ephemeral state desired?
-	export let selected: boolean;
+	export let editing: boolean;
 	export let completed: boolean;
 
 	let removing = false;
@@ -18,7 +18,7 @@
 		<button
 			class="level-button"
 			on:click={() => select?.(level_def.id)}
-			class:selected
+			class:selected={editing}
 			class:completed
 		>
 			{level_def.name}
@@ -27,13 +27,18 @@
 	{#if edit}
 		<button
 			class="icon-button plain-button"
-			on:click={() => (removing ? remove?.(level_def.id) : edit?.(level_def))}
+			title={removing ? 'remove level' : editing ? 'stop editing level' : 'edit level'}
+			on:click={() => (removing ? remove?.(level_def.id) : edit?.(editing ? null : level_def))}
 		>
 			{#if removing}✖{:else}✎{/if}
 		</button>
 	{/if}
 	{#if remove}
-		<button class="icon-button plain-button" on:click={() => (removing = !removing)}>
+		<button
+			class="icon-button plain-button"
+			on:click={() => (removing = !removing)}
+			title={removing ? 'cancel removing' : 'remove level'}
+		>
 			{#if removing}×{:else}✕{/if}
 		</button>
 	{/if}
