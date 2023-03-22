@@ -4,7 +4,6 @@ import {z} from 'zod';
 import {signal, type Signal} from '@preact/signals-core';
 import {getContext, setContext} from 'svelte';
 
-import {level_defs} from '$lib/earbetter/level_defs';
 import type {LevelDef, LevelId} from '$lib/earbetter/level';
 import {create_project_def, ProjectDef, ProjectId} from '$lib/earbetter/project';
 import {create_level_stats} from '$lib/earbetter/level_stats';
@@ -27,7 +26,7 @@ export class App {
 	selected_project_def: Signal<ProjectDef | null> = signal(null);
 	project_defs: Signal<ProjectDef[]> = signal([]);
 
-	level_defs: Signal<LevelDef[]> = signal(level_defs.slice());
+	level_defs: Signal<LevelDef[]> = signal([]);
 	active_level_def: Signal<LevelDef | null> = signal(null);
 	editing_level_def: Signal<LevelDef | null> = signal(null);
 
@@ -44,6 +43,7 @@ export class App {
 			),
 		);
 		console.log(`app_data`, this.app_data.peek());
+		this.load_project(this.app_data.peek().projects[0] || null);
 
 		// TODO BLOCK delete id from app_data if not loadable -- load_project?
 
@@ -66,6 +66,25 @@ export class App {
 		console.log('App.save');
 		set_in_storage(this.storage_key, (this.app_data.value = this.toJSON()));
 	}
+
+	load_project = (id: ProjectId | null): void => {
+		const loaded = id
+			? load_from_storage(
+					id,
+					() => null,
+					(v) => ProjectDef.parse(v),
+			  )
+			: null;
+		console.log(`loaded`, loaded);
+		if (loaded) {
+			this.project_defs.value = this.project_defs.peek().concat(loaded);
+			this.selected_project_def.value = loaded;
+		} else {
+			console.log(`load_project failed id`, id);
+			// TODO BLOCK how?
+			// this.project_defs.value = [];
+		}
+	};
 
 	select_project = (id: ProjectId | null): void => {
 		this.selected_project_def.value = id

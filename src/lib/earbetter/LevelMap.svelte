@@ -30,6 +30,8 @@
 	$: ({stats} = level_stats);
 	$: console.log('stats', $stats);
 
+	$: console.log(`$level_defs`, $level_defs);
+
 	const audio_ctx = get_audio_ctx();
 	(window as any).audio = audio_ctx;
 
@@ -104,6 +106,8 @@
 		<menu class="levels column-sm">
 			{#each $level_defs as d (d.id)}
 				<LevelMapItem {app} level_def={d} />
+			{:else}
+				this project has no levels
 			{/each}
 		</menu>
 	</section>

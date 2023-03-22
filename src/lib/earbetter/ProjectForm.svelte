@@ -3,6 +3,7 @@
 	import {slide} from 'svelte/transition';
 
 	import {create_project_id, ProjectDef, type ProjectId} from '$lib/earbetter/project';
+	import {level_defs} from '$lib/earbetter/level_defs';
 
 	const dispatch = createEventDispatcher<{submit: ProjectDef; remove: ProjectId}>();
 
@@ -18,6 +19,7 @@
 	const to_data = (): ProjectDef => ({
 		id,
 		name,
+		level_defs,
 	});
 
 	export const set_project_def = (project_def: ProjectDef | null): void => {
