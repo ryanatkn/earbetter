@@ -80,6 +80,8 @@
 
 {#if show_main_menu}
 	<Dialog on:close={() => (show_main_menu = false)}>
-		<WebsiteMap><h2>earbetter</h2></WebsiteMap>
+		<div style:padding-bottom="var(--spacing_md)">
+			<WebsiteMap><h2>earbetter</h2></WebsiteMap>
+		</div>
 	</Dialog>
 {/if}
