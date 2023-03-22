@@ -28,7 +28,7 @@ export class App {
 	selected_project_def: Signal<ProjectDef | null> = signal(null);
 	project_defs: Signal<ProjectDef[]> = signal([]);
 
-	level_defs: Signal<LevelDef[]> = signal([]);
+	level_defs: Signal<LevelDef[]> = signal([]); // TODO BLOCK duplicates info on `selected_project_def`
 	active_level_def: Signal<LevelDef | null> = signal(null);
 	editing_level_def: Signal<LevelDef | null> = signal(null);
 
@@ -108,29 +108,30 @@ export class App {
 		this.save_project(id);
 	};
 
-	create_project = (p: ProjectDef): void => {
-		const {id} = p;
+	create_project = (project_def: ProjectDef): void => {
+		const {id} = project_def;
 		const existing = this.project_defs.peek().find((d) => d.id !== id);
 		if (existing) {
-			this.update_project(p);
-			return;
+			return this.update_project(project_def);
 		}
 		this.app_data.value = {
 			...this.app_data.peek(),
 			projects: this.app_data.peek().projects.concat(id),
 		};
-		this.project_defs.value = this.project_defs.peek().concat(p);
-		this.selected_project_def.value = p;
+		this.project_defs.value = this.project_defs.peek().concat(project_def);
+		this.selected_project_def.value = project_def;
 		this.save_project(id);
 	};
 
 	update_project = (project_def: ProjectDef): void => {
 		const {id} = project_def;
 		const index = this.project_defs.peek().findIndex((p) => p.id === id);
-		if (index === -1) return;
-		const next_project_defs = this.project_defs.peek().slice();
-		next_project_defs[index] = project_def;
-		this.project_defs.value = next_project_defs;
+		if (index === -1) {
+			return this.create_project(project_def);
+		}
+		const updated = this.project_defs.peek().slice();
+		updated[index] = project_def;
+		this.project_defs.value = updated;
 		if (this.selected_project_def.peek()?.id === id) {
 			this.selected_project_def.value = project_def;
 		}
@@ -165,7 +166,9 @@ export class App {
 
 	create_level_def = (level_def: LevelDef): void => {
 		const found = this.level_defs.peek().find((d) => d.id === level_def.id);
-		if (found) return; // TODO maybe update?
+		if (found) {
+			return this.update_level_def(level_def);
+		}
 		this.level_defs.value = this.level_defs.peek().concat(level_def);
 		this.editing_level_def.value = level_def;
 	};
@@ -174,8 +177,7 @@ export class App {
 		const {id} = level_def;
 		const index = this.level_defs.peek().findIndex((d) => d.id === id);
 		if (index === -1) {
-			console.error('cannot find level def to update', level_def);
-			return;
+			return this.create_level_def(level_def);
 		} else {
 			const updated = this.level_defs.peek().slice();
 			updated[index] = level_def;
