@@ -26,22 +26,22 @@
 			}
 			case '1': {
 				swallow(e);
-				$instrument = 'sawtooth';
+				instrument.value = 'sawtooth';
 				return;
 			}
 			case '2': {
 				swallow(e);
-				$instrument = 'sine';
+				instrument.value = 'sine';
 				return;
 			}
 			case '3': {
 				swallow(e);
-				$instrument = 'square';
+				instrument.value = 'square';
 				return;
 			}
 			case '4': {
 				swallow(e);
-				$instrument = 'triangle';
+				instrument.value = 'triangle';
 				return;
 			}
 			case 'ArrowUp': {
