@@ -103,14 +103,7 @@
 		</header>
 		<menu class="levels column-sm">
 			{#each $level_defs as d (d.id)}
-				<LevelMapItem
-					level_def={d}
-					select={play_level_def}
-					edit={edit_level_def}
-					remove={remove_level_def}
-					editing={d === $editing_level_def}
-					completed={$stats.completed[d.id]}
-				/>
+				<LevelMapItem {app} level_def={d} />
 			{/each}
 		</menu>
 	</section>
