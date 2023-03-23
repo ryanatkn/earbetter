@@ -25,6 +25,8 @@
 	let id: string;
 	$: editing = $project_defs.some((d) => d.id === id);
 
+	$: creating = $editing_project && $selected_project_def !== $editing_project_def;
+
 	$: ({projects} = $app_data);
 </script>
 
@@ -45,9 +47,10 @@
 			{remove_project}
 		/>
 		<button
-			class="create-new-project"
+			class="create-new-project deselectable"
+			class:selected={creating}
 			on:click={() => {
-				if ($editing_project && $selected_project_def !== $editing_project_def) {
+				if (creating) {
 					editing_project.value = false;
 				} else {
 					editing_project_def.value = create_project_def();
