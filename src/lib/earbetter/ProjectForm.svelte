@@ -37,18 +37,15 @@
 
 	$: changed = !project_def || id !== project_def.id || name !== project_def.name;
 
-	const import_data = () => {
+	const import_data = async (): Promise<void> => {
 		const data = to_data();
-		data.level_defs.length = (data.level_defs.length / 4) | 0; // TODO HACK do this properly with an input, is truncated in the `prompt`
 		const serialized = JSON.stringify(data);
-		// TODO refactor
-		const imported = prompt('data for this project: ', serialized); // eslint-disable-line no-alert
-		if (imported) {
-			try {
-				dispatch('submit', ProjectDef.parse(JSON.parse(imported)));
-			} catch (err) {
-				console.error('failed to parse', err, imported);
-			}
+		try {
+			const imported = await import_project_data(serialized);
+			if (imported) dispatch('submit', imported);
+			// dispatch('submit', ProjectDef.parse(JSON.parse(imported)));
+		} catch (err) {
+			console.error('failed to import data', err);
 		}
 	};
 </script>
