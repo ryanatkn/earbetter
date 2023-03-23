@@ -39,15 +39,22 @@
 
 	$: changed = !project_def || id !== project_def.id || name !== project_def.name;
 
+	// TODO lots of similarity with `LevelDefForm`
 	let importing = false;
 	let serialized = '';
+	let updated = '';
+	$: changed_serialized = serialized !== updated;
 	let parse_error_message = '';
 	let project_data_el: HTMLTextAreaElement;
+	let start_importing_el: HTMLButtonElement;
 
 	const import_data = async (): Promise<void> => {
 		parse_error_message = '';
 		try {
-			const parsed = ProjectDef.parse(JSON.parse(serialized));
+			const json = JSON.parse(serialized);
+			// add an `id` if there is none
+			if (json && !json.id) json.id = create_project_id();
+			const parsed = ProjectDef.parse(json);
 			dispatch('submit', parsed);
 		} catch (err) {
 			console.error('failed to import data', err);
@@ -57,25 +64,36 @@
 	};
 
 	const start_importing_data = () => {
-		serialized = JSON.stringify(to_data());
+		serialized = updated = JSON.stringify(to_data());
 		importing = true;
 	};
 </script>
 
 {#if importing}
-	<Dialog on:close={() => (importing = false)}>
+	<Dialog
+		on:close={() => {
+			importing = false;
+			start_importing_el.focus();
+		}}
+	>
 		<div class="importing markup padded-xl column centered">
 			<h2>import project data</h2>
 			<button
 				on:click={() => {
-					void navigator.clipboard.writeText(serialized);
+					void navigator.clipboard.writeText(updated);
 					project_data_el.select();
 				}}
 			>
 				copy to clipboard
 			</button>
-			<textarea bind:value={serialized} bind:this={project_data_el} />
-			<button on:click={import_data}>import project data</button>
+			<textarea bind:value={updated} bind:this={project_data_el} />
+			<button
+				on:click={import_data}
+				disabled={!changed_serialized}
+				title={changed_serialized ? undefined : 'data has not changed'}
+			>
+				import project data
+			</button>
 		</div>
 	</Dialog>
 {/if}
@@ -112,7 +130,7 @@
 	>
 		{#if editing}save changes to project{:else}create project{/if}
 	</button>
-	<button type="button" on:click={start_importing_data}>
+	<button type="button" on:click={start_importing_data} bind:this={start_importing_el}>
 		{#if editing}import/export data{:else}import data{/if}
 	</button>
 	{#if parse_error_message}

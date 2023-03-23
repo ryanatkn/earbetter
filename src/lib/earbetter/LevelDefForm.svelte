@@ -4,7 +4,7 @@
 	import Dialog from '@feltjs/felt-ui/Dialog.svelte';
 	import Message from '@feltjs/felt-ui/Message.svelte';
 
-	import {create_id, LevelDef, type LevelId} from '$lib/earbetter/level';
+	import {create_level_id, LevelDef, type LevelId} from '$lib/earbetter/level';
 	import {parse_intervals, serialize_intervals, midi_names} from '$lib/music/notes';
 	import {BASE_LEVEL_DEF} from '$lib/earbetter/level_defs';
 	import {MIDI_MAX, MIDI_MIN, type Midi} from '$lib/music/midi';
@@ -15,7 +15,7 @@
 	const DEFAULT_INTERVALS = [4, 7, 12];
 
 	export let level_def: LevelDef | null = null;
-	export let id = create_id();
+	export let id = create_level_id();
 	export let name = DEFAULT_NAME;
 	export let intervals = DEFAULT_INTERVALS;
 	export let trial_count: number = BASE_LEVEL_DEF.trial_count;
@@ -47,7 +47,7 @@
 			note_min = level_def.note_min;
 			note_max = level_def.note_max;
 		} else {
-			id = create_id();
+			id = create_level_id();
 			name = DEFAULT_NAME;
 			intervals = DEFAULT_INTERVALS;
 			trial_count = BASE_LEVEL_DEF.trial_count;
@@ -70,15 +70,22 @@
 	let expanded = false;
 	$: if (editing) expanded = true;
 
+	// TODO lots of similarity with `ProjectForm`
 	let importing = false;
 	let serialized = '';
+	let updated = '';
+	$: changed_serialized = serialized !== updated;
 	let parse_error_message = '';
 	let level_data_el: HTMLTextAreaElement;
+	let start_importing_el: HTMLButtonElement;
 
 	const import_data = async (): Promise<void> => {
 		parse_error_message = '';
 		try {
-			const parsed = LevelDef.parse(JSON.parse(serialized));
+			const json = JSON.parse(updated);
+			// add an `id` if there is none
+			if (json && !json.id) json.id = create_level_id();
+			const parsed = LevelDef.parse(json);
 			dispatch('submit', parsed);
 		} catch (err) {
 			console.error('failed to import data', err);
@@ -88,25 +95,38 @@
 	};
 
 	const start_importing_data = () => {
-		serialized = JSON.stringify(to_data());
+		serialized = updated = JSON.stringify(to_data());
 		importing = true;
 	};
+
+	// TODO BLOCK focus the button on close
 </script>
 
 {#if importing}
-	<Dialog on:close={() => (importing = false)}>
+	<Dialog
+		on:close={() => {
+			importing = false;
+			start_importing_el.focus();
+		}}
+	>
 		<div class="importing markup padded-xl column centered">
 			<h2>import level data</h2>
 			<button
 				on:click={() => {
-					void navigator.clipboard.writeText(serialized);
+					void navigator.clipboard.writeText(updated);
 					level_data_el.select();
 				}}
 			>
 				copy to clipboard
 			</button>
-			<textarea bind:value={serialized} bind:this={level_data_el} />
-			<button on:click={import_data}>import project data</button>
+			<textarea bind:value={updated} bind:this={level_data_el} />
+			<button
+				on:click={import_data}
+				disabled={!changed_serialized}
+				title={changed_serialized ? undefined : 'data has not changed'}
+			>
+				import project data
+			</button>
 		</div>
 	</Dialog>
 {/if}
@@ -135,7 +155,7 @@
 				<details>
 					<summary>more info</summary>
 					<p>
-						this is a comma-separated list of numbers representing the
+						<code>intervals</code> is a comma-separated list of numbers representing the
 						<a href="https://wikipedia.org/wiki/Interval_(music)">musical intervals</a> used in the
 						level, aka the number of piano keys (<a href="https://wikipedia.org/wiki/Semitone"
 							>semitones</a
@@ -194,7 +214,7 @@
 			>
 				{#if editing}save changes to level{:else}create level{/if}
 			</button>
-			<button type="button" on:click={start_importing_data}>
+			<button type="button" on:click={start_importing_data} bind:this={start_importing_el}>
 				{#if editing}import/export data{:else}import data{/if}
 			</button>
 			{#if parse_error_message}

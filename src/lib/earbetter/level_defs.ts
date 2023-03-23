@@ -1,5 +1,5 @@
 import {
-	create_id,
+	create_level_id,
 	DEFAULT_SEQUENCE_LENGTH,
 	DEFAULT_TRIAL_COUNT,
 	type LevelDef,
@@ -152,4 +152,4 @@ export const default_level_defs: LevelDef[] = [
 		name: 'chromatic scale (four octaves)',
 		intervals: Array.from({length: 49}, (_, i) => i - 24),
 	},
-].map((d) => ({...BASE_LEVEL_DEF, ...d, id: create_id()}));
+].map((d) => ({...BASE_LEVEL_DEF, ...d, id: create_level_id()}));
