@@ -39,7 +39,7 @@ export class App {
 	constructor(public readonly get_ac: () => AudioContext, public readonly storage_key = 'app') {
 		// TODO BLOCK refactor
 		// TODO BLOCK maybe `new App(App.load())` ?
-		this.app_data = signal(load_from_storage(storage_key, () => DEFAULT_APP_DATA, AppData.parse));
+		this.app_data = signal(this.load());
 		this.saved = this.app_data.peek(); // hacky, but enables the following effect without waste
 		effect(() => this.save());
 		console.log(`app_data`, this.app_data.peek());
@@ -50,6 +50,10 @@ export class App {
 
 	toJSON(): AppData {
 		return this.app_data.value;
+	}
+
+	load(): AppData {
+		return load_from_storage(this.storage_key, () => DEFAULT_APP_DATA, AppData.parse);
 	}
 
 	// TODO BLOCK use this
@@ -99,7 +103,6 @@ export class App {
 		} else {
 			console.log(`load_project failed id, saving`, id);
 			this.create_project(create_project_def());
-			this.save(); // TODO BLOCK where to do this?
 		}
 	};
 
