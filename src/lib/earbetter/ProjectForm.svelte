@@ -2,6 +2,7 @@
 	import {createEventDispatcher} from 'svelte';
 	import {slide} from 'svelte/transition';
 	import {swallow} from '@feltjs/util/dom.js';
+	import Dialog from '@feltjs/felt-ui/Dialog.svelte';
 
 	import {create_project_id, ProjectDef, type ProjectId} from '$lib/earbetter/project';
 	import {level_defs} from '$lib/earbetter/level_defs';
@@ -20,7 +21,7 @@
 	const to_data = (): ProjectDef => ({
 		id,
 		name,
-		level_defs,
+		level_defs: project_def?.level_defs || level_defs,
 	});
 
 	$: set_project_def(project_def);
@@ -37,23 +38,34 @@
 
 	$: changed = !project_def || id !== project_def.id || name !== project_def.name;
 
+	let importing = false;
+	let serialized = '';
+
 	const import_data = async (): Promise<void> => {
-		const data = to_data();
-		const serialized = JSON.stringify(data);
 		try {
-			// TODO BLOCK figure this out
-			const imported = await import_project_data(serialized);
-			if (imported) dispatch('submit', imported);
-			// TODO BLOCK maybe a different API:
-			on_input_project_data = (imported) => {
-				if (imported) dispatch('submit', imported);
-			};
+			const parsed = ProjectDef.parse(JSON.parse(serialized));
+			dispatch('submit', parsed);
 		} catch (err) {
 			console.error('failed to import data', err);
 		}
+		importing = false;
+	};
+
+	const start_importing_data = () => {
+		serialized = JSON.stringify(to_data());
+		importing = true;
 	};
 </script>
 
+{#if importing}
+	<Dialog on:close={() => (importing = false)}>
+		<div class="importing markup padded-xl column centered">
+			<h2>import project data</h2>
+			<textarea bind:value={serialized} />
+			<button on:click={import_data}>import project data</button>
+		</div>
+	</Dialog>
+{/if}
 <form class="project-def-form">
 	<header>
 		<h2>
@@ -87,7 +99,7 @@
 	>
 		{#if editing}save changes to project{:else}create project{/if}
 	</button>
-	<button type="button" on:click={import_data}>
+	<button type="button" on:click={start_importing_data}>
 		{#if editing}import/export data{:else}import data{/if}
 	</button>
 	{#if editing}
@@ -109,3 +121,9 @@
 	{/if}
 	<slot name="footer" {changed} />
 </form>
+
+<style>
+	.importing textarea {
+		height: calc(var(--input_height) * 3);
+	}
+</style>
