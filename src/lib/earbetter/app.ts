@@ -4,14 +4,14 @@ import {signal, type Signal, computed, effect} from '@preact/signals-core';
 import {getContext, setContext} from 'svelte';
 
 import {to_play_level_url, type LevelDef, type LevelId} from '$lib/earbetter/level';
-import {create_project_def, ProjectDef, ProjectId} from '$lib/earbetter/project';
+import {create_project_def, ProjectDef, ProjectId, ProjectName} from '$lib/earbetter/project';
 import {create_level_stats} from '$lib/earbetter/level_stats';
 import {load_from_storage, set_in_storage} from '$lib/util/storage';
 
 // TODO refactor all storage calls, and rethink in signals instead of all top-level orchestration (that's less reusable)
 
 export const AppData = z.object({
-	projects: z.array(ProjectId),
+	projects: z.array(z.object({id: ProjectId, name: ProjectName})),
 });
 export type AppData = z.infer<typeof AppData>;
 
@@ -43,9 +43,7 @@ export class App {
 		this.saved = this.app_data.peek(); // hacky, but enables the following effect without waste
 		effect(() => this.save());
 		console.log(`app_data`, this.app_data.peek());
-		this.load_project(this.app_data.peek().projects[0] || null);
-
-		// TODO BLOCK delete id from app_data if not loadable -- load_project?
+		this.load_project(this.app_data.peek().projects[0]?.id || null);
 	}
 
 	// returns a stable reference to data that's immutable by convention
@@ -54,18 +52,18 @@ export class App {
 	}
 
 	load(): AppData {
-		const data = load_from_storage(this.storage_key, () => DEFAULT_APP_DATA, AppData.parse);
+		const loaded = load_from_storage(this.storage_key, DEFAULT_APP_DATA, AppData.parse);
 		let ids_to_delete: ProjectId[] | null = null;
-		for (const project_id of data.projects) {
-			if (localStorage.getItem(project_id) === null) {
-				console.warn('deleting unknown id', project_id);
-				(ids_to_delete || (ids_to_delete = [])).push(project_id);
+		for (const p of loaded.projects) {
+			if (localStorage.getItem(p.id) === null) {
+				console.warn('deleting unknown id', p);
+				(ids_to_delete || (ids_to_delete = [])).push(p.id);
 			}
 		}
 		if (ids_to_delete) {
-			data.projects = data.projects.filter((p) => !ids_to_delete!.includes(p));
+			loaded.projects = loaded.projects.filter((p) => !ids_to_delete!.includes(p.id));
 		}
-		return data;
+		return loaded;
 	}
 
 	private saved: AppData; // immutable, used to avoid waste
@@ -85,13 +83,13 @@ export class App {
 		const app_data = this.app_data.peek();
 		const {projects} = app_data;
 		if (project_def) {
-			if (!projects.includes(id)) {
-				this.app_data.value = {projects: projects.concat(id)};
+			if (!projects.some((p) => p.id === id)) {
+				this.app_data.value = {projects: projects.concat({id, name: project_def.name})};
 				this.save(); // TODO should this be an effect?
 			}
 		} else {
-			if (projects.includes(id)) {
-				this.app_data.value = {projects: projects.filter((p) => p !== id)};
+			if (projects.some((p) => p.id === id)) {
+				this.app_data.value = {projects: projects.filter((p) => p.id !== id)};
 				this.save(); // TODO should this be an effect?
 			}
 		}
@@ -99,13 +97,7 @@ export class App {
 
 	load_project = (id: ProjectId | null): void => {
 		console.log('load_project', id);
-		const loaded = id
-			? load_from_storage(
-					id,
-					() => null,
-					(v) => ProjectDef.parse(v),
-			  )
-			: null;
+		const loaded = id ? load_from_storage(id, null, ProjectDef.parse) : null;
 		console.log(`loaded`, loaded);
 		if (loaded) {
 			// TODO batch if this code stays imperative like this
@@ -153,7 +145,7 @@ export class App {
 		}
 		this.app_data.value = {
 			...this.app_data.peek(),
-			projects: this.app_data.peek().projects.concat(id),
+			projects: this.app_data.peek().projects.concat({id, name: project_def.name}),
 		};
 		this.project_defs.value = project_defs.concat(project_def);
 		this.selected_project_def.value = project_def;

@@ -4,26 +4,27 @@ import {browser} from '$app/environment';
 
 /**
  * Loads `key` and falls back to `defaultValue`.
- * If `validate` is provided and throws, it removes the `key` and returns `undefined`.
- * @param key
- * @param defaultValue
- * @param validate
+ * If `parse` is provided and throws, it removes the `key` and returns `undefined`.
+ * @param key - The `localStorage` key.
+ * @param defaultValue - Can be a lazily called function to avoid waste.
+ * @param parse
  * @returns
  */
 export const load_from_storage = <T>(
 	key: string,
-	to_default_value: () => T,
+	default_value: T | (() => T),
 	parse: (value: unknown) => T,
 ): T => {
+	const fn = typeof default_value === 'function';
 	console.log(`load_from_storage key`, key);
-	if (!browser) return to_default_value();
+	if (!browser) return fn ? (default_value as any)() : default_value;
 	const stored = localStorage.getItem(key);
-	if (!stored) return to_default_value();
+	if (!stored) return fn ? (default_value as any)() : default_value;
 	try {
 		return parse(JSON.parse(stored));
 	} catch (err) {
 		localStorage.removeItem(key);
-		return to_default_value();
+		return fn ? (default_value as any)() : default_value;
 	}
 };
 
