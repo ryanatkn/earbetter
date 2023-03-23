@@ -3,7 +3,7 @@ import {randomItem, type Flavored} from '@feltjs/util';
 import {signal, Signal} from '@preact/signals-core';
 
 import {LevelDef} from '$lib/earbetter/level';
-import {level_defs} from '$lib/earbetter/level_defs';
+import {default_level_defs} from '$lib/earbetter/level_defs';
 import {emojis} from '$lib/util/emoji';
 
 export type ProjectId = Flavored<string, 'ProjectId'>;
@@ -52,7 +52,7 @@ export class Project {
 export const create_project_def = (): ProjectDef => ({
 	id: create_project_id(),
 	name: random_project_name(),
-	level_defs,
+	level_defs: default_level_defs,
 });
 
 const random_project_name = (): ProjectName => randomItem(emojis).icon + randomItem(emojis).icon;

@@ -77,7 +77,7 @@ export interface Trial {
 	retry_count: number;
 }
 
-export const create_id = (): LevelId => crypto.randomUUID();
+export const create_level_id = (): LevelId => crypto.randomUUID();
 
 const create_next_trial = (def: LevelDef, current_trial: Trial | null): Trial => {
 	const {note_min, note_max} = def;

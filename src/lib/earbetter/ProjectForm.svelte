@@ -2,9 +2,11 @@
 	import {createEventDispatcher} from 'svelte';
 	import {slide} from 'svelte/transition';
 	import {swallow} from '@feltjs/util/dom.js';
+	import Dialog from '@feltjs/felt-ui/Dialog.svelte';
+	import Message from '@feltjs/felt-ui/Message.svelte';
 
 	import {create_project_id, ProjectDef, type ProjectId} from '$lib/earbetter/project';
-	import {level_defs} from '$lib/earbetter/level_defs';
+	import {default_level_defs} from '$lib/earbetter/level_defs';
 
 	const dispatch = createEventDispatcher<{submit: ProjectDef; remove: ProjectId}>();
 
@@ -20,7 +22,7 @@
 	const to_data = (): ProjectDef => ({
 		id,
 		name,
-		level_defs,
+		level_defs: project_def?.level_defs || default_level_defs,
 	});
 
 	$: set_project_def(project_def);
@@ -37,22 +39,65 @@
 
 	$: changed = !project_def || id !== project_def.id || name !== project_def.name;
 
-	const import_data = () => {
-		const data = to_data();
-		data.level_defs.length = (data.level_defs.length / 4) | 0; // TODO HACK do this properly with an input, is truncated in the `prompt`
-		const serialized = JSON.stringify(data);
-		// TODO refactor
-		const imported = prompt('data for this project: ', serialized); // eslint-disable-line no-alert
-		if (imported) {
-			try {
-				dispatch('submit', ProjectDef.parse(JSON.parse(imported)));
-			} catch (err) {
-				console.error('failed to parse', err, imported);
-			}
+	// TODO lots of similarity with `LevelDefForm`
+	let importing = false;
+	let serialized = '';
+	let updated = '';
+	$: changed_serialized = serialized !== updated;
+	let parse_error_message = '';
+	$: project_def, id, (parse_error_message = '');
+	let project_data_el: HTMLTextAreaElement;
+	let start_importing_el: HTMLButtonElement;
+
+	const import_data = async (): Promise<void> => {
+		parse_error_message = '';
+		try {
+			const json = JSON.parse(serialized);
+			// add an `id` if there is none
+			if (json && !json.id) json.id = create_project_id();
+			const parsed = ProjectDef.parse(json);
+			dispatch('submit', parsed);
+		} catch (err) {
+			console.error('failed to import data', err);
+			parse_error_message = err.message || 'unknown error';
 		}
+		importing = false;
+	};
+
+	const start_importing_data = () => {
+		serialized = updated = JSON.stringify(to_data());
+		importing = true;
 	};
 </script>
 
+{#if importing}
+	<Dialog
+		on:close={() => {
+			importing = false;
+			start_importing_el.focus();
+		}}
+	>
+		<div class="importing markup padded-xl column centered">
+			<h2>import project data</h2>
+			<button
+				on:click={() => {
+					void navigator.clipboard.writeText(updated);
+					project_data_el.select();
+				}}
+			>
+				copy to clipboard
+			</button>
+			<textarea bind:value={updated} bind:this={project_data_el} />
+			<button
+				on:click={import_data}
+				disabled={!changed_serialized}
+				title={changed_serialized ? undefined : 'data has not changed'}
+			>
+				import project data
+			</button>
+		</div>
+	</Dialog>
+{/if}
 <form class="project-def-form">
 	<header>
 		<h2>
@@ -86,9 +131,14 @@
 	>
 		{#if editing}save changes to project{:else}create project{/if}
 	</button>
-	<button type="button" on:click={import_data}>
+	<button type="button" on:click={start_importing_data} bind:this={start_importing_el}>
 		{#if editing}import/export data{:else}import data{/if}
 	</button>
+	{#if parse_error_message}
+		<div class="message-wrapper">
+			<Message status="error"><pre>{parse_error_message}</pre></Message>
+		</div>
+	{/if}
 	{#if editing}
 		<button type="button" on:click={() => (removing = !removing)}> remove project </button>
 		{#if removing}
@@ -108,3 +158,12 @@
 	{/if}
 	<slot name="footer" {changed} />
 </form>
+
+<style>
+	.importing textarea {
+		height: calc(var(--input_height) * 3);
+	}
+	.message-wrapper {
+		overflow-x: auto;
+	}
+</style>

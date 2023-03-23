@@ -1,8 +1,10 @@
 <script lang="ts">
 	import {createEventDispatcher} from 'svelte';
 	import {slide} from 'svelte/transition';
+	import Dialog from '@feltjs/felt-ui/Dialog.svelte';
+	import Message from '@feltjs/felt-ui/Message.svelte';
 
-	import {create_id, LevelDef, type LevelId} from '$lib/earbetter/level';
+	import {create_level_id, LevelDef, type LevelId} from '$lib/earbetter/level';
 	import {parse_intervals, serialize_intervals, midi_names} from '$lib/music/notes';
 	import {BASE_LEVEL_DEF} from '$lib/earbetter/level_defs';
 	import {MIDI_MAX, MIDI_MIN, type Midi} from '$lib/music/midi';
@@ -13,7 +15,7 @@
 	const DEFAULT_INTERVALS = [4, 7, 12];
 
 	export let level_def: LevelDef | null = null;
-	export let id = create_id();
+	export let id = create_level_id();
 	export let name = DEFAULT_NAME;
 	export let intervals = DEFAULT_INTERVALS;
 	export let trial_count: number = BASE_LEVEL_DEF.trial_count;
@@ -45,7 +47,7 @@
 			note_min = level_def.note_min;
 			note_max = level_def.note_max;
 		} else {
-			id = create_id();
+			id = create_level_id();
 			name = DEFAULT_NAME;
 			intervals = DEFAULT_INTERVALS;
 			trial_count = BASE_LEVEL_DEF.trial_count;
@@ -68,21 +70,65 @@
 	let expanded = false;
 	$: if (editing) expanded = true;
 
-	const import_data = () => {
-		const data = to_data();
-		const serialized = JSON.stringify(data);
-		// TODO refactor
-		const imported = prompt('data for this level: ', serialized); // eslint-disable-line no-alert
-		if (imported) {
-			try {
-				dispatch('submit', LevelDef.parse(JSON.parse(imported)));
-			} catch (err) {
-				console.error('failed to parse', err, imported);
-			}
+	// TODO lots of similarity with `ProjectForm`
+	let importing = false;
+	let serialized = '';
+	let updated = '';
+	$: changed_serialized = serialized !== updated;
+	let parse_error_message = '';
+	$: level_def, id, (parse_error_message = '');
+	let level_data_el: HTMLTextAreaElement;
+	let start_importing_el: HTMLButtonElement;
+
+	const import_data = async (): Promise<void> => {
+		parse_error_message = '';
+		try {
+			const json = JSON.parse(updated);
+			// add an `id` if there is none
+			if (json && !json.id) json.id = create_level_id();
+			const parsed = LevelDef.parse(json);
+			dispatch('submit', parsed);
+		} catch (err) {
+			console.error('failed to import data', err);
+			parse_error_message = err.message || 'unknown error';
 		}
+		importing = false;
+	};
+
+	const start_importing_data = () => {
+		serialized = updated = JSON.stringify(to_data());
+		importing = true;
 	};
 </script>
 
+{#if importing}
+	<Dialog
+		on:close={() => {
+			importing = false;
+			start_importing_el.focus();
+		}}
+	>
+		<div class="importing markup padded-xl column centered">
+			<h2>import level data</h2>
+			<button
+				on:click={() => {
+					void navigator.clipboard.writeText(updated);
+					level_data_el.select();
+				}}
+			>
+				copy to clipboard
+			</button>
+			<textarea bind:value={updated} bind:this={level_data_el} />
+			<button
+				on:click={import_data}
+				disabled={!changed_serialized}
+				title={changed_serialized ? undefined : 'data has not changed'}
+			>
+				import project data
+			</button>
+		</div>
+	</Dialog>
+{/if}
 <form class="level-def-form">
 	<header>
 		<h2>
@@ -108,7 +154,7 @@
 				<details>
 					<summary>more info</summary>
 					<p>
-						this is a comma-separated list of numbers representing the
+						<code>intervals</code> is a comma-separated list of numbers representing the
 						<a href="https://wikipedia.org/wiki/Interval_(music)">musical intervals</a> used in the
 						level, aka the number of piano keys (<a href="https://wikipedia.org/wiki/Semitone"
 							>semitones</a
@@ -167,9 +213,14 @@
 			>
 				{#if editing}save changes to level{:else}create level{/if}
 			</button>
-			<button type="button" on:click={import_data}>
+			<button type="button" on:click={start_importing_data} bind:this={start_importing_el}>
 				{#if editing}import/export data{:else}import data{/if}
 			</button>
+			{#if parse_error_message}
+				<div class="message-wrapper">
+					<Message status="error"><pre>{parse_error_message}</pre></Message>
+				</div>
+			{/if}
 			{#if editing}
 				<button type="button" on:click={() => (removing = !removing)}> remove level </button>
 				{#if removing}
@@ -187,7 +238,7 @@
 					</div>
 				{/if}
 			{/if}
-			<slot name="footer" {changed} />
+			<slot name="footer" {changed} {to_data} />
 		</div>
 	{:else}
 		<button on:click={() => (expanded = true)}>make a new level</button>
@@ -195,6 +246,9 @@
 </form>
 
 <style>
+	.level-def-form {
+		width: 100%;
+	}
 	header {
 		font-size: var(--font_size_xl);
 		text-align: center;
@@ -203,5 +257,11 @@
 	.fields {
 		display: flex;
 		flex-direction: column;
+	}
+	.importing textarea {
+		height: calc(var(--input_height) * 3);
+	}
+	.message-wrapper {
+		overflow-x: auto;
 	}
 </style>

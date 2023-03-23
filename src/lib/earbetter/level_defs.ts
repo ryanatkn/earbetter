@@ -1,5 +1,5 @@
 import {
-	create_id,
+	create_level_id,
 	DEFAULT_SEQUENCE_LENGTH,
 	DEFAULT_TRIAL_COUNT,
 	type LevelDef,
@@ -22,7 +22,7 @@ export const BASE_LEVEL_DEF = {
 // which keys can be used
 // present_duration
 
-export const level_defs: LevelDef[] = [
+export const default_level_defs: LevelDef[] = [
 	{
 		name: 'perfect fourth vs perfect octave',
 		intervals: [5, 12],
@@ -152,4 +152,4 @@ export const level_defs: LevelDef[] = [
 		name: 'chromatic scale (four octaves)',
 		intervals: Array.from({length: 49}, (_, i) => i - 24),
 	},
-].map((d) => ({...BASE_LEVEL_DEF, ...d, id: create_id()}));
+].map((d) => ({...BASE_LEVEL_DEF, ...d, id: create_level_id()}));
