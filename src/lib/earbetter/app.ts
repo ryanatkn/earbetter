@@ -67,21 +67,20 @@ export class App {
 		this.saved = data;
 	}
 
-	// TODO BLOCK reactive?
 	save_project = (id: ProjectId): void => {
 		console.log('save_project', id);
-		// TODO BLOCK project, and `project.toJSON()`?
 		const project_def = this.project_defs.peek().find((p) => p.id === id);
 		set_in_storage(id, project_def); // correctly deletes the storage key if `undefined`
 		const app_data = this.app_data.peek();
+		const {projects} = app_data;
 		if (project_def) {
-			if (!app_data.projects.includes(id)) {
-				this.app_data.value = {...app_data, projects: app_data.projects.concat(id)};
+			if (!projects.includes(id)) {
+				this.app_data.value = {projects: projects.concat(id)};
 				this.save(); // TODO should this be an effect?
 			}
 		} else {
-			if (app_data.projects.includes(id)) {
-				this.app_data.value = {...app_data, projects: app_data.projects.filter((p) => p !== id)};
+			if (projects.includes(id)) {
+				this.app_data.value = {projects: projects.filter((p) => p !== id)};
 				this.save(); // TODO should this be an effect?
 			}
 		}
