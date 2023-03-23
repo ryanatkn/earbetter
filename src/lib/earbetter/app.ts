@@ -25,7 +25,10 @@ export const get_app = (): App => getContext(APP_KEY);
 export const set_app = (store: App): App => setContext(APP_KEY, store);
 
 export class App {
-	app_data: Signal<AppData>; // TODO BLOCK wheres the source of truth? currently need to keep these in sync at 3 levels -- mixing serialization concerns with runtime representations
+	// TODO wheres the source of truth?
+	// currently manually syncing the same changes to both `app_data` `project_defs` --
+	// mixing serialization concerns with runtime representations
+	app_data: Signal<AppData>;
 
 	project_defs: Signal<ProjectDef[]> = signal([]);
 
