@@ -61,6 +61,8 @@
 				return;
 			}
 			case 'Escape': {
+				// TODO hacky, maybe change the inner `Dialog` to use `capture`? but that's less flexible
+				if (!show_main_menu && document.getElementsByClassName('dialog').length) return;
 				swallow(e);
 				show_main_menu = !show_main_menu;
 				return;
