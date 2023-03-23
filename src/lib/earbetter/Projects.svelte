@@ -1,5 +1,5 @@
 <script lang="ts">
-	import type {ProjectDef} from '$lib/earbetter/project';
+	import {create_project_def, type ProjectDef} from '$lib/earbetter/project';
 	import ProjectForm from '$lib/earbetter/ProjectForm.svelte';
 	import ProjectsList from '$lib/earbetter/ProjectsList.svelte';
 	import type {App} from '$lib/earbetter/app';
@@ -42,12 +42,15 @@
 			<button
 				class="create-new-project"
 				on:click={() => {
-					if ($editing_project) {
-						console.log('RESETTTING DEF TO EDIT');
-						editing_project_def.value = null;
-					}
-					editing_project.value = !$editing_project;
 					console.log(`$editing_project`, $editing_project);
+					if ($editing_project) {
+						// TODO does this logic belong in `app`? given that it has `edit_project`, seems sensible
+						editing_project_def.value = null;
+						editing_project.value = false;
+					} else {
+						editing_project_def.value = create_project_def();
+						editing_project.value = true;
+					}
 				}}
 			>
 				{#if $editing_project}
