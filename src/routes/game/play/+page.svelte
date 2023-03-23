@@ -14,7 +14,7 @@
 
 	const app = get_app();
 
-	// TODO BLOCK add this to the app data so it's persisted when we navigate, and can be saved if it's not in the list
+	// TODO add this to the app data so it's persisted when we navigate, and can be saved if it's not in the list
 	$: active_level_def = parse_from_hash<LevelDef>($page.url.hash);
 	$: if (active_level_def === null) {
 		void go_back();
