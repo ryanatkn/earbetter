@@ -25,7 +25,7 @@
 	let id: string;
 	$: editing = $project_defs.some((d) => d.id === id);
 
-	$: creating = $editing_project && $selected_project_def !== $editing_project_def;
+	$: creating = $editing_project && $selected_project_def?.id !== $editing_project_def?.id;
 
 	$: ({projects} = $app_data);
 </script>

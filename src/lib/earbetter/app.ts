@@ -140,6 +140,7 @@ export class App {
 		const {projects} = this.app_data.peek();
 		const existing = projects.find((d) => d.id === id);
 		if (!existing) return;
+		// TODO syncing `app_data` with `project_defs` is awkward
 		this.app_data.value = {
 			...this.app_data.peek(),
 			projects: projects.filter((p) => p.id !== id),
@@ -163,6 +164,7 @@ export class App {
 			log.trace('project already exists', project_def, existing);
 			return;
 		}
+		// TODO syncing `app_data` with `project_defs` is awkward
 		this.app_data.value = {
 			...this.app_data.peek(),
 			projects: this.app_data.peek().projects.concat({id, name: project_def.name}),
@@ -180,6 +182,16 @@ export class App {
 		if (index === -1) {
 			console.error('cannot find project_def to update', id, project_defs);
 			return; // no active project
+		}
+		const existing = project_defs[index];
+		// TODO syncing `app_data` with `project_defs` is awkward
+		if (project_def.name !== existing.name) {
+			const app_data = this.app_data.peek();
+			console.log(`existing.name`, existing.name, project_def.name);
+			this.app_data.value = {
+				...app_data,
+				projects: app_data.projects.map((p) => (p.id === id ? {id: p.id, name: p.name} : p)),
+			};
 		}
 		const updated = project_defs.slice();
 		updated[index] = project_def;
