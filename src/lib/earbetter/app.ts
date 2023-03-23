@@ -237,7 +237,7 @@ export class App {
 			return;
 		}
 
-		this.update_project({...project_def, level_defs: level_defs.concat(level_def)});
+		this.update_project({...project_def, level_defs: [level_def].concat(level_defs)});
 		this.editing_level_def.value = level_def;
 	};
 
