@@ -1,10 +1,10 @@
 <script lang="ts">
 	import {createEventDispatcher} from 'svelte';
 	import {slide} from 'svelte/transition';
+	import {swallow} from '@feltjs/util/dom.js';
 
 	import {create_project_id, ProjectDef, type ProjectId} from '$lib/earbetter/project';
 	import {level_defs} from '$lib/earbetter/level_defs';
-	import {swallow} from '@feltjs/util';
 
 	const dispatch = createEventDispatcher<{submit: ProjectDef; remove: ProjectId}>();
 
