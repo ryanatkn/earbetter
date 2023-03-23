@@ -205,6 +205,9 @@ export class App {
 		if (this.selected_project_def.peek()?.id === id) {
 			this.selected_project_def.value = project_def;
 		}
+		if (this.editing_project_def.peek()?.id === id) {
+			this.editing_project_def.value = project_def;
+		}
 		this.save_project(id);
 	};
 
