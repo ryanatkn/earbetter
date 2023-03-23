@@ -2,7 +2,6 @@
 	import type {Signal} from '@preact/signals-core';
 
 	import type {MIDIAccess} from '$lib/audio/WebMIDI';
-	import type {LevelDef} from '$lib/earbetter/level';
 	import LevelMapItem from '$lib/earbetter/LevelMapItem.svelte';
 	import {get_ac} from '$lib/audio/ac';
 	import InitMidiButton from '$lib/audio/InitMidiButton.svelte';
@@ -38,10 +37,6 @@
 
 	const volume = get_volume();
 	const instrument = get_instrument();
-
-	// TODO this or props? currently both..?
-	let set_level_def: (leve_def: LevelDef | null) => void;
-	$: set_level_def?.($editing_level_def);
 
 	let id: string;
 	$: editing = $level_defs ? $level_defs.some((d) => d.id === id) : false;
@@ -92,7 +87,6 @@
 				<LevelDefForm
 					{editing}
 					bind:id
-					bind:set_level_def
 					level_def={$editing_level_def}
 					on:submit={(editing ? update_level_def : create_level_def)
 						? (e) => (editing ? update_level_def : create_level_def)(e.detail)

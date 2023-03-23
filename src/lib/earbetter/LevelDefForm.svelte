@@ -34,8 +34,8 @@
 		note_max,
 	});
 
-	// TODO BLOCK multiple sources of truth - should this be a reactive statement from `level_def`? should it set `level_def` locally?
-	export const set_level_def = (level_def: LevelDef | null): void => {
+	$: set_level_def(level_def);
+	const set_level_def = (level_def: LevelDef | null): void => {
 		if (level_def) {
 			id = level_def.id;
 			name = level_def.name;
@@ -75,7 +75,7 @@
 		const imported = prompt('data for this level: ', serialized); // eslint-disable-line no-alert
 		if (imported) {
 			try {
-				set_level_def(LevelDef.parse(JSON.parse(imported)));
+				level_def = LevelDef.parse(JSON.parse(imported));
 			} catch (err) {
 				console.error('failed to parse', err, imported);
 			}
