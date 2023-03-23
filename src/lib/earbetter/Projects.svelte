@@ -9,6 +9,8 @@
 	$: ({
 		project_defs,
 		selected_project_def,
+		editing_project,
+		editing_project_def,
 		select_project,
 		edit_project,
 		remove_project,
@@ -34,31 +36,50 @@
 				selected_project_def={$selected_project_def}
 				project_defs={$project_defs}
 				{select_project}
-				{edit_project}
+				edit_project={(p) => edit_project(p === $editing_project_def ? null : p)}
 				{remove_project}
 			/>
+			<button
+				class="create-new-project"
+				on:click={() => {
+					if ($editing_project) {
+						console.log('RESETTTING DEF TO EDIT');
+						editing_project_def.value = null;
+					}
+					editing_project.value = !$editing_project;
+					console.log(`$editing_project`, $editing_project);
+				}}
+			>
+				{#if $editing_project}
+					close the project editor
+				{:else}
+					create a new project
+				{/if}
+			</button>
 		</section>
 	{/if}
-	<section class="panel padded-md column-sm markup">
-		<ProjectForm
-			{editing}
-			bind:id
-			bind:set_project_def
-			project_def={$selected_project_def}
-			on:submit={(editing ? update_project : create_project)
-				? (e) => (editing ? update_project : create_project)?.(e.detail)
-				: undefined}
-			on:remove={remove_project ? (e) => remove_project?.(e.detail) : undefined}
-		>
-			<svelte:fragment slot="footer" let:changed>
-				{#if editing && edit_project}
-					<button type="button" on:click={() => edit_project?.(null)}>
-						{#if changed}discard changes and stop editing{:else}stop editing this project{/if}
-					</button>
-				{/if}
-			</svelte:fragment>
-		</ProjectForm>
-	</section>
+	{#if ($editing_project && $editing_project_def) || !$selected_project_def}
+		<section class="panel padded-md column-sm markup">
+			<ProjectForm
+				{editing}
+				bind:id
+				bind:set_project_def
+				project_def={$editing_project_def}
+				on:submit={(editing ? update_project : create_project)
+					? (e) => (editing ? update_project : create_project)?.(e.detail)
+					: undefined}
+				on:remove={remove_project ? (e) => remove_project?.(e.detail) : undefined}
+			>
+				<svelte:fragment slot="footer" let:changed>
+					{#if editing}
+						<button type="button" on:click={() => (editing_project.value = false)}>
+							{#if changed}discard changes and stop editing{:else}stop editing this project{/if}
+						</button>
+					{/if}
+				</svelte:fragment>
+			</ProjectForm>
+		</section>
+	{/if}
 </div>
 
 <style>
@@ -68,5 +89,9 @@
 		flex-direction: column;
 		justify-content: center;
 		align-items: flex-start;
+	}
+	.create-new-project {
+		margin: var(--spacing_md) 0;
+		width: 100%;
 	}
 </style>

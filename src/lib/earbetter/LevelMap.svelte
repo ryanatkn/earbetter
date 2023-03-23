@@ -12,6 +12,7 @@
 	import {get_instrument, get_volume} from '$lib/audio/helpers';
 	import InstrumentControl from '$lib/audio/InstrumentControl.svelte';
 	import type {App} from '$lib/earbetter/app';
+	import ControlsInstructions from '$lib/earbetter/ControlsInstructions.svelte';
 
 	export let app: App;
 	export let midi_access: Signal<MIDIAccess | null>;
@@ -47,97 +48,69 @@
 </script>
 
 <div class="map">
-	<div>
-		<section class="panel padded-md markup column-sm">
-			<header>
-				<h2>controls</h2>
-			</header>
-			<p>
-				Earbetter does not yet function well on devices with smaller screens, see <a
-					href="https://github.com/ryanatkn/earbetter/issues/2">issue #2</a
-				>.
-			</p>
-			<table>
-				<tr>
-					<td><code>Spacebar</code></td>
-					<td>replay trial</td>
-				</tr>
-				<tr>
-					<td><code>r</code></td>
-					<td>restart level</td>
-				</tr>
-				<tr>
-					<td><code>Escape</code></td>
-					<td>exit level</td>
-				</tr>
-				<tr>
-					<td><code>1 to 4</code></td>
-					<td>set instrument</td>
-				</tr>
-				<tr>
-					<td><code>c</code></td>
-					<td>connect MIDI</td>
-				</tr>
-				<tr>
-					<td><code>up/down arrows</code></td>
-					<td>adjust volume</td>
-				</tr>
-				<tr>
-					<td><code>` Backtick</code></td>
-					<td>cheat</td>
-				</tr>
-			</table>
-			<VolumeControl {volume} />
-			<InstrumentControl {instrument} />
-			<p>
-				Earbetter supports MIDI devices like piano keyboards. Connect a device and click the button
-				below:
-			</p>
-			<InitMidiButton {midi_access} />
-		</section>
-		{#if $level_defs}
-			<section class="column-sm">
-				<Projects {app} />
+	{#if $level_defs}
+		<div class="column-sm">
+			<section class="panel padded-md markup">
+				<header>
+					<h2>controls</h2>
+				</header>
+				<ControlsInstructions />
+				<VolumeControl {volume} />
+				<InstrumentControl {instrument} />
+				<p>
+					Earbetter supports MIDI devices like piano keyboards. Connect a device and click the
+					button below:
+				</p>
+				<InitMidiButton {midi_access} />
 			</section>
-		{/if}
-	</div>
-	<section class="column-sm">
+			{#if $level_defs}
+				<section>
+					<Projects {app} />
+				</section>
+			{/if}
+		</div>
+	{/if}
+	<div class="column-sm">
 		{#if $level_defs}
-			<div class="panel padded-md">
+			<section class="panel padded-md">
 				<header class="markup">
 					<h2>ear training levels</h2>
 				</header>
-				<menu class="levels column-sm">
+				<menu class="levels">
 					{#each $level_defs as d (d.id)}
 						<LevelMapItem {app} level_def={d} />
 					{/each}
 				</menu>
-			</div>
+			</section>
 		{:else}
 			<Projects {app} />
 		{/if}
-	</section>
-	<section class="panel padded-md markup column-sm">
-		<LevelDefForm
-			{editing}
-			bind:id
-			bind:set_level_def
-			level_def={$editing_level_def}
-			on:submit={(editing ? update_level_def : create_level_def)
-				? (e) => (editing ? update_level_def : create_level_def)(e.detail)
-				: undefined}
-			on:remove={(e) => remove_level_def(e.detail)}
-		>
-			<svelte:fragment slot="footer" let:changed>
-				{#if editing}
-					<button type="button" on:click={() => play_level_def(id)}> play! </button>
-					<button type="button" on:click={() => edit_level_def(null)}>
-						{#if changed}discard changes and stop editing{:else}stop editing this level{/if}
-					</button>
-				{/if}
-			</svelte:fragment>
-		</LevelDefForm>
-	</section>
+	</div>
+	{#if $level_defs}
+		<div class="column-sm">
+			<section class="panel padded-md markup">
+				<LevelDefForm
+					{editing}
+					bind:id
+					bind:set_level_def
+					level_def={$editing_level_def}
+					on:submit={(editing ? update_level_def : create_level_def)
+						? (e) => (editing ? update_level_def : create_level_def)(e.detail)
+						: undefined}
+					on:remove={(e) => remove_level_def(e.detail)}
+				>
+					<svelte:fragment slot="footer" let:changed>
+						{#if editing}
+							<button type="button" on:click={() => play_level_def(id)}> play! </button>
+							<button type="button" on:click={() => edit_level_def(null)}>
+								{#if changed}discard changes and stop editing{:else}stop editing this level{/if}
+							</button>
+						{/if}
+					</svelte:fragment>
+				</LevelDefForm>
+			</section>
+		</div>
+	{/if}
 </div>
 
 <style>
@@ -151,21 +124,27 @@
 		display: flex;
 		flex-direction: column;
 		align-items: stretch;
-		padding: var(--spacing_md);
+		margin: var(--spacing_md) 0;
 	}
 	section {
 		display: flex;
 		flex-direction: column;
 		align-items: center;
-		margin: var(--spacing_xl5) var(--spacing_xl);
+	}
+	.column-sm {
+		margin: 0 var(--spacing_xl) var(--spacing_xl5);
+	}
+	section:not(:first-child) {
+		margin: var(--spacing_xl5) 0;
 	}
 	@media (max-width: 1111px) {
 		.map {
 			flex-direction: column;
 			align-items: center;
 		}
-		section {
-			margin: var(--spacing_xl5) 0;
+		.column-sm {
+			margin-left: 0;
+			margin-right: 0;
 		}
 	}
 </style>

@@ -18,11 +18,11 @@
 			{project_def.name}
 		</button>
 	{/if}
-	{#if edit}
+	{#if (removing && remove) || (!removing && edit)}
 		<button
 			class="icon-button plain-button"
 			title={removing ? 'remove project' : 'edit project'}
-			on:click={() => (removing ? remove?.(project_def.id) : edit?.(selected ? null : project_def))}
+			on:click={() => (removing ? remove?.(project_def.id) : edit?.(project_def))}
 		>
 			{#if removing}✖{:else}✎{/if}
 		</button>
