@@ -1,6 +1,6 @@
 import {goto} from '$app/navigation';
 import {z} from 'zod';
-import {signal, type Signal, computed} from '@preact/signals-core';
+import {signal, type Signal, computed, effect} from '@preact/signals-core';
 import {getContext, setContext} from 'svelte';
 
 import {to_play_level_url, type LevelDef, type LevelId} from '$lib/earbetter/level';
@@ -39,13 +39,9 @@ export class App {
 	constructor(public readonly get_ac: () => AudioContext, public readonly storage_key = 'app') {
 		// TODO BLOCK refactor
 		// TODO BLOCK maybe `new App(App.load())` ?
-		this.app_data = signal(
-			load_from_storage(
-				storage_key,
-				() => DEFAULT_APP_DATA,
-				(v) => AppData.parse(v),
-			),
-		);
+		this.app_data = signal(load_from_storage(storage_key, () => DEFAULT_APP_DATA, AppData.parse));
+		this.saved = this.app_data.peek(); // hacky, but enables the following effect without waste
+		effect(() => this.save());
 		console.log(`app_data`, this.app_data.peek());
 		this.load_project(this.app_data.peek().projects[0] || null);
 
@@ -53,21 +49,37 @@ export class App {
 	}
 
 	toJSON(): AppData {
-		console.log('App.toJSON');
-		return this.app_data.peek();
+		return this.app_data.value;
 	}
 
 	// TODO BLOCK use this
+	private saved: AppData;
 	save(): void {
-		console.log('App.save');
-		set_in_storage(this.storage_key, this.toJSON());
+		const data = this.toJSON();
+		if (data === this.saved) return;
+		console.log('App.save', data);
+		set_in_storage(this.storage_key, data);
+		this.saved = data;
 	}
 
 	// TODO BLOCK reactive?
 	save_project = (id: ProjectId): void => {
 		console.log('save_project', id);
+		// TODO BLOCK project, and `project.toJSON()`?
 		const project_def = this.project_defs.peek().find((p) => p.id === id);
 		set_in_storage(id, project_def); // correctly deletes the storage key if `undefined`
+		const app_data = this.app_data.peek();
+		if (project_def) {
+			if (!app_data.projects.includes(id)) {
+				this.app_data.value = {...app_data, projects: app_data.projects.concat(id)};
+				this.save(); // TODO should this be an effect?
+			}
+		} else {
+			if (app_data.projects.includes(id)) {
+				this.app_data.value = {...app_data, projects: app_data.projects.filter((p) => p !== id)};
+				this.save(); // TODO should this be an effect?
+			}
+		}
 	};
 
 	load_project = (id: ProjectId | null): void => {

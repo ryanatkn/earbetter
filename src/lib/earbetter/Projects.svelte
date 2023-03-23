@@ -39,9 +39,7 @@
 				class="create-new-project"
 				on:click={() => {
 					console.log(`$editing_project`, $editing_project);
-					if ($editing_project) {
-						// TODO does this logic belong in `app`? given that it has `edit_project`, seems sensible
-						editing_project_def.value = null;
+					if ($editing_project && $selected_project_def !== $editing_project_def) {
 						editing_project.value = false;
 					} else {
 						editing_project_def.value = create_project_def();
@@ -49,11 +47,7 @@
 					}
 				}}
 			>
-				{#if $editing_project}
-					close the project editor
-				{:else}
-					create a new project
-				{/if}
+				create a new project
 			</button>
 		</section>
 	{/if}
