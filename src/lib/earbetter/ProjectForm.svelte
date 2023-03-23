@@ -24,6 +24,7 @@
 
 	$: set_project_def(project_def);
 	const set_project_def = (project_def: ProjectDef | null): void => {
+		console.log(`set_project_def`, project_def);
 		if (project_def) {
 			id = project_def.id;
 			name = project_def.name;

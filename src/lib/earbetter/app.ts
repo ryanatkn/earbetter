@@ -54,13 +54,13 @@ export class App {
 
 	toJSON(): AppData {
 		console.log('App.toJSON');
-		return {projects: this.project_defs.peek().map((p) => p.id)};
+		return this.app_data.peek();
 	}
 
 	// TODO BLOCK use this
 	save(): void {
 		console.log('App.save');
-		set_in_storage(this.storage_key, (this.app_data.value = this.toJSON()));
+		set_in_storage(this.storage_key, this.toJSON());
 	}
 
 	// TODO BLOCK reactive?
