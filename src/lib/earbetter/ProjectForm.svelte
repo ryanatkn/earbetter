@@ -39,6 +39,7 @@
 
 	const import_data = () => {
 		const data = to_data();
+		data.level_defs.length = (data.level_defs.length / 4) | 0; // TODO HACK do this properly with an input, is truncated in the `prompt`
 		const serialized = JSON.stringify(data);
 		// TODO refactor
 		const imported = prompt('data for this project: ', serialized); // eslint-disable-line no-alert
