@@ -76,6 +76,7 @@
 	let updated = '';
 	$: changed_serialized = serialized !== updated;
 	let parse_error_message = '';
+	$: level_def, id, (parse_error_message = '');
 	let level_data_el: HTMLTextAreaElement;
 	let start_importing_el: HTMLButtonElement;
 

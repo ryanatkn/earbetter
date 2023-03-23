@@ -45,6 +45,7 @@
 	let updated = '';
 	$: changed_serialized = serialized !== updated;
 	let parse_error_message = '';
+	$: project_def, id, (parse_error_message = '');
 	let project_data_el: HTMLTextAreaElement;
 	let start_importing_el: HTMLButtonElement;
 
