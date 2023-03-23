@@ -40,8 +40,7 @@ export class App {
 	level_stats = create_level_stats();
 
 	constructor(public readonly get_ac: () => AudioContext, public readonly storage_key = 'app') {
-		// TODO BLOCK refactor
-		// TODO BLOCK maybe `new App(App.load())` ?
+		// TODO maybe `new App(App.load())` ?
 		this.app_data = signal(this.load());
 		this.saved = this.app_data.peek(); // hacky, but enables the following effect without waste
 		effect(() => this.save());
