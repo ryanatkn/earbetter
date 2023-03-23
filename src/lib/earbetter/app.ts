@@ -137,13 +137,20 @@ export class App {
 
 	remove_project = (id: ProjectId): void => {
 		log.trace('remove_project', id);
-		const project_defs = this.project_defs.peek();
-		const existing = project_defs.find((d) => d.id === id);
+		const {projects} = this.app_data.peek();
+		const existing = projects.find((d) => d.id === id);
 		if (!existing) return;
+		this.app_data.value = {
+			...this.app_data.peek(),
+			projects: projects.filter((p) => p.id !== id),
+		};
+		this.project_defs.value = this.project_defs.peek().filter((p) => p.id !== id);
 		if (this.selected_project_def.peek()?.id === id) {
-			this.selected_project_def.value = null;
+			this.selected_project_def.value =
+				this.project_defs.peek()[0] ||
+				this.load_project(this.app_data.peek().projects[0]?.id) ||
+				null;
 		}
-		this.project_defs.value = project_defs.filter((d) => d !== existing);
 		this.save_project(id);
 	};
 
@@ -177,6 +184,7 @@ export class App {
 		const updated = project_defs.slice();
 		updated[index] = project_def;
 		this.project_defs.value = updated;
+		// TODO this is awkward, could be the id and not need manual updating, or maybe store signals
 		if (this.selected_project_def.peek()?.id === id) {
 			this.selected_project_def.value = project_def;
 		}
