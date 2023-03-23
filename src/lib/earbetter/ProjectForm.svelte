@@ -23,8 +23,6 @@
 		level_defs,
 	});
 
-	// TODO BLOCK is bugged and not showing changed state, maybe export `sync`?
-
 	$: set_project_def(project_def);
 	const set_project_def = (project_def: ProjectDef | null): void => {
 		console.log(`set_project_def`, project_def);
