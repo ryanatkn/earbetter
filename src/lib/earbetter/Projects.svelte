@@ -1,5 +1,5 @@
 <script lang="ts">
-	import {create_project_def, type ProjectDef} from '$lib/earbetter/project';
+	import {create_project_def} from '$lib/earbetter/project';
 	import ProjectForm from '$lib/earbetter/ProjectForm.svelte';
 	import ProjectsList from '$lib/earbetter/ProjectsList.svelte';
 	import type {App} from '$lib/earbetter/app';
@@ -17,10 +17,6 @@
 		update_project,
 		create_project,
 	} = app);
-
-	// TODO this or props? currently both..?
-	let set_project_def: (project_def: ProjectDef | null) => void;
-	$: set_project_def?.($selected_project_def);
 
 	let id: string;
 	$: editing = $project_defs.some((d) => d.id === id);
@@ -66,7 +62,6 @@
 			<ProjectForm
 				{editing}
 				bind:id
-				bind:set_project_def
 				project_def={$editing_project_def}
 				on:submit={(editing ? update_project : create_project)
 					? (e) => (editing ? update_project : create_project)?.(e.detail)

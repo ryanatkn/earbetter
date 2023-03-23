@@ -22,12 +22,13 @@
 		level_defs,
 	});
 
-	export const set_project_def = (project_def: ProjectDef | null): void => {
+	$: set_project_def(project_def);
+	const set_project_def = (project_def: ProjectDef | null): void => {
 		if (project_def) {
 			id = project_def.id;
 			name = project_def.name;
 		} else {
-			id = create_project_id();
+			id = create_project_id(); // TODO duplicates work on first mount with no project_def, but not sure it's worth fixing, maybe there's a better pattern without this?
 			name = DEFAULT_NAME;
 		}
 	};
@@ -41,7 +42,7 @@
 		const imported = prompt('data for this project: ', serialized); // eslint-disable-line no-alert
 		if (imported) {
 			try {
-				set_project_def(ProjectDef.parse(JSON.parse(imported)));
+				project_def = ProjectDef.parse(JSON.parse(imported));
 			} catch (err) {
 				console.error('failed to parse', err, imported);
 			}

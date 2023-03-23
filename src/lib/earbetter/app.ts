@@ -120,7 +120,7 @@ export class App {
 		console.log('create_project', project_def);
 		const project_defs = this.project_defs.peek();
 		const {id} = project_def;
-		const existing = project_defs.find((d) => d.id !== id);
+		const existing = project_defs.find((d) => d.id === id);
 		if (existing) {
 			console.log('project already exists', project_def, existing);
 			return;
