@@ -4,6 +4,7 @@
 
 	import {create_project_id, ProjectDef, type ProjectId} from '$lib/earbetter/project';
 	import {level_defs} from '$lib/earbetter/level_defs';
+	import {swallow} from '@feltjs/util';
 
 	const dispatch = createEventDispatcher<{submit: ProjectDef; remove: ProjectId}>();
 
@@ -62,7 +63,15 @@
 	<fieldset>
 		<label>
 			<div class="title">name</div>
-			<input bind:value={name} />
+			<input
+				bind:value={name}
+				on:keydown={(e) => {
+					if (e.key === 'Enter') {
+						swallow(e);
+						dispatch('submit', to_data());
+					}
+				}}
+			/>
 		</label>
 	</fieldset>
 	<fieldset>
