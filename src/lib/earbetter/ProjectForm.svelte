@@ -40,6 +40,7 @@
 
 	let importing = false;
 	let serialized = '';
+	let project_data_el: HTMLTextAreaElement;
 
 	const import_data = async (): Promise<void> => {
 		try {
@@ -61,7 +62,15 @@
 	<Dialog on:close={() => (importing = false)}>
 		<div class="importing markup padded-xl column centered">
 			<h2>import project data</h2>
-			<textarea bind:value={serialized} />
+			<button
+				on:click={() => {
+					void navigator.clipboard.writeText(serialized);
+					project_data_el.select();
+				}}
+			>
+				copy to clipboard
+			</button>
+			<textarea bind:value={serialized} bind:this={project_data_el} />
 			<button on:click={import_data}>import project data</button>
 		</div>
 	</Dialog>

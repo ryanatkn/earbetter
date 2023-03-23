@@ -71,6 +71,7 @@
 
 	let importing = false;
 	let serialized = '';
+	let level_data_el: HTMLTextAreaElement;
 
 	const import_data = async (): Promise<void> => {
 		try {
@@ -91,8 +92,16 @@
 {#if importing}
 	<Dialog on:close={() => (importing = false)}>
 		<div class="importing markup padded-xl column centered">
-			<h2>import project data</h2>
-			<textarea bind:value={serialized} />
+			<h2>import level data</h2>
+			<button
+				on:click={() => {
+					void navigator.clipboard.writeText(serialized);
+					level_data_el.select();
+				}}
+			>
+				copy to clipboard
+			</button>
+			<textarea bind:value={serialized} bind:this={level_data_el} />
 			<button on:click={import_data}>import project data</button>
 		</div>
 	</Dialog>
