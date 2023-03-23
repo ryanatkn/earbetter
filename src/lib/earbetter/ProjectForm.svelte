@@ -3,6 +3,7 @@
 	import {slide} from 'svelte/transition';
 	import {swallow} from '@feltjs/util/dom.js';
 	import Dialog from '@feltjs/felt-ui/Dialog.svelte';
+	import Message from '@feltjs/felt-ui/Message.svelte';
 
 	import {create_project_id, ProjectDef, type ProjectId} from '$lib/earbetter/project';
 	import {default_level_defs} from '$lib/earbetter/level_defs';
@@ -40,14 +41,17 @@
 
 	let importing = false;
 	let serialized = '';
+	let parse_error_message = '';
 	let project_data_el: HTMLTextAreaElement;
 
 	const import_data = async (): Promise<void> => {
+		parse_error_message = '';
 		try {
 			const parsed = ProjectDef.parse(JSON.parse(serialized));
 			dispatch('submit', parsed);
 		} catch (err) {
 			console.error('failed to import data', err);
+			parse_error_message = err.message || 'unknown error';
 		}
 		importing = false;
 	};
@@ -111,6 +115,11 @@
 	<button type="button" on:click={start_importing_data}>
 		{#if editing}import/export data{:else}import data{/if}
 	</button>
+	{#if parse_error_message}
+		<div class="message-wrapper">
+			<Message status="error"><pre>{parse_error_message}</pre></Message>
+		</div>
+	{/if}
 	{#if editing}
 		<button type="button" on:click={() => (removing = !removing)}> remove project </button>
 		{#if removing}
@@ -134,5 +143,8 @@
 <style>
 	.importing textarea {
 		height: calc(var(--input_height) * 3);
+	}
+	.message-wrapper {
+		overflow-x: auto;
 	}
 </style>

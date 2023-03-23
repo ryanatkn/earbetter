@@ -2,6 +2,7 @@
 	import {createEventDispatcher} from 'svelte';
 	import {slide} from 'svelte/transition';
 	import Dialog from '@feltjs/felt-ui/Dialog.svelte';
+	import Message from '@feltjs/felt-ui/Message.svelte';
 
 	import {create_id, LevelDef, type LevelId} from '$lib/earbetter/level';
 	import {parse_intervals, serialize_intervals, midi_names} from '$lib/music/notes';
@@ -71,14 +72,17 @@
 
 	let importing = false;
 	let serialized = '';
+	let parse_error_message = '';
 	let level_data_el: HTMLTextAreaElement;
 
 	const import_data = async (): Promise<void> => {
+		parse_error_message = '';
 		try {
 			const parsed = LevelDef.parse(JSON.parse(serialized));
 			dispatch('submit', parsed);
 		} catch (err) {
 			console.error('failed to import data', err);
+			parse_error_message = err.message || 'unknown error';
 		}
 		importing = false;
 	};
@@ -193,6 +197,11 @@
 			<button type="button" on:click={start_importing_data}>
 				{#if editing}import/export data{:else}import data{/if}
 			</button>
+			{#if parse_error_message}
+				<div class="message-wrapper">
+					<Message status="error"><pre>{parse_error_message}</pre></Message>
+				</div>
+			{/if}
 			{#if editing}
 				<button type="button" on:click={() => (removing = !removing)}> remove level </button>
 				{#if removing}
@@ -218,6 +227,9 @@
 </form>
 
 <style>
+	.level-def-form {
+		width: 100%;
+	}
 	header {
 		font-size: var(--font_size_xl);
 		text-align: center;
@@ -229,5 +241,8 @@
 	}
 	.importing textarea {
 		height: calc(var(--input_height) * 3);
+	}
+	.message-wrapper {
+		overflow-x: auto;
 	}
 </style>
