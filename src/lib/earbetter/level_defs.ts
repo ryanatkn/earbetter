@@ -22,7 +22,7 @@ export const BASE_LEVEL_DEF = {
 // which keys can be used
 // present_duration
 
-export const level_defs: LevelDef[] = [
+export const default_level_defs: LevelDef[] = [
 	{
 		name: 'perfect fourth vs perfect octave',
 		intervals: [5, 12],

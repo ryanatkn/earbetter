@@ -5,7 +5,7 @@
 	import Dialog from '@feltjs/felt-ui/Dialog.svelte';
 
 	import {create_project_id, ProjectDef, type ProjectId} from '$lib/earbetter/project';
-	import {level_defs} from '$lib/earbetter/level_defs';
+	import {default_level_defs} from '$lib/earbetter/level_defs';
 
 	const dispatch = createEventDispatcher<{submit: ProjectDef; remove: ProjectId}>();
 
@@ -21,7 +21,7 @@
 	const to_data = (): ProjectDef => ({
 		id,
 		name,
-		level_defs: project_def?.level_defs || level_defs,
+		level_defs: project_def?.level_defs || default_level_defs,
 	});
 
 	$: set_project_def(project_def);
