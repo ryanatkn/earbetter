@@ -48,6 +48,7 @@ export class App {
 		// TODO BLOCK delete id from app_data if not loadable -- load_project?
 	}
 
+	// returns a stable reference to data that's immutable by convention
 	toJSON(): AppData {
 		return this.app_data.value;
 	}
@@ -56,8 +57,8 @@ export class App {
 		return load_from_storage(this.storage_key, () => DEFAULT_APP_DATA, AppData.parse);
 	}
 
-	// TODO BLOCK use this
-	private saved: AppData;
+	private saved: AppData; // immutable, used to avoid waste
+
 	save(): void {
 		const data = this.toJSON();
 		if (data === this.saved) return;
