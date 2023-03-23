@@ -31,7 +31,7 @@ export class App {
 
 	selected_project_def: Signal<ProjectDef | null> = signal(null);
 	level_defs = computed(() => this.selected_project_def.value?.level_defs || null);
-	editing_project: Signal<boolean> = signal(false); // TODO BLOCK can this be removed for `editing_project_def`?
+	editing_project: Signal<boolean> = signal(false);
 	editing_project_def: Signal<ProjectDef | null> = signal(null);
 
 	active_level_def: Signal<LevelDef | null> = signal(null);
