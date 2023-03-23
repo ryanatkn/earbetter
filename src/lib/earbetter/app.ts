@@ -190,7 +190,9 @@ export class App {
 			console.log(`existing.name`, existing.name, project_def.name);
 			this.app_data.value = {
 				...app_data,
-				projects: app_data.projects.map((p) => (p.id === id ? {id: p.id, name: p.name} : p)),
+				projects: app_data.projects.map((p) =>
+					p.id === id ? {id: p.id, name: project_def.name} : p,
+				),
 			};
 		}
 		const updated = project_defs.slice();
