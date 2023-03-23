@@ -90,7 +90,7 @@
 		</h2>
 	</header>
 	{#if editing || expanded}
-		<div class="fields">
+		<div class="fields" in:slide|local>
 			<fieldset>
 				<label>
 					<div class="title">name</div>

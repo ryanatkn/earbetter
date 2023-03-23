@@ -1,4 +1,6 @@
 <script lang="ts">
+	import {slide} from 'svelte/transition';
+
 	import {create_project_def} from '$lib/earbetter/project';
 	import ProjectForm from '$lib/earbetter/ProjectForm.svelte';
 	import ProjectsList from '$lib/earbetter/ProjectsList.svelte';
@@ -58,7 +60,7 @@
 	</section>
 {/if}
 {#if ($editing_project && $editing_project_def) || !$selected_project_def}
-	<section class="panel padded-md column-sm markup">
+	<section class="panel padded-md column-sm markup" transition:slide|local>
 		<ProjectForm
 			{editing}
 			bind:id
