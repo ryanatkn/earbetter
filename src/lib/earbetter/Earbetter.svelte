@@ -1,7 +1,7 @@
 <script lang="ts">
 	import LevelMap from '$lib/earbetter/LevelMap.svelte';
 	import Level from '$lib/earbetter/Level.svelte';
-	import {get_audio_ctx} from '$lib/audio/audio_ctx';
+	import {get_ac} from '$lib/audio/ac';
 	import {midi_access} from '$lib/audio/midi_access';
 	import type {App} from '$lib/earbetter/app';
 
@@ -9,8 +9,8 @@
 
 	$: ({active_level_def, exit_level_to_map} = app);
 
-	const audio_ctx = get_audio_ctx();
-	(window as any).audio = audio_ctx;
+	const ac = get_ac();
+	(window as any).audio = ac;
 </script>
 
 {#if $active_level_def}

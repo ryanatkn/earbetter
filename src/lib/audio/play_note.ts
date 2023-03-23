@@ -14,13 +14,13 @@ import {type Midi, midi_to_freq} from '$lib/music/midi';
 // and we need to support more options like `velocity`, should probably have a single options object
 
 export const play_note = (
-	audio_ctx: AudioContext,
+	ac: AudioContext,
 	note: Midi,
 	volume: Volume,
 	duration: Milliseconds,
 	instrument?: Instrument,
 ): Promise<void> => {
-	const stop = start_playing_note(audio_ctx, note, volume, instrument);
+	const stop = start_playing_note(ac, note, volume, instrument);
 	return new Promise((resolve) =>
 		setTimeout(() => {
 			stop();
@@ -30,12 +30,12 @@ export const play_note = (
 };
 
 const stop_osc = (
-	audio_ctx: AudioContext,
+	ac: AudioContext,
 	duration: Milliseconds,
 	gain: GainNode,
 	osc: OscillatorNode,
 ) => {
-	const endTime = audio_ctx.currentTime + duration / 1000;
+	const endTime = ac.currentTime + duration / 1000;
 	gain.gain.setTargetAtTime(0, endTime, SMOOTH_GAIN_TIME_CONSTANT);
 	osc.stop(endTime + SMOOTH_GAIN_TIME_CONSTANT * 2);
 };
@@ -48,7 +48,7 @@ export interface StopPlaying {
 export const playing_notes: Signal<Set<Midi>> = signal(new Set());
 
 export const start_playing_note = (
-	audio_ctx: AudioContext,
+	ac: AudioContext,
 	note: Midi,
 	volume: Volume = DEFAULT_VOLUME,
 	instrument: Instrument = 'sine',
@@ -56,12 +56,12 @@ export const start_playing_note = (
 	const freq = midi_to_freq(note);
 	console.log('start playing note', note, freq);
 
-	const gain = audio_ctx.createGain();
+	const gain = ac.createGain();
 	gain.gain.value = volume_to_gain(volume);
-	gain.connect(audio_ctx.destination);
-	const osc = audio_ctx.createOscillator();
+	gain.connect(ac.destination);
+	const osc = ac.createOscillator();
 	osc.type = instrument;
-	osc.frequency.setValueAtTime(freq, audio_ctx.currentTime);
+	osc.frequency.setValueAtTime(freq, ac.currentTime);
 	osc.start();
 	osc.connect(gain);
 
@@ -75,7 +75,7 @@ export const start_playing_note = (
 		disposed = true;
 
 		console.log(`stop playing note`, note);
-		stop_osc(audio_ctx, 10, gain, osc);
+		stop_osc(ac, 10, gain, osc);
 
 		const next_playing_notes = new Set(playing_notes.peek());
 		next_playing_notes.delete(note);
@@ -84,20 +84,20 @@ export const start_playing_note = (
 };
 
 // Helpers to play a single note at a time.
-// Maybe this should be put in the main context and wrap `audio_ctx` so it's not accessed directly?
+// Maybe this should be put in the main context and wrap `ac` so it's not accessed directly?
 
 // TODO is redundant with `playing_notes` and manually updated
 const playing: Map<Midi, StopPlaying> = new Map(); // global cache used to enforce that at most one of each note plays
 
 export const start_playing = (
-	audio_ctx: AudioContext,
+	ac: AudioContext,
 	note: Midi,
 	volume?: Volume,
 	instrument?: Instrument,
 ): void => {
 	const current = playing.get(note);
 	if (current) return;
-	playing.set(note, start_playing_note(audio_ctx, note, volume, instrument));
+	playing.set(note, start_playing_note(ac, note, volume, instrument));
 };
 
 export const stop_playing = (note: Midi): void => {

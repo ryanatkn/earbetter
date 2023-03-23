@@ -5,14 +5,14 @@
 	import Dialog from '@feltjs/felt-ui/Dialog.svelte';
 
 	import '$routes/style.css';
-	import {set_audio_ctx} from '$lib/audio/audio_ctx';
+	import {set_ac} from '$lib/audio/ac';
 	import {adjust_volume, set_instrument, set_volume} from '$lib/audio/helpers';
 	import {request_access} from '$lib/audio/midi_access';
 	import {App, set_app} from '$lib/earbetter/app';
 	import WebsiteMap from '$routes/WebsiteMap.svelte';
 	import {afterNavigate} from '$app/navigation';
 
-	const get_ac = set_audio_ctx();
+	const get_ac = set_ac();
 	const volume = set_volume();
 	const instrument = set_instrument();
 

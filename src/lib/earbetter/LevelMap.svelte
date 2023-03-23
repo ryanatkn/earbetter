@@ -4,7 +4,7 @@
 	import type {MIDIAccess} from '$lib/audio/WebMIDI';
 	import type {LevelDef} from '$lib/earbetter/level';
 	import LevelMapItem from '$lib/earbetter/LevelMapItem.svelte';
-	import {get_audio_ctx} from '$lib/audio/audio_ctx';
+	import {get_ac} from '$lib/audio/ac';
 	import InitMidiButton from '$lib/audio/InitMidiButton.svelte';
 	import LevelDefForm from '$lib/earbetter/LevelDefForm.svelte';
 	import Projects from '$lib/earbetter/Projects.svelte';
@@ -33,8 +33,8 @@
 
 	$: console.log(`$level_defs`, $level_defs);
 
-	const audio_ctx = get_audio_ctx();
-	(window as any).audio = audio_ctx;
+	const ac = get_ac();
+	(window as any).audio = ac;
 
 	const volume = get_volume();
 	const instrument = get_instrument();

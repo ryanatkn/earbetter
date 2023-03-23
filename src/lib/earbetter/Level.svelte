@@ -6,7 +6,7 @@
 	import Piano from '$lib/music/Piano.svelte';
 	import LevelProgressIndicator from '$lib/earbetter/LevelProgressIndicator.svelte';
 	import TrialProgressIndicator from '$lib/earbetter/TrialProgressIndicator.svelte';
-	import {get_audio_ctx} from '$lib/audio/audio_ctx';
+	import {get_ac} from '$lib/audio/ac';
 	import MidiInput from '$lib/audio/MidiInput.svelte';
 	import type {Midi} from '$lib/music/midi';
 	import {playing_notes, start_playing, stop_playing} from '$lib/audio/play_note';
@@ -33,11 +33,11 @@
 
 	let clientWidth; // `undefined` on first render
 
-	const audio_ctx = get_audio_ctx();
+	const ac = get_ac();
 	const volume = get_volume();
 	const instrument = get_instrument();
 
-	const level = create_level(level_def, audio_ctx, volume, instrument);
+	const level = create_level(level_def, ac, volume, instrument);
 	// $: level.setDef(level_def); // TODO update if level_def prop changes
 	$: ({def, status, trial} = level);
 	$: guessing_index = $trial?.guessing_index;
@@ -117,7 +117,7 @@
 	on:note_start={(e) => {
 		// TODO should this be ignored if it's not an enabled key? should the level itself ignore the guess?
 		if ($status === 'complete') {
-			start_playing(audio_ctx, e.detail.note, $volume, $instrument);
+			start_playing(ac, e.detail.note, $volume, $instrument);
 		} else {
 			console.log(`guessing $status`, $status);
 			// TODO should we intercept here if disabled, and just play the blip with no penalty? or should that be a param to `guess`?
@@ -184,7 +184,7 @@
 				on:press={$status === 'waiting_for_input'
 					? (e) => on_press_key(e.detail)
 					: $status === 'complete'
-					? (e) => start_playing(audio_ctx, e.detail, $volume, $instrument)
+					? (e) => start_playing(ac, e.detail, $volume, $instrument)
 					: undefined}
 				on:release={$status === 'complete' ? (e) => stop_playing(e.detail) : undefined}
 			/>
