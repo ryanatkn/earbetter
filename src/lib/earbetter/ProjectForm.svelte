@@ -41,9 +41,13 @@
 		const data = to_data();
 		const serialized = JSON.stringify(data);
 		try {
+			// TODO BLOCK figure this out
 			const imported = await import_project_data(serialized);
 			if (imported) dispatch('submit', imported);
-			// dispatch('submit', ProjectDef.parse(JSON.parse(imported)));
+			// TODO BLOCK maybe a different API:
+			on_input_project_data = (imported) => {
+				if (imported) dispatch('submit', imported);
+			};
 		} catch (err) {
 			console.error('failed to import data', err);
 		}
