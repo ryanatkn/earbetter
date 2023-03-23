@@ -54,7 +54,18 @@ export class App {
 	}
 
 	load(): AppData {
-		return load_from_storage(this.storage_key, () => DEFAULT_APP_DATA, AppData.parse);
+		const data = load_from_storage(this.storage_key, () => DEFAULT_APP_DATA, AppData.parse);
+		let ids_to_delete: ProjectId[] | null = null;
+		for (const project_id of data.projects) {
+			if (localStorage.getItem(project_id) === null) {
+				console.warn('deleting unknown id', project_id);
+				(ids_to_delete || (ids_to_delete = [])).push(project_id);
+			}
+		}
+		if (ids_to_delete) {
+			data.projects = data.projects.filter((p) => !ids_to_delete!.includes(p));
+		}
+		return data;
 	}
 
 	private saved: AppData; // immutable, used to avoid waste
