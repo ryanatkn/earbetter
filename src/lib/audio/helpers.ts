@@ -13,13 +13,13 @@ export const Volume = z
 	.max(1)
 	.transform((v) => round(v, 2));
 
-export const DEFAULT_VOLUME: Volume = 0.51;
+export const DEFAULT_VOLUME: Volume = 0.43;
 export const DEFAULT_VOLUME_INCREMENT: Volume = 0.01;
 
-const KEY = Symbol('volume');
-export const get_volume = (): Signal<Volume> => getContext(KEY);
+const VOLUME_KEY = Symbol('volume');
+export const get_volume = (): Signal<Volume> => getContext(VOLUME_KEY);
 export const set_volume = (store = signal(DEFAULT_VOLUME)): Signal<Volume> =>
-	setContext(KEY, store);
+	setContext(VOLUME_KEY, store);
 
 export const adjust_volume = (
 	volume: Signal<Volume>,
@@ -43,4 +43,13 @@ export const volume_to_gain = (volume: Volume): number => volume ** VOLUME_TO_GA
 
 export const SMOOTH_GAIN_TIME_CONSTANT = 0.03;
 
-export const osc_types: OscillatorType[] = ['sawtooth', 'sine', 'square', 'triangle']; // TODO support "custom"
+// TODO this is `OscillatorType` excluding "custom" because it can't be used directly,
+//  and we'll probably add to the type union the data for `createPeriodicWave`
+export type Instrument = 'sawtooth' | 'sine' | 'square' | 'triangle';
+
+export const instruments: Instrument[] = ['sawtooth', 'sine', 'square', 'triangle']; // TODO support "custom"
+export const DEFAULT_OSC_TYPE: Instrument = 'sine';
+const OSC_TYPE_KEY = Symbol('instrument');
+export const get_instrument = (): Signal<Instrument> => getContext(OSC_TYPE_KEY);
+export const set_instrument = (store = signal(DEFAULT_OSC_TYPE)): Signal<Instrument> =>
+	setContext(OSC_TYPE_KEY, store);

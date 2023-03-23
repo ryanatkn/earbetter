@@ -1,42 +1,42 @@
 <script lang="ts">
 	import {slide} from 'svelte/transition';
 
-	import type {LevelDef, LevelId} from '$lib/earbetter/level';
+	import type {LevelDef} from '$lib/earbetter/level';
+	import type {App} from '$lib/earbetter/app';
 
+	export let app: App;
 	export let level_def: LevelDef;
-	export let select: ((id: LevelId) => void) | null = null; // TODO event? or is the ability to have a return value for ephemeral state desired?
-	export let edit: ((level_def: LevelDef) => void) | null = null; // TODO event? or is the ability to have a return value for ephemeral state desired?
-	export let remove: ((id: LevelId) => void) | null = null; // TODO event? or is the ability to have a return value for ephemeral state desired?
-	export let selected: boolean;
-	export let completed: boolean;
+
+	$: ({editing_level_def, play_level_def, edit_level_def, remove_level_def} = app);
+
+	$: editing = $editing_level_def === level_def;
 
 	let removing = false;
 </script>
 
 <li class="level-map-item" transition:slide|local>
-	{#if select}
-		<button
-			class="level-button"
-			on:click={() => select?.(level_def.id)}
-			class:selected
-			class:completed
-		>
-			{level_def.name}
-		</button>
-	{/if}
-	{#if edit}
-		<button
-			class="icon-button plain-button"
-			on:click={() => (removing ? remove?.(level_def.id) : edit?.(level_def))}
-		>
-			{#if removing}✖{:else}✎{/if}
-		</button>
-	{/if}
-	{#if remove}
-		<button class="icon-button plain-button" on:click={() => (removing = !removing)}>
-			{#if removing}×{:else}✕{/if}
-		</button>
-	{/if}
+	<button
+		class="level-button deselectable"
+		on:click={() => play_level_def(level_def.id)}
+		class:selected={editing}
+	>
+		{level_def.name}
+	</button>
+	<button
+		class="icon-button plain-button"
+		title={removing ? 'remove level' : editing ? 'stop editing level' : 'edit level'}
+		on:click={() =>
+			removing ? remove_level_def(level_def.id) : edit_level_def(editing ? null : level_def)}
+	>
+		{#if removing}✖{:else}✎{/if}
+	</button>
+	<button
+		class="icon-button plain-button"
+		on:click={() => (removing = !removing)}
+		title={removing ? 'cancel removing' : 'remove level'}
+	>
+		{#if removing}×{:else}✕{/if}
+	</button>
 </li>
 
 <style>

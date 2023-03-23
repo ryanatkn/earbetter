@@ -3,11 +3,12 @@ import {z} from 'zod';
 import type {Flavored} from '@feltjs/util';
 import {Logger} from '@feltjs/util/log.js';
 import {signal, batch, Signal, effect} from '@preact/signals-core';
+import {base} from '$app/paths';
 
 import {z_midi, type Midi} from '$lib/music/midi';
 import {Intervals} from '$lib/music/notes';
 import {play_note} from '$lib/audio/play_note';
-import type {Volume} from '$lib/audio/helpers';
+import type {Instrument, Volume} from '$lib/audio/helpers';
 
 // TODO this isn't idiomatic signals code yet, uses `peek` too much
 
@@ -100,6 +101,9 @@ const create_next_trial = (def: LevelDef, current_trial: Trial | null): Trial =>
 		}
 	}
 
+	// TODO how to handle this? keep going? (if so need to avoid infinite loop below)
+	if (valid_notes.length < 2) throw Error('invalid notes');
+
 	// create the random sequence of notes
 	for (let i = 0; i < def.sequence_length - 1; i++) {
 		let next_note: Midi;
@@ -125,8 +129,9 @@ const DEFAULT_TRIALS: Trial[] = [];
 
 export const create_level = (
 	level_def: LevelDef, // TODO maybe make optional?
-	audio_ctx: AudioContext,
+	ac: AudioContext,
 	volume: Signal<Volume>,
+	instrument: Signal<Instrument>,
 ): Level => {
 	const def: Signal<LevelDef> = signal(level_def);
 	const status: Signal<Status> = signal(DEFAULT_STATUS);
@@ -167,7 +172,7 @@ export const create_level = (
 			};
 			const duration =
 				sequence_length < DEFAULT_SEQUENCE_LENGTH ? DEFAULT_NOTE_DURATION_2 : DEFAULT_NOTE_DURATION; // TODO refactor, see elsewhere
-			await play_note(audio_ctx, note, volume.peek(), duration); // eslint-disable-line no-await-in-loop
+			await play_note(ac, note, volume.peek(), duration, instrument.peek()); // eslint-disable-line no-await-in-loop
 			if (current_seq_id !== seq_id) return; // cancel
 		}
 		batch(() => {
@@ -192,7 +197,7 @@ export const create_level = (
 			// if incorrect -> FAILURE -> showing_failure_feedback -> REPROMPT
 			if (actual !== note) {
 				log.trace('guess incorrect');
-				void play_note(audio_ctx, note, volume.peek(), DEFAULT_NOTE_DURATION_FAILED);
+				void play_note(ac, note, volume.peek(), DEFAULT_NOTE_DURATION_FAILED, instrument.peek());
 				if (guessing_index === 0 || !$trial.valid_notes.has(note)) {
 					return; // no penalty or delay if this is the first one
 				}
@@ -206,7 +211,7 @@ export const create_level = (
 			const sequence_length = $trial.sequence.length;
 			const duration =
 				sequence_length < DEFAULT_SEQUENCE_LENGTH ? DEFAULT_NOTE_DURATION_2 : DEFAULT_NOTE_DURATION; // TODO refactor, see elsewhere
-			void play_note(audio_ctx, note, volume.peek(), duration);
+			void play_note(ac, note, volume.peek(), duration, instrument.peek());
 
 			if (guessing_index >= sequence_length - 1) {
 				// if more -> update current response index
@@ -318,3 +323,6 @@ const to_fallback_tonic = (note_min: Midi, note_max: Midi): Midi => {
 	const offset = ((note_max - note_min) / 4) | 0;
 	return randomInt(note_min + offset, note_max - offset) as Midi;
 };
+
+export const to_play_level_url = (level_def: LevelDef): string =>
+	`${base}/game/play#` + encodeURIComponent(JSON.stringify(level_def));

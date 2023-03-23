@@ -117,3 +117,11 @@ td {
 		filter: drop-shadow(1px 1px 25px var(--tint_light_7));
 	}
 }
+
+.panel > header:first-child,
+.markup > header:first-child,
+form > header:first-child {
+	font-size: var(--font_size_xl);
+	text-align: center;
+	margin-bottom: var(--spacing_md);
+}
