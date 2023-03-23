@@ -119,6 +119,7 @@ td {
 }
 
 .panel > header:first-child,
+.markup > header:first-child,
 form > header:first-child {
 	font-size: var(--font_size_xl);
 	text-align: center;

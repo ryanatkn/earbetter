@@ -59,9 +59,7 @@
 				<InitMidiButton {midi_access} />
 			</section>
 			{#if $level_defs}
-				<section>
-					<Projects {app} />
-				</section>
+				<Projects {app} />
 			{/if}
 		</div>
 	{/if}

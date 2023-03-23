@@ -130,6 +130,7 @@ export class App {
 		console.log('edit_project', project_def);
 		this.editing_project.value = !!project_def;
 		this.editing_project_def.value = project_def;
+		if (project_def) this.selected_project_def.value = project_def;
 	};
 
 	remove_project = (id: ProjectId): void => {

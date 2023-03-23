@@ -26,67 +26,60 @@
 	$: ({projects} = $app_data);
 </script>
 
-<div class="projects">
-	{#if $selected_project_def}
-		<section class="panel padded-md column-sm">
-			<header class="markup">
+{#if $selected_project_def}
+	<section class="panel padded-md column-sm">
+		<div class="markup">
+			<header>
 				<h2>projects</h2>
 			</header>
-			<ProjectsList
-				selected_project_def={$selected_project_def}
-				{projects}
-				project_defs={$project_defs}
-				{load_project}
-				{select_project}
-				edit_project={(p) => edit_project(p === $editing_project_def ? null : p)}
-				{remove_project}
-			/>
-			<button
-				class="create-new-project"
-				on:click={() => {
-					if ($editing_project && $selected_project_def !== $editing_project_def) {
-						editing_project.value = false;
-					} else {
-						editing_project_def.value = create_project_def();
-						editing_project.value = true;
-					}
-				}}
-			>
-				create a new project
-			</button>
-		</section>
-	{/if}
-	{#if ($editing_project && $editing_project_def) || !$selected_project_def}
-		<section class="panel padded-md column-sm markup">
-			<ProjectForm
-				{editing}
-				bind:id
-				project_def={$editing_project_def}
-				on:submit={(editing ? update_project : create_project)
-					? (e) => (editing ? update_project : create_project)?.(e.detail)
-					: undefined}
-				on:remove={remove_project ? (e) => remove_project?.(e.detail) : undefined}
-			>
-				<svelte:fragment slot="footer" let:changed>
-					{#if editing}
-						<button type="button" on:click={() => (editing_project.value = false)}>
-							{#if changed}discard changes and stop editing{:else}stop editing this project{/if}
-						</button>
-					{/if}
-				</svelte:fragment>
-			</ProjectForm>
-		</section>
-	{/if}
-</div>
+		</div>
+		<ProjectsList
+			selected_project_def={$selected_project_def}
+			{projects}
+			project_defs={$project_defs}
+			{load_project}
+			{select_project}
+			edit_project={(p) => edit_project(p === $editing_project_def ? null : p)}
+			{remove_project}
+		/>
+		<button
+			class="create-new-project"
+			on:click={() => {
+				if ($editing_project && $selected_project_def !== $editing_project_def) {
+					editing_project.value = false;
+				} else {
+					editing_project_def.value = create_project_def();
+					editing_project.value = true;
+				}
+			}}
+		>
+			create a new project
+		</button>
+	</section>
+{/if}
+{#if ($editing_project && $editing_project_def) || !$selected_project_def}
+	<section class="panel padded-md column-sm markup">
+		<ProjectForm
+			{editing}
+			bind:id
+			project_def={$editing_project_def}
+			on:submit={(editing ? update_project : create_project)
+				? (e) => (editing ? update_project : create_project)?.(e.detail)
+				: undefined}
+			on:remove={remove_project ? (e) => remove_project?.(e.detail) : undefined}
+		>
+			<svelte:fragment slot="footer" let:changed>
+				{#if editing}
+					<button type="button" on:click={() => (editing_project.value = false)}>
+						{#if changed}discard changes and stop editing{:else}stop editing this project{/if}
+					</button>
+				{/if}
+			</svelte:fragment>
+		</ProjectForm>
+	</section>
+{/if}
 
 <style>
-	.projects {
-		width: 100%;
-		display: flex;
-		flex-direction: column;
-		justify-content: center;
-		align-items: flex-start;
-	}
 	.create-new-project {
 		margin: var(--spacing_md) 0;
 		width: 100%;
