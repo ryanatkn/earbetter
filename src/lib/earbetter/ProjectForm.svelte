@@ -44,7 +44,7 @@
 		const imported = prompt('data for this project: ', serialized); // eslint-disable-line no-alert
 		if (imported) {
 			try {
-				project_def = ProjectDef.parse(JSON.parse(imported));
+				dispatch('submit', ProjectDef.parse(JSON.parse(imported)));
 			} catch (err) {
 				console.error('failed to parse', err, imported);
 			}

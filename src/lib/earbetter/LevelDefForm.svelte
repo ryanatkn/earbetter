@@ -75,7 +75,7 @@
 		const imported = prompt('data for this level: ', serialized); // eslint-disable-line no-alert
 		if (imported) {
 			try {
-				level_def = LevelDef.parse(JSON.parse(imported));
+				dispatch('submit', LevelDef.parse(JSON.parse(imported)));
 			} catch (err) {
 				console.error('failed to parse', err, imported);
 			}
