@@ -98,8 +98,6 @@
 		serialized = updated = JSON.stringify(to_data());
 		importing = true;
 	};
-
-	// TODO BLOCK focus the button on close
 </script>
 
 {#if importing}
