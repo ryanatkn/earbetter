@@ -210,7 +210,7 @@
 					</div>
 				{/if}
 			{/if}
-			<slot name="footer" {changed} />
+			<slot name="footer" {changed} {to_data} />
 		</div>
 	{:else}
 		<button on:click={() => (expanded = true)}>make a new level</button>
