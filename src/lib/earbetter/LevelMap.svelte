@@ -68,9 +68,11 @@
 	<div class="column-sm">
 		{#if $level_defs}
 			<section class="panel padded-md">
-				<header class="markup">
-					<h2>ear training levels</h2>
-				</header>
+				<div class="markup">
+					<header>
+						<h2>ear training levels</h2>
+					</header>
+				</div>
 				<menu class="levels">
 					{#each $level_defs as d (d.id)}
 						<LevelMapItem {app} level_def={d} />
