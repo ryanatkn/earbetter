@@ -44,6 +44,10 @@ export class App {
 		effect(() => this.save());
 		console.log(`app_data`, this.app_data.peek());
 		this.load_project(this.app_data.peek().projects[0]?.id || null);
+		// TODO refactor
+		if (this.project_defs.peek().length) {
+			this.selected_project_def.value = this.project_defs.peek()[0];
+		}
 	}
 
 	// returns a stable reference to data that's immutable by convention
@@ -95,25 +99,31 @@ export class App {
 		}
 	};
 
-	load_project = (id: ProjectId | null): void => {
+	load_project = (id: ProjectId | null): ProjectDef | null => {
 		console.log('load_project', id);
 		const loaded = id ? load_from_storage(id, null, ProjectDef.parse) : null;
 		console.log(`loaded`, loaded);
 		if (loaded) {
 			// TODO batch if this code stays imperative like this
 			this.project_defs.value = this.project_defs.peek().concat(loaded);
-			this.selected_project_def.value = loaded;
+			return loaded;
 		} else {
-			console.log(`load_project failed id, saving`, id);
-			this.create_project(create_project_def());
+			console.log(`load_project failed, creating new`, id);
+			const def = create_project_def();
+			this.create_project(def);
+			return def;
 		}
 	};
 
 	select_project = (id: ProjectId | null): void => {
 		console.log('select_project', id);
-		this.selected_project_def.value = id
-			? this.project_defs.peek().find((d) => d.id === id) || null
-			: null;
+		if (!id) {
+			this.selected_project_def.value = null;
+			return;
+		}
+		const def = this.project_defs.peek().find((d) => d.id === id) || this.load_project(id);
+		this.selected_project_def.value = def;
+		this.editing_project_def.value = def;
 	};
 
 	edit_project = (project_def: ProjectDef | null): void => {

@@ -7,10 +7,12 @@
 	export let app: App; // TODO maybe change to be more granular objects?
 
 	$: ({
+		app_data,
 		project_defs,
 		selected_project_def,
 		editing_project,
 		editing_project_def,
+		load_project,
 		select_project,
 		edit_project,
 		remove_project,
@@ -20,6 +22,8 @@
 
 	let id: string;
 	$: editing = $project_defs.some((d) => d.id === id);
+
+	$: ({projects} = $app_data);
 </script>
 
 <div class="projects">
@@ -30,7 +34,9 @@
 			</header>
 			<ProjectsList
 				selected_project_def={$selected_project_def}
+				{projects}
 				project_defs={$project_defs}
+				{load_project}
 				{select_project}
 				edit_project={(p) => edit_project(p === $editing_project_def ? null : p)}
 				{remove_project}
@@ -38,7 +44,6 @@
 			<button
 				class="create-new-project"
 				on:click={() => {
-					console.log(`$editing_project`, $editing_project);
 					if ($editing_project && $selected_project_def !== $editing_project_def) {
 						editing_project.value = false;
 					} else {
