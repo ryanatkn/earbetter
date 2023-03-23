@@ -2,11 +2,14 @@ import {goto} from '$app/navigation';
 import {z} from 'zod';
 import {signal, type Signal, computed, effect} from '@preact/signals-core';
 import {getContext, setContext} from 'svelte';
+import {Logger} from '@feltjs/util/log.js';
 
 import {to_play_level_url, type LevelDef, type LevelId} from '$lib/earbetter/level';
 import {create_project_def, ProjectDef, ProjectId, ProjectName} from '$lib/earbetter/project';
 import {create_level_stats} from '$lib/earbetter/level_stats';
 import {load_from_storage, set_in_storage} from '$lib/util/storage';
+
+const log = new Logger('[app]');
 
 // TODO refactor all storage calls, and rethink in signals instead of all top-level orchestration (that's less reusable)
 
@@ -42,7 +45,7 @@ export class App {
 		this.app_data = signal(this.load());
 		this.saved = this.app_data.peek(); // hacky, but enables the following effect without waste
 		effect(() => this.save());
-		console.log(`app_data`, this.app_data.peek());
+		log.trace(`app_data`, this.app_data.peek());
 		this.load_project(this.app_data.peek().projects[0]?.id || null);
 		// TODO refactor
 		if (this.project_defs.peek().length) {
@@ -75,13 +78,13 @@ export class App {
 	save(): void {
 		const data = this.toJSON();
 		if (data === this.saved) return;
-		console.log('App.save', data);
+		log.trace('App.save', data);
 		set_in_storage(this.storage_key, data);
 		this.saved = data;
 	}
 
 	save_project = (id: ProjectId): void => {
-		console.log('save_project', id);
+		log.trace('save_project', id);
 		const project_def = this.project_defs.peek().find((p) => p.id === id);
 		set_in_storage(id, project_def); // correctly deletes the storage key if `undefined`
 		const app_data = this.app_data.peek();
@@ -100,15 +103,15 @@ export class App {
 	};
 
 	load_project = (id: ProjectId | null): ProjectDef | null => {
-		console.log('load_project', id);
+		log.trace('load_project', id);
 		const loaded = id ? load_from_storage(id, null, ProjectDef.parse) : null;
-		console.log(`loaded`, loaded);
+		log.trace(`loaded`, loaded);
 		if (loaded) {
 			// TODO batch if this code stays imperative like this
 			this.project_defs.value = this.project_defs.peek().concat(loaded);
 			return loaded;
 		} else {
-			console.log(`load_project failed, creating new`, id);
+			log.trace(`load_project failed, creating new`, id);
 			const def = create_project_def();
 			this.create_project(def);
 			return def;
@@ -116,7 +119,7 @@ export class App {
 	};
 
 	select_project = (id: ProjectId | null): void => {
-		console.log('select_project', id);
+		log.trace('select_project', id);
 		if (!id) {
 			this.selected_project_def.value = null;
 			return;
@@ -127,14 +130,14 @@ export class App {
 	};
 
 	edit_project = (project_def: ProjectDef | null): void => {
-		console.log('edit_project', project_def);
+		log.trace('edit_project', project_def);
 		this.editing_project.value = !!project_def;
 		this.editing_project_def.value = project_def;
 		if (project_def) this.selected_project_def.value = project_def;
 	};
 
 	remove_project = (id: ProjectId): void => {
-		console.log('remove_project', id);
+		log.trace('remove_project', id);
 		const project_defs = this.project_defs.peek();
 		const existing = project_defs.find((d) => d.id === id);
 		if (!existing) return;
@@ -146,12 +149,12 @@ export class App {
 	};
 
 	create_project = (project_def: ProjectDef): void => {
-		console.log('create_project', project_def);
+		log.trace('create_project', project_def);
 		const project_defs = this.project_defs.peek();
 		const {id} = project_def;
 		const existing = project_defs.find((d) => d.id === id);
 		if (existing) {
-			console.log('project already exists', project_def, existing);
+			log.trace('project already exists', project_def, existing);
 			return;
 		}
 		this.app_data.value = {
@@ -164,7 +167,7 @@ export class App {
 	};
 
 	update_project = (project_def: ProjectDef): void => {
-		console.log('update_project', project_def);
+		log.trace('update_project', project_def);
 		const project_defs = this.project_defs.peek();
 		const {id} = project_def;
 		const index = project_defs.findIndex((p) => p.id === id);
@@ -182,7 +185,7 @@ export class App {
 	};
 
 	play_level_def = async (id: LevelId): Promise<void> => {
-		console.log('play_level_def', id);
+		log.trace('play_level_def', id);
 		const level_def = this.level_defs.peek()?.find((d) => d.id === id);
 		if (!level_def) {
 			console.error('cannot find level_def with id', id);
@@ -193,12 +196,12 @@ export class App {
 	};
 
 	edit_level_def = (level_def: LevelDef | null): void => {
-		console.log('edit_level_def', level_def);
+		log.trace('edit_level_def', level_def);
 		this.editing_level_def.value = level_def;
 	};
 
 	remove_level_def = (id: LevelId): void => {
-		console.log('remove_level_def', id);
+		log.trace('remove_level_def', id);
 		const project_def = this.selected_project_def.peek();
 		if (!project_def) {
 			console.error('cannot remove level_def without a project', project_def, id);
@@ -220,7 +223,7 @@ export class App {
 	};
 
 	create_level_def = (level_def: LevelDef): void => {
-		console.log('create_level_def', level_def);
+		log.trace('create_level_def', level_def);
 		const project_def = this.selected_project_def.peek();
 		if (!project_def) {
 			console.error('cannot update level_def without a project', project_def, level_def);
@@ -231,7 +234,7 @@ export class App {
 		// or would it be better to always go through the `project_def`?
 		const existing = level_defs.find((d) => d.id === level_def.id);
 		if (existing) {
-			console.log('level_def already exists', level_def, existing);
+			log.trace('level_def already exists', level_def, existing);
 			return;
 		}
 
@@ -240,7 +243,7 @@ export class App {
 	};
 
 	update_level_def = (level_def: LevelDef): void => {
-		console.log('update_level_def', level_def);
+		log.trace('update_level_def', level_def);
 		const project_def = this.selected_project_def.peek();
 		if (!project_def) {
 			console.error('cannot update level_def without a project', project_def, level_def);
@@ -260,7 +263,7 @@ export class App {
 	};
 
 	exit_level_to_map = async (success = false): Promise<void> => {
-		console.log('exit_level_to_map', success);
+		log.trace('exit_level_to_map', success);
 		const $active_level_def = this.active_level_def.peek();
 		if (!$active_level_def) return;
 		if (success) {
