@@ -21,7 +21,11 @@
 >
 	<!-- TODO show a color based on the number of mistakes? -->
 	{#if full_history}
-		{sum}
+		{#if sum === 0}
+			★
+		{:else}
+			{sum}
+		{/if}
 	{:else if length}
 		{'⭑'.repeat(length)}
 	{/if}
