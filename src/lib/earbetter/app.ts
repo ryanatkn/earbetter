@@ -24,8 +24,6 @@ const APP_KEY = Symbol('app');
 export const get_app = (): App => getContext(APP_KEY);
 export const set_app = (store: App): App => setContext(APP_KEY, store);
 
-// TODO BLOCK figure out how/where to store the stats
-
 export class App {
 	// TODO wheres the source of truth?
 	// currently manually syncing the same changes to both `app_data` `project_defs` --
@@ -296,12 +294,6 @@ export class App {
 		log.trace('exit_level_to_map', success);
 		const $active_level_def = this.active_level_def.peek();
 		if (!$active_level_def) return;
-		if (success) {
-			const mistakes = this.level.peek()?.mistakes.peek();
-			if (mistakes != null) {
-				this.level_stats.register_success($active_level_def.id, mistakes);
-			}
-		}
 		this.active_level_def.value = null;
 		await goto('#');
 	};

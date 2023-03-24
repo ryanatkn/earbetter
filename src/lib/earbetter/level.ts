@@ -9,6 +9,7 @@ import {z_midi, type Midi} from '$lib/music/midi';
 import {Intervals} from '$lib/music/notes';
 import {play_note} from '$lib/audio/play_note';
 import type {Instrument, Volume} from '$lib/audio/helpers';
+import type {LevelStats} from '$lib/earbetter/level_stats';
 
 // TODO this isn't idiomatic signals code yet, uses `peek` too much
 
@@ -130,6 +131,7 @@ const DEFAULT_TRIALS: Trial[] = [];
 
 export const create_level = (
 	level_def: LevelDef, // TODO maybe make optional?
+	level_stats: LevelStats,
 	ac: AudioContext,
 	volume: Signal<Volume>,
 	instrument: Signal<Instrument>,
@@ -226,6 +228,10 @@ export const create_level = (
 					setTimeout(() => next_trial(), DEFAULT_FEEDBACK_DURATION); // TODO effects?
 				} else {
 					log.trace('guess correct and done with all trials!');
+					// TODO BLOCK
+
+					level_stats.register_success(level_def.id, mistakes.peek());
+
 					setTimeout(() => complete_level(), DEFAULT_FEEDBACK_DURATION); // TODO effects?
 				}
 			} else {

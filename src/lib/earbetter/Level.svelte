@@ -12,8 +12,10 @@
 	import {playing_notes, start_playing, stop_playing} from '$lib/audio/play_note';
 	import {get_instrument, get_volume} from '$lib/audio/helpers';
 	import {midi_access} from '$lib/audio/midi_access';
+	import type {LevelStats} from '$lib/earbetter/level_stats';
 
 	export let level_def: LevelDef;
+	export let level_stats: LevelStats;
 	export let exit_level_to_map: (success?: boolean) => void;
 
 	let clientWidth; // `undefined` on first render
@@ -22,7 +24,7 @@
 	const volume = get_volume();
 	const instrument = get_instrument();
 
-	export let level = create_level(level_def, ac, volume, instrument);
+	export let level = create_level(level_def, level_stats, ac, volume, instrument);
 	// $: level.setDef(level_def); // TODO update if level_def prop changes
 	$: ({def, status, trial} = level);
 	$: guessing_index = $trial?.guessing_index;
