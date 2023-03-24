@@ -44,7 +44,7 @@ const to_success_data = (data: number[] | undefined, mistakes: number): number[]
 	const updated = data?.concat() || [];
 	// TODO this won't handle a dynamic MISTAKE_HISTORY_LENGTH, wouldn't reduce the size of the array
 	if (updated.length >= MISTAKE_HISTORY_LENGTH) {
-		const max_value = updated.reduce((min, v) => Math.min(min, v));
+		const max_value = updated.reduce((max, v) => Math.max(max, v));
 		if (mistakes < max_value) {
 			const index_to_remove = updated.findIndex((m) => m === max_value);
 			updated[index_to_remove] = mistakes;

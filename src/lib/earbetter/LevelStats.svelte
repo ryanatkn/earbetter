@@ -1,6 +1,7 @@
 <script lang="ts">
 	import type {LevelDef} from '$lib/earbetter/level';
 	import {MISTAKE_HISTORY_LENGTH, type LevelStats} from '$lib/earbetter/level_stats';
+	import {plural} from '@feltjs/util';
 
 	export let level_def: LevelDef;
 	export let level_stats: LevelStats;
@@ -11,17 +12,22 @@
 	$: ({length} = mistakes);
 	$: full_history = length >= MISTAKE_HISTORY_LENGTH;
 	$: sum = full_history ? mistakes.reduce((s, v) => s + v, 0) : undefined;
+	$: perfect = sum === 0;
 </script>
 
 <div
 	class="level-stats"
-	title={full_history
-		? `you made a total of ${sum} mistakes in your best ${MISTAKE_HISTORY_LENGTH} runs`
-		: undefined}
+	title={perfect
+		? `you performed flawlessly in your best ${MISTAKE_HISTORY_LENGTH} runs!`
+		: full_history
+		? `you made a total of ${sum} mistake${plural(sum)} in your best ${MISTAKE_HISTORY_LENGTH} runs`
+		: `you've completed ${length} run${plural(
+				length,
+		  )} of this level, and you'll be scored after ${MISTAKE_HISTORY_LENGTH}`}
 >
 	<!-- TODO show a color based on the number of mistakes? -->
 	{#if full_history}
-		{#if sum === 0}
+		{#if perfect}
 			★
 		{:else}
 			{sum}
