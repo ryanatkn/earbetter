@@ -11,7 +11,7 @@ export const Volume = z
 	.number()
 	.min(0)
 	.max(1)
-	.transform((v) => round(v, 2));
+	.transform((v) => round(v, 2) as Volume);
 
 export const DEFAULT_VOLUME: Volume = 0.63;
 export const DEFAULT_VOLUME_INCREMENT: Volume = 0.01;
