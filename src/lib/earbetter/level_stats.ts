@@ -6,8 +6,9 @@ import {LevelId} from '$lib/earbetter/level';
 export const CompletedLevelStats = z.record(LevelId, z.array(z.number()));
 export type CompletedLevelStats = z.infer<typeof CompletedLevelStats>;
 
+// TODO BLOCK use to parse from storage
 export const LevelStatsState = z.object({
-	completed: CompletedLevelStats,
+	mistakes: CompletedLevelStats,
 });
 export type LevelStatsState = z.infer<typeof LevelStatsState>;
 
@@ -17,7 +18,7 @@ export interface LevelStats {
 }
 
 export const create_level_stats = (): LevelStats => {
-	const stats = signal<LevelStatsState>({completed: {}});
+	const stats = signal<LevelStatsState>({mistakes: {}});
 
 	return {
 		stats,
@@ -25,9 +26,9 @@ export const create_level_stats = (): LevelStats => {
 			const s = stats.peek();
 			stats.value = {
 				...s,
-				completed: {
-					...s.completed,
-					[id]: to_success_data(s.completed[id], mistakes),
+				mistakes: {
+					...s.mistakes,
+					[id]: to_success_data(s.mistakes[id], mistakes),
 				},
 			};
 			console.log('register success', id, mistakes, stats.peek());
