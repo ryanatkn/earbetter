@@ -9,7 +9,7 @@
 	import VolumeControl from '$lib/audio/VolumeControl.svelte';
 	import Header from '$routes/Header.svelte';
 	import Footer from '$routes/Footer.svelte';
-	import {get_instrument, get_volume} from '$lib/audio/helpers';
+	import {get_instrument, get_volume, with_velocity} from '$lib/audio/helpers';
 	import InstrumentControl from '$lib/audio/InstrumentControl.svelte';
 
 	const ac = get_ac();
@@ -32,7 +32,8 @@
 
 <MidiInput
 	{midi_access}
-	on:note_start={(e) => start_playing(ac, e.detail.note, $volume, $instrument)}
+	on:note_start={(e) =>
+		start_playing(ac, e.detail.note, with_velocity($volume, e.detail.velocity), $instrument)}
 	on:note_stop={(e) => stop_playing(e.detail.note)}
 />
 <main bind:clientWidth>
@@ -44,7 +45,7 @@
 				{note_min}
 				{note_max}
 				{pressed_keys}
-				on:press={(e) => start_playing(ac, e.detail, $volume, $instrument)}
+				on:press={(e) => start_playing(ac, e.detail, with_velocity($volume, null), $instrument)}
 				on:release={(e) => stop_playing(e.detail)}
 			/>
 		{/if}

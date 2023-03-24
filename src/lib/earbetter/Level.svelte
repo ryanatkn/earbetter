@@ -10,7 +10,7 @@
 	import MidiInput from '$lib/audio/MidiInput.svelte';
 	import type {Midi} from '$lib/music/midi';
 	import {playing_notes, start_playing, stop_playing} from '$lib/audio/play_note';
-	import {get_instrument, get_volume} from '$lib/audio/helpers';
+	import {get_instrument, get_volume, with_velocity} from '$lib/audio/helpers';
 	import {midi_access} from '$lib/audio/midi_access';
 	import type {LevelStats} from '$lib/earbetter/level_stats';
 
@@ -104,7 +104,7 @@
 	on:note_start={(e) => {
 		// TODO should this be ignored if it's not an enabled key? should the level itself ignore the guess?
 		if ($status === 'complete') {
-			start_playing(ac, e.detail.note, $volume, $instrument);
+			start_playing(ac, e.detail.note, with_velocity($volume, e.detail.velocity), $instrument);
 		} else {
 			console.log(`guessing $status`, $status);
 			// TODO should we intercept here if disabled, and just play the blip with no penalty? or should that be a param to `guess`?
@@ -171,7 +171,7 @@
 				on:press={$status === 'waiting_for_input'
 					? (e) => on_press_key(e.detail)
 					: $status === 'complete'
-					? (e) => start_playing(ac, e.detail, $volume, $instrument)
+					? (e) => start_playing(ac, e.detail, with_velocity($volume, null), $instrument)
 					: undefined}
 				on:release={$status === 'complete' ? (e) => stop_playing(e.detail) : undefined}
 			/>

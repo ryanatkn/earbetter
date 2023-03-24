@@ -8,7 +8,7 @@
 	import LevelDefForm from '$lib/earbetter/LevelDefForm.svelte';
 	import Projects from '$lib/earbetter/Projects.svelte';
 	import VolumeControl from '$lib/audio/VolumeControl.svelte';
-	import {get_instrument, get_volume} from '$lib/audio/helpers';
+	import {get_instrument, get_volume, with_velocity} from '$lib/audio/helpers';
 	import InstrumentControl from '$lib/audio/InstrumentControl.svelte';
 	import type {App} from '$lib/earbetter/app';
 	import ControlsInstructions from '$lib/earbetter/ControlsInstructions.svelte';
@@ -47,7 +47,7 @@
 <MidiInput
 	{midi_access}
 	on:note_start={(e) => {
-		start_playing(ac, e.detail.note, $volume, $instrument);
+		start_playing(ac, e.detail.note, with_velocity($volume, e.detail.velocity), $instrument);
 	}}
 	on:note_stop={(e) => {
 		stop_playing(e.detail.note);
