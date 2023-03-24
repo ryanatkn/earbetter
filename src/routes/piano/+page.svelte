@@ -3,7 +3,7 @@
 	import {get_ac} from '$lib/audio/ac';
 	import {midi_access} from '$lib/audio/midi_access';
 	import MidiInput from '$lib/audio/MidiInput.svelte';
-	import {MIDI_MAX, MIDI_MIN, type Midi} from '$lib/music/midi';
+	import type {Midi} from '$lib/music/midi';
 	import {playing_notes, start_playing, stop_playing} from '$lib/audio/play_note';
 	import InitMidiButton from '$lib/audio/InitMidiButton.svelte';
 	import VolumeControl from '$lib/audio/VolumeControl.svelte';
@@ -11,6 +11,7 @@
 	import Footer from '$routes/Footer.svelte';
 	import {get_instrument, get_volume, with_velocity} from '$lib/audio/helpers';
 	import InstrumentControl from '$lib/audio/InstrumentControl.svelte';
+	import MidiRangeControl from '$lib/audio/MidiRangeControl.svelte';
 
 	const ac = get_ac();
 	const volume = get_volume();
@@ -51,24 +52,15 @@
 		{/if}
 	</div>
 	<form class="column-sm markup">
-		<fieldset class="row">
-			<label>
-				MIDI min
-				<input type="number" bind:value={note_min} step={1} min={MIDI_MIN} max={MIDI_MAX} />
-				<input type="range" bind:value={note_min} step={1} min={MIDI_MIN} max={MIDI_MAX} />
-			</label>
-			<label>
-				MIDI max
-				<input type="number" bind:value={note_max} step={1} min={MIDI_MIN} max={MIDI_MAX} />
-				<input type="range" bind:value={note_max} step={1} min={MIDI_MIN} max={MIDI_MAX} />
-			</label>
-		</fieldset>
 		<fieldset>
 			<VolumeControl {volume} />
 			<InstrumentControl {instrument} />
 		</fieldset>
 		<fieldset>
 			<InitMidiButton {midi_access} />
+		</fieldset>
+		<fieldset class="row">
+			<MidiRangeControl bind:note_min bind:note_max />
 		</fieldset>
 	</form>
 	<Footer />

@@ -144,16 +144,7 @@ export const create_level = (
 
 	const start = (): void => {
 		if (status.peek() !== 'initial') return;
-		batch(() => {
-			const next_trial = create_next_trial(def.peek(), trial.peek());
-			log.trace('start level', trial);
-			// TODO this is really "on enter presenting_prompt state" logic
-			// TODO `s` is stale! so we need the timeout
-			status.value = 'presenting_prompt';
-			mistakes.value = 0;
-			trial.value = next_trial;
-			trials.value = [...trials.peek(), next_trial];
-		});
+		next_trial();
 	};
 
 	effect(() => {
@@ -206,7 +197,7 @@ export const create_level = (
 				if (guessing_index === 0 || !$trial.valid_notes.has(note)) {
 					return; // no penalty or delay if this is the first one
 				}
-				// TODO this is really "on enter showing_failure_feedback state" logic
+				// TODO should this be "on enter showing_failure_feedback state" logic?
 				status.value = 'showing_failure_feedback';
 				mistakes.value = mistakes.peek() + 1;
 				setTimeout(() => retry_trial(), DEFAULT_FEEDBACK_DURATION); // TODO effects?
@@ -222,7 +213,7 @@ export const create_level = (
 			if (guessing_index >= sequence_length - 1) {
 				// if more -> update current response index
 				status.value = 'showing_success_feedback';
-				// TODO this is really "on enter showing_success_feedback state" logic
+				// TODO should this be "on enter showing_success_feedback state" logic?
 				if ($trial.index < def.peek().trial_count - 1) {
 					log.trace('guess correct and done with trial');
 					setTimeout(() => next_trial(), DEFAULT_FEEDBACK_DURATION); // TODO effects?
@@ -254,8 +245,7 @@ export const create_level = (
 		const $trial = trial.peek();
 		if (!$trial) return;
 		batch(() => {
-			// TODO this is really "on enter presenting_prompt state" logic
-			// TODO try to remove the timeout
+			// TODO should this be "on enter presenting_prompt state" logic?
 			status.value = 'presenting_prompt';
 			trial.value = {
 				...$trial,
@@ -268,11 +258,12 @@ export const create_level = (
 		batch(() => {
 			const next_trial = create_next_trial(def.peek(), trial.peek());
 			log.trace('next trial', next_trial);
-			// TODO this is really "on enter presenting_prompt state" logic
-			// TODO `s` is stale! so we need the timeout
+			// TODO should this be "on enter presenting_prompt state" logic?
 			status.value = 'presenting_prompt';
+			const $trials = trials.peek();
+			if ($trials.length === 0) mistakes.value = 0;
 			trial.value = next_trial;
-			trials.value = [...trials.peek(), next_trial];
+			trials.value = [...$trials, next_trial];
 		});
 	};
 

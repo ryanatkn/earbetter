@@ -127,3 +127,8 @@ header {
 	text-align: center;
 	margin-bottom: var(--spacing_md);
 }
+
+.error {
+	--border_color: var(--red);
+	--border_color_dark: hsl(var(--red_hue), 60%, 61%);
+}

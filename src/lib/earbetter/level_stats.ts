@@ -3,12 +3,12 @@ import {z} from 'zod';
 
 import {LevelId} from '$lib/earbetter/level';
 
-export const CompletedLevelStats = z.record(LevelId, z.array(z.number()));
-export type CompletedLevelStats = z.infer<typeof CompletedLevelStats>;
+export const MistakesLevelStats = z.record(LevelId, z.array(z.number()));
+export type MistakesLevelStats = z.infer<typeof MistakesLevelStats>;
 
 // TODO BLOCK use to parse from storage
 export const LevelStatsState = z.object({
-	mistakes: CompletedLevelStats,
+	mistakes: MistakesLevelStats,
 });
 export type LevelStatsState = z.infer<typeof LevelStatsState>;
 
