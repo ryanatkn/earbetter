@@ -61,6 +61,10 @@ section {
 	margin-bottom: 60px;
 }
 
+aside {
+	background-color: var(--tint_light_0);
+}
+
 a:hover {
 	color: var(--light_text_color);
 }
