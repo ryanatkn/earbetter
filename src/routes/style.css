@@ -122,9 +122,7 @@ td {
 	}
 }
 
-.panel > header:first-child,
-.markup > header:first-child,
-form > header:first-child {
+header {
 	font-size: var(--font_size_xl);
 	text-align: center;
 	margin-bottom: var(--spacing_md);

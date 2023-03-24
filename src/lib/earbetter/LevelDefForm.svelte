@@ -249,11 +249,6 @@
 	.level-def-form {
 		width: 100%;
 	}
-	header {
-		font-size: var(--font_size_xl);
-		text-align: center;
-		margin-bottom: var(--spacing_md);
-	}
 	.fields {
 		display: flex;
 		flex-direction: column;
