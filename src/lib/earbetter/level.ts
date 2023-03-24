@@ -19,7 +19,7 @@ export const DEFAULT_NOTE_DURATION_2 = 500; // TODO adjust this to make more cha
 export const DEFAULT_NOTE_DURATION_FAILED = 50;
 export const DEFAULT_FEEDBACK_DURATION = 1000; // TODO configurable
 export const DEFAULT_SEQUENCE_LENGTH = 4;
-export const DEFAULT_TRIAL_COUNT = 5;
+export const DEFAULT_TRIAL_COUNT = 2;
 
 export type LevelId = Flavored<string, 'Level'>;
 export const LevelId = z
@@ -52,6 +52,7 @@ export type Status =
 export interface Level {
 	def: Signal<LevelDef>;
 	status: Signal<Status>;
+	mistakes: Signal<number>;
 	trial: Signal<Trial | null>;
 	trials: Signal<Trial[]>;
 	reset: () => void;
@@ -135,6 +136,7 @@ export const create_level = (
 ): Level => {
 	const def: Signal<LevelDef> = signal(level_def);
 	const status: Signal<Status> = signal(DEFAULT_STATUS);
+	const mistakes: Signal<number> = signal(0);
 	const trial: Signal<Trial | null> = signal(DEFAULT_TRIAL);
 	const trials: Signal<Trial[]> = signal(DEFAULT_TRIALS);
 
@@ -146,6 +148,7 @@ export const create_level = (
 			// TODO this is really "on enter presenting_prompt state" logic
 			// TODO `s` is stale! so we need the timeout
 			status.value = 'presenting_prompt';
+			mistakes.value = 0;
 			trial.value = next_trial;
 			trials.value = [...trials.peek(), next_trial];
 		});
@@ -203,6 +206,7 @@ export const create_level = (
 				}
 				// TODO this is really "on enter showing_failure_feedback state" logic
 				status.value = 'showing_failure_feedback';
+				mistakes.value = mistakes.peek() + 1;
 				setTimeout(() => retry_trial(), DEFAULT_FEEDBACK_DURATION); // TODO effects?
 				return;
 			}
@@ -215,19 +219,17 @@ export const create_level = (
 
 			if (guessing_index >= sequence_length - 1) {
 				// if more -> update current response index
+				status.value = 'showing_success_feedback';
+				// TODO this is really "on enter showing_success_feedback state" logic
 				if ($trial.index < def.peek().trial_count - 1) {
 					log.trace('guess correct and done with trial');
-					// TODO this is really "on enter showing_success_feedback state" logic
-					status.value = 'showing_success_feedback';
 					setTimeout(() => next_trial(), DEFAULT_FEEDBACK_DURATION); // TODO effects?
 				} else {
-					// TODO this is really "on enter showing_success_feedback state" logic
 					log.trace('guess correct and done with all trials!');
-					status.value = 'showing_success_feedback';
 					setTimeout(() => complete_level(), DEFAULT_FEEDBACK_DURATION); // TODO effects?
 				}
 			} else {
-				// SUCCESS -> showing_success_feedback
+				// SUCCESS -> no status change because we show no visible positive feedback to users until the end
 				log.trace('guess correct but not done');
 				trial.value = {
 					...$trial,
@@ -281,6 +283,7 @@ export const create_level = (
 	const level: Level = {
 		def,
 		status,
+		mistakes,
 		trial,
 		trials,
 		reset: () => {

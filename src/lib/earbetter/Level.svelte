@@ -13,21 +13,6 @@
 	import {get_instrument, get_volume} from '$lib/audio/helpers';
 	import {midi_access} from '$lib/audio/midi_access';
 
-	/*
-
-  TODO
-
-	- MIDI input!!
-	- orient people to their keyboard, maybe showing middle C?
-		- related: consider rendering the Piano clamped to the tonic and octaveShift (valid_notes) - problem is you might have a harder time arranging yourself on your keyboard
-		- maybe always show the full keyboard? maybe always start at a C?
-	- clamp level def data to the audible range
-	- xstate!
-	- what about supporting only a negative octave shift? changes the `tonic_max` calculation!
-	- consider disabling input except for the tonic at first
-  - show a histogram of the correct inputs lined up vertically  with the buttons, moving to the right from the left or fixed onscreen
-
-  */
 	export let level_def: LevelDef;
 	export let exit_level_to_map: (success?: boolean) => void;
 
@@ -37,7 +22,7 @@
 	const volume = get_volume();
 	const instrument = get_instrument();
 
-	const level = create_level(level_def, ac, volume, instrument);
+	export let level = create_level(level_def, ac, volume, instrument);
 	// $: level.setDef(level_def); // TODO update if level_def prop changes
 	$: ({def, status, trial} = level);
 	$: guessing_index = $trial?.guessing_index;

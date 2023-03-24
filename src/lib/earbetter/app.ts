@@ -4,7 +4,7 @@ import {signal, type Signal, computed, effect} from '@preact/signals-core';
 import {getContext, setContext} from 'svelte';
 import {Logger} from '@feltjs/util/log.js';
 
-import {to_play_level_url, type LevelDef, type LevelId} from '$lib/earbetter/level';
+import {to_play_level_url, type Level, type LevelDef, type LevelId} from '$lib/earbetter/level';
 import {create_project_def, ProjectDef, ProjectId, ProjectName} from '$lib/earbetter/project';
 import {create_level_stats} from '$lib/earbetter/level_stats';
 import {load_from_storage, set_in_storage} from '$lib/util/storage';
@@ -24,6 +24,8 @@ const APP_KEY = Symbol('app');
 export const get_app = (): App => getContext(APP_KEY);
 export const set_app = (store: App): App => setContext(APP_KEY, store);
 
+// TODO BLOCK figure out how/where to store the stats
+
 export class App {
 	// TODO wheres the source of truth?
 	// currently manually syncing the same changes to both `app_data` `project_defs` --
@@ -36,6 +38,7 @@ export class App {
 	level_defs = computed(() => this.selected_project_def.value?.level_defs || null);
 	editing_project: Signal<boolean> = signal(false);
 	editing_project_def: Signal<ProjectDef | null> = signal(null);
+	level: Signal<Level | null> = signal(null);
 
 	active_level_def: Signal<LevelDef | null> = signal(null);
 	editing_level_def: Signal<LevelDef | null> = signal(null);
@@ -294,7 +297,10 @@ export class App {
 		const $active_level_def = this.active_level_def.peek();
 		if (!$active_level_def) return;
 		if (success) {
-			this.level_stats.register_success($active_level_def.id);
+			const mistakes = this.level.peek()?.mistakes.peek();
+			if (mistakes != null) {
+				this.level_stats.register_success($active_level_def.id, mistakes);
+			}
 		}
 		this.active_level_def.value = null;
 		await goto('#');
