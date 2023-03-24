@@ -21,9 +21,9 @@
 		? `you performed flawlessly in your best ${MISTAKE_HISTORY_LENGTH} runs!`
 		: full_history
 		? `you made a total of ${sum} mistake${plural(sum)} in your best ${MISTAKE_HISTORY_LENGTH} runs`
-		: `you've completed ${length} run${plural(
-				length,
-		  )} of this level, and you'll be scored after ${MISTAKE_HISTORY_LENGTH}`}
+		: `you've completed ${length || 'no'} run${plural(length)} of this level, do ${
+				MISTAKE_HISTORY_LENGTH - length
+		  }${length ? ' more' : ''} to get scored`}
 >
 	{#if full_history}
 		{#if perfect}

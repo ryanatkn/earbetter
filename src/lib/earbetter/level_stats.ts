@@ -23,15 +23,11 @@ export const create_level_stats = (): LevelStats => {
 	return {
 		stats,
 		register_success: (id, mistakes) => {
-			const s = stats.peek();
-			stats.value = {
-				...s,
-				mistakes: {
-					...s.mistakes,
-					[id]: to_success_data(s.mistakes[id], mistakes),
-				},
-			};
-			console.log('register success', id, mistakes, stats.peek());
+			const s = {...stats.peek()};
+			s.mistakes = {...s.mistakes}; // preserves key order
+			s.mistakes[id] = add_mistakes(s.mistakes[id], mistakes);
+			stats.value = s;
+			console.log('register success', id, mistakes, s);
 		},
 	};
 };
@@ -39,8 +35,8 @@ export const create_level_stats = (): LevelStats => {
 // TODO refactor - parameter? needs care tho, see comment below
 export const MISTAKE_HISTORY_LENGTH = 5;
 
-// TODO BLOCK rename, schema?
-const to_success_data = (data: number[] | undefined, mistakes: number): number[] => {
+// TODO BLOCK rename, schema? we want a schema because we'll load it from storage, do that first
+const add_mistakes = (data: number[] | undefined, mistakes: number): number[] => {
 	const updated = data?.concat() || [];
 	// TODO this won't handle a dynamic MISTAKE_HISTORY_LENGTH, wouldn't reduce the size of the array
 	if (updated.length >= MISTAKE_HISTORY_LENGTH) {
