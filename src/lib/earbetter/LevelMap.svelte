@@ -12,6 +12,8 @@
 	import InstrumentControl from '$lib/audio/InstrumentControl.svelte';
 	import type {App} from '$lib/earbetter/app';
 	import ControlsInstructions from '$lib/earbetter/ControlsInstructions.svelte';
+	import MidiInput from '$lib/audio/MidiInput.svelte';
+	import {start_playing, stop_playing} from '$lib/audio/play_note';
 
 	export let app: App;
 	export let midi_access: Signal<MIDIAccess | null>;
@@ -42,6 +44,15 @@
 	$: editing = $level_defs ? $level_defs.some((d) => d.id === id) : false;
 </script>
 
+<MidiInput
+	{midi_access}
+	on:note_start={(e) => {
+		start_playing(ac, e.detail.note, $volume, $instrument);
+	}}
+	on:note_stop={(e) => {
+		stop_playing(e.detail.note);
+	}}
+/>
 <div class="map">
 	{#if $level_defs}
 		<div class="column-sm">
