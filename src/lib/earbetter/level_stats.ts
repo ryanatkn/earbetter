@@ -22,7 +22,6 @@ export const create_level_stats = (): LevelStats => {
 	return {
 		stats,
 		register_success: (id, mistakes) => {
-			console.log('register success', id);
 			const s = stats.peek();
 			stats.value = {
 				...s,
@@ -31,6 +30,7 @@ export const create_level_stats = (): LevelStats => {
 					[id]: to_success_data(s.completed[id], mistakes),
 				},
 			};
+			console.log('register success', id, mistakes, stats.peek());
 		},
 	};
 };
