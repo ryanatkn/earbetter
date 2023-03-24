@@ -63,10 +63,10 @@
 				<ControlsInstructions />
 				<VolumeControl {volume} />
 				<InstrumentControl {instrument} />
-				<p>
+				<aside>
 					Earbetter supports MIDI devices like piano keyboards. Connect a device and click the
 					button below:
-				</p>
+				</aside>
 				<InitMidiButton {midi_access} />
 			</section>
 			{#if $level_defs}
