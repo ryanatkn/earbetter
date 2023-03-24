@@ -228,10 +228,7 @@ export const create_level = (
 					setTimeout(() => next_trial(), DEFAULT_FEEDBACK_DURATION); // TODO effects?
 				} else {
 					log.trace('guess correct and done with all trials!');
-					// TODO BLOCK
-
 					level_stats.register_success(level_def.id, mistakes.peek());
-
 					setTimeout(() => complete_level(), DEFAULT_FEEDBACK_DURATION); // TODO effects?
 				}
 			} else {
