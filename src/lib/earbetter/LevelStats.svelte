@@ -25,7 +25,6 @@
 				length,
 		  )} of this level, and you'll be scored after ${MISTAKE_HISTORY_LENGTH}`}
 >
-	<!-- TODO show a color based on the number of mistakes? -->
 	{#if full_history}
 		{#if perfect}
 			★
