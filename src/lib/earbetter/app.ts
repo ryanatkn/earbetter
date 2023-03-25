@@ -4,9 +4,14 @@ import {signal, type Signal, computed, effect} from '@preact/signals-core';
 import {getContext, setContext} from 'svelte';
 import {Logger} from '@feltjs/util/log.js';
 
-import {to_play_level_url, type LevelDef, type LevelId} from '$lib/earbetter/level';
+import {
+	add_mistakes_to_stats,
+	to_play_level_url,
+	type Level,
+	type LevelDef,
+	type LevelId,
+} from '$lib/earbetter/level';
 import {create_project_def, ProjectDef, ProjectId, ProjectName} from '$lib/earbetter/project';
-import {create_level_stats} from '$lib/earbetter/level_stats';
 import {load_from_storage, set_in_storage} from '$lib/util/storage';
 
 const log = new Logger('[app]');
@@ -35,12 +40,11 @@ export class App {
 	selected_project_def: Signal<ProjectDef | null> = signal(null);
 	level_defs = computed(() => this.selected_project_def.value?.level_defs || null);
 	editing_project: Signal<boolean> = signal(false);
-	editing_project_def: Signal<ProjectDef | null> = signal(null);
+	editing_project_def: Signal<ProjectDef | null> = signal(null); // this may be `selected_project_def`, or a new project def that hasn't been created yet
+	level: Signal<Level | null> = signal(null);
 
 	active_level_def: Signal<LevelDef | null> = signal(null);
 	editing_level_def: Signal<LevelDef | null> = signal(null);
-
-	level_stats = create_level_stats();
 
 	constructor(public readonly get_ac: () => AudioContext, public readonly storage_key = 'app') {
 		// TODO maybe `new App(App.load())` ?
@@ -94,12 +98,10 @@ export class App {
 		if (project_def) {
 			if (!projects.some((p) => p.id === id)) {
 				this.app_data.value = {projects: projects.concat({id, name: project_def.name})};
-				this.save(); // TODO should this be an effect?
 			}
 		} else {
 			if (projects.some((p) => p.id === id)) {
 				this.app_data.value = {projects: projects.filter((p) => p.id !== id)};
-				this.save(); // TODO should this be an effect?
 			}
 		}
 	};
@@ -190,7 +192,6 @@ export class App {
 		// TODO syncing `app_data` with `project_defs` is awkward
 		if (project_def.name !== existing.name) {
 			const app_data = this.app_data.peek();
-			console.log(`existing.name`, existing.name, project_def.name);
 			this.app_data.value = {
 				...app_data,
 				projects: app_data.projects.map((p) =>
@@ -289,13 +290,19 @@ export class App {
 		this.editing_level_def.value = level_def;
 	};
 
-	exit_level_to_map = async (success = false): Promise<void> => {
-		log.trace('exit_level_to_map', success);
+	register_success = (id: LevelId, mistakes: number): void => {
+		const project_def = this.selected_project_def.peek();
+		if (!project_def) return;
+		this.update_project({
+			...project_def,
+			stats: add_mistakes_to_stats(project_def.stats, id, mistakes),
+		});
+	};
+
+	exit_level_to_map = async (): Promise<void> => {
+		log.trace('exit_level_to_map');
 		const $active_level_def = this.active_level_def.peek();
 		if (!$active_level_def) return;
-		if (success) {
-			this.level_stats.register_success($active_level_def.id);
-		}
 		this.active_level_def.value = null;
 		await goto('#');
 	};

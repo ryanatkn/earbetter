@@ -19,7 +19,7 @@ export const DEFAULT_NOTE_DURATION_2 = 500; // TODO adjust this to make more cha
 export const DEFAULT_NOTE_DURATION_FAILED = 50;
 export const DEFAULT_FEEDBACK_DURATION = 1000; // TODO configurable
 export const DEFAULT_SEQUENCE_LENGTH = 4;
-export const DEFAULT_TRIAL_COUNT = 5;
+export const DEFAULT_TRIAL_COUNT = 2;
 
 export type LevelId = Flavored<string, 'Level'>;
 export const LevelId = z
@@ -52,6 +52,7 @@ export type Status =
 export interface Level {
 	def: Signal<LevelDef>;
 	status: Signal<Status>;
+	mistakes: Signal<number>;
 	trial: Signal<Trial | null>;
 	trials: Signal<Trial[]>;
 	reset: () => void;
@@ -63,6 +64,7 @@ export interface Level {
 	next_trial: () => void;
 	complete_level: () => void;
 	// dev and debug methods
+	win: () => void;
 	guess_correctly: () => void;
 	get_correct_guess: () => number | null;
 }
@@ -135,20 +137,13 @@ export const create_level = (
 ): Level => {
 	const def: Signal<LevelDef> = signal(level_def);
 	const status: Signal<Status> = signal(DEFAULT_STATUS);
+	const mistakes: Signal<number> = signal(0);
 	const trial: Signal<Trial | null> = signal(DEFAULT_TRIAL);
 	const trials: Signal<Trial[]> = signal(DEFAULT_TRIALS);
 
 	const start = (): void => {
 		if (status.peek() !== 'initial') return;
-		batch(() => {
-			const next_trial = create_next_trial(def.peek(), trial.peek());
-			log.trace('start level', trial);
-			// TODO this is really "on enter presenting_prompt state" logic
-			// TODO `s` is stale! so we need the timeout
-			status.value = 'presenting_prompt';
-			trial.value = next_trial;
-			trials.value = [...trials.peek(), next_trial];
-		});
+		next_trial();
 	};
 
 	effect(() => {
@@ -173,7 +168,7 @@ export const create_level = (
 			const duration =
 				sequence_length < DEFAULT_SEQUENCE_LENGTH ? DEFAULT_NOTE_DURATION_2 : DEFAULT_NOTE_DURATION; // TODO refactor, see elsewhere
 			await play_note(ac, note, volume.peek(), duration, instrument.peek()); // eslint-disable-line no-await-in-loop
-			if (current_seq_id !== seq_id) return; // cancel
+			if (current_seq_id !== seq_id || !trial.peek()) return; // cancel
 		}
 		batch(() => {
 			status.value = 'waiting_for_input';
@@ -201,8 +196,9 @@ export const create_level = (
 				if (guessing_index === 0 || !$trial.valid_notes.has(note)) {
 					return; // no penalty or delay if this is the first one
 				}
-				// TODO this is really "on enter showing_failure_feedback state" logic
+				// TODO should this be "on enter showing_failure_feedback state" logic?
 				status.value = 'showing_failure_feedback';
+				mistakes.value = mistakes.peek() + 1;
 				setTimeout(() => retry_trial(), DEFAULT_FEEDBACK_DURATION); // TODO effects?
 				return;
 			}
@@ -215,19 +211,17 @@ export const create_level = (
 
 			if (guessing_index >= sequence_length - 1) {
 				// if more -> update current response index
+				status.value = 'showing_success_feedback';
+				// TODO should this be "on enter showing_success_feedback state" logic?
 				if ($trial.index < def.peek().trial_count - 1) {
 					log.trace('guess correct and done with trial');
-					// TODO this is really "on enter showing_success_feedback state" logic
-					status.value = 'showing_success_feedback';
 					setTimeout(() => next_trial(), DEFAULT_FEEDBACK_DURATION); // TODO effects?
 				} else {
-					// TODO this is really "on enter showing_success_feedback state" logic
 					log.trace('guess correct and done with all trials!');
-					status.value = 'showing_success_feedback';
 					setTimeout(() => complete_level(), DEFAULT_FEEDBACK_DURATION); // TODO effects?
 				}
 			} else {
-				// SUCCESS -> showing_success_feedback
+				// SUCCESS -> no status change because we show no visible positive feedback to users until the end
 				log.trace('guess correct but not done');
 				trial.value = {
 					...$trial,
@@ -249,8 +243,7 @@ export const create_level = (
 		const $trial = trial.peek();
 		if (!$trial) return;
 		batch(() => {
-			// TODO this is really "on enter presenting_prompt state" logic
-			// TODO try to remove the timeout
+			// TODO should this be "on enter presenting_prompt state" logic?
 			status.value = 'presenting_prompt';
 			trial.value = {
 				...$trial,
@@ -263,11 +256,12 @@ export const create_level = (
 		batch(() => {
 			const next_trial = create_next_trial(def.peek(), trial.peek());
 			log.trace('next trial', next_trial);
-			// TODO this is really "on enter presenting_prompt state" logic
-			// TODO `s` is stale! so we need the timeout
+			// TODO should this be "on enter presenting_prompt state" logic?
 			status.value = 'presenting_prompt';
+			const $trials = trials.peek();
+			if ($trials.length === 0) mistakes.value = 0;
 			trial.value = next_trial;
-			trials.value = [...trials.peek(), next_trial];
+			trials.value = [...$trials, next_trial];
 		});
 	};
 
@@ -281,6 +275,7 @@ export const create_level = (
 	const level: Level = {
 		def,
 		status,
+		mistakes,
 		trial,
 		trials,
 		reset: () => {
@@ -301,6 +296,9 @@ export const create_level = (
 		next_trial,
 		complete_level,
 		// dev and debug methods
+		win: () => {
+			complete_level();
+		},
 		guess_correctly: () => {
 			if (status.peek() !== 'waiting_for_input') return;
 			const midi = get_correct_guess(trial.peek());
@@ -326,3 +324,40 @@ const to_fallback_tonic = (note_min: Midi, note_max: Midi): Midi => {
 
 export const to_play_level_url = (level_def: LevelDef): string =>
 	`${base}/game/play#` + encodeURIComponent(JSON.stringify(level_def));
+
+export const MistakesLevelStats = z.record(LevelId, z.array(z.number()));
+export type MistakesLevelStats = z.infer<typeof MistakesLevelStats>;
+
+export const LevelStats = z.object({
+	mistakes: MistakesLevelStats,
+});
+export type LevelStats = z.infer<typeof LevelStats>;
+
+export const DEFAULT_LEVEL_STATS: LevelStats = {mistakes: {}};
+
+// TODO refactor - parameter? needs care tho, see comment below
+export const MISTAKE_HISTORY_LENGTH = 5;
+
+export const add_mistakes_to_stats = (
+	stats: LevelStats,
+	id: LevelId,
+	mistakes: number,
+): LevelStats => {
+	const s = {...stats};
+	s.mistakes = {...s.mistakes}; // preserves key order
+	s.mistakes[id] = add_mistakes(s.mistakes[id], mistakes);
+	return s;
+};
+
+const add_mistakes = (data: number[] | undefined, mistakes: number): number[] => {
+	const updated = data?.slice() || [];
+	if (updated.length >= MISTAKE_HISTORY_LENGTH) {
+		updated.sort((a, b) => a - b).length = MISTAKE_HISTORY_LENGTH;
+		if (mistakes < updated.at(-1)!) {
+			updated[updated.length - 1] = mistakes;
+		}
+	} else {
+		updated.push(mistakes);
+	}
+	return updated;
+};

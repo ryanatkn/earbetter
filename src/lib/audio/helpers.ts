@@ -11,10 +11,14 @@ export const Volume = z
 	.number()
 	.min(0)
 	.max(1)
-	.transform((v) => round(v, 2));
+	.transform((v) => round(v, 2) as Volume);
 
-export const DEFAULT_VOLUME: Volume = 0.43;
+export const DEFAULT_VOLUME: Volume = 0.63;
 export const DEFAULT_VOLUME_INCREMENT: Volume = 0.01;
+export const DEFAULT_VELOCITY = 0.47; // balances the volume between using a MIDI input and others that don't have velocity
+// TODO the sqrt may be heavy handed, the goal is to normalize the volume for convenience, but idk
+export const with_velocity = (volume: Volume, velocity: number | null | undefined): Volume =>
+	Math.sqrt(velocity == null ? DEFAULT_VELOCITY : velocity) * volume;
 
 const VOLUME_KEY = Symbol('volume');
 export const get_volume = (): Signal<Volume> => getContext(VOLUME_KEY);

@@ -1,8 +1,9 @@
 <script lang="ts">
 	import {onDestroy, onMount} from 'svelte';
 	import {isEditable, swallow} from '@feltjs/util/dom.js';
+	import {scale} from 'svelte/transition';
 
-	import {create_level, type LevelDef} from '$lib/earbetter/level';
+	import {create_level, LevelId, type LevelDef} from '$lib/earbetter/level';
 	import Piano from '$lib/music/Piano.svelte';
 	import LevelProgressIndicator from '$lib/earbetter/LevelProgressIndicator.svelte';
 	import TrialProgressIndicator from '$lib/earbetter/TrialProgressIndicator.svelte';
@@ -10,26 +11,12 @@
 	import MidiInput from '$lib/audio/MidiInput.svelte';
 	import type {Midi} from '$lib/music/midi';
 	import {playing_notes, start_playing, stop_playing} from '$lib/audio/play_note';
-	import {get_instrument, get_volume} from '$lib/audio/helpers';
+	import {get_instrument, get_volume, with_velocity} from '$lib/audio/helpers';
 	import {midi_access} from '$lib/audio/midi_access';
 
-	/*
-
-  TODO
-
-	- MIDI input!!
-	- orient people to their keyboard, maybe showing middle C?
-		- related: consider rendering the Piano clamped to the tonic and octaveShift (valid_notes) - problem is you might have a harder time arranging yourself on your keyboard
-		- maybe always show the full keyboard? maybe always start at a C?
-	- clamp level def data to the audible range
-	- xstate!
-	- what about supporting only a negative octave shift? changes the `tonic_max` calculation!
-	- consider disabling input except for the tonic at first
-  - show a histogram of the correct inputs lined up vertically  with the buttons, moving to the right from the left or fixed onscreen
-
-  */
 	export let level_def: LevelDef;
-	export let exit_level_to_map: (success?: boolean) => void;
+	export let exit_level_to_map: () => void;
+	export let register_success: (id: LevelId, mistakes: number) => void;
 
 	let clientWidth; // `undefined` on first render
 
@@ -37,7 +24,7 @@
 	const volume = get_volume();
 	const instrument = get_instrument();
 
-	const level = create_level(level_def, ac, volume, instrument);
+	export let level = create_level(level_def, ac, volume, instrument);
 	// $: level.setDef(level_def); // TODO update if level_def prop changes
 	$: ({def, status, trial} = level);
 	$: guessing_index = $trial?.guessing_index;
@@ -65,6 +52,10 @@
 
 	$: initial = waiting && guessing_index === 0; // the initial user-prompting trial state before any inputs have been entered by the player (related, "prompting")
 
+	$: if (complete) {
+		register_success(level_def.id, level.mistakes.peek());
+	}
+
 	const piano_padding = 20;
 
 	let el: HTMLElement;
@@ -87,7 +78,7 @@
 				switch ($status) {
 					case 'complete': {
 						swallow(e);
-						exit_level_to_map(true);
+						exit_level_to_map();
 						return;
 					}
 					default: {
@@ -99,7 +90,11 @@
 			}
 			case '`': {
 				swallow(e);
-				level.guess_correctly();
+				if (e.ctrlKey) {
+					level.win();
+				} else {
+					level.guess_correctly();
+				}
 				return;
 			}
 			case 'Escape': {
@@ -117,7 +112,7 @@
 	on:note_start={(e) => {
 		// TODO should this be ignored if it's not an enabled key? should the level itself ignore the guess?
 		if ($status === 'complete') {
-			start_playing(ac, e.detail.note, $volume, $instrument);
+			start_playing(ac, e.detail.note, with_velocity($volume, e.detail.velocity), $instrument);
 		} else {
 			console.log(`guessing $status`, $status);
 			// TODO should we intercept here if disabled, and just play the blip with no penalty? or should that be a param to `guess`?
@@ -163,6 +158,7 @@
 
 	<div class="feedback" class:success class:failure class:complete>
 		{#if complete}
+			<div class="icons" in:scale|local>🎵🎶</div>
 			<button class="big" on:click={() => exit_level_to_map()}>
 				go back to the map &nbsp;<code>Escape</code></button
 			>
@@ -184,7 +180,7 @@
 				on:press={$status === 'waiting_for_input'
 					? (e) => on_press_key(e.detail)
 					: $status === 'complete'
-					? (e) => start_playing(ac, e.detail, $volume, $instrument)
+					? (e) => start_playing(ac, e.detail, with_velocity($volume, null), $instrument)
 					: undefined}
 				on:release={$status === 'complete' ? (e) => stop_playing(e.detail) : undefined}
 			/>
@@ -252,5 +248,12 @@
 	}
 	.feedback.failure {
 		background-color: var(--failure_color, red);
+	}
+
+	.icons {
+		font-size: var(--icon_size_xl);
+		word-break: break-all;
+		text-align: center;
+		word-wrap: break-word;
 	}
 </style>

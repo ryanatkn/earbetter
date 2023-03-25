@@ -8,10 +8,12 @@
 	import LevelDefForm from '$lib/earbetter/LevelDefForm.svelte';
 	import Projects from '$lib/earbetter/Projects.svelte';
 	import VolumeControl from '$lib/audio/VolumeControl.svelte';
-	import {get_instrument, get_volume} from '$lib/audio/helpers';
+	import {get_instrument, get_volume, with_velocity} from '$lib/audio/helpers';
 	import InstrumentControl from '$lib/audio/InstrumentControl.svelte';
 	import type {App} from '$lib/earbetter/app';
 	import ControlsInstructions from '$lib/earbetter/ControlsInstructions.svelte';
+	import MidiInput from '$lib/audio/MidiInput.svelte';
+	import {start_playing, stop_playing} from '$lib/audio/play_note';
 
 	export let app: App;
 	export let midi_access: Signal<MIDIAccess | null>;
@@ -19,16 +21,12 @@
 	$: ({
 		editing_level_def,
 		level_defs,
-		level_stats,
 		play_level_def,
 		edit_level_def,
 		remove_level_def,
 		create_level_def,
 		update_level_def,
 	} = app);
-
-	$: ({stats} = level_stats);
-	$: console.log('stats', $stats);
 
 	$: console.log(`$level_defs`, $level_defs);
 
@@ -42,6 +40,15 @@
 	$: editing = $level_defs ? $level_defs.some((d) => d.id === id) : false;
 </script>
 
+<MidiInput
+	{midi_access}
+	on:note_start={(e) => {
+		start_playing(ac, e.detail.note, with_velocity($volume, e.detail.velocity), $instrument);
+	}}
+	on:note_stop={(e) => {
+		stop_playing(e.detail.note);
+	}}
+/>
 <div class="map">
 	{#if $level_defs}
 		<div class="column-sm">
@@ -52,10 +59,10 @@
 				<ControlsInstructions />
 				<VolumeControl {volume} />
 				<InstrumentControl {instrument} />
-				<p>
+				<aside>
 					Earbetter supports MIDI devices like piano keyboards. Connect a device and click the
 					button below:
-				</p>
+				</aside>
 				<InitMidiButton {midi_access} />
 			</section>
 			{#if $level_defs}

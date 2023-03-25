@@ -136,7 +136,7 @@
 		</h2>
 	</header>
 	{#if editing || expanded}
-		<div class="fields" in:slide|local>
+		<div class="fields" transition:slide|local>
 			<fieldset>
 				<label>
 					<div class="title">name</div>
@@ -216,6 +216,9 @@
 			<button type="button" on:click={start_importing_data} bind:this={start_importing_el}>
 				{#if editing}import/export data{:else}import data{/if}
 			</button>
+			{#if !editing}
+				<button type="button" on:click={() => (expanded = false)}> cancel </button>
+			{/if}
 			{#if parse_error_message}
 				<div class="message-wrapper">
 					<Message status="error"><pre>{parse_error_message}</pre></Message>
@@ -248,11 +251,6 @@
 <style>
 	.level-def-form {
 		width: 100%;
-	}
-	header {
-		font-size: var(--font_size_xl);
-		text-align: center;
-		margin-bottom: var(--spacing_md);
 	}
 	.fields {
 		display: flex;

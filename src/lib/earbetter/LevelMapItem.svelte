@@ -3,18 +3,24 @@
 
 	import type {LevelDef} from '$lib/earbetter/level';
 	import type {App} from '$lib/earbetter/app';
+	import LevelStatsSummary from '$lib/earbetter/LevelStatsSummary.svelte';
 
 	export let app: App;
 	export let level_def: LevelDef;
 
-	$: ({editing_level_def, play_level_def, edit_level_def, remove_level_def} = app);
+	$: ({editing_level_def, selected_project_def, play_level_def, edit_level_def, remove_level_def} =
+		app);
 
 	$: editing = $editing_level_def === level_def;
+	$: stats = $selected_project_def?.stats;
 
 	let removing = false;
 </script>
 
 <li class="level-map-item" transition:slide|local>
+	{#if stats}
+		<LevelStatsSummary {level_def} {stats} />
+	{/if}
 	<button
 		class="level-button deselectable"
 		on:click={() => play_level_def(level_def.id)}

@@ -81,8 +81,20 @@
 
 {#if show_main_menu}
 	<Dialog on:close={() => (show_main_menu = false)}>
-		<div style:padding-bottom="var(--spacing_md)">
+		<section>
 			<WebsiteMap><h2>earbetter</h2></WebsiteMap>
+		</section>
+		<div class="padded-md">
+			<button
+				on:click={() => {
+					// eslint-disable-next-line no-alert
+					if (confirm('delete all locally saved data? this cannot be undone')) {
+						localStorage.clear();
+					}
+				}}
+			>
+				clear saved data
+			</button>
 		</div>
 	</Dialog>
 {/if}
