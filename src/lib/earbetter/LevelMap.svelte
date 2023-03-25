@@ -1,8 +1,9 @@
 <script lang="ts">
+	import LevelMapItems from './LevelMapItems.svelte';
+
 	import type {Signal} from '@preact/signals-core';
 
 	import type {MIDIAccess} from '$lib/audio/WebMIDI';
-	import LevelMapItem from '$lib/earbetter/LevelMapItem.svelte';
 	import {get_ac} from '$lib/audio/ac';
 	import InitMidiButton from '$lib/audio/InitMidiButton.svelte';
 	import LevelDefForm from '$lib/earbetter/LevelDefForm.svelte';
@@ -24,7 +25,6 @@
 	$: ({
 		editing_level_def,
 		level_defs,
-		selected_realm_def,
 		play_level_def,
 		edit_level_def,
 		remove_level_def,
@@ -96,18 +96,7 @@
 		</section>
 		{#if $level_defs}
 			<Realms {app} />
-			<section class="panel padded-md">
-				<div class="markup">
-					<header>
-						<h2>{$selected_realm_def?.name}</h2>
-					</header>
-				</div>
-				<menu class="levels">
-					{#each $level_defs as d (d.id)}
-						<LevelMapItem {app} level_def={d} />
-					{/each}
-				</menu>
-			</section>
+			<LevelMapItems {app} level_defs={$level_defs} />
 		{:else}
 			<Projects {app} />
 		{/if}
