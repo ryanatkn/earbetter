@@ -9,7 +9,6 @@ import {z_midi, type Midi} from '$lib/music/midi';
 import {Intervals} from '$lib/music/notes';
 import {play_note} from '$lib/audio/play_note';
 import type {Instrument, Volume} from '$lib/audio/helpers';
-import type {LevelStats} from '$lib/earbetter/level_stats';
 
 // TODO this isn't idiomatic signals code yet, uses `peek` too much
 
@@ -131,7 +130,6 @@ const DEFAULT_TRIALS: Trial[] = [];
 
 export const create_level = (
 	level_def: LevelDef, // TODO maybe make optional?
-	level_stats: LevelStats,
 	ac: AudioContext,
 	volume: Signal<Volume>,
 	instrument: Signal<Instrument>,
@@ -219,7 +217,6 @@ export const create_level = (
 					setTimeout(() => next_trial(), DEFAULT_FEEDBACK_DURATION); // TODO effects?
 				} else {
 					log.trace('guess correct and done with all trials!');
-					level_stats.register_success(level_def.id, mistakes.peek());
 					setTimeout(() => complete_level(), DEFAULT_FEEDBACK_DURATION); // TODO effects?
 				}
 			} else {
@@ -323,3 +320,35 @@ const to_fallback_tonic = (note_min: Midi, note_max: Midi): Midi => {
 
 export const to_play_level_url = (level_def: LevelDef): string =>
 	`${base}/game/play#` + encodeURIComponent(JSON.stringify(level_def));
+
+export const MistakesLevelStats = z.record(LevelId, z.array(z.number()));
+export type MistakesLevelStats = z.infer<typeof MistakesLevelStats>;
+
+export const LevelStats = z.object({
+	mistakes: MistakesLevelStats,
+});
+export type LevelStats = z.infer<typeof LevelStats>;
+
+// TODO refactor - parameter? needs care tho, see comment below
+export const MISTAKE_HISTORY_LENGTH = 5;
+
+export const add_mistakes = (stats: LevelStats, id: LevelId, mistakes: number): LevelStats => {
+	const s = {...stats};
+	s.mistakes = {...s.mistakes}; // preserves key order
+	s.mistakes[id] = add_mistakes_to(s.mistakes[id], mistakes);
+	return s;
+};
+
+// TODO BLOCK rename?
+const add_mistakes_to = (data: number[] | undefined, mistakes: number): number[] => {
+	const updated = data?.slice() || [];
+	if (updated.length >= MISTAKE_HISTORY_LENGTH) {
+		updated.sort((a, b) => a - b).length = MISTAKE_HISTORY_LENGTH;
+		if (mistakes < updated.at(-1)!) {
+			updated[updated.length - 1] = mistakes;
+		}
+	} else {
+		updated.push(mistakes);
+	}
+	return updated;
+};

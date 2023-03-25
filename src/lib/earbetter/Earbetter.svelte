@@ -10,9 +10,7 @@
 
 	export let app: App;
 
-	$: ({active_level_def, level_stats, exit_level_to_map} = app);
-
-	// TODO BLOCK when to clear `level_stats`? switching projects, or is that not needed?
+	$: ({active_level_def, exit_level_to_map, register_success} = app);
 
 	const ac = get_ac();
 	(window as any).audio = ac;
@@ -27,7 +25,7 @@
 
 {#if $active_level_def}
 	<div class="level">
-		<Level level_def={$active_level_def} {level_stats} {exit_level_to_map} bind:level />
+		<Level level_def={$active_level_def} {exit_level_to_map} {register_success} bind:level />
 	</div>
 {:else}
 	<slot name="header" />

@@ -4,9 +4,15 @@ import {signal, type Signal, computed, effect} from '@preact/signals-core';
 import {getContext, setContext} from 'svelte';
 import {Logger} from '@feltjs/util/log.js';
 
-import {to_play_level_url, type Level, type LevelDef, type LevelId} from '$lib/earbetter/level';
+import {
+	add_mistakes,
+	LevelStats,
+	to_play_level_url,
+	type Level,
+	type LevelDef,
+	type LevelId,
+} from '$lib/earbetter/level';
 import {create_project_def, ProjectDef, ProjectId, ProjectName} from '$lib/earbetter/project';
-import {create_level_stats} from '$lib/earbetter/level_stats';
 import {load_from_storage, set_in_storage} from '$lib/util/storage';
 
 const log = new Logger('[app]');
@@ -41,7 +47,7 @@ export class App {
 	active_level_def: Signal<LevelDef | null> = signal(null);
 	editing_level_def: Signal<LevelDef | null> = signal(null);
 
-	level_stats = create_level_stats();
+	stats: Signal<LevelStats> = signal({mistakes: {}});
 
 	constructor(public readonly get_ac: () => AudioContext, public readonly storage_key = 'app') {
 		// TODO maybe `new App(App.load())` ?
@@ -95,12 +101,10 @@ export class App {
 		if (project_def) {
 			if (!projects.some((p) => p.id === id)) {
 				this.app_data.value = {projects: projects.concat({id, name: project_def.name})};
-				this.save(); // TODO should this be an effect?
 			}
 		} else {
 			if (projects.some((p) => p.id === id)) {
 				this.app_data.value = {projects: projects.filter((p) => p.id !== id)};
-				this.save(); // TODO should this be an effect?
 			}
 		}
 	};
@@ -191,7 +195,6 @@ export class App {
 		// TODO syncing `app_data` with `project_defs` is awkward
 		if (project_def.name !== existing.name) {
 			const app_data = this.app_data.peek();
-			console.log(`existing.name`, existing.name, project_def.name);
 			this.app_data.value = {
 				...app_data,
 				projects: app_data.projects.map((p) =>
@@ -290,8 +293,13 @@ export class App {
 		this.editing_level_def.value = level_def;
 	};
 
-	exit_level_to_map = async (success = false): Promise<void> => {
-		log.trace('exit_level_to_map', success);
+	register_success = (id: LevelId, mistakes: number): void => {
+		this.stats.value = add_mistakes(this.stats.peek(), id, mistakes);
+		console.log('register success', id, mistakes, this.stats.peek());
+	};
+
+	exit_level_to_map = async (): Promise<void> => {
+		log.trace('exit_level_to_map');
 		const $active_level_def = this.active_level_def.peek();
 		if (!$active_level_def) return;
 		this.active_level_def.value = null;

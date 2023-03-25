@@ -1,14 +1,12 @@
 <script lang="ts">
 	import type {LevelDef} from '$lib/earbetter/level';
-	import {MISTAKE_HISTORY_LENGTH, type LevelStats} from '$lib/earbetter/level_stats';
+	import {MISTAKE_HISTORY_LENGTH, type LevelStats} from '$lib/earbetter/level';
 	import {plural} from '@feltjs/util';
 
 	export let level_def: LevelDef;
-	export let level_stats: LevelStats;
+	export let stats: LevelStats;
 
-	$: ({stats} = level_stats);
-
-	$: mistakes = $stats.mistakes[level_def.id] || [];
+	$: mistakes = stats.mistakes[level_def.id] || [];
 	$: ({length} = mistakes);
 	$: full_history = length >= MISTAKE_HISTORY_LENGTH;
 	$: sum = full_history ? mistakes.reduce((s, v) => s + v, 0) : undefined;
