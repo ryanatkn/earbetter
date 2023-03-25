@@ -22,7 +22,7 @@
 	{/if}
 	{#if (removing && remove) || editing}
 		<button
-			class="icon-button plain-button"
+			class="icon-button plain-button deselectable"
 			class:selected={selected && !removing}
 			class:editing
 			title={removing ? 'remove realm' : 'edit realm'}
