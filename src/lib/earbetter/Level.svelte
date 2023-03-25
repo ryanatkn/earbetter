@@ -1,6 +1,7 @@
 <script lang="ts">
 	import {onDestroy, onMount} from 'svelte';
 	import {isEditable, swallow} from '@feltjs/util/dom.js';
+	import {scale} from 'svelte/transition';
 
 	import {create_level, LevelId, type LevelDef} from '$lib/earbetter/level';
 	import Piano from '$lib/music/Piano.svelte';
@@ -157,7 +158,7 @@
 
 	<div class="feedback" class:success class:failure class:complete>
 		{#if complete}
-			<div style:font-size="var(--icon_size_xl)">🎵🎶</div>
+			<div class="icons" in:scale|local>🎵🎶</div>
 			<button class="big" on:click={() => exit_level_to_map()}>
 				go back to the map &nbsp;<code>Escape</code></button
 			>
@@ -247,5 +248,12 @@
 	}
 	.feedback.failure {
 		background-color: var(--failure_color, red);
+	}
+
+	.icons {
+		font-size: var(--icon_size_xl);
+		word-break: break-all;
+		text-align: center;
+		word-wrap: break-word;
 	}
 </style>
