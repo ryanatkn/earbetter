@@ -79,7 +79,7 @@
 				<ul>
 					<li>each level is a standalone challenge</li>
 					<li>
-						you get a score averaged over {MISTAKE_HISTORY_LENGTH}
+						your score is from your best {MISTAKE_HISTORY_LENGTH}
 						runs
 					</li>
 					<li>each realm has one or more levels</li>
