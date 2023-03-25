@@ -59,7 +59,7 @@
 				<ControlsInstructions />
 				<VolumeControl {volume} />
 				<InstrumentControl {instrument} />
-				<aside>earbetter supports MIDI devices like piano keyboards, connect one and click:</aside>
+				<aside>earbetter supports MIDI devices like piano keyboards, connect and click:</aside>
 				<InitMidiButton {midi_access} />
 			</section>
 			{#if $level_defs}
