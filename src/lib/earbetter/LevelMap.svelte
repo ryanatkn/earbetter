@@ -69,6 +69,16 @@
 		</div>
 	{/if}
 	<div class="column-sm">
+		<section class="panel padded-md">
+			<div class="markup">
+				<aside>
+					earbetter is in early development, and many things are unfinished and unknown - feedback
+					is appreciated on <a href="https://github.com/ryanatkn/earbetter"
+						>the GitHub discussions and issues</a
+					>
+				</aside>
+			</div>
+		</section>
 		{#if $level_defs}
 			<Realms {app} />
 			<section class="panel padded-md">
@@ -76,12 +86,6 @@
 					<header>
 						<h2>ear training levels</h2>
 					</header>
-					<aside>
-						earbetter is in early development, and many things are unfinished and unknown - feedback
-						is appreciated on <a href="https://github.com/ryanatkn/earbetter"
-							>the GitHub discussions and issues</a
-						>
-					</aside>
 				</div>
 				<menu class="levels">
 					{#each $level_defs as d (d.id)}

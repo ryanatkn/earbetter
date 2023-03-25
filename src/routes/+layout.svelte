@@ -3,6 +3,7 @@
 	import {base} from '$app/paths';
 	import {isEditable, swallow} from '@feltjs/util/dom.js';
 	import Dialog from '@feltjs/felt-ui/Dialog.svelte';
+	import {slide} from 'svelte/transition';
 
 	import '$routes/style.css';
 	import {set_ac} from '$lib/audio/ac';
@@ -69,6 +70,8 @@
 			}
 		}
 	};
+
+	let deleting = false;
 </script>
 
 <svelte:head>
@@ -85,16 +88,17 @@
 			<WebsiteMap><h2>earbetter</h2></WebsiteMap>
 		</section>
 		<div class="padded-md">
-			<button
-				on:click={() => {
-					// eslint-disable-next-line no-alert
-					if (confirm('delete all locally saved data? this cannot be undone')) {
+			<button on:click={() => (deleting = !deleting)}> clear saved data </button>
+			<div transition:slide|local>
+				<button
+					on:click={() => {
 						localStorage.clear();
-					}
-				}}
-			>
-				clear saved data
-			</button>
+						location.reload;
+					}}
+				>
+					✕ delete all locally saved data
+				</button>
+			</div>
 		</div>
 	</Dialog>
 {/if}
