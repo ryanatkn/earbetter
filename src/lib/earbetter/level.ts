@@ -20,7 +20,7 @@ export const DEFAULT_NOTE_DURATION_2 = 500; // TODO adjust this to make more cha
 export const DEFAULT_NOTE_DURATION_FAILED = 50;
 export const DEFAULT_FEEDBACK_DURATION = 1000; // TODO configurable
 export const DEFAULT_SEQUENCE_LENGTH = 4;
-export const DEFAULT_TRIAL_COUNT = 2;
+export const DEFAULT_TRIAL_COUNT = 5;
 
 export type LevelId = Flavored<string, 'Level'>;
 export const LevelId = z.string().uuid().transform<LevelId>(identity);
