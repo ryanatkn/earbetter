@@ -15,6 +15,7 @@
 	import MidiInput from '$lib/audio/MidiInput.svelte';
 	import {start_playing, stop_playing} from '$lib/audio/play_note';
 	import Realms from '$lib/earbetter/Realms.svelte';
+	import {MISTAKE_HISTORY_LENGTH} from '$lib/earbetter/level';
 
 	export let app: App;
 	export let midi_access: Signal<MIDIAccess | null>;
@@ -77,6 +78,18 @@
 						>the GitHub discussions and issues</a
 					>
 				</aside>
+				<p>
+					earbetter is an <a href="https://en.wikipedia.org/wiki/Ear_training">ear training</a> tool
+					and game:
+				</p>
+				<ul>
+					<li>each level is a standalone challenge</li>
+					<li>
+						you get a score averaged over {MISTAKE_HISTORY_LENGTH}
+						runs
+					</li>
+					<li>each realm has one or more levels</li>
+				</ul>
 			</div>
 		</section>
 		{#if $level_defs}
