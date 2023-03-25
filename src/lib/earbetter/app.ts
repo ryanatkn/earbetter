@@ -40,7 +40,7 @@ export class App {
 	selected_project_def: Signal<ProjectDef | null> = signal(null);
 	level_defs = computed(() => this.selected_project_def.value?.level_defs || null);
 	editing_project: Signal<boolean> = signal(false);
-	editing_project_def: Signal<ProjectDef | null> = signal(null);
+	editing_project_def: Signal<ProjectDef | null> = signal(null); // this may be `selected_project_def`, or a new project def that hasn't been created yet
 	level: Signal<Level | null> = signal(null);
 
 	active_level_def: Signal<LevelDef | null> = signal(null);
