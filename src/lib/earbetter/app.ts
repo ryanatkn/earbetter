@@ -5,7 +5,7 @@ import {getContext, setContext} from 'svelte';
 import {Logger} from '@feltjs/util/log.js';
 
 import {
-	add_mistakes_to_stats,
+	add_mistakes_to_level_stats,
 	to_play_level_url,
 	type Level,
 	type LevelDef,
@@ -296,7 +296,7 @@ export class App {
 		if (!project_def) return;
 		this.update_project({
 			...project_def,
-			stats: add_mistakes_to_stats(project_def.stats, id, mistakes),
+			level_stats: add_mistakes_to_level_stats(project_def.level_stats, id, mistakes),
 		});
 	};
 

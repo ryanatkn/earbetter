@@ -32,7 +32,7 @@ export const ProjectDef = z.object({
 	id: ProjectId,
 	name: z.string(),
 	level_defs: z.array(LevelDef),
-	stats: LevelStats,
+	level_stats: LevelStats,
 });
 export type ProjectDef = z.infer<typeof ProjectDef>;
 
@@ -54,7 +54,7 @@ export const create_project_def = (partial?: Partial<ProjectDef>): ProjectDef =>
 	id: partial?.id ?? create_project_id(),
 	name: partial?.name ?? random_project_name(),
 	level_defs: partial?.level_defs ?? default_level_defs,
-	stats: partial?.stats ?? DEFAULT_LEVEL_STATS,
+	level_stats: partial?.level_stats ?? DEFAULT_LEVEL_STATS,
 });
 
 const random_project_name = (): ProjectName => randomItem(emojis).icon + randomItem(emojis).icon;

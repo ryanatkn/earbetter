@@ -12,14 +12,15 @@
 		app);
 
 	$: editing = $editing_level_def === level_def;
-	$: stats = $selected_project_def?.stats;
+	$: level_stats = $selected_project_def?.level_stats;
 
 	let removing = false;
 </script>
 
+level_stats
 <li class="level-map-item" transition:slide|local>
-	{#if stats}
-		<LevelStatsSummary {level_def} {stats} />
+	{#if level_stats}
+		<LevelStatsSummary {level_def} {level_stats} />
 	{/if}
 	<button
 		class="level-button deselectable"

@@ -338,12 +338,12 @@ export const DEFAULT_LEVEL_STATS: LevelStats = {mistakes: {}};
 // TODO refactor - parameter? needs care tho, see comment below
 export const MISTAKE_HISTORY_LENGTH = 5;
 
-export const add_mistakes_to_stats = (
-	stats: LevelStats,
+export const add_mistakes_to_level_stats = (
+	level_stats: LevelStats,
 	id: LevelId,
 	mistakes: number,
 ): LevelStats => {
-	const s = {...stats};
+	const s = {...level_stats};
 	s.mistakes = {...s.mistakes}; // preserves key order
 	s.mistakes[id] = add_mistakes(s.mistakes[id], mistakes);
 	return s;

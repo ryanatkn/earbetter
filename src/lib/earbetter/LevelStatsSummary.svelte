@@ -4,9 +4,9 @@
 	import {plural} from '@feltjs/util';
 
 	export let level_def: LevelDef;
-	export let stats: LevelStats;
+	export let level_stats: LevelStats;
 
-	$: mistakes = stats.mistakes[level_def.id] || [];
+	$: mistakes = level_stats.mistakes[level_def.id] || [];
 	$: ({length} = mistakes);
 	$: full_history = length >= MISTAKE_HISTORY_LENGTH;
 	$: sum = full_history ? mistakes.reduce((s, v) => s + v, 0) : undefined;
@@ -14,7 +14,7 @@
 </script>
 
 <div
-	class="level-stats"
+	class="level-stats-summary"
 	title={perfect
 		? `you performed flawlessly in your best ${MISTAKE_HISTORY_LENGTH} runs!`
 		: full_history
@@ -35,7 +35,7 @@
 </div>
 
 <style>
-	.level-stats {
+	.level-stats-summary {
 		display: flex;
 		align-items: center;
 		justify-content: center;
