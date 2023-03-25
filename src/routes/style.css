@@ -96,8 +96,8 @@ button.big {
 
 /* TODO fix this class upstream so this is controlled by a variable */
 .plain-button {
-	--button_color_hover: var(--tint_light_1);
-	--button_color_active: var(--tint_light_2);
+	--button_color_hover: var(--tint_dark_3);
+	--button_color_active: var(--tint_dark_5);
 }
 
 code {
