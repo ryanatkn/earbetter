@@ -18,7 +18,7 @@
 	export let exit_level_to_map: () => void;
 	export let register_success: (id: LevelId, mistakes: number) => void;
 
-	let clientWidth; // `undefined` on first render
+	let clientWidth: number | undefined;
 
 	const ac = get_ac();
 	const volume = get_volume();

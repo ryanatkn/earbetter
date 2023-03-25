@@ -1,5 +1,5 @@
 <aside>
-	Earbetter doesn't work well yet on devices with smaller screens, see <a
+	earbetter doesn't work well yet on devices with smaller screens, see <a
 		href="https://github.com/ryanatkn/earbetter/issues/2">issue #2</a
 	>.
 </aside>

@@ -50,7 +50,7 @@ export class App {
 		// TODO maybe `new App(App.load())` ?
 		this.app_data = signal(this.load());
 		this.saved = this.app_data.peek(); // hacky, but enables the following effect without waste
-		effect(() => this.save());
+		effect(() => this.save()); // TODO do effects like this need to be cleaned up or is calling dispose only for special cases?
 		log.trace(`app_data`, this.app_data.peek());
 		this.load_project(this.app_data.peek().projects[0]?.id || null);
 		// TODO refactor
@@ -220,6 +220,7 @@ export class App {
 			return;
 		}
 		void this.get_ac().resume(); // TODO where's the best place for this? needs to be synchronous with a click or similar, so this breaks if `play_level_def` is called without a user action
+		this.editing_level_def.value = level_def; // for better UX, so when the user navigates back it's still being edited
 		await goto(to_play_level_url(level_def));
 	};
 

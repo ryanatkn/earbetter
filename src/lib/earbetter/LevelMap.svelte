@@ -60,7 +60,7 @@
 				<VolumeControl {volume} />
 				<InstrumentControl {instrument} />
 				<aside>
-					Earbetter supports MIDI devices like piano keyboards. Connect a device and click the
+					earbetter supports MIDI devices like piano keyboards. Connect a device and click the
 					button below:
 				</aside>
 				<InitMidiButton {midi_access} />

@@ -14,8 +14,7 @@ The goal is to make an ear training experience that's fun and useful,
 and also publish reusable components and helpers for music and audio programming.
 It's online at [earbetter.ryanatkn.com](https://earbetter.ryanatkn.com/).
 
-Earbetter is designed to be ideally played with a MIDI device like a piano keyboard.
-It also works without them.
+earbetter is designed for MIDI devices like piano keyboards, but it also works without them.
 
 ## develop
 
