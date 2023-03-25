@@ -82,14 +82,11 @@
 	onDestroy(unsubscribe);
 
 	const subscribe = ($ma: MIDIAccess | null) => {
-		log(`subscribe $ma`, $ma);
 		if (unsubscribers.length) unsubscribe();
 		if (!$ma) return;
 		for (const input of $ma.inputs.values()) {
-			log('subscribing to midi input', input);
 			input.addEventListener('midimessage', midimessage as any);
 			unsubscribers.push(() => {
-				log('unsubscribing to midi input', input);
 				input.removeEventListener('midimessage', midimessage as any);
 			});
 		}

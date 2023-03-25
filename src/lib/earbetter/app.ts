@@ -5,8 +5,7 @@ import {getContext, setContext} from 'svelte';
 import {Logger} from '@feltjs/util/log.js';
 
 import {
-	add_mistakes,
-	LevelStats,
+	add_mistakes_to_stats,
 	to_play_level_url,
 	type Level,
 	type LevelDef,
@@ -46,8 +45,6 @@ export class App {
 
 	active_level_def: Signal<LevelDef | null> = signal(null);
 	editing_level_def: Signal<LevelDef | null> = signal(null);
-
-	stats: Signal<LevelStats> = signal({mistakes: {}});
 
 	constructor(public readonly get_ac: () => AudioContext, public readonly storage_key = 'app') {
 		// TODO maybe `new App(App.load())` ?
@@ -294,8 +291,12 @@ export class App {
 	};
 
 	register_success = (id: LevelId, mistakes: number): void => {
-		this.stats.value = add_mistakes(this.stats.peek(), id, mistakes);
-		console.log('register success', id, mistakes, this.stats.peek());
+		const project_def = this.selected_project_def.peek();
+		if (!project_def) return;
+		this.update_project({
+			...project_def,
+			stats: add_mistakes_to_stats(project_def.stats, id, mistakes),
+		});
 	};
 
 	exit_level_to_map = async (): Promise<void> => {

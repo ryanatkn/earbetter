@@ -64,6 +64,7 @@ export interface Level {
 	next_trial: () => void;
 	complete_level: () => void;
 	// dev and debug methods
+	win: () => void;
 	guess_correctly: () => void;
 	get_correct_guess: () => number | null;
 }
@@ -167,7 +168,7 @@ export const create_level = (
 			const duration =
 				sequence_length < DEFAULT_SEQUENCE_LENGTH ? DEFAULT_NOTE_DURATION_2 : DEFAULT_NOTE_DURATION; // TODO refactor, see elsewhere
 			await play_note(ac, note, volume.peek(), duration, instrument.peek()); // eslint-disable-line no-await-in-loop
-			if (current_seq_id !== seq_id) return; // cancel
+			if (current_seq_id !== seq_id || !trial.peek()) return; // cancel
 		}
 		batch(() => {
 			status.value = 'waiting_for_input';
@@ -295,6 +296,9 @@ export const create_level = (
 		next_trial,
 		complete_level,
 		// dev and debug methods
+		win: () => {
+			complete_level();
+		},
 		guess_correctly: () => {
 			if (status.peek() !== 'waiting_for_input') return;
 			const midi = get_correct_guess(trial.peek());
@@ -332,15 +336,18 @@ export type LevelStats = z.infer<typeof LevelStats>;
 // TODO refactor - parameter? needs care tho, see comment below
 export const MISTAKE_HISTORY_LENGTH = 5;
 
-export const add_mistakes = (stats: LevelStats, id: LevelId, mistakes: number): LevelStats => {
+export const add_mistakes_to_stats = (
+	stats: LevelStats,
+	id: LevelId,
+	mistakes: number,
+): LevelStats => {
 	const s = {...stats};
 	s.mistakes = {...s.mistakes}; // preserves key order
-	s.mistakes[id] = add_mistakes_to(s.mistakes[id], mistakes);
+	s.mistakes[id] = add_mistakes(s.mistakes[id], mistakes);
 	return s;
 };
 
-// TODO BLOCK rename?
-const add_mistakes_to = (data: number[] | undefined, mistakes: number): number[] => {
+const add_mistakes = (data: number[] | undefined, mistakes: number): number[] => {
 	const updated = data?.slice() || [];
 	if (updated.length >= MISTAKE_HISTORY_LENGTH) {
 		updated.sort((a, b) => a - b).length = MISTAKE_HISTORY_LENGTH;

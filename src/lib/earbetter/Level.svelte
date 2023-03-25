@@ -89,7 +89,11 @@
 			}
 			case '`': {
 				swallow(e);
-				level.guess_correctly();
+				if (e.ctrlKey) {
+					level.win();
+				} else {
+					level.guess_correctly();
+				}
 				return;
 			}
 			case 'Escape': {
@@ -153,6 +157,7 @@
 
 	<div class="feedback" class:success class:failure class:complete>
 		{#if complete}
+			<div style:font-size="var(--icon_size_xl)">🎵🎶</div>
 			<button class="big" on:click={() => exit_level_to_map()}>
 				go back to the map &nbsp;<code>Escape</code></button
 			>

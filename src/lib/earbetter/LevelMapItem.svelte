@@ -8,15 +8,19 @@
 	export let app: App;
 	export let level_def: LevelDef;
 
-	$: ({editing_level_def, stats, play_level_def, edit_level_def, remove_level_def} = app);
+	$: ({editing_level_def, editing_project_def, play_level_def, edit_level_def, remove_level_def} =
+		app);
 
 	$: editing = $editing_level_def === level_def;
+	$: stats = $editing_project_def?.stats;
 
 	let removing = false;
 </script>
 
 <li class="level-map-item" transition:slide|local>
-	<LevelStats {level_def} stats={$stats} />
+	{#if stats}
+		<LevelStats {level_def} {stats} />
+	{/if}
 	<button
 		class="level-button deselectable"
 		on:click={() => play_level_def(level_def.id)}
