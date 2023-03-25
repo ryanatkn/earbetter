@@ -13,6 +13,7 @@ import {
 } from '$lib/earbetter/level';
 import {create_project_def, ProjectDef, ProjectId, ProjectName} from '$lib/earbetter/project';
 import {load_from_storage, set_in_storage} from '$lib/util/storage';
+import type {RealmDef, RealmId} from '$lib/earbetter/realm';
 
 const log = new Logger('[app]');
 
@@ -39,12 +40,19 @@ export class App {
 
 	selected_project_def: Signal<ProjectDef | null> = signal(null);
 	level_defs = computed(() => this.selected_project_def.value?.level_defs || null);
+	realm_defs = computed(() => this.selected_project_def.value?.realm_defs || null);
 	editing_project: Signal<boolean> = signal(false);
 	editing_project_def: Signal<ProjectDef | null> = signal(null); // this may be `selected_project_def`, or a new project def that hasn't been created yet
+
 	level: Signal<Level | null> = signal(null);
 
 	active_level_def: Signal<LevelDef | null> = signal(null);
 	editing_level_def: Signal<LevelDef | null> = signal(null);
+
+	// TODO BLOCK make these ids? same elsewhere to avoid needing to mutate?
+	selected_realm_def: Signal<RealmDef | null> = signal(null);
+	editing_realm: Signal<boolean> = signal(false);
+	editing_realm_def: Signal<RealmDef | null> = signal(null);
 
 	constructor(public readonly get_ac: () => AudioContext, public readonly storage_key = 'app') {
 		// TODO maybe `new App(App.load())` ?
@@ -224,7 +232,8 @@ export class App {
 		await goto(to_play_level_url(level_def));
 	};
 
-	edit_level_def = (level_def: LevelDef | null): void => {
+	edit_level_def = (id: LevelId | null): void => {
+		const level_def = (id && this.level_defs.peek()?.find((d) => d.id === id)) || null;
 		log.trace('edit_level_def', level_def);
 		this.editing_level_def.value = level_def;
 	};
@@ -251,11 +260,12 @@ export class App {
 		});
 	};
 
+	// TODO inconsistent naming with `realm` having the `_def` prefix here
 	create_level_def = (level_def: LevelDef): void => {
 		log.trace('create_level_def', level_def);
 		const project_def = this.selected_project_def.peek();
 		if (!project_def) {
-			console.error('cannot update level_def without a project', project_def, level_def);
+			console.error('cannot create level_def without a project', project_def, level_def);
 			return; // no active project
 		}
 		const {level_defs} = project_def;
@@ -289,6 +299,88 @@ export class App {
 		updated[index] = level_def;
 		this.update_project({...project_def, level_defs: updated});
 		this.editing_level_def.value = level_def;
+	};
+
+	select_realm = (id: RealmId | null): void => {
+		log.trace('select_realm', id);
+		if (!id) {
+			this.selected_realm_def.value = null;
+			return;
+		}
+		const def = this.realm_defs.peek()?.find((d) => d.id === id);
+		if (!def) return; // TODO hm
+		this.selected_realm_def.value = def;
+		this.editing_realm_def.value = def;
+	};
+
+	edit_realm = (id: RealmId | null): void => {
+		const realm_def = (id && this.realm_defs.peek()?.find((d) => d.id === id)) || null;
+		log.trace('edit_realm_def', realm_def);
+		this.editing_realm_def.value = realm_def;
+	};
+
+	remove_realm = (id: RealmId): void => {
+		log.trace('remove_realm_def', id);
+		const project_def = this.selected_project_def.peek();
+		if (!project_def) {
+			console.error('cannot remove realm_def without a project', project_def, id);
+			return; // no active project
+		}
+		const {realm_defs} = project_def;
+		const realm_def = realm_defs.find((d) => d.id === id);
+		if (!realm_def) {
+			console.error('cannot find realm_def with id', id);
+			return;
+		}
+		if (id === this.editing_realm_def.value?.id) {
+			this.editing_realm_def.value = null;
+		}
+		this.update_project({
+			...project_def,
+			realm_defs: realm_defs.filter((d) => d !== realm_def),
+		});
+	};
+
+	create_realm = (realm_def: RealmDef): void => {
+		log.trace('create_realm', realm_def);
+		const project_def = this.selected_project_def.peek();
+		if (!project_def) {
+			console.error('cannot create a realm_def without a project', project_def, realm_def);
+			return; // no active project
+		}
+		const {realm_defs} = project_def;
+		// TODO is it weird that these access both `this.realm_defs` and the source of truth `project_def`,
+		// or would it be better to always go through the `project_def`?
+		const existing = realm_defs.find((d) => d.id === realm_def.id);
+		if (existing) {
+			log.trace('realm_def already exists', realm_def, existing);
+			return;
+		}
+
+		this.update_project({...project_def, realm_defs: [realm_def].concat(realm_defs)});
+		this.editing_realm_def.value = realm_def;
+		this.selected_realm_def.value = realm_def;
+	};
+
+	update_realm = (realm_def: RealmDef): void => {
+		log.trace('update_realm_def', realm_def);
+		const project_def = this.selected_project_def.peek();
+		if (!project_def) {
+			console.error('cannot update realm_def without a project', project_def, realm_def);
+			return; // no active project
+		}
+		const {realm_defs} = project_def;
+		const {id} = realm_def;
+		const index = realm_defs.findIndex((d) => d.id === id);
+		if (index === -1) {
+			console.error('cannot find realm_def to update', id, realm_defs);
+			return;
+		}
+		const updated = realm_defs.slice();
+		updated[index] = realm_def;
+		this.update_project({...project_def, realm_defs: updated});
+		this.editing_realm_def.value = realm_def;
+		this.selected_realm_def.value = realm_def;
 	};
 
 	register_success = (id: LevelId, mistakes: number): void => {

@@ -4,7 +4,7 @@
 	import type {ProjectDef, ProjectId, ProjectMetadata} from '$lib/earbetter/project';
 
 	export let project: ProjectMetadata;
-	export let project_def: ProjectDef | undefined;
+	export let project_def: ProjectDef | undefined; // TODO shouldn't this be required?
 	export let load: (id: ProjectId) => ProjectDef | null;
 	export let select: ((id: ProjectId) => void) | null = null; // TODO event? or is the ability to have a return value for ephemeral state desired?
 	export let edit: ((project_def: ProjectDef | null) => void) | null = null; // TODO event? or is the ability to have a return value for ephemeral state desired?

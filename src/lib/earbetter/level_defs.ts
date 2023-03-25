@@ -37,6 +37,16 @@ export const default_level_defs: LevelDef[] = [
 		sequence_length: 2,
 	},
 	{
+		name: 'major third vs perfect fourth',
+		intervals: [4, 5],
+		sequence_length: 2,
+	},
+	{
+		name: 'perfect fourth vs perfect fifth',
+		intervals: [5, 7],
+		sequence_length: 2,
+	},
+	{
 		name: 'major third vs perfect fourth vs perfect fifth',
 		intervals: [4, 5, 7],
 		sequence_length: 2,

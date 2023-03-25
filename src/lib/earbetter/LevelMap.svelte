@@ -14,6 +14,7 @@
 	import ControlsInstructions from '$lib/earbetter/ControlsInstructions.svelte';
 	import MidiInput from '$lib/audio/MidiInput.svelte';
 	import {start_playing, stop_playing} from '$lib/audio/play_note';
+	import Realms from '$lib/earbetter/Realms.svelte';
 
 	export let app: App;
 	export let midi_access: Signal<MIDIAccess | null>;
@@ -69,6 +70,7 @@
 	{/if}
 	<div class="column-sm">
 		{#if $level_defs}
+			<Realms {app} />
 			<section class="panel padded-md">
 				<div class="markup">
 					<header>
