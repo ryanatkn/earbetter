@@ -16,6 +16,7 @@
 	import {start_playing, stop_playing} from '$lib/audio/play_note';
 	import Realms from '$lib/earbetter/Realms.svelte';
 	import {MISTAKE_HISTORY_LENGTH} from '$lib/earbetter/level';
+	import RealmEditor from '$lib/earbetter/RealmEditor.svelte';
 
 	export let app: App;
 	export let midi_access: Signal<MIDIAccess | null>;
@@ -23,6 +24,7 @@
 	$: ({
 		editing_level_def,
 		level_defs,
+		selected_realm_def,
 		play_level_def,
 		edit_level_def,
 		remove_level_def,
@@ -97,7 +99,7 @@
 			<section class="panel padded-md">
 				<div class="markup">
 					<header>
-						<h2>ear training levels</h2>
+						<h2>{$selected_realm_def?.name}</h2>
 					</header>
 				</div>
 				<menu class="levels">
@@ -112,6 +114,7 @@
 	</div>
 	{#if $level_defs}
 		<div class="column-sm">
+			<RealmEditor {app} />
 			<section class="panel padded-md markup">
 				<LevelDefForm
 					{editing}
