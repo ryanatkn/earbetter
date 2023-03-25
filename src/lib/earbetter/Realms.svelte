@@ -23,7 +23,8 @@
 	let id: string;
 	$: editing = $realm_defs ? $realm_defs.some((d) => d.id === id) : false;
 
-	$: creating = $editing_realm && $selected_realm_def?.id !== $editing_realm_def?.id;
+	$: creating =
+		$editing_realm && !!$editing_realm_def && $selected_realm_def?.id !== $editing_realm_def?.id;
 
 	$: console.log(`$selected_realm_def`, $selected_realm_def);
 	$: console.log(`$realm_defs`, $realm_defs);
