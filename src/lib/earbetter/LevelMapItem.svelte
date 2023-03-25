@@ -17,7 +17,6 @@
 	let removing = false;
 </script>
 
-level_stats
 <li class="level-map-item" transition:slide|local>
 	{#if level_stats}
 		<LevelStatsSummary {level_def} {level_stats} />
