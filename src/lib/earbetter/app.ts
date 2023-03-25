@@ -322,6 +322,10 @@ export class App {
 		const realm_def = (id && this.realm_defs.peek()?.find((d) => d.id === id)) || null;
 		log.trace('edit_realm', realm_def);
 		this.editing_realm_def.value = realm_def;
+		if (realm_def) {
+			this.editing_realm.value = true;
+			this.selected_realm_def.value = realm_def;
+		}
 	};
 
 	remove_realm = (id: RealmId): void => {
