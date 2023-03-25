@@ -1,4 +1,5 @@
 import {z} from 'zod';
+import {identity} from '@feltjs/util/function.js';
 
 import type {Frequency} from '$lib/audio/helpers';
 import {DEFAULT_TUNING} from '$lib/music/helpers';
@@ -31,7 +32,7 @@ export const z_midi = z
 	.number()
 	.gte(0)
 	.lte(127)
-	.transform((t) => t as Midi);
+	.transform<Midi>(identity as any);
 
 export const MIDI_MIN = 0;
 export const MIDI_MAX = 127;

@@ -1,6 +1,7 @@
 import {randomItem, randomInt} from '@feltjs/util/random.js';
 import {z} from 'zod';
 import type {Flavored} from '@feltjs/util';
+import {identity} from '@feltjs/util/function.js';
 import {Logger} from '@feltjs/util/log.js';
 import {signal, batch, Signal, effect} from '@preact/signals-core';
 import {base} from '$app/paths';
@@ -22,10 +23,8 @@ export const DEFAULT_SEQUENCE_LENGTH = 4;
 export const DEFAULT_TRIAL_COUNT = 2;
 
 export type LevelId = Flavored<string, 'Level'>;
-export const LevelId = z
-	.string()
-	.uuid()
-	.transform((t) => t as LevelId);
+export const LevelId = z.string().uuid().transform<LevelId>(identity);
+export const create_level_id = (): LevelId => crypto.randomUUID();
 
 // TODO add restrictions to the below def
 export const LevelDef = z.object({
@@ -78,8 +77,6 @@ export interface Trial {
 	guessing_index: number | null; // index of interval being guessed
 	retry_count: number;
 }
-
-export const create_level_id = (): LevelId => crypto.randomUUID();
 
 const create_next_trial = (def: LevelDef, current_trial: Trial | null): Trial => {
 	const {note_min, note_max} = def;
