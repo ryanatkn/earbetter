@@ -72,15 +72,9 @@
 	<div class="column-sm">
 		<section class="panel padded-md">
 			<div class="markup">
-				<aside>
-					earbetter is in early development, and many things are unfinished and unknown - feedback
-					is appreciated on <a href="https://github.com/ryanatkn/earbetter"
-						>the GitHub discussions and issues</a
-					>
-				</aside>
 				<p>
 					earbetter is an <a href="https://en.wikipedia.org/wiki/Ear_training">ear training</a> tool
-					and game:
+					+ game:
 				</p>
 				<ul>
 					<li>each level is a standalone challenge</li>
@@ -89,7 +83,14 @@
 						runs
 					</li>
 					<li>each realm has one or more levels</li>
+					<li>each realm has win conditions</li>
 				</ul>
+				<aside>
+					earbetter is in early development, and many things are unfinished and unknown - feedback
+					is appreciated on <a href="https://github.com/ryanatkn/earbetter"
+						>the GitHub discussions and issues</a
+					>
+				</aside>
 			</div>
 		</section>
 		{#if $level_defs}
