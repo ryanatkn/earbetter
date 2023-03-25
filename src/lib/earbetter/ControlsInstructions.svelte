@@ -1,7 +1,7 @@
 <aside>
-	earbetter doesn't work well yet on devices with smaller screens, see <a
+	devices with smaller screens aren't well supported yet, see <a
 		href="https://github.com/ryanatkn/earbetter/issues/2">issue #2</a
-	>.
+	>
 </aside>
 <table>
 	<tr>
