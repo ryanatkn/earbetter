@@ -333,6 +333,8 @@ export const LevelStats = z.object({
 });
 export type LevelStats = z.infer<typeof LevelStats>;
 
+export const DEFAULT_LEVEL_STATS: LevelStats = {mistakes: {}};
+
 // TODO refactor - parameter? needs care tho, see comment below
 export const MISTAKE_HISTORY_LENGTH = 5;
 
