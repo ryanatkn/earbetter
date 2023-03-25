@@ -62,8 +62,13 @@ export class App {
 		log.trace(`app_data`, this.app_data.peek());
 		this.load_project(this.app_data.peek().projects[0]?.id || null);
 		// TODO refactor
-		if (this.project_defs.peek().length) {
-			this.selected_project_def.value = this.project_defs.peek()[0];
+		const project_def = this.project_defs.peek()[0];
+		if (project_def) {
+			this.selected_project_def.value = project_def;
+			const realm_def = project_def.realm_defs[0];
+			if (realm_def) {
+				this.selected_realm_def.value = realm_def;
+			}
 		}
 	}
 
@@ -315,7 +320,7 @@ export class App {
 
 	edit_realm = (id: RealmId | null): void => {
 		const realm_def = (id && this.realm_defs.peek()?.find((d) => d.id === id)) || null;
-		log.trace('edit_realm_def', realm_def);
+		log.trace('edit_realm', realm_def);
 		this.editing_realm_def.value = realm_def;
 	};
 
