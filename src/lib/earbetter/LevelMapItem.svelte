@@ -3,7 +3,7 @@
 
 	import type {LevelDef} from '$lib/earbetter/level';
 	import type {App} from '$lib/earbetter/app';
-	import LevelStats from '$lib/earbetter/LevelStats.svelte';
+	import LevelStatsSummary from '$lib/earbetter/LevelStatsSummary.svelte';
 
 	export let app: App;
 	export let level_def: LevelDef;
@@ -19,7 +19,7 @@
 
 <li class="level-map-item" transition:slide|local>
 	{#if stats}
-		<LevelStats {level_def} {stats} />
+		<LevelStatsSummary {level_def} {stats} />
 	{/if}
 	<button
 		class="level-button deselectable"

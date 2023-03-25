@@ -21,7 +21,7 @@
 	$: ({
 		editing_level_def,
 		level_defs,
-		editing_project_def,
+		selected_project_def,
 		play_level_def,
 		edit_level_def,
 		remove_level_def,
@@ -29,7 +29,7 @@
 		update_level_def,
 	} = app);
 
-	$: stats = $editing_project_def?.stats;
+	$: stats = $selected_project_def?.stats;
 	$: console.log('stats', stats);
 
 	$: console.log(`$level_defs`, $level_defs);
