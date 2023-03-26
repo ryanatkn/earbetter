@@ -85,7 +85,7 @@
 						your score is the sum of mistakes in your best {MISTAKE_HISTORY_LENGTH}
 						runs, win a ★ at 0
 					</li>
-					<li>each realm has one or more levels</li>
+					<li>realms group levels into bigger challenges</li>
 				</ul>
 				<aside>
 					earbetter is in early development, and many things are unfinished and unknown - feedback
