@@ -1,6 +1,6 @@
 import {goto} from '$app/navigation';
 import {z} from 'zod';
-import {signal, type Signal, computed, effect} from '@preact/signals-core';
+import {signal, type Signal, computed, effect, type ReadonlySignal} from '@preact/signals-core';
 import {getContext, setContext} from 'svelte';
 import {Logger} from '@feltjs/util/log.js';
 
@@ -39,7 +39,9 @@ export class App {
 	project_defs: Signal<ProjectDef[]> = signal([]);
 
 	selected_project_def: Signal<ProjectDef | null> = signal(null);
-	level_defs = computed(() => this.selected_project_def.value?.level_defs || null);
+	level_defs: ReadonlySignal<LevelDef[] | null> = computed(
+		() => this.selected_project_def.value?.level_defs || null,
+	);
 	realm_defs = computed(() => this.selected_project_def.value?.realm_defs || null);
 	editing_project: Signal<boolean> = signal(false);
 	editing_project_def: Signal<ProjectDef | null> = signal(null); // this may be `selected_project_def`, or a new project def that hasn't been created yet
@@ -51,6 +53,14 @@ export class App {
 
 	// TODO BLOCK make these ids? same elsewhere to avoid needing to mutate?
 	selected_realm_def: Signal<RealmDef | null> = signal(null);
+	selected_realm_level_defs: ReadonlySignal<LevelDef[] | null> = computed(
+		() =>
+			(this.level_defs.value &&
+				this.selected_realm_def.value?.levels.map(
+					(id) => this.level_defs.value!.find((d) => d.id === id)!,
+				)) ||
+			null,
+	);
 	editing_realm: Signal<boolean> = signal(false);
 	editing_realm_def: Signal<RealmDef | null> = signal(null);
 

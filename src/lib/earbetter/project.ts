@@ -49,7 +49,7 @@ export class Project {
 export const create_project_def = (partial?: Partial<ProjectDef>): ProjectDef => ({
 	id: partial?.id ?? create_project_id(),
 	name: partial?.name ?? random_project_name(),
-	level_defs: partial?.level_defs ?? default_level_defs,
+	level_defs: partial?.level_defs ?? Array.from(default_level_defs.values()),
 	level_stats: partial?.level_stats ?? DEFAULT_LEVEL_STATS,
 	realm_defs: partial?.realm_defs ?? default_realm_defs,
 });

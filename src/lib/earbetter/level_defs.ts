@@ -1,20 +1,9 @@
 import {
-	create_level_id,
+	create_level_def,
 	DEFAULT_SEQUENCE_LENGTH,
-	DEFAULT_TRIAL_COUNT,
+	LevelId,
 	type LevelDef,
 } from '$lib/earbetter/level';
-
-export const BASE_LEVEL_DEF = {
-	// TODO support something like this for 3-star accomplishment (or N-star)
-	// we probably additionally want to say for each version not just the number of trials,
-	// but the number of trials that must be correct to count as success (which should probably be 0 for the first level!)
-	// trial_count: [2, 5, 25],
-	trial_count: DEFAULT_TRIAL_COUNT,
-	sequence_length: DEFAULT_SEQUENCE_LENGTH,
-	note_min: 48,
-	note_max: 84,
-} satisfies Partial<LevelDef>;
 
 // TODO programmatic dimensions
 // "up and down" (duplicate the intervals below the tonic)
@@ -22,7 +11,33 @@ export const BASE_LEVEL_DEF = {
 // which keys can be used
 // present_duration
 
-export const default_level_defs: LevelDef[] = [
+// TODO block maybe pass this as a param? awkward as a global, disconnected from the project data
+export const default_level_defs: Map<LevelId, LevelDef> = new Map();
+
+export const lookup_level = (id: LevelId, defs = default_level_defs): LevelDef => {
+	const level_def = defs.get(id);
+	if (!level_def) throw Error('unable to find level with id: ' + id);
+	return level_def;
+};
+
+export const lookup_level_by_name = (name: string, defs = default_level_defs): LevelDef => {
+	for (const d of defs.values()) {
+		if (d.name === name) return d;
+	}
+	throw Error('unable to find level with name: ' + name);
+};
+
+export const create_and_cache_level_def = (
+	partial?: Partial<LevelDef>,
+	defs = default_level_defs,
+): LevelDef => {
+	const level = create_level_def(partial);
+	defs.set(level.id, level);
+	return level;
+};
+
+// TODO refactor
+[
 	{
 		name: 'perfect fourth vs perfect octave',
 		intervals: [5, 12],
@@ -162,4 +177,4 @@ export const default_level_defs: LevelDef[] = [
 		name: 'chromatic scale (four octaves)',
 		intervals: Array.from({length: 49}, (_, i) => i - 24),
 	},
-].map((d) => ({...BASE_LEVEL_DEF, ...d, id: create_level_id()}));
+].forEach((d) => create_and_cache_level_def(d));

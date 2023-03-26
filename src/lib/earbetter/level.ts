@@ -6,7 +6,7 @@ import {Logger} from '@feltjs/util/log.js';
 import {signal, batch, Signal, effect} from '@preact/signals-core';
 import {base} from '$app/paths';
 
-import {z_midi, type Midi} from '$lib/music/midi';
+import {Midi} from '$lib/music/midi';
 import {Intervals} from '$lib/music/notes';
 import {play_note} from '$lib/audio/play_note';
 import type {Instrument, Volume} from '$lib/audio/helpers';
@@ -21,6 +21,10 @@ export const DEFAULT_NOTE_DURATION_FAILED = 50;
 export const DEFAULT_FEEDBACK_DURATION = 1000; // TODO configurable
 export const DEFAULT_SEQUENCE_LENGTH = 4;
 export const DEFAULT_TRIAL_COUNT = 5;
+export const DEFAULT_TRIAL_NAME = 'new trial';
+export const DEFAULT_INTERVALS = [5, 7];
+export const DEFAULT_NOTE_MIN = 48;
+export const DEFAULT_NOTE_MAX = 84;
 
 export type LevelId = Flavored<string, 'Level'>;
 export const LevelId = z.string().uuid().transform<LevelId>(identity);
@@ -33,8 +37,8 @@ export const LevelDef = z.object({
 	intervals: Intervals,
 	trial_count: z.number(),
 	sequence_length: z.number(),
-	note_min: z_midi,
-	note_max: z_midi,
+	note_min: Midi,
+	note_max: Midi,
 });
 export type LevelDef = z.infer<typeof LevelDef>;
 
@@ -358,3 +362,13 @@ const add_mistakes = (data: number[] | undefined, mistakes: number): number[] =>
 	}
 	return updated;
 };
+
+export const create_level_def = (partial?: Partial<LevelDef>): LevelDef => ({
+	id: partial?.id ?? create_level_id(),
+	name: partial?.name ?? DEFAULT_TRIAL_NAME,
+	intervals: partial?.intervals ?? DEFAULT_INTERVALS,
+	trial_count: partial?.trial_count ?? DEFAULT_TRIAL_COUNT,
+	sequence_length: partial?.sequence_length ?? DEFAULT_SEQUENCE_LENGTH,
+	note_min: partial?.note_min ?? DEFAULT_NOTE_MIN,
+	note_max: partial?.note_max ?? DEFAULT_NOTE_MAX,
+});

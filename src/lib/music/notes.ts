@@ -1,8 +1,9 @@
 import {z} from 'zod';
+import type {Flavored} from '@feltjs/util';
+import {identity} from '@feltjs/util/function.js';
 
 import {type Midi, midis, is_midi} from '$lib/music/midi';
 import {type Hsl, hsl_to_string, type Hue} from '$lib/util/colors';
-import {identity, type Flavored} from '@feltjs/util';
 
 // `Midi` is our primary means of identifying notes,
 // and its type is a number with a min of 0, just like array indices.
@@ -34,9 +35,9 @@ export type Chroma = (typeof chromas)[number]; // corresponds to indices of `pit
 export const pitch_classes = Object.freeze(['C', 'C♯', 'D', 'D♯', 'E', 'F', 'F♯', 'G', 'G♯', 'A', 'A♯', 'B'] as const); // prettier-ignore
 export type PitchClass = (typeof pitch_classes)[number];
 export type Octave = -1 | 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9;
-export type Semitones = Flavored<number, 'Semitones'>;
 
-export const Semitones = z.number().transform<Semitones>(identity);
+export type Semitones = Flavored<number, 'Semitones'>;
+export const Semitones = z.number().int().transform<Semitones>(identity);
 
 export const Intervals = z.array(Semitones);
 export type Intervals = z.infer<typeof Intervals>;

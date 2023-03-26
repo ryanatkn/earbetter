@@ -87,18 +87,20 @@
 		<section>
 			<WebsiteMap><h2>earbetter</h2></WebsiteMap>
 		</section>
-		<div class="padded-md">
+		<div class="padded-md centered">
 			<button on:click={() => (deleting = !deleting)}> clear saved data </button>
-			<div transition:slide|local>
-				<button
-					on:click={() => {
-						localStorage.clear();
-						location.reload;
-					}}
-				>
-					✕ delete all locally saved data
-				</button>
-			</div>
+			{#if deleting}
+				<div transition:slide|local>
+					<button
+						on:click={() => {
+							localStorage.clear();
+							location.reload();
+						}}
+					>
+						✕ permanently delete all locally saved data
+					</button>
+				</div>
+			{/if}
 		</div>
 	</Dialog>
 {/if}

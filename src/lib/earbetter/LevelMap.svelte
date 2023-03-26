@@ -25,6 +25,7 @@
 	$: ({
 		editing_level_def,
 		level_defs,
+		selected_realm_level_defs,
 		play_level_def,
 		edit_level_def,
 		remove_level_def,
@@ -33,6 +34,7 @@
 	} = app);
 
 	$: console.log(`$level_defs`, $level_defs);
+	$: console.log(`$selected_realm_level_defs`, $selected_realm_level_defs);
 
 	const ac = get_ac();
 	(window as any).audio = ac;
@@ -94,9 +96,9 @@
 				</aside>
 			</div>
 		</section>
-		{#if $level_defs}
+		{#if $selected_realm_level_defs}
 			<Realms {app} />
-			<LevelMapItems {app} level_defs={$level_defs} />
+			<LevelMapItems {app} level_defs={$selected_realm_level_defs} />
 		{:else}
 			<Projects {app} />
 		{/if}
@@ -142,12 +144,6 @@
 		flex-direction: row;
 		justify-content: center;
 		align-items: flex-start;
-	}
-	.levels {
-		display: flex;
-		flex-direction: column;
-		align-items: stretch;
-		margin: var(--spacing_md) 0;
 	}
 	section {
 		display: flex;
