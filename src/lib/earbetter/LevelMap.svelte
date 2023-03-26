@@ -25,6 +25,7 @@
 	$: ({
 		editing_level_def,
 		level_defs,
+		selected_realm_id,
 		selected_realm_level_defs,
 		play_level_def,
 		edit_level_def,
@@ -102,34 +103,36 @@
 	{#if $level_defs}
 		<div class="column-sm">
 			<RealmEditor {app} />
-			<section class="panel padded-md markup">
-				<LevelDefForm
-					{editing}
-					bind:id
-					level_def={$editing_level_def}
-					on:submit={(editing ? update_level_def : create_level_def)
-						? (e) => (editing ? update_level_def : create_level_def)(e.detail)
-						: undefined}
-					on:remove={(e) => remove_level_def(e.detail)}
-				>
-					<svelte:fragment slot="footer" let:changed let:to_data>
-						{#if editing}
-							<button
-								type="button"
-								on:click={() => {
-									if (changed) update_level_def(to_data());
-									play_level_def(id);
-								}}
-							>
-								play!
-							</button>
-							<button type="button" on:click={() => edit_level_def(null)}>
-								{#if changed}discard changes and stop editing{:else}stop editing this level{/if}
-							</button>
-						{/if}
-					</svelte:fragment>
-				</LevelDefForm>
-			</section>
+			{#if $selected_realm_id}
+				<section class="panel padded-md markup">
+					<LevelDefForm
+						{editing}
+						bind:id
+						level_def={$editing_level_def}
+						on:submit={(editing ? update_level_def : create_level_def)
+							? (e) => (editing ? update_level_def : create_level_def)(e.detail)
+							: undefined}
+						on:remove={(e) => remove_level_def(e.detail)}
+					>
+						<svelte:fragment slot="footer" let:changed let:to_data>
+							{#if editing}
+								<button
+									type="button"
+									on:click={() => {
+										if (changed) update_level_def(to_data());
+										play_level_def(id);
+									}}
+								>
+									play!
+								</button>
+								<button type="button" on:click={() => edit_level_def(null)}>
+									{#if changed}discard changes and stop editing{:else}stop editing this level{/if}
+								</button>
+							{/if}
+						</svelte:fragment>
+					</LevelDefForm>
+				</section>
+			{/if}
 		</div>
 	{/if}
 </div>

@@ -53,11 +53,9 @@ export class App {
 		const id = this.selected_project_id.value;
 		return this.project_defs.value.find((p) => p.id === id) || null;
 	});
-	level_defs: ReadonlySignal<LevelDef[] | null> = computed(() => {
-		const defs = this.selected_project_def.value?.level_defs;
-		console.log(`!!level_defs`, defs);
-		return defs || null;
-	});
+	level_defs: ReadonlySignal<LevelDef[] | null> = computed(
+		() => this.selected_project_def.value?.level_defs || null,
+	);
 	realm_defs = computed(() => this.selected_project_def.value?.realm_defs || null);
 	editing_project: Signal<boolean> = signal(false);
 	editing_project_draft: Signal<boolean> = signal(false);
@@ -193,9 +191,9 @@ export class App {
 			return loaded;
 		} else {
 			log.trace(`load_project failed, creating new`, id);
-			const def = create_project_def();
-			this.create_project(def);
-			return def;
+			const project_def = create_project_def();
+			this.create_project(project_def);
+			return project_def;
 		}
 	};
 
@@ -206,9 +204,11 @@ export class App {
 			return;
 		}
 		batch(() => {
-			const def = this.project_defs.peek().find((d) => d.id === id) || this.load_project(id);
-			if (!def) console.error('failed to find or load def', id);
-			this.selected_project_id.value = def?.id || null;
+			const project_def =
+				this.project_defs.peek().find((d) => d.id === id) || this.load_project(id);
+			if (!project_def) console.error('failed to find or load def', id);
+			this.selected_project_id.value = project_def?.id || null;
+			this.selected_realm_id.value = project_def?.realm_defs[0]?.id || null;
 		});
 		log.trace('exit select_project', id, this.selected_realm_level_defs.peek());
 	};
@@ -276,6 +276,9 @@ export class App {
 			};
 			this.project_defs.value = project_defs.concat(project_def);
 			this.selected_project_id.value = id;
+			if (this.project_draft_def.peek() === project_def) {
+				this.project_draft_def.value = null;
+			}
 			this.save_project(id);
 		});
 	};
@@ -320,7 +323,7 @@ export class App {
 
 	edit_level_def = (id: LevelId | null): void => {
 		const level_def = (id && this.level_defs.peek()?.find((d) => d.id === id)) || null;
-		log.trace('edit_level_def', level_def);
+		log.trace('edit_level_def', id, level_def);
 		this.editing_level_def.value = level_def;
 	};
 
@@ -393,10 +396,19 @@ export class App {
 			this.selected_realm_id.value = null;
 			return;
 		}
-		const def = this.realm_defs.peek()?.find((d) => d.id === id);
-		if (!def) return; // TODO BLOCK hm, report an error? how to handle?
-		this.selected_realm_id.value = id;
-		this.editing_realm_draft.value = false; // TODO BLOCK is this right?
+		const realm_def = this.realm_defs.peek()?.find((d) => d.id === id);
+		if (!realm_def) return; // TODO BLOCK hm, report an error? how to handle?
+		batch(() => {
+			this.selected_realm_id.value = id;
+			this.editing_realm_draft.value = false; // TODO BLOCK is this right?
+			// TODO derive instead of manually checking? might not be needed with a restructuring that saves the editing state in the tree
+			if (
+				this.editing_level_def.peek() &&
+				!realm_def.levels.includes(this.editing_level_def.peek()!.id)
+			) {
+				this.editing_level_def.value = null;
+			}
+		});
 	};
 
 	edit_realm = (realm_def: RealmDef | null): void => {
