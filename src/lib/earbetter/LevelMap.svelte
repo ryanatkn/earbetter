@@ -82,8 +82,8 @@
 				<ul>
 					<li>each level is a standalone challenge</li>
 					<li>
-						your score is from your best {MISTAKE_HISTORY_LENGTH}
-						runs
+						your score is the sum of mistakes in your best {MISTAKE_HISTORY_LENGTH}
+						runs, win a ★ at 0
 					</li>
 					<li>each realm has one or more levels</li>
 				</ul>
