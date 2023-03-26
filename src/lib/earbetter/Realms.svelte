@@ -1,6 +1,6 @@
 <script lang="ts">
 	import {create_realm_def} from '$lib/earbetter/realm';
-	import RealmsList from '$lib/earbetter/RealmsList.svelte';
+	import RealmItems from '$lib/earbetter/RealmItems.svelte';
 	import type {App} from '$lib/earbetter/app';
 
 	export let app: App; // TODO maybe change to be more granular objects?
@@ -29,7 +29,7 @@
 				<h2>realms</h2>
 			</header>
 		</div>
-		<RealmsList
+		<RealmItems
 			selected_realm_def={$selected_realm_def}
 			realm_defs={$realm_defs}
 			{select_realm}

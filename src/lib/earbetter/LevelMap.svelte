@@ -33,6 +33,7 @@
 		update_level_def,
 	} = app);
 
+	// TODO BLOCK remove these
 	$: console.log(`$level_defs`, $level_defs);
 	$: console.log(`$selected_realm_level_defs`, $selected_realm_level_defs);
 

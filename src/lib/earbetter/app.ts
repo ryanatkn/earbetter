@@ -1,6 +1,13 @@
 import {goto} from '$app/navigation';
 import {z} from 'zod';
-import {signal, type Signal, computed, effect, type ReadonlySignal} from '@preact/signals-core';
+import {
+	signal,
+	type Signal,
+	computed,
+	effect,
+	type ReadonlySignal,
+	batch,
+} from '@preact/signals-core';
 import {getContext, setContext} from 'svelte';
 import {Logger} from '@feltjs/util/log.js';
 
@@ -16,6 +23,8 @@ import {load_from_storage, set_in_storage} from '$lib/util/storage';
 import type {RealmDef, RealmId} from '$lib/earbetter/realm';
 
 const log = new Logger('[app]');
+
+// TODO maybe an `action` decorator instead of manual `batch`?
 
 // TODO refactor all storage calls, and rethink in signals instead of all top-level orchestration (that's less reusable)
 
@@ -38,27 +47,53 @@ export class App {
 
 	project_defs: Signal<ProjectDef[]> = signal([]);
 
-	selected_project_def: Signal<ProjectDef | null> = signal(null);
-	level_defs: ReadonlySignal<LevelDef[] | null> = computed(
-		() => this.selected_project_def.value?.level_defs || null,
-	);
+	// TODO BLOCK `selected_project_id` and use it derived?
+	selected_project_id: Signal<ProjectId | null> = signal(null);
+	selected_project_def: ReadonlySignal<ProjectDef | null> = computed(() => {
+		const id = this.selected_project_id.value;
+		return this.project_defs.value.find((p) => p.id === id) || null;
+	});
+	level_defs: ReadonlySignal<LevelDef[] | null> = computed(() => {
+		const defs = this.selected_project_def.value?.level_defs;
+		console.log(`!!level_defs`, defs);
+		return defs || null;
+	});
 	realm_defs = computed(() => this.selected_project_def.value?.realm_defs || null);
 	editing_project: Signal<boolean> = signal(false);
-	editing_project_def: Signal<ProjectDef | null> = signal(null); // this may be `selected_project_def`, or a new project def that hasn't been created yet
+	draft_project: Signal<ProjectDef | null> = signal(null); // TODO BLOCK could derive `editing_project_id` from this or `selected`
+	editing_draft: Signal<boolean> = signal(false);
+	editing_project_id: ReadonlySignal<ProjectId | null> = computed(() => {
+		if (this.editing_draft.value) {
+			const id = this.draft_project.value?.id;
+			if (!id) console.error('no id!!!'); // TODO BLOCK remove?
+			return id || null;
+		} else {
+			return this.selected_project_def.value?.id || null;
+		}
+	}); // this may be `selected_project_def`, or a new project def that hasn't been created yet
+	editing_project_def: ReadonlySignal<ProjectDef | null> = computed(() =>
+		this.editing_draft.value ? this.draft_project.value : this.selected_project_def.value,
+	);
 
 	level: Signal<Level | null> = signal(null);
 
 	active_level_def: Signal<LevelDef | null> = signal(null);
 	editing_level_def: Signal<LevelDef | null> = signal(null);
 
-	// TODO BLOCK make these ids? same elsewhere to avoid needing to mutate?
+	// TODO BLOCK make these ids? same elsewhere to avoid needing to mutate? or should they be nested signals?
 	selected_realm_def: Signal<RealmDef | null> = signal(null);
 	selected_realm_level_defs: ReadonlySignal<LevelDef[] | null> = computed(
 		() =>
 			(this.level_defs.value &&
-				this.selected_realm_def.value?.levels.map(
-					(id) => this.level_defs.value!.find((d) => d.id === id)!,
-				)) ||
+				this.selected_realm_def.value?.levels.map((id) => {
+					const level_def = this.level_defs.value!.find((d) => d.id === id)!;
+					if (!level_def) {
+						console.error(`id, level_def`, id, level_def);
+						console.log(`this.level_defs.peek()`, this.level_defs.peek());
+						console.log(`this.selected_project_def.peek()`, this.selected_project_def.peek());
+					}
+					return level_def;
+				})) ||
 			null,
 	);
 	editing_realm: Signal<boolean> = signal(false);
@@ -74,7 +109,7 @@ export class App {
 		// TODO refactor
 		const project_def = this.project_defs.peek()[0];
 		if (project_def) {
-			this.selected_project_def.value = project_def;
+			this.selected_project_id.value = project_def.id;
 			const realm_def = project_def.realm_defs[0];
 			if (realm_def) {
 				this.selected_realm_def.value = realm_def;
@@ -107,7 +142,7 @@ export class App {
 	save(): void {
 		const data = this.toJSON();
 		if (data === this.saved) return;
-		log.trace('App.save', data);
+		log.trace('save', data);
 		set_in_storage(this.storage_key, data);
 		this.saved = data;
 	}
@@ -148,19 +183,39 @@ export class App {
 	select_project = (id: ProjectId | null): void => {
 		log.trace('select_project', id);
 		if (!id) {
-			this.selected_project_def.value = null;
+			this.selected_project_id.value = null;
 			return;
 		}
-		const def = this.project_defs.peek().find((d) => d.id === id) || this.load_project(id);
-		this.selected_project_def.value = def;
-		this.editing_project_def.value = def;
+		batch(() => {
+			const def = this.project_defs.peek().find((d) => d.id === id) || this.load_project(id);
+			if (!def) console.error('failed to find or load def', id);
+			this.selected_project_id.value = def?.id || null;
+		});
+		log.trace('exit select_project', id, this.selected_realm_level_defs.peek());
 	};
 
 	edit_project = (project_def: ProjectDef | null): void => {
 		log.trace('edit_project', project_def);
-		this.editing_project.value = !!project_def;
-		this.editing_project_def.value = project_def;
-		if (project_def) this.selected_project_def.value = project_def;
+		batch(() => {
+			if (!project_def) {
+				this.editing_project.value = false;
+				this.draft_project.value = null;
+				return;
+			}
+			this.editing_project.value = true;
+			const {id} = project_def;
+			const found = this.project_defs.peek().find((d) => d.id === id);
+			if (found) {
+				// existing project
+				this.selected_project_id.value = id;
+				this.editing_draft.value = false;
+			} else {
+				// draft project
+				this.draft_project.value = project_def;
+				this.editing_draft.value = true;
+			}
+		});
+		log.trace('edit_project exit');
 	};
 
 	remove_project = (id: ProjectId): void => {
@@ -169,18 +224,20 @@ export class App {
 		const existing = projects.find((d) => d.id === id);
 		if (!existing) return;
 		// TODO syncing `app_data` with `project_defs` is awkward
-		this.app_data.value = {
-			...this.app_data.peek(),
-			projects: projects.filter((p) => p.id !== id),
-		};
-		this.project_defs.value = this.project_defs.peek().filter((p) => p.id !== id);
-		if (this.selected_project_def.peek()?.id === id) {
-			this.selected_project_def.value =
-				this.project_defs.peek()[0] ||
-				this.load_project(this.app_data.peek().projects[0]?.id) ||
-				null;
-		}
-		this.save_project(id);
+		batch(() => {
+			this.app_data.value = {
+				...this.app_data.peek(),
+				projects: projects.filter((p) => p.id !== id),
+			};
+			this.project_defs.value = this.project_defs.peek().filter((p) => p.id !== id);
+			if (this.selected_project_id.peek() === id) {
+				this.selected_project_id.value =
+					this.project_defs.peek()[0].id ||
+					this.load_project(this.app_data.peek().projects[0]?.id)?.id ||
+					null;
+			}
+			this.save_project(id);
+		});
 	};
 
 	create_project = (project_def: ProjectDef): void => {
@@ -192,14 +249,16 @@ export class App {
 			log.trace('project already exists', project_def, existing);
 			return;
 		}
-		// TODO syncing `app_data` with `project_defs` is awkward
-		this.app_data.value = {
-			...this.app_data.peek(),
-			projects: this.app_data.peek().projects.concat({id, name: project_def.name}),
-		};
-		this.project_defs.value = project_defs.concat(project_def);
-		this.selected_project_def.value = project_def;
-		this.save_project(id);
+		batch(() => {
+			// TODO syncing `app_data` with `project_defs` is awkward
+			this.app_data.value = {
+				...this.app_data.peek(),
+				projects: this.app_data.peek().projects.concat({id, name: project_def.name}),
+			};
+			this.project_defs.value = project_defs.concat(project_def);
+			this.selected_project_id.value = id;
+			this.save_project(id);
+		});
 	};
 
 	update_project = (project_def: ProjectDef): void => {
@@ -225,13 +284,6 @@ export class App {
 		const updated = project_defs.slice();
 		updated[index] = project_def;
 		this.project_defs.value = updated;
-		// TODO this is awkward, could be the id and not need manual updating, or maybe store signals
-		if (this.selected_project_def.peek()?.id === id) {
-			this.selected_project_def.value = project_def;
-		}
-		if (this.editing_project_def.peek()?.id === id) {
-			this.editing_project_def.value = project_def;
-		}
 		this.save_project(id);
 	};
 

@@ -3,7 +3,7 @@
 
 	import {create_project_def} from '$lib/earbetter/project';
 	import ProjectForm from '$lib/earbetter/ProjectForm.svelte';
-	import ProjectsList from '$lib/earbetter/ProjectsList.svelte';
+	import ProjectItems from '$lib/earbetter/ProjectItems.svelte';
 	import type {App} from '$lib/earbetter/app';
 
 	export let app: App; // TODO maybe change to be more granular objects?
@@ -11,8 +11,10 @@
 	$: ({
 		app_data,
 		project_defs,
+		selected_project_id,
 		selected_project_def,
 		editing_project,
+		editing_project_id,
 		editing_project_def,
 		load_project,
 		select_project,
@@ -25,7 +27,7 @@
 	let id: string;
 	$: editing = $project_defs.some((d) => d.id === id);
 
-	$: creating = $editing_project && $selected_project_def?.id !== $editing_project_def?.id;
+	$: creating = $editing_project && $selected_project_id !== $editing_project_id;
 
 	$: ({projects} = $app_data);
 </script>
@@ -37,13 +39,14 @@
 				<h2>projects</h2>
 			</header>
 		</div>
-		<ProjectsList
-			selected_project_def={$selected_project_def}
+		<ProjectItems
+			selected_project_id={$selected_project_id}
+			editing_project_id={$editing_project_id}
 			{projects}
 			project_defs={$project_defs}
 			{load_project}
 			{select_project}
-			edit_project={(p) => edit_project(p === $editing_project_def ? null : p)}
+			edit_project={(p) => edit_project(p === $editing_project_def && $editing_project ? null : p)}
 			{remove_project}
 		/>
 		<button
@@ -53,8 +56,7 @@
 				if (creating) {
 					editing_project.value = false;
 				} else {
-					editing_project_def.value = create_project_def();
-					editing_project.value = true;
+					edit_project(create_project_def());
 				}
 			}}
 		>
