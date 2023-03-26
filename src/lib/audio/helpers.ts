@@ -13,7 +13,7 @@ export const Volume = z
 	.max(1)
 	.transform<Volume>((v) => round(v, 2));
 
-export const DEFAULT_VOLUME: Volume = 0.63;
+export const DEFAULT_VOLUME: Volume = 0.59;
 export const DEFAULT_VOLUME_INCREMENT: Volume = 0.01;
 export const DEFAULT_VELOCITY = 0.47; // balances the volume between using a MIDI input and others that don't have velocity
 // TODO the sqrt may be heavy handed, the goal is to normalize the volume for convenience, but idk
