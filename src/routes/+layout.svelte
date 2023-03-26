@@ -1,11 +1,13 @@
 <script lang="ts">
 	import '@feltjs/felt-ui/style.css';
+	import '$routes/style.css';
+
 	import {base} from '$app/paths';
 	import {isEditable, swallow} from '@feltjs/util/dom.js';
 	import Dialog from '@feltjs/felt-ui/Dialog.svelte';
 	import {slide} from 'svelte/transition';
+	import {browser} from '$app/environment';
 
-	import '$routes/style.css';
 	import {set_ac} from '$lib/audio/ac';
 	import {adjust_volume, set_instrument, set_volume} from '$lib/audio/helpers';
 	import {request_access} from '$lib/audio/midi_access';
@@ -17,7 +19,8 @@
 	const volume = set_volume();
 	const instrument = set_instrument();
 
-	set_app(new App(get_ac));
+	const app = set_app(new App(get_ac));
+	if (browser) (window as any).app = app;
 
 	// TODO add to app? context? global store?
 	let show_main_menu = false;
