@@ -1,7 +1,6 @@
 import {create_realm_def, type RealmDef} from '$lib/earbetter/realm';
 import {create_and_cache_level_def, lookup_level_by_name} from '$lib/earbetter/level_defs';
 import {DEFAULT_NOTE_MIN} from '$lib/earbetter/level';
-import type {Midi} from '$lib/music/midi';
 
 // TODO programmatic dimensions
 // "up and down" (duplicate the intervals below the tonic)
