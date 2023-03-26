@@ -8,10 +8,9 @@
 	export let edit: ((realm_def: RealmDef | null) => void) | null = null; // TODO event? or is the ability to have a return value for ephemeral state desired?
 	export let remove: ((id: RealmId) => void) | null = null; // TODO event? or is the ability to have a return value for ephemeral state desired?
 	export let selected: boolean;
+	export let editing: boolean;
 
 	let removing = false;
-
-	$: editing = !removing && edit;
 </script>
 
 <li class="realm-item" transition:slide|local>
@@ -20,7 +19,7 @@
 			{realm_def.name}
 		</button>
 	{/if}
-	{#if (removing && remove) || editing}
+	{#if (removing && remove) || (!removing && edit)}
 		<button
 			class="icon-button plain-button deselectable"
 			class:selected={selected && !removing}

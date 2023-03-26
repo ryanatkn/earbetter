@@ -9,6 +9,7 @@
 		realm_defs,
 		selected_realm_def,
 		editing_realm,
+		editing_realm_id,
 		editing_realm_def,
 		select_realm,
 		edit_realm,
@@ -22,36 +23,36 @@
 	$: console.log(`$realm_defs`, $realm_defs);
 </script>
 
-{#if $selected_realm_def && $realm_defs}
-	<section class="panel padded-md column-sm">
-		<div class="markup">
-			<header>
-				<h2>realms</h2>
-			</header>
-		</div>
+<section class="panel padded-md column-sm">
+	<div class="markup">
+		<header>
+			<h2>realms</h2>
+		</header>
+	</div>
+	{#if $realm_defs}
 		<RealmItems
 			selected_realm_def={$selected_realm_def}
 			realm_defs={$realm_defs}
+			editing_realm_id={$editing_realm ? $editing_realm_id : null}
 			{select_realm}
-			edit_realm={(p) => edit_realm(!p || p === $editing_realm_def ? null : p.id)}
+			edit_realm={(p) => edit_realm(p === $editing_realm_def && $editing_realm ? null : p)}
 			{remove_realm}
 		/>
-		<button
-			class="create-new-realm deselectable"
-			class:selected={creating}
-			on:click={() => {
-				if (creating) {
-					editing_realm.value = false;
-				} else {
-					editing_realm_def.value = create_realm_def();
-					editing_realm.value = true;
-				}
-			}}
-		>
-			create a new realm
-		</button>
-	</section>
-{/if}
+	{/if}
+	<button
+		class="create-new-realm deselectable"
+		class:selected={creating}
+		on:click={() => {
+			if (creating) {
+				editing_realm.value = false;
+			} else {
+				edit_realm(create_realm_def());
+			}
+		}}
+	>
+		create a new realm
+	</button>
+</section>
 
 <style>
 	.create-new-realm {

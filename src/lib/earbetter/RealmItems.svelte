@@ -2,7 +2,8 @@
 	import type {RealmDef, RealmId} from '$lib/earbetter/realm';
 	import RealmItem from '$lib/earbetter/RealmItem.svelte';
 
-	export let selected_realm_def: RealmDef | null = null;
+	export let selected_realm_def: RealmDef | null = null; // TODO BLOCK selected_realm_def and draft
+	export let editing_realm_id: RealmId | null = null;
 	export let realm_defs: RealmDef[] = [];
 	export let select_realm: (id: RealmId) => void;
 	export let edit_realm: (realm_def: RealmDef | null) => void;
@@ -21,6 +22,7 @@
 			edit={edit_realm}
 			remove={remove_realm}
 			selected={realm.id === selected_realm_def?.id}
+			editing={realm.id === editing_realm_id}
 		/>
 	{/each}
 </menu>

@@ -41,7 +41,7 @@
 		</div>
 		<ProjectItems
 			selected_project_id={$selected_project_id}
-			editing_project_id={$editing_project_id}
+			editing_project_id={$editing_project ? $editing_project_id : null}
 			{projects}
 			project_defs={$project_defs}
 			{load_project}

@@ -69,9 +69,7 @@
 				<aside>earbetter supports MIDI devices like piano keyboards, connect and click:</aside>
 				<InitMidiButton {midi_access} />
 			</section>
-			{#if $level_defs}
-				<Projects {app} />
-			{/if}
+			<Projects {app} />
 		</div>
 	{/if}
 	<div class="column-sm">
@@ -96,11 +94,9 @@
 				</aside>
 			</div>
 		</section>
+		<Realms {app} />
 		{#if $selected_realm_level_defs}
-			<Realms {app} />
 			<LevelMapItems {app} level_defs={$selected_realm_level_defs} />
-		{:else}
-			<Projects {app} />
 		{/if}
 	</div>
 	{#if $level_defs}

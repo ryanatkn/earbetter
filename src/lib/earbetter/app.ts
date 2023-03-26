@@ -60,11 +60,11 @@ export class App {
 	});
 	realm_defs = computed(() => this.selected_project_def.value?.realm_defs || null);
 	editing_project: Signal<boolean> = signal(false);
-	draft_project: Signal<ProjectDef | null> = signal(null); // TODO BLOCK could derive `editing_project_id` from this or `selected`
-	editing_draft: Signal<boolean> = signal(false);
+	editing_project_draft: Signal<boolean> = signal(false);
+	project_draft_def: Signal<ProjectDef | null> = signal(null); // TODO BLOCK could derive `editing_project_id` from this or `selected`
 	editing_project_id: ReadonlySignal<ProjectId | null> = computed(() => {
-		if (this.editing_draft.value) {
-			const id = this.draft_project.value?.id;
+		if (this.editing_project_draft.value) {
+			const id = this.project_draft_def.value?.id;
 			if (!id) console.error('no id!!!'); // TODO BLOCK remove?
 			return id || null;
 		} else {
@@ -72,7 +72,9 @@ export class App {
 		}
 	}); // this may be `selected_project_def`, or a new project def that hasn't been created yet
 	editing_project_def: ReadonlySignal<ProjectDef | null> = computed(() =>
-		this.editing_draft.value ? this.draft_project.value : this.selected_project_def.value,
+		this.editing_project_draft.value
+			? this.project_draft_def.value
+			: this.selected_project_def.value,
 	);
 
 	level: Signal<Level | null> = signal(null);
@@ -81,7 +83,11 @@ export class App {
 	editing_level_def: Signal<LevelDef | null> = signal(null);
 
 	// TODO BLOCK make these ids? same elsewhere to avoid needing to mutate? or should they be nested signals?
-	selected_realm_def: Signal<RealmDef | null> = signal(null);
+	selected_realm_id: Signal<RealmId | null> = signal(null);
+	selected_realm_def: ReadonlySignal<RealmDef | null> = computed(() => {
+		const id = this.selected_realm_id.value;
+		return this.realm_defs.value?.find((p) => p.id === id) || null;
+	});
 	selected_realm_level_defs: ReadonlySignal<LevelDef[] | null> = computed(
 		() =>
 			(this.level_defs.value &&
@@ -97,7 +103,20 @@ export class App {
 			null,
 	);
 	editing_realm: Signal<boolean> = signal(false);
-	editing_realm_def: Signal<RealmDef | null> = signal(null);
+	editing_realm_draft: Signal<boolean> = signal(false);
+	realm_draft_def: Signal<RealmDef | null> = signal(null); // TODO BLOCK could derive `editing_realm_id` from this or `selected`
+	editing_realm_id: ReadonlySignal<RealmId | null> = computed(() => {
+		if (this.editing_realm_draft.value) {
+			const id = this.realm_draft_def.value?.id;
+			if (!id) console.error('no id!!!'); // TODO BLOCK remove?
+			return id || null;
+		} else {
+			return this.selected_realm_def.value?.id || null;
+		}
+	}); // this may be `selected_realm_def`, or a new realm def that hasn't been created yet
+	editing_realm_def: ReadonlySignal<RealmDef | null> = computed(() =>
+		this.editing_realm_draft.value ? this.realm_draft_def.value : this.selected_realm_def.value,
+	);
 
 	constructor(public readonly get_ac: () => AudioContext, public readonly storage_key = 'app') {
 		// TODO maybe `new App(App.load())` ?
@@ -112,7 +131,7 @@ export class App {
 			this.selected_project_id.value = project_def.id;
 			const realm_def = project_def.realm_defs[0];
 			if (realm_def) {
-				this.selected_realm_def.value = realm_def;
+				this.selected_realm_id.value = realm_def.id;
 			}
 		}
 	}
@@ -199,7 +218,7 @@ export class App {
 		batch(() => {
 			if (!project_def) {
 				this.editing_project.value = false;
-				this.draft_project.value = null;
+				this.project_draft_def.value = null;
 				return;
 			}
 			this.editing_project.value = true;
@@ -208,11 +227,11 @@ export class App {
 			if (found) {
 				// existing project
 				this.selected_project_id.value = id;
-				this.editing_draft.value = false;
+				this.editing_project_draft.value = false;
 			} else {
 				// draft project
-				this.draft_project.value = project_def;
-				this.editing_draft.value = true;
+				this.project_draft_def.value = project_def;
+				this.editing_project_draft.value = true;
 			}
 		});
 		log.trace('edit_project exit');
@@ -371,23 +390,37 @@ export class App {
 	select_realm = (id: RealmId | null): void => {
 		log.trace('select_realm', id);
 		if (!id) {
-			this.selected_realm_def.value = null;
+			this.selected_realm_id.value = null;
 			return;
 		}
 		const def = this.realm_defs.peek()?.find((d) => d.id === id);
-		if (!def) return; // TODO hm
-		this.selected_realm_def.value = def;
-		this.editing_realm_def.value = def;
+		if (!def) return; // TODO BLOCK hm, report an error? how to handle?
+		this.selected_realm_id.value = id;
+		this.editing_realm_draft.value = false; // TODO BLOCK is this right?
 	};
 
-	edit_realm = (id: RealmId | null): void => {
-		const realm_def = (id && this.realm_defs.peek()?.find((d) => d.id === id)) || null;
+	edit_realm = (realm_def: RealmDef | null): void => {
 		log.trace('edit_realm', realm_def);
-		this.editing_realm_def.value = realm_def;
-		if (realm_def) {
+		batch(() => {
+			if (!realm_def) {
+				this.editing_realm.value = false;
+				this.realm_draft_def.value = null;
+				return;
+			}
 			this.editing_realm.value = true;
-			this.selected_realm_def.value = realm_def;
-		}
+			const {id} = realm_def;
+			const found = this.realm_defs.peek()?.find((d) => d.id === id);
+			if (found) {
+				// existing realm
+				this.selected_realm_id.value = id;
+				this.editing_realm_draft.value = false;
+			} else {
+				// draft realm
+				this.realm_draft_def.value = realm_def;
+				this.editing_realm_draft.value = true;
+			}
+		});
+		log.trace('edit_realm exit');
 	};
 
 	remove_realm = (id: RealmId): void => {
@@ -403,8 +436,8 @@ export class App {
 			console.error('cannot find realm_def with id', id);
 			return;
 		}
-		if (id === this.editing_realm_def.value?.id) {
-			this.editing_realm_def.value = null;
+		if (id === this.selected_realm_id.peek()) {
+			this.selected_realm_id.value = null;
 		}
 		this.update_project({
 			...project_def,
@@ -429,8 +462,7 @@ export class App {
 		}
 
 		this.update_project({...project_def, realm_defs: [realm_def].concat(realm_defs)});
-		this.editing_realm_def.value = realm_def;
-		this.selected_realm_def.value = realm_def;
+		this.selected_realm_id.value = realm_def.id;
 	};
 
 	update_realm = (realm_def: RealmDef): void => {
@@ -450,8 +482,7 @@ export class App {
 		const updated = realm_defs.slice();
 		updated[index] = realm_def;
 		this.update_project({...project_def, realm_defs: updated});
-		this.editing_realm_def.value = realm_def;
-		this.selected_realm_def.value = realm_def;
+		this.selected_realm_id.value = id;
 	};
 
 	register_success = (id: LevelId, mistakes: number): void => {
