@@ -86,7 +86,6 @@
 						runs
 					</li>
 					<li>each realm has one or more levels</li>
-					<li>each realm has win conditions</li>
 				</ul>
 				<aside>
 					earbetter is in early development, and many things are unfinished and unknown - feedback
