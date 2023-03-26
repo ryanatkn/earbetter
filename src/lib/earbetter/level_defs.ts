@@ -14,19 +14,7 @@ import {
 // TODO block maybe pass this as a param? awkward as a global, disconnected from the project data
 export const default_level_defs: Map<LevelId, LevelDef> = new Map();
 
-export const lookup_level = (id: LevelId, defs = default_level_defs): LevelDef => {
-	const level_def = defs.get(id);
-	if (!level_def) throw Error('unable to find level with id: ' + id);
-	return level_def;
-};
-
-export const lookup_level_by_name = (name: string, defs = default_level_defs): LevelDef => {
-	for (const d of defs.values()) {
-		if (d.name === name) return d;
-	}
-	throw Error('unable to find level with name: ' + name);
-};
-
+// TODO BLOCK probably rethink this caching thing to be plain data without global caching
 export const create_and_cache_level_def = (
 	partial?: Partial<LevelDef>,
 	defs = default_level_defs,
@@ -117,64 +105,5 @@ export const create_and_cache_level_def = (
 	{
 		name: 'major pentatonic',
 		intervals: [2, 4, 7, 9, 12, -10, -8, -5, -3, -12],
-	},
-	{
-		name: 'minor pentatonic',
-		intervals: [3, 5, 7, 10, 12, -9, -7, -5, -2, -12],
-	},
-	{
-		name: 'major second vs major third (long)',
-		intervals: [2, 4],
-		sequence_length: DEFAULT_SEQUENCE_LENGTH * 2,
-	},
-	{
-		name: 'major second vs major third vs perfect fourth (long)',
-		intervals: [2, 4, 5],
-		sequence_length: DEFAULT_SEQUENCE_LENGTH * 2,
-	},
-	{
-		name: 'major scale (Ionian mode)',
-		intervals: [2, 4, 5, 7, 9, 11, 12],
-	},
-	{
-		name: 'minor scale (Aeolian mode)',
-		intervals: [2, 3, 5, 7, 8, 10, 12],
-	},
-	{name: 'Dorian mode', intervals: [2, 3, 5, 7, 9, 10, 12]},
-	{name: 'Phrygian mode', intervals: [1, 3, 5, 7, 8, 10, 12]},
-	{name: 'Lydian mode', intervals: [2, 4, 6, 7, 9, 11, 12]},
-	{name: 'Mixolydian mode', intervals: [2, 4, 5, 7, 9, 10, 12]},
-	{name: 'Locrian mode', intervals: [1, 3, 5, 6, 8, 10, 12]},
-	{name: 'octatonic scale', intervals: [2, 3, 5, 6, 8, 9, 11]},
-	{
-		name: 'major scale (long)',
-		intervals: [2, 4, 5, 7, 9, 11, 12],
-		sequence_length: DEFAULT_SEQUENCE_LENGTH * 2,
-	},
-	{
-		name: 'major scale in both directions',
-		intervals: [2, 4, 5, 7, 9, 11, 12, -1, -3, -5, -7, -8, -10, -12],
-	},
-	{
-		name: 'major scale in both directions (long)',
-		intervals: [2, 4, 5, 7, 9, 11, 12, -1, -3, -5, -7, -8, -10, -12],
-		sequence_length: DEFAULT_SEQUENCE_LENGTH * 2,
-	},
-	{
-		name: 'major scale up two octaves',
-		intervals: [2, 4, 5, 7, 9, 11, 12, 14, 16, 17, 19, 21, 23, 24],
-	},
-	{
-		name: 'major scale up two octaves (long)',
-		intervals: [2, 4, 5, 7, 9, 11, 12, 14, 16, 17, 19, 21, 23, 24],
-		sequence_length: DEFAULT_SEQUENCE_LENGTH * 2,
-	},
-	{
-		name: 'chromatic scale (two octaves)',
-		intervals: Array.from({length: 25}, (_, i) => i - 12),
-	},
-	{
-		name: 'chromatic scale (four octaves)',
-		intervals: Array.from({length: 49}, (_, i) => i - 24),
 	},
 ].forEach((d) => create_and_cache_level_def(d));

@@ -4,10 +4,8 @@ import {signal, Signal} from '@preact/signals-core';
 import {identity} from '@feltjs/util/function.js';
 
 import {DEFAULT_LEVEL_STATS, LevelDef, LevelStats} from '$lib/earbetter/level';
-import {default_level_defs} from '$lib/earbetter/level_defs';
 import {emojis} from '$lib/util/emoji';
 import {RealmDef} from '$lib/earbetter/realm';
-import {default_realm_defs} from '$lib/earbetter/realm_defs';
 
 export type ProjectId = Flavored<string, 'ProjectId'>;
 export const ProjectId = z.string().uuid().transform<ProjectId>(identity); // TODO better way to do this?
@@ -49,9 +47,9 @@ export class Project {
 export const create_project_def = (partial?: Partial<ProjectDef>): ProjectDef => ({
 	id: partial?.id ?? create_project_id(),
 	name: partial?.name ?? random_project_name(),
-	level_defs: partial?.level_defs ?? Array.from(default_level_defs.values()),
+	level_defs: partial?.level_defs ?? [],
 	level_stats: partial?.level_stats ?? DEFAULT_LEVEL_STATS,
-	realm_defs: partial?.realm_defs ?? default_realm_defs,
+	realm_defs: partial?.realm_defs ?? [],
 });
 
 const random_project_name = (): ProjectName => randomItem(emojis).icon + randomItem(emojis).icon;

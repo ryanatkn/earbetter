@@ -1,6 +1,5 @@
 import {z} from 'zod';
 import type {Flavored} from '@feltjs/util';
-import {identity} from '@feltjs/util/function.js';
 
 import type {Frequency} from '$lib/audio/helpers';
 import {DEFAULT_TUNING} from '$lib/music/helpers';
