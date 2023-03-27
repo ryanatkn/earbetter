@@ -269,6 +269,7 @@ export class App {
 			};
 			this.project_defs.value = project_defs.concat(project_def);
 			this.selected_project_id.value = id;
+			this.editing_project.value = false;
 			if (this.project_draft_def.peek() === project_def) {
 				this.project_draft_def.value = null;
 			}
