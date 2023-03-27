@@ -319,7 +319,7 @@ export class App {
 	edit_level_def = (level_def: LevelDef | null): void => {
 		log.trace('edit_level_def', level_def);
 		batch(() => {
-			this.editing_level.value = true;
+			this.editing_level.value = !!level_def;
 			this.editing_level_def.value = level_def;
 		});
 	};
@@ -387,7 +387,8 @@ export class App {
 
 		batch(() => {
 			this.update_project({...project_def, realm_defs: next_realm_defs});
-			this.editing_level_def.value = level_def;
+			this.editing_level.value = false;
+			this.editing_level_def.value = null;
 		});
 
 		return;

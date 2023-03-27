@@ -7,7 +7,9 @@
 	export let app: App;
 	export let level_defs: LevelDef[]; // TODO making this a prop here, but using `app` most places, maybe change it to context?
 
-	$: ({selected_realm_def, edit_level_def} = app);
+	$: ({selected_realm_def, editing_level, editing_level_def, edit_level_def} = app);
+
+	$: editing_draft = $editing_level && !level_defs.some((d) => d === $editing_level_def);
 
 	$: console.log(`level_defs`, level_defs);
 </script>
@@ -23,7 +25,12 @@
 			<LevelMapItem {app} level_def={d} />
 		{/each}
 	</menu>
-	<button on:click={() => edit_level_def(create_level_def())}>create a new level</button>
+	<button
+		class:selected={editing_draft}
+		on:click={() => edit_level_def(editing_draft ? null : create_level_def())}
+	>
+		create a new level
+	</button>
 </section>
 
 <style>
