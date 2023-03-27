@@ -9,7 +9,6 @@
 		app_data,
 		project_defs,
 		selected_project_id,
-		selected_project_def,
 		editing_project,
 		editing_project_id,
 		editing_project_def,
@@ -24,41 +23,36 @@
 	$: ({projects} = $app_data);
 </script>
 
-{#if $selected_project_def}
-	<section class="card column-sm">
-		<div class="panel padded-md">
-			<div class="markup">
-				<header>
-					<h2>projects</h2>
-				</header>
-			</div>
-			<ProjectItems
-				selected_project_id={$selected_project_id}
-				editing_project_id={$editing_project ? $editing_project_id : null}
-				{projects}
-				project_defs={$project_defs}
-				{load_project}
-				{select_project}
-				edit_project={(p) =>
-					edit_project(p === $editing_project_def && $editing_project ? null : p)}
-				{remove_project}
-			/>
-			<button
-				class="create-new-project deselectable"
-				class:selected={creating}
-				on:click={() => {
-					if (creating) {
-						editing_project.value = false;
-					} else {
-						edit_project(create_project_def());
-					}
-				}}
-			>
-				create a new project
-			</button>
-		</div>
-	</section>
-{/if}
+<div class="panel padded-md">
+	<div class="markup">
+		<header>
+			<h2>projects</h2>
+		</header>
+	</div>
+	<ProjectItems
+		selected_project_id={$selected_project_id}
+		editing_project_id={$editing_project ? $editing_project_id : null}
+		{projects}
+		project_defs={$project_defs}
+		{load_project}
+		{select_project}
+		edit_project={(p) => edit_project(p === $editing_project_def && $editing_project ? null : p)}
+		{remove_project}
+	/>
+	<button
+		class="create-new-project deselectable"
+		class:selected={creating}
+		on:click={() => {
+			if (creating) {
+				editing_project.value = false;
+			} else {
+				edit_project(create_project_def());
+			}
+		}}
+	>
+		create a new project
+	</button>
+</div>
 
 <style>
 	.create-new-project {

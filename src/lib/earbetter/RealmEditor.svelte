@@ -1,6 +1,4 @@
 <script lang="ts">
-	import {slide} from 'svelte/transition';
-
 	import RealmForm from '$lib/earbetter/RealmForm.svelte';
 	import type {App} from '$lib/earbetter/app';
 
@@ -21,31 +19,24 @@
 
 	$: console.log(`$selected_realm_def`, $selected_realm_def);
 	$: console.log(`$realm_defs`, $realm_defs);
-
-	$: no_realms = !$realm_defs?.length;
-	// TODO BLOCK hoist the card
 </script>
 
-{#if ($editing_realm && $editing_realm_def) || no_realms}
-	<section class="card" transition:slide|local>
-		<div class="panel padded-md markup">
-			<RealmForm
-				{editing}
-				bind:id
-				realm_def={$editing_realm_def}
-				on:submit={(editing ? update_realm : create_realm)
-					? (e) => (editing ? update_realm : create_realm)?.(e.detail)
-					: undefined}
-				on:remove={remove_realm ? (e) => remove_realm?.(e.detail) : undefined}
-			>
-				<svelte:fragment slot="footer" let:changed>
-					{#if editing}
-						<button type="button" on:click={() => (editing_realm.value = false)}>
-							{#if changed}discard changes and stop editing{:else}stop editing this realm{/if}
-						</button>
-					{/if}
-				</svelte:fragment>
-			</RealmForm>
-		</div>
-	</section>
-{/if}
+<div class="panel padded-md markup">
+	<RealmForm
+		{editing}
+		bind:id
+		realm_def={$editing_realm_def}
+		on:submit={(editing ? update_realm : create_realm)
+			? (e) => (editing ? update_realm : create_realm)?.(e.detail)
+			: undefined}
+		on:remove={remove_realm ? (e) => remove_realm?.(e.detail) : undefined}
+	>
+		<svelte:fragment slot="footer" let:changed>
+			{#if editing}
+				<button type="button" on:click={() => (editing_realm.value = false)}>
+					{#if changed}discard changes and stop editing{:else}stop editing this realm{/if}
+				</button>
+			{/if}
+		</svelte:fragment>
+	</RealmForm>
+</div>

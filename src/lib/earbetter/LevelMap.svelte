@@ -25,9 +25,15 @@
 
 	$: ({
 		project_defs,
+		editing_project,
+		editing_project_def,
+		selected_project_def,
+		realm_defs,
+		editing_realm,
+		editing_realm_def,
+		level_defs,
 		editing_level,
 		editing_level_def,
-		level_defs,
 		selected_realm_id,
 		show_game_help,
 		toggle_game_help,
@@ -46,6 +52,8 @@
 
 	let id: string;
 	$: editing = $level_defs ? $level_defs.some((d) => d.id === id) : false;
+
+	$: no_realms = !$realm_defs?.length;
 </script>
 
 <MidiInput
@@ -60,8 +68,16 @@
 <div class="map">
 	{#if $project_defs.length}
 		<div class="column-sm">
-			<Projects {app} />
-			<ProjectEditor {app} />
+			{#if $selected_project_def}
+				<section class="card">
+					<Projects {app} />
+				</section>
+			{/if}
+			{#if ($editing_project && $editing_project_def) || !$selected_project_def}
+				<section class="card" transition:slide|local>
+					<ProjectEditor {app} />
+				</section>
+			{/if}
 			<section class="card">
 				<div class="panel padded-md markup">
 					<header>
@@ -108,7 +124,11 @@
 		<section class="card">
 			<Realms {app} />
 		</section>
-		<RealmEditor {app} />
+		{#if ($editing_realm && $editing_realm_def) || no_realms}
+			<section class="card" transition:slide|local>
+				<RealmEditor {app} />
+			</section>
+		{/if}
 	</div>
 	{#if $project_defs.length}
 		<div class="column-sm">

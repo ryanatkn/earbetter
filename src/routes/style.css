@@ -144,3 +144,8 @@ button {
 	padding: var(--spacing_xl3) 0;
 	margin: 0;
 }
+
+/* TODO hacky but idk */
+.card .panel {
+	width: 100%;
+}
