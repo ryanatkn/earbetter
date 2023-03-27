@@ -21,9 +21,11 @@
 
 	$: console.log(`$selected_realm_def`, $selected_realm_def);
 	$: console.log(`$realm_defs`, $realm_defs);
+
+	$: no_realms = !$realm_defs?.length;
 </script>
 
-{#if ($editing_realm && $editing_realm_def) || !$selected_realm_def}
+{#if ($editing_realm && $editing_realm_def) || no_realms}
 	<section class="panel padded-md column-sm markup" transition:slide|local>
 		<RealmForm
 			{editing}

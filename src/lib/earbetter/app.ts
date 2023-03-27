@@ -57,7 +57,9 @@ export class App {
 		const id = this.selected_project_id.value;
 		return this.project_defs.value.find((p) => p.id === id) || null;
 	});
-	realm_defs = computed(() => this.selected_project_def.value?.realm_defs || null);
+	realm_defs: ReadonlySignal<RealmDef[] | null> = computed(
+		() => this.selected_project_def.value?.realm_defs || null,
+	);
 	editing_project: Signal<boolean> = signal(false);
 	editing_project_draft: Signal<boolean> = signal(false);
 	project_draft_def: Signal<ProjectDef | null> = signal(null);
@@ -469,6 +471,9 @@ export class App {
 		if (!realm_def) {
 			console.error('cannot find realm_def with id', id);
 			return;
+		}
+		if (id === this.editing_realm_id.peek()) {
+			this.editing_realm.value = false; // TODO move to component?
 		}
 		if (id === this.selected_realm_id.peek()) {
 			this.selected_realm_id.value = null;
