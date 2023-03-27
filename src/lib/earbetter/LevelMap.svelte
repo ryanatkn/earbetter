@@ -1,7 +1,6 @@
 <script lang="ts">
-	import LevelMapItems from './LevelMapItems.svelte';
-
 	import type {Signal} from '@preact/signals-core';
+	import {slide} from 'svelte/transition';
 
 	import type {MIDIAccess} from '$lib/audio/WebMIDI';
 	import {get_ac} from '$lib/audio/ac';
@@ -18,6 +17,7 @@
 	import Realms from '$lib/earbetter/Realms.svelte';
 	import {MISTAKE_HISTORY_LENGTH} from '$lib/earbetter/level';
 	import RealmEditor from '$lib/earbetter/RealmEditor.svelte';
+	import LevelMapItems from '$lib/earbetter/LevelMapItems.svelte';
 
 	export let app: App;
 	export let midi_access: Signal<MIDIAccess | null>;
@@ -28,6 +28,8 @@
 		editing_level_def,
 		level_defs,
 		selected_realm_id,
+		show_game_help,
+		toggle_game_help,
 		play_level_def,
 		edit_level_def,
 		remove_level_def,
@@ -71,27 +73,32 @@
 		</div>
 	{/if}
 	<div class="column-sm">
-		<section class="panel padded-md">
-			<div class="markup">
-				<p>
-					earbetter is an <a href="https://en.wikipedia.org/wiki/Ear_training">ear training</a> tool/game:
-				</p>
-				<ul>
-					<li>each level is a standalone challenge</li>
-					<li>
-						your score is the sum of mistakes in your best {MISTAKE_HISTORY_LENGTH}
-						runs, win a ★ at 0
-					</li>
-					<li>realms group levels into bigger challenges</li>
-				</ul>
-				<aside>
-					earbetter is in early development, and many things are unfinished and unknown - feedback
-					is appreciated on <a href="https://github.com/ryanatkn/earbetter"
-						>the GitHub discussions and issues</a
-					>
-				</aside>
-			</div>
-		</section>
+		{#if $show_game_help}
+			<section class="panel padded-md" out:slide|local>
+				<div class="markup">
+					<p>
+						earbetter is an <a href="https://en.wikipedia.org/wiki/Ear_training">ear training</a> tool/game:
+					</p>
+					<ul>
+						<li>each level is a standalone challenge</li>
+						<li>
+							your score is the sum of mistakes in your best {MISTAKE_HISTORY_LENGTH}
+							runs, win a ★ at 0
+						</li>
+						<li>realms group levels into bigger challenges</li>
+					</ul>
+					<aside>
+						earbetter is in early development, and many things are unfinished and unknown - feedback
+						is appreciated on <a href="https://github.com/ryanatkn/earbetter"
+							>the GitHub discussions and issues</a
+						>
+					</aside>
+					<div class="centered-hz">
+						<button style:margin="0" on:click={() => toggle_game_help()}>ok, hide this</button>
+					</div>
+				</div>
+			</section>
+		{/if}
 		<Realms {app} />
 		<RealmEditor {app} />
 	</div>

@@ -30,11 +30,12 @@ const log = new Logger('[app]');
 // TODO refactor all storage calls, and rethink in signals instead of all top-level orchestration (that's less reusable)
 
 export const AppData = z.object({
-	projects: z.array(z.object({id: ProjectId, name: ProjectName})),
+	projects: z.array(z.object({id: ProjectId, name: ProjectName})).default([]),
+	show_game_help: z.boolean().default(true),
 });
 export type AppData = z.infer<typeof AppData>;
 
-export const DEFAULT_APP_DATA: AppData = {projects: []};
+console.log(`AppData.parse({})`, AppData.parse({}));
 
 const APP_KEY = Symbol('app');
 export const get_app = (): App => getContext(APP_KEY);
@@ -45,6 +46,11 @@ export class App {
 	// currently manually syncing the same changes to both `app_data` `project_defs` --
 	// mixing serialization concerns with runtime representations
 	app_data: Signal<AppData>;
+
+	show_game_help: ReadonlySignal<boolean> = computed(() => this.app_data.value.show_game_help);
+	toggle_game_help = (): void => {
+		this.app_data.value = {...this.app_data.peek(), show_game_help: !this.show_game_help.peek()};
+	};
 
 	project_defs: Signal<ProjectDef[]> = signal([]);
 
@@ -126,7 +132,7 @@ export class App {
 	}
 
 	load(): AppData {
-		const loaded = load_from_storage(this.storage_key, DEFAULT_APP_DATA, AppData.parse);
+		const loaded = load_from_storage(this.storage_key, AppData.parse({}), AppData.parse);
 		let ids_to_delete: ProjectId[] | null = null;
 		for (const p of loaded.projects) {
 			if (localStorage.getItem(p.id) === null) {
@@ -158,11 +164,14 @@ export class App {
 		const {projects} = app_data;
 		if (project_def) {
 			if (!projects.some((p) => p.id === id)) {
-				this.app_data.value = {projects: projects.concat({id, name: project_def.name})};
+				this.app_data.value = {
+					...app_data,
+					projects: projects.concat({id, name: project_def.name}),
+				};
 			}
 		} else {
 			if (projects.some((p) => p.id === id)) {
-				this.app_data.value = {projects: projects.filter((p) => p.id !== id)};
+				this.app_data.value = {...app_data, projects: projects.filter((p) => p.id !== id)};
 			}
 		}
 	};
