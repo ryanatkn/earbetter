@@ -1,6 +1,6 @@
 # contributing to earbetter
 
-wow cool welcome ok:
+hey cool thanks for your interest
 
 1. this project is non-commercial, open source, public domain, and made by a web dev not a musician
 1. earbetter is trying to be a powerful, flexible, simple, and fun set of tools
@@ -10,6 +10,7 @@ wow cool welcome ok:
 1. we use GitHub [issues](https://github.com/ryanatkn/earbetter/issues) and
    [discussions](https://github.com/ryanatkn/earbetter/discussions)
 1. [PRs](https://github.com/ryanatkn/earbetter/pulls)
-   are welcome but may be declined for opinionated or other reasons,
-   everything is public domain and forking is encouraged
+   are welcome but they may be declined if they don't fit the project's goals,
+   which are currently unclear and open for discussion,
+   but everything is public domain and forking is encouraged
 1. please be kind and curious

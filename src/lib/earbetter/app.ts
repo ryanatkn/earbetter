@@ -497,8 +497,14 @@ export class App {
 			return;
 		}
 
-		this.update_project({...project_def, realm_defs: [realm_def].concat(realm_defs)});
-		this.selected_realm_id.value = realm_def.id;
+		batch(() => {
+			this.update_project({...project_def, realm_defs: realm_defs.concat(realm_def)});
+			this.selected_realm_id.value = realm_def.id;
+			// TODO is awkward but works, should it be an effect?
+			if (this.realm_draft_def.peek()?.id === realm_def.id) {
+				this.editing_realm.value = false;
+			}
+		});
 	};
 
 	update_realm = (realm_def: RealmDef): void => {
