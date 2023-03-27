@@ -20,7 +20,7 @@ import {
 } from '$lib/earbetter/level';
 import {ProjectDef, ProjectId, ProjectName} from '$lib/earbetter/project';
 import {load_from_storage, set_in_storage} from '$lib/util/storage';
-import type {RealmDef, RealmId} from '$lib/earbetter/realm';
+import {RealmId, type RealmDef} from '$lib/earbetter/realm';
 import default_project_def from '$lib/earbetter/projects/default-project';
 
 const log = new Logger('[app]');
@@ -32,6 +32,7 @@ const log = new Logger('[app]');
 export const AppData = z.object({
 	projects: z.array(z.object({id: ProjectId, name: ProjectName})).default([]),
 	selected_project_id: z.union([ProjectId, z.null()]).default(null),
+	selected_realm_id: z.union([RealmId, z.null()]).default(null),
 	show_game_help: z.boolean().default(true),
 });
 export type AppData = z.infer<typeof AppData>;
@@ -115,20 +116,23 @@ export class App {
 			selected_project_id ||
 				app_data.projects[0]?.id ||
 				this.create_project(default_project_def()).id,
-		);
-		if (project_def) {
-			this.selected_project_id.value = project_def.id;
-			const realm_def = project_def.realm_defs[0];
-			if (realm_def) {
-				this.selected_realm_id.value = realm_def.id;
-			}
-		}
+		)!;
+		this.selected_project_id.value = project_def.id;
+		this.selected_realm_id.value =
+			app_data.selected_realm_id || project_def.realm_defs[0]?.id || null;
 		// save changes to `selected_project_id` back to the `app_data`
 		effect(() => {
 			const app_data = this.app_data.peek();
 			const selected_project_id = this.selected_project_id.value;
 			if (selected_project_id === app_data.selected_project_id) return;
 			this.app_data.value = {...app_data, selected_project_id};
+		});
+		// save changes to `selected_realm_id` back to the `app_data`
+		effect(() => {
+			const app_data = this.app_data.peek();
+			const selected_realm_id = this.selected_realm_id.value;
+			if (selected_realm_id === app_data.selected_realm_id) return;
+			this.app_data.value = {...app_data, selected_realm_id};
 		});
 	}
 
