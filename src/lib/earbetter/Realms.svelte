@@ -9,6 +9,7 @@
 	export let app: App; // TODO maybe change to be more granular objects?
 
 	$: ({
+		selected_project_def,
 		realm_defs,
 		selected_realm_def,
 		editing_realm,
@@ -42,9 +43,10 @@
 			<h2>realms</h2>
 		</header>
 	</div>
-	{#if $realm_defs}
+	{#if $realm_defs && $selected_project_def}
 		<div class="realm-items-wrapper" transition:slide|local>
 			<RealmItems
+				project_def={$selected_project_def}
 				selected_realm_def={$selected_realm_def}
 				realm_defs={$realm_defs}
 				editing_realm_id={$editing_realm ? $editing_realm_id : null}
