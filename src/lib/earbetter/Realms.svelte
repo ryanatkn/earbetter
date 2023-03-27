@@ -36,7 +36,7 @@
 	};
 </script>
 
-<section class="panel padded-md column-sm">
+<div class="panel padded-md">
 	<div class="markup">
 		<header>
 			<h2>realms</h2>
@@ -74,7 +74,7 @@
 			</button>
 		</div>
 	{/if}
-</section>
+</div>
 
 <style>
 	button {

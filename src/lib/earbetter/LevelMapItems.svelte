@@ -16,7 +16,7 @@
 	$: console.log(`level_defs`, level_defs);
 </script>
 
-<section class="panel padded-md">
+<div class="panel padded-md">
 	<div class="markup">
 		<header>
 			<h2>{$selected_realm_def?.name}</h2>
@@ -34,7 +34,7 @@
 	>
 		create a new level
 	</button>
-</section>
+</div>
 
 <style>
 	.levels {
@@ -42,14 +42,6 @@
 		flex-direction: column;
 		align-items: stretch;
 		margin-bottom: var(--spacing_md);
-	}
-	section {
-		display: flex;
-		flex-direction: column;
-		align-items: center;
-	}
-	section:not(:first-child) {
-		margin: var(--spacing_xl5) 0;
 	}
 	button {
 		width: 100%;

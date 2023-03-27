@@ -11,7 +11,7 @@
 
 <style>
 	header {
-		margin: var(--spacing_xl3) auto;
+		margin: var(--spacing_xl3) auto 0;
 		text-align: center;
 		display: flex;
 		flex-direction: column;
