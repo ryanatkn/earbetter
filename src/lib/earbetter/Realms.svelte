@@ -81,6 +81,7 @@
 		width: 100%;
 	}
 	.create-default-realms-wrapper {
+		/* need a wrapper with padding because of the transition */
 		padding-top: var(--spacing_md);
 	}
 	.realm-items-wrapper {
