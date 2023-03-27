@@ -1,7 +1,10 @@
 <script lang="ts">
+	import {slide} from 'svelte/transition';
+
 	import {create_realm_def} from '$lib/earbetter/realm';
 	import RealmItems from '$lib/earbetter/RealmItems.svelte';
 	import type {App} from '$lib/earbetter/app';
+	import default_project_def from '$lib/earbetter/projects/default-project';
 
 	export let app: App; // TODO maybe change to be more granular objects?
 
@@ -12,6 +15,7 @@
 		editing_realm_id,
 		editing_realm_def,
 		select_realm,
+		create_realm,
 		edit_realm,
 		remove_realm,
 	} = app);
@@ -40,7 +44,7 @@
 		/>
 	{/if}
 	<button
-		class="create-new-realm deselectable"
+		class="deselectable"
 		class:selected={creating}
 		on:click={() => {
 			if (creating) {
@@ -52,10 +56,23 @@
 	>
 		create a new realm
 	</button>
+	{#if !$realm_defs?.length}
+		<div in:slide|local>
+			<button
+				on:click={() => {
+					for (const realm_def of default_project_def().realm_defs) {
+						create_realm(realm_def);
+					}
+				}}
+			>
+				create default realms
+			</button>
+		</div>
+	{/if}
 </section>
 
 <style>
-	.create-new-realm {
+	button {
 		margin: var(--spacing_md) 0;
 		width: 100%;
 	}
