@@ -35,8 +35,6 @@ export const AppData = z.object({
 });
 export type AppData = z.infer<typeof AppData>;
 
-console.log(`AppData.parse({})`, AppData.parse({}));
-
 const APP_KEY = Symbol('app');
 export const get_app = (): App => getContext(APP_KEY);
 export const set_app = (store: App): App => setContext(APP_KEY, store);
@@ -54,7 +52,6 @@ export class App {
 
 	project_defs: Signal<ProjectDef[]> = signal([]);
 
-	// TODO BLOCK `selected_project_id` and use it derived?
 	selected_project_id: Signal<ProjectId | null> = signal(null);
 	selected_project_def: ReadonlySignal<ProjectDef | null> = computed(() => {
 		const id = this.selected_project_id.value;
@@ -63,19 +60,18 @@ export class App {
 	realm_defs = computed(() => this.selected_project_def.value?.realm_defs || null);
 	editing_project: Signal<boolean> = signal(false);
 	editing_project_draft: Signal<boolean> = signal(false);
-	project_draft_def: Signal<ProjectDef | null> = signal(null); // TODO BLOCK could derive `editing_project_id` from this or `selected`
+	project_draft_def: Signal<ProjectDef | null> = signal(null);
 	editing_project_id: ReadonlySignal<ProjectId | null> = computed(() =>
 		this.editing_project_draft.value
 			? this.project_draft_def.value?.id || null
 			: this.selected_project_def.value?.id || null,
-	); // this may be `selected_project_def`, or a new project def that hasn't been created yet
+	); // this may be `selected_project_def`, or a new project def draft that hasn't been created yet
 	editing_project_def: ReadonlySignal<ProjectDef | null> = computed(() =>
 		this.editing_project_draft.value
 			? this.project_draft_def.value
 			: this.selected_project_def.value,
 	);
 
-	// TODO BLOCK make these ids? same elsewhere to avoid needing to mutate? or should they be nested signals?
 	selected_realm_id: Signal<RealmId | null> = signal(null);
 	selected_realm_def: ReadonlySignal<RealmDef | null> = computed(() => {
 		const id = this.selected_realm_id.value;
@@ -83,16 +79,12 @@ export class App {
 	});
 	editing_realm: Signal<boolean> = signal(false);
 	editing_realm_draft: Signal<boolean> = signal(false);
-	draft_realm_def: Signal<RealmDef | null> = signal(null); // TODO BLOCK could derive `editing_realm_id` from this or `selected`
-	editing_realm_id: ReadonlySignal<RealmId | null> = computed(() => {
-		if (this.editing_realm_draft.value) {
-			const id = this.draft_realm_def.value?.id;
-			if (!id) console.error('no id!!!'); // TODO BLOCK remove?
-			return id || null;
-		} else {
-			return this.selected_realm_def.value?.id || null;
-		}
-	}); // this may be `selected_realm_def`, or a new realm def that hasn't been created yet
+	draft_realm_def: Signal<RealmDef | null> = signal(null);
+	editing_realm_id: ReadonlySignal<RealmId | null> = computed(() =>
+		this.editing_realm_draft.value
+			? this.draft_realm_def.value?.id || null
+			: this.selected_realm_def.value?.id || null,
+	); // this may be `selected_realm_def`, or a new realm def draft that hasn't been created yet
 	editing_realm_def: ReadonlySignal<RealmDef | null> = computed(() =>
 		this.editing_realm_draft.value ? this.draft_realm_def.value : this.selected_realm_def.value,
 	);
@@ -103,8 +95,8 @@ export class App {
 		() => this.selected_realm_def.value?.level_defs || null,
 	);
 	active_level_def: Signal<LevelDef | null> = signal(null);
-	editing_level: Signal<boolean> = signal(false); // TODO BLOCK draft and editing_level boolean
-	editing_level_def: Signal<LevelDef | null> = signal(null); // TODO BLOCK draft and editing_level boolean
+	editing_level: Signal<boolean> = signal(false);
+	editing_level_def: Signal<LevelDef | null> = signal(null);
 
 	constructor(public readonly get_ac: () => AudioContext, public readonly storage_key = 'app') {
 		// TODO maybe `new App(App.load())` ?
@@ -414,7 +406,7 @@ export class App {
 				const next_realm_defs = realm_defs.slice();
 				next_realm_defs[i] = {...realm_def, level_defs: next_level_defs};
 				this.update_project({...project_def, realm_defs: next_realm_defs});
-				this.editing_level_def.value = level_def; // TODO BLOCK maybe push to the component
+				this.editing_level_def.value = level_def; // TODO maybe push to the component?
 			});
 			return;
 		}
@@ -428,10 +420,10 @@ export class App {
 			return;
 		}
 		const realm_def = this.realm_defs.peek()?.find((d) => d.id === id);
-		if (!realm_def) return; // TODO BLOCK hm, report an error? how to handle?
+		if (!realm_def) return; // TODO hm, report an error? how to handle?
 		batch(() => {
 			this.selected_realm_id.value = id;
-			this.editing_realm_draft.value = false; // TODO BLOCK is this right?
+			this.editing_realm_draft.value = false;
 			// TODO derive instead of manually checking? might not be needed with a restructuring that saves the editing state in the tree
 			if (
 				this.editing_level_def.peek() &&

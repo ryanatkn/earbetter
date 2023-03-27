@@ -11,6 +11,8 @@
 
 	$: editing_draft = $editing_level && !level_defs.some((d) => d === $editing_level_def);
 
+	$: no_levels = !level_defs.length;
+
 	$: console.log(`level_defs`, level_defs);
 </script>
 
@@ -26,7 +28,8 @@
 		{/each}
 	</menu>
 	<button
-		class:selected={editing_draft}
+		class:selected={editing_draft || no_levels}
+		class:deselectable={!no_levels}
 		on:click={() => edit_level_def(editing_draft ? null : create_level_def())}
 	>
 		create a new level

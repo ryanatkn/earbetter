@@ -107,7 +107,7 @@
 			{#if $level_defs}
 				<LevelMapItems {app} level_defs={$level_defs} />
 			{/if}
-			{#if $editing_level && $selected_realm_id && $level_defs}
+			{#if $selected_realm_id && (($editing_level && $level_defs) || $level_defs?.length === 0)}
 				<section class="panel padded-md markup">
 					<LevelDefForm
 						{editing}

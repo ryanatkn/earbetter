@@ -6,6 +6,8 @@
 
 	import {
 		create_level_id,
+		DEFAULT_LEVEL_NAME,
+		DEFAULT_INTERVALS,
 		DEFAULT_NOTE_MAX,
 		DEFAULT_NOTE_MIN,
 		DEFAULT_SEQUENCE_LENGTH,
@@ -18,12 +20,9 @@
 
 	const dispatch = createEventDispatcher<{submit: LevelDef; remove: LevelId}>();
 
-	const DEFAULT_NAME = 'new custom level';
-	const DEFAULT_INTERVALS = [4, 7, 12];
-
 	export let level_def: LevelDef | null = null;
 	export let id = create_level_id();
-	export let name = DEFAULT_NAME;
+	export let name = DEFAULT_LEVEL_NAME;
 	export let intervals = DEFAULT_INTERVALS;
 	export let trial_count: number = DEFAULT_TRIAL_COUNT;
 	export let sequence_length: number = DEFAULT_SEQUENCE_LENGTH;
@@ -55,7 +54,7 @@
 			note_max = level_def.note_max;
 		} else {
 			id = create_level_id();
-			name = DEFAULT_NAME;
+			name = DEFAULT_LEVEL_NAME;
 			intervals = DEFAULT_INTERVALS;
 			trial_count = DEFAULT_TRIAL_COUNT;
 			sequence_length = DEFAULT_SEQUENCE_LENGTH;
