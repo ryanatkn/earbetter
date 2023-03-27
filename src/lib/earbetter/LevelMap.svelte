@@ -93,13 +93,13 @@
 			</div>
 		</section>
 		<Realms {app} />
-		{#if $level_defs}
-			<LevelMapItems {app} level_defs={$level_defs} />
-		{/if}
+		<RealmEditor {app} />
 	</div>
 	{#if $project_defs.length}
 		<div class="column-sm">
-			<RealmEditor {app} />
+			{#if $level_defs}
+				<LevelMapItems {app} level_defs={$level_defs} />
+			{/if}
 			{#if $editing_level && $selected_realm_id && $level_defs}
 				<section class="panel padded-md markup">
 					<LevelDefForm
