@@ -26,7 +26,6 @@
 			class="icon-button plain-button deselectable"
 			title={removing ? 'remove project' : 'edit project'}
 			class:selected={selected && !removing && editing}
-			class:editing
 			on:click={() => (removing ? remove?.(project.id) : edit?.(project_def || load(project.id)))}
 		>
 			{#if removing}✖{:else}✎{/if}
@@ -47,7 +46,7 @@
 	li {
 		width: 100%;
 	}
-	.plain-button:not(.selected.editing) {
+	.plain-button:not(.selected) {
 		visibility: hidden;
 	}
 	.project-item:hover .plain-button {

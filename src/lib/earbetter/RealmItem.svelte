@@ -23,7 +23,6 @@
 		<button
 			class="icon-button plain-button deselectable"
 			class:selected={selected && !removing && editing}
-			class:editing
 			title={removing ? 'remove realm' : editing ? 'stop editing realm' : 'edit realm'}
 			on:click={() => (removing ? remove?.(realm_def.id) : edit?.(realm_def))}
 		>
@@ -45,7 +44,7 @@
 	li {
 		width: 100%;
 	}
-	.plain-button:not(.selected.editing) {
+	.plain-button:not(.selected) {
 		visibility: hidden;
 	}
 	.realm-item:hover .plain-button {

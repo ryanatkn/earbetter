@@ -23,8 +23,17 @@
 	$: creating =
 		$editing_realm && !!$editing_realm_def && $selected_realm_def?.id !== $editing_realm_def?.id;
 
-	$: console.log(`$selected_realm_def`, $selected_realm_def);
-	$: console.log(`$realm_defs`, $realm_defs);
+	$: no_realms = !$realm_defs?.length;
+
+	const click_create_new = () => {
+		if (no_realms) {
+			(document.querySelector('.realm-def-form input') as HTMLInputElement | null)?.focus?.();
+		} else if (creating) {
+			editing_realm.value = false;
+		} else {
+			edit_realm(create_realm_def());
+		}
+	};
 </script>
 
 <section class="panel padded-md column-sm">
@@ -34,30 +43,26 @@
 		</header>
 	</div>
 	{#if $realm_defs}
-		<RealmItems
-			selected_realm_def={$selected_realm_def}
-			realm_defs={$realm_defs}
-			editing_realm_id={$editing_realm ? $editing_realm_id : null}
-			{select_realm}
-			edit_realm={(p) => edit_realm(p === $editing_realm_def && $editing_realm ? null : p)}
-			{remove_realm}
-		/>
+		<div class="realm-items-wrapper">
+			<RealmItems
+				selected_realm_def={$selected_realm_def}
+				realm_defs={$realm_defs}
+				editing_realm_id={$editing_realm ? $editing_realm_id : null}
+				{select_realm}
+				edit_realm={(p) => edit_realm(p === $editing_realm_def && $editing_realm ? null : p)}
+				{remove_realm}
+			/>
+		</div>
 	{/if}
 	<button
-		class="deselectable"
-		class:selected={creating}
-		on:click={() => {
-			if (creating) {
-				editing_realm.value = false;
-			} else {
-				edit_realm(create_realm_def());
-			}
-		}}
+		class={no_realms ? undefined : 'deselectable'}
+		class:selected={creating || no_realms}
+		on:click={click_create_new}
 	>
 		create a new realm
 	</button>
-	{#if !$realm_defs?.length}
-		<div in:slide|local>
+	{#if no_realms}
+		<div class="create-default-realms-wrapper" transition:slide|local>
 			<button
 				on:click={() => {
 					for (const realm_def of default_project_def().realm_defs) {
@@ -73,7 +78,12 @@
 
 <style>
 	button {
-		margin: var(--spacing_md) 0;
 		width: 100%;
+	}
+	.create-default-realms-wrapper {
+		padding-top: var(--spacing_md);
+	}
+	.realm-items-wrapper {
+		margin-bottom: var(--spacing_md);
 	}
 </style>

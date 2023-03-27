@@ -38,7 +38,7 @@
 		display: flex;
 		flex-direction: column;
 		align-items: stretch;
-		margin: var(--spacing_md) 0;
+		margin-bottom: var(--spacing_md);
 	}
 	section {
 		display: flex;
