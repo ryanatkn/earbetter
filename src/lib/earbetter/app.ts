@@ -31,6 +31,7 @@ const log = new Logger('[app]');
 
 export const AppData = z.object({
 	projects: z.array(z.object({id: ProjectId, name: ProjectName})).default([]),
+	selected_project_id: z.union([ProjectId, z.null()]).default(null),
 	show_game_help: z.boolean().default(true),
 });
 export type AppData = z.infer<typeof AppData>;
@@ -103,14 +104,18 @@ export class App {
 	constructor(public readonly get_ac: () => AudioContext, public readonly storage_key = 'app') {
 		// TODO maybe `new App(App.load())` ?
 		this.app_data = signal(this.load());
-		this.saved = this.app_data.peek(); // hacky, but enables the following effect without waste
+		const app_data = this.app_data.peek();
+		this.saved = app_data; // hacky, but enables the following effect without waste
 		effect(() => this.save()); // TODO do effects like this need to be cleaned up or is calling dispose only for special cases?
-		log.debug(`app_data`, this.app_data.peek());
-		this.load_project(
-			this.app_data.peek().projects[0]?.id || this.create_project(default_project_def()).id || null,
-		);
+		log.debug(`app_data`, app_data);
+
 		// TODO refactor
-		const project_def = this.project_defs.peek()[0];
+		const {selected_project_id} = app_data;
+		const project_def = this.load_project(
+			selected_project_id ||
+				app_data.projects[0]?.id ||
+				this.create_project(default_project_def()).id,
+		);
 		if (project_def) {
 			this.selected_project_id.value = project_def.id;
 			const realm_def = project_def.realm_defs[0];
@@ -118,6 +123,13 @@ export class App {
 				this.selected_realm_id.value = realm_def.id;
 			}
 		}
+		// save changes to `selected_project_id` back to the `app_data`
+		effect(() => {
+			const app_data = this.app_data.peek();
+			const selected_project_id = this.selected_project_id.value;
+			if (selected_project_id === app_data.selected_project_id) return;
+			this.app_data.value = {...app_data, selected_project_id};
+		});
 	}
 
 	// returns a stable reference to data that's immutable by convention
