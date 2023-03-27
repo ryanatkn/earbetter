@@ -42,14 +42,47 @@ const def = (): ProjectDef =>
 					{
 						name: 'one octave',
 						intervals: [2, 4, 7, 9],
+						sequence_length: 2,
 					},
 					{
 						name: 'two octaves',
 						intervals: [2, 4, 7, 9, 12, -10, -8, -5, -3, -12],
+						sequence_length: 2,
 					},
 					{
 						name: 'three octaves',
 						intervals: [2, 4, 7, 9, 12, -10, -8, -5, -3, -12, 14, 16, 19, 21, 24],
+						sequence_length: 2,
+					},
+					{
+						name: 'one octave (4)',
+						intervals: [2, 4, 7, 9],
+						sequence_length: 4,
+					},
+					{
+						name: 'two octaves (4)',
+						intervals: [2, 4, 7, 9, 12, -10, -8, -5, -3, -12],
+						sequence_length: 4,
+					},
+					{
+						name: 'three octaves (4)',
+						intervals: [2, 4, 7, 9, 12, -10, -8, -5, -3, -12, 14, 16, 19, 21, 24],
+						sequence_length: 4,
+					},
+					{
+						name: 'one octave (8)',
+						intervals: [2, 4, 7, 9],
+						sequence_length: 8,
+					},
+					{
+						name: 'two octaves (8)',
+						intervals: [2, 4, 7, 9, 12, -10, -8, -5, -3, -12],
+						sequence_length: 8,
+					},
+					{
+						name: 'three octaves (8)',
+						intervals: [2, 4, 7, 9, 12, -10, -8, -5, -3, -12, 14, 16, 19, 21, 24],
+						sequence_length: 8,
 					},
 				].map((v) => create_level_def(v)),
 			},

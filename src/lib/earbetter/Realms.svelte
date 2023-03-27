@@ -43,7 +43,7 @@
 		</header>
 	</div>
 	{#if $realm_defs}
-		<div class="realm-items-wrapper">
+		<div class="realm-items-wrapper" transition:slide|local>
 			<RealmItems
 				selected_realm_def={$selected_realm_def}
 				realm_defs={$realm_defs}
@@ -85,6 +85,6 @@
 		padding-top: var(--spacing_md);
 	}
 	.realm-items-wrapper {
-		margin-bottom: var(--spacing_md);
+		padding-bottom: var(--spacing_md);
 	}
 </style>
