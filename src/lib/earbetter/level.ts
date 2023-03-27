@@ -30,10 +30,13 @@ export type LevelId = Flavored<string, 'Level'>;
 export const LevelId = z.string().uuid().transform<LevelId>(identity);
 export const create_level_id = (): LevelId => crypto.randomUUID();
 
+export type LevelName = Flavored<string, 'LevelName'>;
+export const LevelName = z.string().min(1).max(1000).transform<LevelName>(identity); // TODO better way to do this?
+
 // TODO add restrictions to the below def
 export const LevelDef = z.object({
 	id: LevelId,
-	name: z.string(),
+	name: LevelName,
 	intervals: Intervals,
 	trial_count: z.number(),
 	sequence_length: z.number(),

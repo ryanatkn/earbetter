@@ -26,17 +26,12 @@
 		editing_level_def,
 		level_defs,
 		selected_realm_id,
-		selected_realm_level_defs,
 		play_level_def,
 		edit_level_def,
 		remove_level_def,
 		create_level_def,
 		update_level_def,
 	} = app);
-
-	// TODO BLOCK remove these
-	$: console.log(`$level_defs`, $level_defs);
-	$: console.log(`$selected_realm_level_defs`, $selected_realm_level_defs);
 
 	const ac = get_ac();
 	(window as any).audio = ac;
@@ -96,8 +91,8 @@
 			</div>
 		</section>
 		<Realms {app} />
-		{#if $selected_realm_level_defs}
-			<LevelMapItems {app} level_defs={$selected_realm_level_defs} />
+		{#if $level_defs}
+			<LevelMapItems {app} level_defs={$level_defs} />
 		{/if}
 	</div>
 	{#if $level_defs}

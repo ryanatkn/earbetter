@@ -21,6 +21,7 @@ import {
 import {create_project_def, ProjectDef, ProjectId, ProjectName} from '$lib/earbetter/project';
 import {load_from_storage, set_in_storage} from '$lib/util/storage';
 import type {RealmDef, RealmId} from '$lib/earbetter/realm';
+import default_project_def from '$lib/earbetter/projects/default-project';
 
 const log = new Logger('[app]');
 
@@ -53,9 +54,6 @@ export class App {
 		const id = this.selected_project_id.value;
 		return this.project_defs.value.find((p) => p.id === id) || null;
 	});
-	level_defs: ReadonlySignal<LevelDef[] | null> = computed(
-		() => this.selected_project_def.value?.level_defs || null,
-	);
 	realm_defs = computed(() => this.selected_project_def.value?.realm_defs || null);
 	editing_project: Signal<boolean> = signal(false);
 	editing_project_draft: Signal<boolean> = signal(false);
@@ -86,19 +84,8 @@ export class App {
 		const id = this.selected_realm_id.value;
 		return this.realm_defs.value?.find((p) => p.id === id) || null;
 	});
-	selected_realm_level_defs: ReadonlySignal<LevelDef[] | null> = computed(
-		() =>
-			(this.level_defs.value &&
-				this.selected_realm_def.value?.levels.map((id) => {
-					const level_def = this.level_defs.value!.find((d) => d.id === id)!;
-					if (!level_def) {
-						console.error(`id, level_def`, id, level_def);
-						console.log(`this.level_defs.peek()`, this.level_defs.peek());
-						console.log(`this.selected_project_def.peek()`, this.selected_project_def.peek());
-					}
-					return level_def;
-				})) ||
-			null,
+	level_defs: ReadonlySignal<LevelDef[] | null> = computed(
+		() => this.selected_realm_def.value?.level_defs || null,
 	);
 	editing_realm: Signal<boolean> = signal(false);
 	editing_realm_draft: Signal<boolean> = signal(false);
@@ -122,7 +109,9 @@ export class App {
 		this.saved = this.app_data.peek(); // hacky, but enables the following effect without waste
 		effect(() => this.save()); // TODO do effects like this need to be cleaned up or is calling dispose only for special cases?
 		log.trace(`app_data`, this.app_data.peek());
-		this.load_project(this.app_data.peek().projects[0]?.id || null);
+		this.load_project(
+			this.app_data.peek().projects[0]?.id || this.create_project(default_project_def()).id || null,
+		);
 		// TODO refactor
 		const project_def = this.project_defs.peek()[0];
 		if (project_def) {
@@ -210,7 +199,7 @@ export class App {
 			this.selected_project_id.value = project_def?.id || null;
 			this.selected_realm_id.value = project_def?.realm_defs[0]?.id || null;
 		});
-		log.trace('exit select_project', id, this.selected_realm_level_defs.peek());
+		log.trace('exit select_project', id, this.level_defs.peek());
 	};
 
 	edit_project = (project_def: ProjectDef | null): void => {
@@ -259,14 +248,14 @@ export class App {
 		});
 	};
 
-	create_project = (project_def: ProjectDef): void => {
+	create_project = (project_def: ProjectDef): ProjectDef => {
 		log.trace('create_project', project_def);
 		const project_defs = this.project_defs.peek();
 		const {id} = project_def;
 		const existing = project_defs.find((d) => d.id === id);
 		if (existing) {
 			log.trace('project already exists', project_def, existing);
-			return;
+			return existing;
 		}
 		batch(() => {
 			// TODO syncing `app_data` with `project_defs` is awkward
@@ -281,6 +270,7 @@ export class App {
 			}
 			this.save_project(id);
 		});
+		return project_def;
 	};
 
 	update_project = (project_def: ProjectDef): void => {
@@ -334,19 +324,26 @@ export class App {
 			console.error('cannot remove level_def without a project', project_def, id);
 			return; // no active project
 		}
-		const {level_defs} = project_def;
-		const level_def = level_defs.find((d) => d.id === id);
-		if (!level_def) {
-			console.error('cannot find level_def with id', id);
+		const {realm_defs} = project_def;
+		for (let i = 0; i < realm_defs.length; i++) {
+			const realm_def = realm_defs[i];
+			const {level_defs} = realm_def;
+			const level_def_index = level_defs.findIndex((d) => d.id === id);
+			if (level_def_index === -1) continue;
+			batch(() => {
+				if (id === this.editing_level_def.value?.id) {
+					this.editing_level_def.value = null;
+				}
+				const next_realm_defs = realm_defs.slice();
+				next_realm_defs[i] = {
+					...realm_def,
+					level_defs: level_defs.slice().splice(level_def_index, 1),
+				};
+				this.update_project({...project_def, realm_defs: next_realm_defs});
+			});
 			return;
 		}
-		if (id === this.editing_level_def.value?.id) {
-			this.editing_level_def.value = null;
-		}
-		this.update_project({
-			...project_def,
-			level_defs: level_defs.filter((d) => d !== level_def),
-		});
+		console.error('cannot find level_def with id', id);
 	};
 
 	// TODO inconsistent naming with `realm` having the `_def` prefix here
@@ -357,17 +354,37 @@ export class App {
 			console.error('cannot create level_def without a project', project_def, level_def);
 			return; // no active project
 		}
-		const {level_defs} = project_def;
-		// TODO is it weird that these access both `this.level_defs` and the source of truth `project_def`,
-		// or would it be better to always go through the `project_def`?
+		const {realm_defs} = project_def;
+		const realm_def = this.selected_realm_def.peek();
+		if (!realm_def) {
+			console.error('cannot create level_def without a selected realm');
+			return;
+		}
+		const {level_defs} = realm_def;
+
 		const existing = level_defs.find((d) => d.id === level_def.id);
 		if (existing) {
 			log.trace('level_def already exists', level_def, existing);
 			return;
 		}
 
-		this.update_project({...project_def, level_defs: [level_def].concat(level_defs)});
-		this.editing_level_def.value = level_def;
+		const next_realm_defs = realm_defs.slice();
+		const realm_def_index = realm_defs.indexOf(realm_def);
+		if (realm_def_index === -1) {
+			console.error('expected selected realm def to be in array', realm_def, realm_defs);
+			return;
+		}
+		next_realm_defs[realm_def_index] = {
+			...realm_def,
+			level_defs: realm_def.level_defs.concat(level_def),
+		};
+
+		batch(() => {
+			this.update_project({...project_def, realm_defs: next_realm_defs});
+			this.editing_level_def.value = level_def;
+		});
+
+		return;
 	};
 
 	update_level_def = (level_def: LevelDef): void => {
@@ -377,17 +394,24 @@ export class App {
 			console.error('cannot update level_def without a project', project_def, level_def);
 			return; // no active project
 		}
-		const {level_defs} = project_def;
+		const {realm_defs} = project_def;
 		const {id} = level_def;
-		const index = level_defs.findIndex((d) => d.id === id);
-		if (index === -1) {
-			console.error('cannot find level_def to update', id, level_defs);
+		for (let i = 0; i < realm_defs.length; i++) {
+			const realm_def = realm_defs[i];
+			const {level_defs} = realm_def;
+			const level_def_index = level_defs.findIndex((d) => d.id === id);
+			if (level_def_index === -1) continue;
+			batch(() => {
+				const next_level_defs = level_defs.slice();
+				next_level_defs[level_def_index] = level_def;
+				const next_realm_defs = realm_defs.slice();
+				next_realm_defs[i] = {...realm_def, level_defs: next_level_defs};
+				this.update_project({...project_def, realm_defs: next_realm_defs});
+				this.editing_level_def.value = level_def; // TODO BLOCK maybe push to the component
+			});
 			return;
 		}
-		const updated = level_defs.slice();
-		updated[index] = level_def;
-		this.update_project({...project_def, level_defs: updated});
-		this.editing_level_def.value = level_def;
+		console.error('cannot find level_def with id', id);
 	};
 
 	select_realm = (id: RealmId | null): void => {
@@ -404,7 +428,7 @@ export class App {
 			// TODO derive instead of manually checking? might not be needed with a restructuring that saves the editing state in the tree
 			if (
 				this.editing_level_def.peek() &&
-				!realm_def.levels.includes(this.editing_level_def.peek()!.id)
+				!realm_def.level_defs.includes(this.editing_level_def.peek()!)
 			) {
 				this.editing_level_def.value = null;
 			}

@@ -3,7 +3,7 @@ import {randomItem, type Flavored} from '@feltjs/util';
 import {signal, Signal} from '@preact/signals-core';
 import {identity} from '@feltjs/util/function.js';
 
-import {DEFAULT_LEVEL_STATS, LevelDef, LevelStats} from '$lib/earbetter/level';
+import {DEFAULT_LEVEL_STATS, LevelStats} from '$lib/earbetter/level';
 import {emojis} from '$lib/util/emoji';
 import {RealmDef} from '$lib/earbetter/realm';
 
@@ -26,9 +26,8 @@ export type ProjectMetadata = z.infer<typeof ProjectMetadata>;
 export const ProjectDef = z.object({
 	id: ProjectId,
 	name: z.string(),
-	level_defs: z.array(LevelDef),
-	level_stats: LevelStats,
 	realm_defs: z.array(RealmDef),
+	level_stats: LevelStats,
 });
 export type ProjectDef = z.infer<typeof ProjectDef>;
 
@@ -47,9 +46,8 @@ export class Project {
 export const create_project_def = (partial?: Partial<ProjectDef>): ProjectDef => ({
 	id: partial?.id ?? create_project_id(),
 	name: partial?.name ?? random_project_name(),
-	level_defs: partial?.level_defs ?? [],
-	level_stats: partial?.level_stats ?? DEFAULT_LEVEL_STATS,
 	realm_defs: partial?.realm_defs ?? [],
+	level_stats: partial?.level_stats ?? DEFAULT_LEVEL_STATS,
 });
 
 const random_project_name = (): ProjectName => randomItem(emojis).icon + randomItem(emojis).icon;
