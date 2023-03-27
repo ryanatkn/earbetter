@@ -138,3 +138,14 @@ header {
 button {
 	background: linear-gradient(var(--button_color), var(--button_color_dark));
 }
+
+/* cards include padding for layout so they can be seamlessly animated in/out (is janky with margin) */
+.card {
+	padding: var(--spacing_xl3) 0;
+	margin: 0;
+}
+
+/* TODO hacky but idk */
+.card .panel {
+	width: 100%;
+}

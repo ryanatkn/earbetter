@@ -138,7 +138,7 @@
 			{#if editing}editing level{:else}create a custom level{/if}
 		</h2>
 	</header>
-	<div class="fields" transition:slide|local>
+	<div class="fields">
 		<fieldset>
 			<label>
 				<div class="title">name</div>
