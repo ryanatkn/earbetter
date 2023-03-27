@@ -2,11 +2,12 @@
 	import LevelMapItem from '$lib/earbetter/LevelMapItem.svelte';
 	import type {App} from '$lib/earbetter/app';
 	import type {LevelDef} from '$lib/earbetter/level';
+	import {create_level_def} from '$lib/earbetter/level';
 
 	export let app: App;
 	export let level_defs: LevelDef[]; // TODO making this a prop here, but using `app` most places, maybe change it to context?
 
-	$: ({selected_realm_def} = app);
+	$: ({selected_realm_def, edit_level_def} = app);
 
 	$: console.log(`level_defs`, level_defs);
 </script>
@@ -22,6 +23,7 @@
 			<LevelMapItem {app} level_def={d} />
 		{/each}
 	</menu>
+	<button on:click={() => edit_level_def(create_level_def())}>create a new level</button>
 </section>
 
 <style>
@@ -38,5 +40,8 @@
 	}
 	section:not(:first-child) {
 		margin: var(--spacing_xl5) 0;
+	}
+	button {
+		width: 100%;
 	}
 </style>

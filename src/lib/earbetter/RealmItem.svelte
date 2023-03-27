@@ -24,7 +24,7 @@
 			class="icon-button plain-button deselectable"
 			class:selected={selected && !removing && editing}
 			class:editing
-			title={removing ? 'remove realm' : 'edit realm'}
+			title={removing ? 'remove realm' : editing ? 'stop editing realm' : 'edit realm'}
 			on:click={() => (removing ? remove?.(realm_def.id) : edit?.(realm_def))}
 		>
 			{#if removing}✖{:else}✎{/if}

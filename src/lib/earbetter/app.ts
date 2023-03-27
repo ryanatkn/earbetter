@@ -25,7 +25,7 @@ import default_project_def from '$lib/earbetter/projects/default-project';
 
 const log = new Logger('[app]');
 
-// TODO maybe an `action` decorator instead of manual `batch`?
+// TODO maybe a `@batched` or `@action` decorator instead of manual `batch`?
 
 // TODO refactor all storage calls, and rethink in signals instead of all top-level orchestration (that's less reusable)
 
@@ -58,25 +58,16 @@ export class App {
 	editing_project: Signal<boolean> = signal(false);
 	editing_project_draft: Signal<boolean> = signal(false);
 	project_draft_def: Signal<ProjectDef | null> = signal(null); // TODO BLOCK could derive `editing_project_id` from this or `selected`
-	editing_project_id: ReadonlySignal<ProjectId | null> = computed(() => {
-		if (this.editing_project_draft.value) {
-			const id = this.project_draft_def.value?.id;
-			if (!id) console.error('no id!!!'); // TODO BLOCK remove?
-			return id || null;
-		} else {
-			return this.selected_project_def.value?.id || null;
-		}
-	}); // this may be `selected_project_def`, or a new project def that hasn't been created yet
+	editing_project_id: ReadonlySignal<ProjectId | null> = computed(() =>
+		this.editing_project_draft.value
+			? this.project_draft_def.value?.id || null
+			: this.selected_project_def.value?.id || null,
+	); // this may be `selected_project_def`, or a new project def that hasn't been created yet
 	editing_project_def: ReadonlySignal<ProjectDef | null> = computed(() =>
 		this.editing_project_draft.value
 			? this.project_draft_def.value
 			: this.selected_project_def.value,
 	);
-
-	level: Signal<Level | null> = signal(null);
-
-	active_level_def: Signal<LevelDef | null> = signal(null);
-	editing_level_def: Signal<LevelDef | null> = signal(null);
 
 	// TODO BLOCK make these ids? same elsewhere to avoid needing to mutate? or should they be nested signals?
 	selected_realm_id: Signal<RealmId | null> = signal(null);
@@ -84,15 +75,12 @@ export class App {
 		const id = this.selected_realm_id.value;
 		return this.realm_defs.value?.find((p) => p.id === id) || null;
 	});
-	level_defs: ReadonlySignal<LevelDef[] | null> = computed(
-		() => this.selected_realm_def.value?.level_defs || null,
-	);
 	editing_realm: Signal<boolean> = signal(false);
 	editing_realm_draft: Signal<boolean> = signal(false);
-	realm_draft_def: Signal<RealmDef | null> = signal(null); // TODO BLOCK could derive `editing_realm_id` from this or `selected`
+	draft_realm_def: Signal<RealmDef | null> = signal(null); // TODO BLOCK could derive `editing_realm_id` from this or `selected`
 	editing_realm_id: ReadonlySignal<RealmId | null> = computed(() => {
 		if (this.editing_realm_draft.value) {
-			const id = this.realm_draft_def.value?.id;
+			const id = this.draft_realm_def.value?.id;
 			if (!id) console.error('no id!!!'); // TODO BLOCK remove?
 			return id || null;
 		} else {
@@ -100,8 +88,17 @@ export class App {
 		}
 	}); // this may be `selected_realm_def`, or a new realm def that hasn't been created yet
 	editing_realm_def: ReadonlySignal<RealmDef | null> = computed(() =>
-		this.editing_realm_draft.value ? this.realm_draft_def.value : this.selected_realm_def.value,
+		this.editing_realm_draft.value ? this.draft_realm_def.value : this.selected_realm_def.value,
 	);
+
+	level: Signal<Level | null> = signal(null); // TODO set hackily
+
+	level_defs: ReadonlySignal<LevelDef[] | null> = computed(
+		() => this.selected_realm_def.value?.level_defs || null,
+	);
+	active_level_def: Signal<LevelDef | null> = signal(null);
+	editing_level: Signal<boolean> = signal(false); // TODO BLOCK draft and editing_level boolean
+	editing_level_def: Signal<LevelDef | null> = signal(null); // TODO BLOCK draft and editing_level boolean
 
 	constructor(public readonly get_ac: () => AudioContext, public readonly storage_key = 'app') {
 		// TODO maybe `new App(App.load())` ?
@@ -199,7 +196,6 @@ export class App {
 			this.selected_project_id.value = project_def?.id || null;
 			this.selected_realm_id.value = project_def?.realm_defs[0]?.id || null;
 		});
-		log.trace('exit select_project', id, this.level_defs.peek());
 	};
 
 	edit_project = (project_def: ProjectDef | null): void => {
@@ -223,7 +219,6 @@ export class App {
 				this.editing_project_draft.value = true;
 			}
 		});
-		log.trace('edit_project exit');
 	};
 
 	remove_project = (id: ProjectId): void => {
@@ -311,10 +306,12 @@ export class App {
 		await goto(to_play_level_url(level_def));
 	};
 
-	edit_level_def = (id: LevelId | null): void => {
-		const level_def = (id && this.level_defs.peek()?.find((d) => d.id === id)) || null;
-		log.trace('edit_level_def', id, level_def);
-		this.editing_level_def.value = level_def;
+	edit_level_def = (level_def: LevelDef | null): void => {
+		log.trace('edit_level_def', level_def);
+		batch(() => {
+			this.editing_level.value = true;
+			this.editing_level_def.value = level_def;
+		});
 	};
 
 	remove_level_def = (id: LevelId): void => {
@@ -335,10 +332,9 @@ export class App {
 					this.editing_level_def.value = null;
 				}
 				const next_realm_defs = realm_defs.slice();
-				next_realm_defs[i] = {
-					...realm_def,
-					level_defs: level_defs.slice().splice(level_def_index, 1),
-				};
+				const next_level_defs = level_defs.slice();
+				next_level_defs.splice(level_def_index, 1);
+				next_realm_defs[i] = {...realm_def, level_defs: next_level_defs};
 				this.update_project({...project_def, realm_defs: next_realm_defs});
 			});
 			return;
@@ -440,7 +436,7 @@ export class App {
 		batch(() => {
 			if (!realm_def) {
 				this.editing_realm.value = false;
-				this.realm_draft_def.value = null;
+				this.draft_realm_def.value = null;
 				return;
 			}
 			this.editing_realm.value = true;
@@ -452,11 +448,10 @@ export class App {
 				this.editing_realm_draft.value = false;
 			} else {
 				// draft realm
-				this.realm_draft_def.value = realm_def;
+				this.draft_realm_def.value = realm_def;
 				this.editing_realm_draft.value = true;
 			}
 		});
-		log.trace('edit_realm exit');
 	};
 
 	remove_realm = (id: RealmId): void => {
@@ -501,7 +496,7 @@ export class App {
 			this.update_project({...project_def, realm_defs: realm_defs.concat(realm_def)});
 			this.selected_realm_id.value = realm_def.id;
 			// TODO is awkward but works, should it be an effect?
-			if (this.realm_draft_def.peek()?.id === realm_def.id) {
+			if (this.draft_realm_def.peek()?.id === realm_def.id) {
 				this.editing_realm.value = false;
 			}
 		});
@@ -523,8 +518,10 @@ export class App {
 		}
 		const updated = realm_defs.slice();
 		updated[index] = realm_def;
-		this.update_project({...project_def, realm_defs: updated});
-		this.selected_realm_id.value = id;
+		batch(() => {
+			this.update_project({...project_def, realm_defs: updated});
+			this.selected_realm_id.value = id;
+		});
 	};
 
 	register_success = (id: LevelId, mistakes: number): void => {

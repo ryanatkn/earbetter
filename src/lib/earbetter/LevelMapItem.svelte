@@ -32,7 +32,7 @@
 		class="icon-button plain-button"
 		title={removing ? 'remove level' : editing ? 'stop editing level' : 'edit level'}
 		on:click={() =>
-			removing ? remove_level_def(level_def.id) : edit_level_def(editing ? null : level_def.id)}
+			removing ? remove_level_def(level_def.id) : edit_level_def(editing ? null : level_def)}
 	>
 		{#if removing}✖{:else}✎{/if}
 	</button>

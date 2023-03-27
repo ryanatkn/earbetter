@@ -24,6 +24,7 @@
 
 	$: ({
 		project_defs,
+		editing_level,
 		editing_level_def,
 		level_defs,
 		selected_realm_id,
@@ -99,7 +100,7 @@
 	{#if $project_defs.length}
 		<div class="column-sm">
 			<RealmEditor {app} />
-			{#if $selected_realm_id && $level_defs}
+			{#if $editing_level && $selected_realm_id && $level_defs}
 				<section class="panel padded-md markup">
 					<LevelDefForm
 						{editing}
