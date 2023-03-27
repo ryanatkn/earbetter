@@ -5,7 +5,7 @@
 	import Dialog from '@feltjs/felt-ui/Dialog.svelte';
 	import Message from '@feltjs/felt-ui/Message.svelte';
 
-	import {create_realm_def, create_realm_id, RealmDef, type RealmId} from '$lib/earbetter/realm';
+	import {create_realm_id, RealmDef, type RealmId} from '$lib/earbetter/realm';
 
 	const dispatch = createEventDispatcher<{submit: RealmDef; remove: RealmId}>();
 
@@ -19,7 +19,7 @@
 	let removing = false;
 
 	const to_data = (): RealmDef =>
-		create_realm_def({
+		RealmDef.parse({
 			...realm_def,
 			id,
 			name,
