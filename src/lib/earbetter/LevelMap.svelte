@@ -18,6 +18,7 @@
 	import {MISTAKE_HISTORY_LENGTH} from '$lib/earbetter/level';
 	import RealmEditor from '$lib/earbetter/RealmEditor.svelte';
 	import LevelMapItems from '$lib/earbetter/LevelMapItems.svelte';
+	import ProjectEditor from '$lib/earbetter/ProjectEditor.svelte';
 
 	export let app: App;
 	export let midi_access: Signal<MIDIAccess | null>;
@@ -60,6 +61,7 @@
 	{#if $project_defs.length}
 		<div class="column-sm">
 			<Projects {app} />
+			<ProjectEditor {app} />
 			<section class="card">
 				<div class="panel padded-md markup">
 					<header>
