@@ -69,7 +69,7 @@
 	{#if $project_defs.length}
 		<div class="column-sm">
 			{#if $selected_project_def}
-				<section class="card">
+				<section class="card" transition:slide|local>
 					<Projects {app} />
 				</section>
 			{/if}
@@ -78,7 +78,7 @@
 					<ProjectEditor {app} />
 				</section>
 			{/if}
-			<section class="card">
+			<section class="card" transition:slide|local>
 				<div class="panel padded-md markup">
 					<header>
 						<h2>controls</h2>
@@ -94,7 +94,7 @@
 	{/if}
 	<div class="column-sm">
 		{#if $show_game_help}
-			<section class="card" out:slide|local>
+			<section class="card" transition:slide|local>
 				<div class="panel padded-md">
 					<div class="markup">
 						<p>
@@ -133,12 +133,12 @@
 	{#if $project_defs.length}
 		<div class="column-sm">
 			{#if $level_defs}
-				<section class="card">
+				<section class="card" transition:slide|local>
 					<LevelMapItems {app} level_defs={$level_defs} />
 				</section>
 			{/if}
 			{#if $selected_realm_id && (($editing_level && $level_defs) || $level_defs?.length === 0)}
-				<section class="card">
+				<section class="card" transition:slide|local>
 					<div class="panel padded-md markup">
 						<LevelDefForm
 							{editing}
