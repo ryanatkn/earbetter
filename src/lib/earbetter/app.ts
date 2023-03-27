@@ -18,7 +18,7 @@ import {
 	type LevelDef,
 	type LevelId,
 } from '$lib/earbetter/level';
-import {create_project_def, ProjectDef, ProjectId, ProjectName} from '$lib/earbetter/project';
+import {ProjectDef, ProjectId, ProjectName} from '$lib/earbetter/project';
 import {load_from_storage, set_in_storage} from '$lib/util/storage';
 import type {RealmDef, RealmId} from '$lib/earbetter/realm';
 import default_project_def from '$lib/earbetter/projects/default-project';
@@ -180,7 +180,7 @@ export class App {
 			return loaded;
 		} else {
 			log.debug(`load_project failed, creating new`, id);
-			const project_def = create_project_def();
+			const project_def = ProjectDef.parse({});
 			this.create_project(project_def);
 			return project_def;
 		}

@@ -1,9 +1,9 @@
 import {RealmDef} from '$lib/earbetter/realm';
 import {LevelDef, DEFAULT_NOTE_MIN} from '$lib/earbetter/level';
-import {create_project_def, create_project_id, ProjectDef} from '$lib/earbetter/project';
+import {create_project_id, ProjectDef} from '$lib/earbetter/project';
 
 const def = (): ProjectDef =>
-	create_project_def({
+	ProjectDef.parse({
 		id: create_project_id(),
 		realm_defs: [
 			{
