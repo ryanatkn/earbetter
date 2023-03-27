@@ -10,7 +10,7 @@ see [contributing.md](contributing.md)
 In 2016 I made a simple ear training game named
 [Ear Sharpener](https://github.com/ryanatkn/ear-sharpener) that was interesting to me,
 but it wasn't a very good training tool or much fun to use after the novelty wore off.
-This is a followup with a new design that's trying to be fun and useful.
+This is a followup with a new design that's trying to be more useful and fun.
 It also has some experiences besides the ear trainer itself
 (like [/piano](https://earbetter.ryanatkn.com/piano)),
 and soon it'll publish Svelte components and JS/TS helpers for music and audio programming.
