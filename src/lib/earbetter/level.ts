@@ -35,14 +35,15 @@ export const LevelName = z.string().min(1).max(1000).transform<LevelName>(identi
 
 // TODO add restrictions to the below def
 export const LevelDef = z.object({
-	id: LevelId,
-	name: LevelName,
-	intervals: Intervals,
-	trial_count: z.number(),
-	sequence_length: z.number(),
-	note_min: Midi,
-	note_max: Midi,
+	id: LevelId.default(create_level_id),
+	name: LevelName.default(DEFAULT_LEVEL_NAME),
+	intervals: Intervals.default(DEFAULT_INTERVALS),
+	trial_count: z.number().default(DEFAULT_TRIAL_COUNT),
+	sequence_length: z.number().default(DEFAULT_SEQUENCE_LENGTH),
+	note_min: Midi.default(DEFAULT_NOTE_MIN),
+	note_max: Midi.default(DEFAULT_NOTE_MAX),
 });
+
 export type LevelDef = z.infer<typeof LevelDef>;
 
 export type Status =
@@ -365,13 +366,3 @@ const add_mistakes = (data: number[] | undefined, mistakes: number): number[] =>
 	}
 	return updated;
 };
-
-export const create_level_def = (partial?: Partial<LevelDef>): LevelDef => ({
-	id: partial?.id ?? create_level_id(),
-	name: partial?.name ?? DEFAULT_LEVEL_NAME,
-	intervals: partial?.intervals ?? DEFAULT_INTERVALS,
-	trial_count: partial?.trial_count ?? DEFAULT_TRIAL_COUNT,
-	sequence_length: partial?.sequence_length ?? DEFAULT_SEQUENCE_LENGTH,
-	note_min: partial?.note_min ?? DEFAULT_NOTE_MIN,
-	note_max: partial?.note_max ?? DEFAULT_NOTE_MAX,
-});

@@ -5,12 +5,7 @@
 	import Dialog from '@feltjs/felt-ui/Dialog.svelte';
 	import Message from '@feltjs/felt-ui/Message.svelte';
 
-	import {
-		create_project_def,
-		create_project_id,
-		ProjectDef,
-		type ProjectId,
-	} from '$lib/earbetter/project';
+	import {create_project_id, ProjectDef, type ProjectId} from '$lib/earbetter/project';
 
 	const dispatch = createEventDispatcher<{submit: ProjectDef; remove: ProjectId}>();
 
@@ -24,7 +19,7 @@
 	let removing = false;
 
 	const to_data = (): ProjectDef =>
-		create_project_def({
+		ProjectDef.parse({
 			...project_def,
 			id,
 			name,
@@ -57,7 +52,7 @@
 	const import_data = async (): Promise<void> => {
 		parse_error_message = '';
 		try {
-			const json = JSON.parse(serialized);
+			const json = JSON.parse(updated);
 			// add an `id` if there is none
 			if (json && !json.id) json.id = create_project_id();
 			const parsed = ProjectDef.parse(json);

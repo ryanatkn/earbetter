@@ -13,6 +13,7 @@ export const create_project_id = (): ProjectId => crypto.randomUUID();
 
 export type ProjectName = Flavored<string, 'ProjectName'>;
 export const ProjectName = z.string().min(1).max(1000).transform<ProjectName>(identity); // TODO better way to do this?
+const random_project_name = (): ProjectName => randomItem(emojis).icon + randomItem(emojis).icon;
 
 // Like `ProjectDef` but just the stuff needed for display.
 // Used to avoid loading every project into memory at startup.
@@ -24,10 +25,10 @@ export type ProjectMetadata = z.infer<typeof ProjectMetadata>;
 
 // TODO add restrictions to the below def
 export const ProjectDef = z.object({
-	id: ProjectId,
-	name: z.string(),
-	realm_defs: z.array(RealmDef),
-	level_stats: LevelStats,
+	id: ProjectId.default(create_project_id),
+	name: z.string().default(random_project_name),
+	realm_defs: z.array(RealmDef).default([]),
+	level_stats: LevelStats.default(DEFAULT_LEVEL_STATS),
 });
 export type ProjectDef = z.infer<typeof ProjectDef>;
 
@@ -42,14 +43,3 @@ export class Project {
 		this.def = signal(def);
 	}
 }
-
-export const create_project_def = (partial?: Partial<ProjectDef>): ProjectDef => ({
-	id: partial?.id ?? create_project_id(),
-	name: partial?.name ?? random_project_name(),
-	realm_defs: partial?.realm_defs ?? [],
-	level_stats: partial?.level_stats ?? DEFAULT_LEVEL_STATS,
-});
-
-const random_project_name = (): ProjectName => randomItem(emojis).icon + randomItem(emojis).icon;
-
-// TODO probably fill this out with a runtime wrapping `Project` class (or Svelte component?)

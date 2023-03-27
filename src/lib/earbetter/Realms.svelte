@@ -1,7 +1,7 @@
 <script lang="ts">
 	import {slide} from 'svelte/transition';
 
-	import {create_realm_def} from '$lib/earbetter/realm';
+	import {RealmDef} from '$lib/earbetter/realm';
 	import RealmItems from '$lib/earbetter/RealmItems.svelte';
 	import type {App} from '$lib/earbetter/app';
 	import default_project_def from '$lib/earbetter/projects/default-project';
@@ -32,7 +32,7 @@
 		} else if (creating) {
 			editing_realm.value = false;
 		} else {
-			edit_realm(create_realm_def());
+			edit_realm(RealmDef.parse({}));
 		}
 	};
 </script>

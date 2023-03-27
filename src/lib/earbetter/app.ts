@@ -18,9 +18,9 @@ import {
 	type LevelDef,
 	type LevelId,
 } from '$lib/earbetter/level';
-import {create_project_def, ProjectDef, ProjectId, ProjectName} from '$lib/earbetter/project';
+import {ProjectDef, ProjectId, ProjectName} from '$lib/earbetter/project';
 import {load_from_storage, set_in_storage} from '$lib/util/storage';
-import type {RealmDef, RealmId} from '$lib/earbetter/realm';
+import {RealmId, type RealmDef} from '$lib/earbetter/realm';
 import default_project_def from '$lib/earbetter/projects/default-project';
 
 const log = new Logger('[app]');
@@ -31,6 +31,8 @@ const log = new Logger('[app]');
 
 export const AppData = z.object({
 	projects: z.array(z.object({id: ProjectId, name: ProjectName})).default([]),
+	selected_project_id: z.union([ProjectId, z.null()]).default(null),
+	selected_realm_id: z.union([RealmId, z.null()]).default(null),
 	show_game_help: z.boolean().default(true),
 });
 export type AppData = z.infer<typeof AppData>;
@@ -103,21 +105,34 @@ export class App {
 	constructor(public readonly get_ac: () => AudioContext, public readonly storage_key = 'app') {
 		// TODO maybe `new App(App.load())` ?
 		this.app_data = signal(this.load());
-		this.saved = this.app_data.peek(); // hacky, but enables the following effect without waste
+		const app_data = this.app_data.peek();
+		this.saved = app_data; // hacky, but enables the following effect without waste
 		effect(() => this.save()); // TODO do effects like this need to be cleaned up or is calling dispose only for special cases?
-		log.debug(`app_data`, this.app_data.peek());
-		this.load_project(
-			this.app_data.peek().projects[0]?.id || this.create_project(default_project_def()).id || null,
-		);
+		log.debug(`app_data`, app_data);
+
 		// TODO refactor
-		const project_def = this.project_defs.peek()[0];
-		if (project_def) {
-			this.selected_project_id.value = project_def.id;
-			const realm_def = project_def.realm_defs[0];
-			if (realm_def) {
-				this.selected_realm_id.value = realm_def.id;
+		const {selected_project_id} = app_data;
+		const project_def = this.load_project(
+			selected_project_id ||
+				app_data.projects[0]?.id ||
+				this.create_project(default_project_def()).id,
+		)!;
+		this.selected_project_id.value = project_def.id;
+		this.selected_realm_id.value =
+			app_data.selected_realm_id || project_def.realm_defs[0]?.id || null;
+		// save changes to `selected_project_id` and `selected_realm_id` back to the `app_data`,
+		// these could be decoupled but are often fired together
+		effect(() => {
+			const app_data = this.app_data.peek();
+			const selected_project_id = this.selected_project_id.value;
+			const selected_realm_id = this.selected_realm_id.value;
+			if (
+				selected_project_id !== app_data.selected_project_id ||
+				selected_realm_id !== app_data.selected_realm_id
+			) {
+				this.app_data.value = {...app_data, selected_project_id, selected_realm_id};
 			}
-		}
+		});
 	}
 
 	// returns a stable reference to data that's immutable by convention
@@ -180,7 +195,7 @@ export class App {
 			return loaded;
 		} else {
 			log.debug(`load_project failed, creating new`, id);
-			const project_def = create_project_def();
+			const project_def = ProjectDef.parse({});
 			this.create_project(project_def);
 			return project_def;
 		}
