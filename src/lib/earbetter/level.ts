@@ -159,7 +159,7 @@ export const create_level = (
 	const present_trial_prompt = async (): Promise<void> => {
 		const $trial = trial.peek();
 		if (!$trial) return;
-		log.trace('present_trial_prompt', $trial.sequence);
+		log.debug('present_trial_prompt', $trial.sequence);
 		trial.value = {...$trial, guessing_index: 0};
 		const current_seq_id = ++seq_id;
 		const sequence_length = $trial.sequence.length;
@@ -191,11 +191,11 @@ export const create_level = (
 		if (!$trial || guessing_index == null) return;
 		batch(() => {
 			const actual = get_correct_guess($trial);
-			log.trace('guess', guessing_index, note, actual);
+			log.debug('guess', guessing_index, note, actual);
 
 			// if incorrect -> FAILURE -> showing_failure_feedback -> REPROMPT
 			if (actual !== note) {
-				log.trace('guess incorrect');
+				log.debug('guess incorrect');
 				void play_note(ac, note, volume.peek(), DEFAULT_NOTE_DURATION_FAILED, instrument.peek());
 				if (guessing_index === 0 || !$trial.valid_notes.has(note)) {
 					return; // no penalty or delay if this is the first one
@@ -218,15 +218,15 @@ export const create_level = (
 				status.value = 'showing_success_feedback';
 				// TODO should this be "on enter showing_success_feedback state" logic?
 				if ($trial.index < def.peek().trial_count - 1) {
-					log.trace('guess correct and done with trial');
+					log.debug('guess correct and done with trial');
 					setTimeout(() => next_trial(), DEFAULT_FEEDBACK_DURATION); // TODO effects?
 				} else {
-					log.trace('guess correct and done with all trials!');
+					log.debug('guess correct and done with all trials!');
 					setTimeout(() => complete_level(), DEFAULT_FEEDBACK_DURATION); // TODO effects?
 				}
 			} else {
 				// SUCCESS -> no status change because we show no visible positive feedback to users until the end
-				log.trace('guess correct but not done');
+				log.debug('guess correct but not done');
 				trial.value = {
 					...$trial,
 					guessing_index: guessing_index + 1,
@@ -259,7 +259,7 @@ export const create_level = (
 	const next_trial = (): void => {
 		batch(() => {
 			const next_trial = create_next_trial(def.peek(), trial.peek());
-			log.trace('next trial', next_trial);
+			log.debug('next trial', next_trial);
 			// TODO should this be "on enter presenting_prompt state" logic?
 			status.value = 'presenting_prompt';
 			const $trials = trials.peek();

@@ -105,7 +105,7 @@ export class App {
 		this.app_data = signal(this.load());
 		this.saved = this.app_data.peek(); // hacky, but enables the following effect without waste
 		effect(() => this.save()); // TODO do effects like this need to be cleaned up or is calling dispose only for special cases?
-		log.trace(`app_data`, this.app_data.peek());
+		log.debug(`app_data`, this.app_data.peek());
 		this.load_project(
 			this.app_data.peek().projects[0]?.id || this.create_project(default_project_def()).id || null,
 		);
@@ -145,13 +145,13 @@ export class App {
 	save(): void {
 		const data = this.toJSON();
 		if (data === this.saved) return;
-		log.trace('save', data);
+		log.debug('save', data);
 		set_in_storage(this.storage_key, data);
 		this.saved = data;
 	}
 
 	save_project = (id: ProjectId): void => {
-		log.trace('save_project', id);
+		log.debug('save_project', id);
 		const project_def = this.project_defs.peek().find((p) => p.id === id);
 		set_in_storage(id, project_def); // correctly deletes the storage key if `undefined`
 		const app_data = this.app_data.peek();
@@ -171,15 +171,15 @@ export class App {
 	};
 
 	load_project = (id: ProjectId | null): ProjectDef | null => {
-		log.trace('load_project', id);
+		log.debug('load_project', id);
 		const loaded = id ? load_from_storage(id, null, ProjectDef.parse) : null;
-		log.trace(`loaded`, loaded);
+		log.debug(`loaded`, loaded);
 		if (loaded) {
 			// TODO batch if this code stays imperative like this
 			this.project_defs.value = this.project_defs.peek().concat(loaded);
 			return loaded;
 		} else {
-			log.trace(`load_project failed, creating new`, id);
+			log.debug(`load_project failed, creating new`, id);
 			const project_def = create_project_def();
 			this.create_project(project_def);
 			return project_def;
@@ -187,7 +187,7 @@ export class App {
 	};
 
 	select_project = (id: ProjectId | null): void => {
-		log.trace('select_project', id);
+		log.debug('select_project', id);
 		if (!id) {
 			this.selected_project_id.value = null;
 			return;
@@ -202,7 +202,7 @@ export class App {
 	};
 
 	edit_project = (project_def: ProjectDef | null): void => {
-		log.trace('edit_project', project_def);
+		log.debug('edit_project', project_def);
 		batch(() => {
 			if (!project_def) {
 				this.editing_project.value = false;
@@ -225,7 +225,7 @@ export class App {
 	};
 
 	remove_project = (id: ProjectId): void => {
-		log.trace('remove_project', id);
+		log.debug('remove_project', id);
 		const {projects} = this.app_data.peek();
 		const existing = projects.find((d) => d.id === id);
 		if (!existing) return;
@@ -247,12 +247,12 @@ export class App {
 	};
 
 	create_project = (project_def: ProjectDef): ProjectDef => {
-		log.trace('create_project', project_def);
+		log.debug('create_project', project_def);
 		const project_defs = this.project_defs.peek();
 		const {id} = project_def;
 		const existing = project_defs.find((d) => d.id === id);
 		if (existing) {
-			log.trace('project already exists', project_def, existing);
+			log.debug('project already exists', project_def, existing);
 			return existing;
 		}
 		batch(() => {
@@ -273,7 +273,7 @@ export class App {
 	};
 
 	update_project = (project_def: ProjectDef): void => {
-		log.trace('update_project', project_def);
+		log.debug('update_project', project_def);
 		const project_defs = this.project_defs.peek();
 		const {id} = project_def;
 		const index = project_defs.findIndex((p) => p.id === id);
@@ -299,7 +299,7 @@ export class App {
 	};
 
 	play_level_def = async (id: LevelId): Promise<void> => {
-		log.trace('play_level_def', id);
+		log.debug('play_level_def', id);
 		const level_def = this.level_defs.peek()?.find((d) => d.id === id);
 		if (!level_def) {
 			console.error('cannot find level_def with id', id);
@@ -311,7 +311,7 @@ export class App {
 	};
 
 	edit_level_def = (level_def: LevelDef | null): void => {
-		log.trace('edit_level_def', level_def);
+		log.debug('edit_level_def', level_def);
 		batch(() => {
 			this.editing_level.value = !!level_def;
 			this.editing_level_def.value = level_def;
@@ -319,7 +319,7 @@ export class App {
 	};
 
 	remove_level_def = (id: LevelId): void => {
-		log.trace('remove_level_def', id);
+		log.debug('remove_level_def', id);
 		const project_def = this.selected_project_def.peek();
 		if (!project_def) {
 			console.error('cannot remove level_def without a project', project_def, id);
@@ -348,7 +348,7 @@ export class App {
 
 	// TODO inconsistent naming with `realm` having the `_def` prefix here
 	create_level_def = (level_def: LevelDef): void => {
-		log.trace('create_level_def', level_def);
+		log.debug('create_level_def', level_def);
 		const project_def = this.selected_project_def.peek();
 		if (!project_def) {
 			console.error('cannot create level_def without a project', project_def, level_def);
@@ -364,7 +364,7 @@ export class App {
 
 		const existing = level_defs.find((d) => d.id === level_def.id);
 		if (existing) {
-			log.trace('level_def already exists', level_def, existing);
+			log.debug('level_def already exists', level_def, existing);
 			return;
 		}
 
@@ -389,7 +389,7 @@ export class App {
 	};
 
 	update_level_def = (level_def: LevelDef): void => {
-		log.trace('update_level_def', level_def);
+		log.debug('update_level_def', level_def);
 		const project_def = this.selected_project_def.peek();
 		if (!project_def) {
 			console.error('cannot update level_def without a project', project_def, level_def);
@@ -416,7 +416,7 @@ export class App {
 	};
 
 	select_realm = (id: RealmId | null): void => {
-		log.trace('select_realm', id);
+		log.debug('select_realm', id);
 		if (!id) {
 			this.selected_realm_id.value = null;
 			return;
@@ -437,7 +437,7 @@ export class App {
 	};
 
 	edit_realm = (realm_def: RealmDef | null): void => {
-		log.trace('edit_realm', realm_def);
+		log.debug('edit_realm', realm_def);
 		batch(() => {
 			if (!realm_def) {
 				this.editing_realm.value = false;
@@ -460,7 +460,7 @@ export class App {
 	};
 
 	remove_realm = (id: RealmId): void => {
-		log.trace('remove_realm_def', id);
+		log.debug('remove_realm_def', id);
 		const project_def = this.selected_project_def.peek();
 		if (!project_def) {
 			console.error('cannot remove realm_def without a project', project_def, id);
@@ -485,7 +485,7 @@ export class App {
 	};
 
 	create_realm = (realm_def: RealmDef): void => {
-		log.trace('create_realm', realm_def);
+		log.debug('create_realm', realm_def);
 		const project_def = this.selected_project_def.peek();
 		if (!project_def) {
 			console.error('cannot create a realm_def without a project', project_def, realm_def);
@@ -496,7 +496,7 @@ export class App {
 		// or would it be better to always go through the `project_def`?
 		const existing = realm_defs.find((d) => d.id === realm_def.id);
 		if (existing) {
-			log.trace('realm_def already exists', realm_def, existing);
+			log.debug('realm_def already exists', realm_def, existing);
 			return;
 		}
 
@@ -511,7 +511,7 @@ export class App {
 	};
 
 	update_realm = (realm_def: RealmDef): void => {
-		log.trace('update_realm_def', realm_def);
+		log.debug('update_realm_def', realm_def);
 		const project_def = this.selected_project_def.peek();
 		if (!project_def) {
 			console.error('cannot update realm_def without a project', project_def, realm_def);
@@ -542,7 +542,7 @@ export class App {
 	};
 
 	exit_level_to_map = async (): Promise<void> => {
-		log.trace('exit_level_to_map');
+		log.debug('exit_level_to_map');
 		const $active_level_def = this.active_level_def.peek();
 		if (!$active_level_def) return;
 		this.active_level_def.value = null;
