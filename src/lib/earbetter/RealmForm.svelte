@@ -52,7 +52,7 @@
 	const import_data = async (): Promise<void> => {
 		parse_error_message = '';
 		try {
-			const json = JSON.parse(serialized);
+			const json = JSON.parse(updated);
 			// add an `id` if there is none
 			if (json && !json.id) json.id = create_realm_id();
 			const parsed = RealmDef.parse(json);
