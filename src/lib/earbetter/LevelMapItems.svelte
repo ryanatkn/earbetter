@@ -14,6 +14,14 @@
 	$: no_levels = !level_defs.length;
 
 	$: console.log(`level_defs`, level_defs);
+
+	const click_create_new = () => {
+		if (no_levels) {
+			(document.querySelector('.level-def-form input') as HTMLInputElement | null)?.focus?.();
+		} else {
+			edit_level_def(editing_draft ? null : create_level_def());
+		}
+	};
 </script>
 
 <div class="panel padded-md">
@@ -30,7 +38,7 @@
 	<button
 		class:selected={editing_draft || no_levels}
 		class:deselectable={!no_levels}
-		on:click={() => edit_level_def(editing_draft ? null : create_level_def())}
+		on:click={click_create_new}
 	>
 		create a new level
 	</button>
