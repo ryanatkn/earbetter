@@ -23,6 +23,7 @@
 	export let midi_access: Signal<MIDIAccess | null>;
 
 	$: ({
+		project_defs,
 		editing_level_def,
 		level_defs,
 		selected_realm_id,
@@ -53,8 +54,9 @@
 	}}
 />
 <div class="map">
-	{#if $level_defs}
+	{#if $project_defs.length}
 		<div class="column-sm">
+			<Projects {app} />
 			<section class="panel padded-md markup">
 				<header>
 					<h2>controls</h2>
@@ -65,7 +67,6 @@
 				<aside>earbetter supports MIDI devices like piano keyboards, connect and click:</aside>
 				<InitMidiButton {midi_access} />
 			</section>
-			<Projects {app} />
 		</div>
 	{/if}
 	<div class="column-sm">
@@ -95,10 +96,10 @@
 			<LevelMapItems {app} level_defs={$level_defs} />
 		{/if}
 	</div>
-	{#if $level_defs}
+	{#if $project_defs.length}
 		<div class="column-sm">
 			<RealmEditor {app} />
-			{#if $selected_realm_id}
+			{#if $selected_realm_id && $level_defs}
 				<section class="panel padded-md markup">
 					<LevelDefForm
 						{editing}

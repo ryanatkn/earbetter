@@ -240,7 +240,7 @@ export class App {
 			this.project_defs.value = this.project_defs.peek().filter((p) => p.id !== id);
 			if (this.selected_project_id.peek() === id) {
 				this.selected_project_id.value =
-					this.project_defs.peek()[0].id ||
+					this.project_defs.peek()[0]?.id ||
 					this.load_project(this.app_data.peek().projects[0]?.id)?.id ||
 					null;
 			}

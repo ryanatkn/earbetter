@@ -2,7 +2,7 @@
 	import type {RealmDef, RealmId} from '$lib/earbetter/realm';
 	import RealmItem from '$lib/earbetter/RealmItem.svelte';
 
-	export let selected_realm_def: RealmDef | null = null; // TODO BLOCK selected_realm_def and draft
+	export let selected_realm_def: RealmDef | null = null;
 	export let editing_realm_id: RealmId | null = null;
 	export let realm_defs: RealmDef[] = [];
 	export let select_realm: (id: RealmId) => void;
