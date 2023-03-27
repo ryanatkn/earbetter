@@ -1,5 +1,5 @@
 import {create_realm_def} from '$lib/earbetter/realm';
-import {create_level_def, DEFAULT_NOTE_MIN} from '$lib/earbetter/level';
+import {LevelDef, DEFAULT_NOTE_MIN} from '$lib/earbetter/level';
 import {create_project_def, create_project_id, ProjectDef} from '$lib/earbetter/project';
 
 const def = (): ProjectDef =>
@@ -84,7 +84,7 @@ const def = (): ProjectDef =>
 						intervals: [2, 4, 7, 9, 12, -10, -8, -5, -3, -12, 14, 16, 19, 21, 24],
 						sequence_length: 8,
 					},
-				].map((v) => create_level_def(v)),
+				].map((v) => LevelDef.parse(v)),
 			},
 			{
 				name: 'major third vs perfect fourth',
@@ -125,7 +125,7 @@ const def = (): ProjectDef =>
 						intervals: [4, 5, -8, -7, 16, 17, -20, -19],
 						sequence_length: 8,
 					},
-				].map((v) => create_level_def(v)),
+				].map((v) => LevelDef.parse(v)),
 			},
 		].map((v) => create_realm_def(v)),
 	});

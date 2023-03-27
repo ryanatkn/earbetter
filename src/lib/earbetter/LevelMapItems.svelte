@@ -1,8 +1,7 @@
 <script lang="ts">
 	import LevelMapItem from '$lib/earbetter/LevelMapItem.svelte';
 	import type {App} from '$lib/earbetter/app';
-	import type {LevelDef} from '$lib/earbetter/level';
-	import {create_level_def} from '$lib/earbetter/level';
+	import {LevelDef} from '$lib/earbetter/level';
 
 	export let app: App;
 	export let level_defs: LevelDef[]; // TODO making this a prop here, but using `app` most places, maybe change it to context?
@@ -19,7 +18,7 @@
 		if (no_levels) {
 			(document.querySelector('.level-def-form input') as HTMLInputElement | null)?.focus?.();
 		} else {
-			edit_level_def(editing_draft ? null : create_level_def());
+			edit_level_def(editing_draft ? null : LevelDef.parse({}));
 		}
 	};
 </script>
