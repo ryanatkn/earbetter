@@ -10,10 +10,15 @@
 </svelte:head>
 <main>
 	<Header />
-	<menu>
-		<li><a class="panel" href="{base}/game">play the game!</a></li>
-		<li><a class="panel" href="{base}/piano">play piano!</a></li>
-	</menu>
+	<section class="panel padded-md markup">
+		<p>ear training game and tools for playing and programming music and audio</p>
+	</section>
+	<section>
+		<menu>
+			<li><a class="panel" href="{base}/game">play the game!</a></li>
+			<li><a class="panel" href="{base}/piano">play piano!</a></li>
+		</menu>
+	</section>
 	<Footer />
 </main>
 

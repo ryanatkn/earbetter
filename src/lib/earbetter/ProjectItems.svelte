@@ -2,7 +2,8 @@
 	import type {ProjectDef, ProjectId, ProjectMetadata} from '$lib/earbetter/project';
 	import ProjectItem from '$lib/earbetter/ProjectItem.svelte';
 
-	export let selected_project_def: ProjectDef | null = null;
+	export let selected_project_id: ProjectId | null = null;
+	export let editing_project_id: ProjectId | null = null;
 	export let projects: ProjectMetadata[] = [];
 	export let project_defs: ProjectDef[] = [];
 	export let load_project: (id: ProjectId) => ProjectDef | null;
@@ -20,7 +21,8 @@
 			select={select_project}
 			edit={edit_project}
 			remove={remove_project}
-			selected={project.id === selected_project_def?.id}
+			selected={project.id === selected_project_id}
+			editing={project.id === editing_project_id}
 		/>
 	{/each}
 </menu>

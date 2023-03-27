@@ -1,11 +1,12 @@
 import {randomItem, randomInt} from '@feltjs/util/random.js';
 import {z} from 'zod';
 import type {Flavored} from '@feltjs/util';
+import {identity} from '@feltjs/util/function.js';
 import {Logger} from '@feltjs/util/log.js';
 import {signal, batch, Signal, effect} from '@preact/signals-core';
 import {base} from '$app/paths';
 
-import {z_midi, type Midi} from '$lib/music/midi';
+import {Midi} from '$lib/music/midi';
 import {Intervals} from '$lib/music/notes';
 import {play_note} from '$lib/audio/play_note';
 import type {Instrument, Volume} from '$lib/audio/helpers';
@@ -20,22 +21,27 @@ export const DEFAULT_NOTE_DURATION_FAILED = 50;
 export const DEFAULT_FEEDBACK_DURATION = 1000; // TODO configurable
 export const DEFAULT_SEQUENCE_LENGTH = 4;
 export const DEFAULT_TRIAL_COUNT = 5;
+export const DEFAULT_LEVEL_NAME = 'new level';
+export const DEFAULT_INTERVALS = [5, 7];
+export const DEFAULT_NOTE_MIN = 48;
+export const DEFAULT_NOTE_MAX = 84;
 
 export type LevelId = Flavored<string, 'Level'>;
-export const LevelId = z
-	.string()
-	.uuid()
-	.transform((t) => t as LevelId);
+export const LevelId = z.string().uuid().transform<LevelId>(identity);
+export const create_level_id = (): LevelId => crypto.randomUUID();
+
+export type LevelName = Flavored<string, 'LevelName'>;
+export const LevelName = z.string().min(1).max(1000).transform<LevelName>(identity); // TODO better way to do this?
 
 // TODO add restrictions to the below def
 export const LevelDef = z.object({
 	id: LevelId,
-	name: z.string(),
+	name: LevelName,
 	intervals: Intervals,
 	trial_count: z.number(),
 	sequence_length: z.number(),
-	note_min: z_midi,
-	note_max: z_midi,
+	note_min: Midi,
+	note_max: Midi,
 });
 export type LevelDef = z.infer<typeof LevelDef>;
 
@@ -78,8 +84,6 @@ export interface Trial {
 	guessing_index: number | null; // index of interval being guessed
 	retry_count: number;
 }
-
-export const create_level_id = (): LevelId => crypto.randomUUID();
 
 const create_next_trial = (def: LevelDef, current_trial: Trial | null): Trial => {
 	const {note_min, note_max} = def;
@@ -361,3 +365,13 @@ const add_mistakes = (data: number[] | undefined, mistakes: number): number[] =>
 	}
 	return updated;
 };
+
+export const create_level_def = (partial?: Partial<LevelDef>): LevelDef => ({
+	id: partial?.id ?? create_level_id(),
+	name: partial?.name ?? DEFAULT_LEVEL_NAME,
+	intervals: partial?.intervals ?? DEFAULT_INTERVALS,
+	trial_count: partial?.trial_count ?? DEFAULT_TRIAL_COUNT,
+	sequence_length: partial?.sequence_length ?? DEFAULT_SEQUENCE_LENGTH,
+	note_min: partial?.note_min ?? DEFAULT_NOTE_MIN,
+	note_max: partial?.note_max ?? DEFAULT_NOTE_MAX,
+});

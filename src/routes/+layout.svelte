@@ -1,10 +1,13 @@
 <script lang="ts">
 	import '@feltjs/felt-ui/style.css';
+	import '$routes/style.css';
+
 	import {base} from '$app/paths';
 	import {isEditable, swallow} from '@feltjs/util/dom.js';
 	import Dialog from '@feltjs/felt-ui/Dialog.svelte';
+	import {slide} from 'svelte/transition';
+	import {browser} from '$app/environment';
 
-	import '$routes/style.css';
 	import {set_ac} from '$lib/audio/ac';
 	import {adjust_volume, set_instrument, set_volume} from '$lib/audio/helpers';
 	import {request_access} from '$lib/audio/midi_access';
@@ -16,7 +19,8 @@
 	const volume = set_volume();
 	const instrument = set_instrument();
 
-	set_app(new App(get_ac));
+	const app = set_app(new App(get_ac));
+	if (browser) (window as any).app = app;
 
 	// TODO add to app? context? global store?
 	let show_main_menu = false;
@@ -69,6 +73,8 @@
 			}
 		}
 	};
+
+	let deleting = false;
 </script>
 
 <svelte:head>
@@ -84,17 +90,20 @@
 		<section>
 			<WebsiteMap><h2>earbetter</h2></WebsiteMap>
 		</section>
-		<div class="padded-md">
-			<button
-				on:click={() => {
-					// eslint-disable-next-line no-alert
-					if (confirm('delete all locally saved data? this cannot be undone')) {
-						localStorage.clear();
-					}
-				}}
-			>
-				clear saved data
-			</button>
+		<div class="padded-md centered">
+			<button on:click={() => (deleting = !deleting)}> clear saved data </button>
+			{#if deleting}
+				<div transition:slide|local>
+					<button
+						on:click={() => {
+							localStorage.clear();
+							location.reload();
+						}}
+					>
+						✕ permanently delete all locally saved data
+					</button>
+				</div>
+			{/if}
 		</div>
 	</Dialog>
 {/if}

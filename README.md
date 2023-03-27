@@ -1,6 +1,6 @@
 # earbetter
 
-> ear training game and tools for programming music and audio 🎶🦜
+> ear training game and tools for playing and programming music and audio 🎶🦜
 > [earbetter.ryanatkn.com](https://earbetter.ryanatkn.com/)
 
 see [contributing.md](contributing.md)
@@ -8,10 +8,12 @@ see [contributing.md](contributing.md)
 ## intro
 
 In 2016 I made a simple ear training game named
-[`ear-sharpener`](https://github.com/ryanatkn/ear-sharpener).
-This is a followup with a new design.
-The goal is to make an ear training experience that's fun and useful,
-and also publish reusable components and helpers for music and audio programming.
+[Ear Sharpener](https://github.com/ryanatkn/ear-sharpener) that was interesting to me,
+but it wasn't a very good training tool or much fun to use after the novelty wore off.
+This is a followup with a new design that's trying to be fun and useful.
+It also has some experiences besides the ear trainer itself
+(like [/piano](https://earbetter.ryanatkn.com/piano)),
+and soon it'll publish Svelte components and JS/TS helpers for music and audio programming.
 It's online at [earbetter.ryanatkn.com](https://earbetter.ryanatkn.com/).
 
 earbetter is designed for MIDI devices like piano keyboards, but it also works without them.

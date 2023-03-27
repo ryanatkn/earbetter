@@ -4,12 +4,13 @@
 	import type {ProjectDef, ProjectId, ProjectMetadata} from '$lib/earbetter/project';
 
 	export let project: ProjectMetadata;
-	export let project_def: ProjectDef | undefined;
+	export let project_def: ProjectDef | undefined; // may not be loaded
 	export let load: (id: ProjectId) => ProjectDef | null;
 	export let select: ((id: ProjectId) => void) | null = null; // TODO event? or is the ability to have a return value for ephemeral state desired?
 	export let edit: ((project_def: ProjectDef | null) => void) | null = null; // TODO event? or is the ability to have a return value for ephemeral state desired?
 	export let remove: ((id: ProjectId) => void) | null = null; // TODO event? or is the ability to have a return value for ephemeral state desired?
 	export let selected: boolean;
+	export let editing: boolean;
 
 	let removing = false;
 </script>
@@ -22,8 +23,9 @@
 	{/if}
 	{#if (removing && remove) || (!removing && edit)}
 		<button
-			class="icon-button plain-button"
+			class="icon-button plain-button deselectable"
 			title={removing ? 'remove project' : 'edit project'}
+			class:selected={selected && !removing && editing}
 			on:click={() => (removing ? remove?.(project.id) : edit?.(project_def || load(project.id)))}
 		>
 			{#if removing}✖{:else}✎{/if}
@@ -44,7 +46,7 @@
 	li {
 		width: 100%;
 	}
-	.plain-button {
+	.plain-button:not(.selected) {
 		visibility: hidden;
 	}
 	.project-item:hover .plain-button {

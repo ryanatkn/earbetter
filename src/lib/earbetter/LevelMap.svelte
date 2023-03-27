@@ -1,8 +1,8 @@
 <script lang="ts">
 	import type {Signal} from '@preact/signals-core';
+	import {slide} from 'svelte/transition';
 
 	import type {MIDIAccess} from '$lib/audio/WebMIDI';
-	import LevelMapItem from '$lib/earbetter/LevelMapItem.svelte';
 	import {get_ac} from '$lib/audio/ac';
 	import InitMidiButton from '$lib/audio/InitMidiButton.svelte';
 	import LevelDefForm from '$lib/earbetter/LevelDefForm.svelte';
@@ -14,21 +14,28 @@
 	import ControlsInstructions from '$lib/earbetter/ControlsInstructions.svelte';
 	import MidiInput from '$lib/audio/MidiInput.svelte';
 	import {start_playing, stop_playing} from '$lib/audio/play_note';
+	import Realms from '$lib/earbetter/Realms.svelte';
+	import {MISTAKE_HISTORY_LENGTH} from '$lib/earbetter/level';
+	import RealmEditor from '$lib/earbetter/RealmEditor.svelte';
+	import LevelMapItems from '$lib/earbetter/LevelMapItems.svelte';
 
 	export let app: App;
 	export let midi_access: Signal<MIDIAccess | null>;
 
 	$: ({
+		project_defs,
+		editing_level,
 		editing_level_def,
 		level_defs,
+		selected_realm_id,
+		show_game_help,
+		toggle_game_help,
 		play_level_def,
 		edit_level_def,
 		remove_level_def,
 		create_level_def,
 		update_level_def,
 	} = app);
-
-	$: console.log(`$level_defs`, $level_defs);
 
 	const ac = get_ac();
 	(window as any).audio = ac;
@@ -50,8 +57,9 @@
 	}}
 />
 <div class="map">
-	{#if $level_defs}
+	{#if $project_defs.length}
 		<div class="column-sm">
+			<Projects {app} />
 			<section class="panel padded-md markup">
 				<header>
 					<h2>controls</h2>
@@ -62,65 +70,73 @@
 				<aside>earbetter supports MIDI devices like piano keyboards, connect and click:</aside>
 				<InitMidiButton {midi_access} />
 			</section>
-			{#if $level_defs}
-				<Projects {app} />
-			{/if}
 		</div>
 	{/if}
 	<div class="column-sm">
-		{#if $level_defs}
-			<section class="panel padded-md">
+		{#if $show_game_help}
+			<section class="panel padded-md" out:slide|local>
 				<div class="markup">
-					<header>
-						<h2>ear training levels</h2>
-					</header>
+					<p>
+						earbetter is an <a href="https://en.wikipedia.org/wiki/Ear_training">ear training</a> tool/game:
+					</p>
+					<ul>
+						<li>each level is a standalone challenge</li>
+						<li>
+							your score is the sum of mistakes in your best {MISTAKE_HISTORY_LENGTH}
+							runs, win a ★ at 0
+						</li>
+						<li>realms group levels into bigger challenges</li>
+					</ul>
 					<aside>
 						earbetter is in early development, and many things are unfinished and unknown - feedback
 						is appreciated on <a href="https://github.com/ryanatkn/earbetter"
 							>the GitHub discussions and issues</a
 						>
 					</aside>
+					<div class="centered-hz">
+						<button style:margin="0" on:click={() => toggle_game_help()}>ok, hide this</button>
+					</div>
 				</div>
-				<menu class="levels">
-					{#each $level_defs as d (d.id)}
-						<LevelMapItem {app} level_def={d} />
-					{/each}
-				</menu>
 			</section>
-		{:else}
-			<Projects {app} />
 		{/if}
+		<Realms {app} />
+		<RealmEditor {app} />
 	</div>
-	{#if $level_defs}
+	{#if $project_defs.length}
 		<div class="column-sm">
-			<section class="panel padded-md markup">
-				<LevelDefForm
-					{editing}
-					bind:id
-					level_def={$editing_level_def}
-					on:submit={(editing ? update_level_def : create_level_def)
-						? (e) => (editing ? update_level_def : create_level_def)(e.detail)
-						: undefined}
-					on:remove={(e) => remove_level_def(e.detail)}
-				>
-					<svelte:fragment slot="footer" let:changed let:to_data>
-						{#if editing}
-							<button
-								type="button"
-								on:click={() => {
-									if (changed) update_level_def(to_data());
-									play_level_def(id);
-								}}
-							>
-								play!
-							</button>
-							<button type="button" on:click={() => edit_level_def(null)}>
-								{#if changed}discard changes and stop editing{:else}stop editing this level{/if}
-							</button>
-						{/if}
-					</svelte:fragment>
-				</LevelDefForm>
-			</section>
+			{#if $level_defs}
+				<LevelMapItems {app} level_defs={$level_defs} />
+			{/if}
+			{#if $selected_realm_id && (($editing_level && $level_defs) || $level_defs?.length === 0)}
+				<section class="panel padded-md markup">
+					<LevelDefForm
+						{editing}
+						bind:id
+						level_def={$editing_level_def}
+						on:submit={(editing ? update_level_def : create_level_def)
+							? (e) => (editing ? update_level_def : create_level_def)(e.detail)
+							: undefined}
+						on:remove={(e) => remove_level_def(e.detail)}
+					>
+						<svelte:fragment slot="footer" let:changed let:to_data>
+							{#if editing}
+								<button
+									type="button"
+									on:click={() => {
+										if (changed) update_level_def(to_data());
+										play_level_def(id);
+									}}
+								>
+									play!
+								</button>
+								<button type="button" on:click={() => edit_level_def(null)}>
+									{#if changed}discard changes and stop editing{:else}stop editing this level{/if}
+								</button>
+							{/if}
+						</svelte:fragment>
+					</LevelDefForm>
+				</section>
+			{/if}
 		</div>
 	{/if}
 </div>
@@ -131,12 +147,6 @@
 		flex-direction: row;
 		justify-content: center;
 		align-items: flex-start;
-	}
-	.levels {
-		display: flex;
-		flex-direction: column;
-		align-items: stretch;
-		margin: var(--spacing_md) 0;
 	}
 	section {
 		display: flex;
