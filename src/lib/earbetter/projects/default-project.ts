@@ -55,32 +55,32 @@ const def = (): ProjectDef =>
 						sequence_length: 2,
 					},
 					{
-						name: 'one octave (4)',
+						name: 'one octave (4 notes)',
 						intervals: [2, 4, 7, 9],
 						sequence_length: 4,
 					},
 					{
-						name: 'two octaves (4)',
+						name: 'two octaves (4 notes)',
 						intervals: [2, 4, 7, 9, 12, -10, -8, -5, -3, -12],
 						sequence_length: 4,
 					},
 					{
-						name: 'three octaves (4)',
+						name: 'three octaves (4 notes)',
 						intervals: [2, 4, 7, 9, 12, -10, -8, -5, -3, -12, 14, 16, 19, 21, 24],
 						sequence_length: 4,
 					},
 					{
-						name: 'one octave (8)',
+						name: 'one octave (8 notes)',
 						intervals: [2, 4, 7, 9],
 						sequence_length: 8,
 					},
 					{
-						name: 'two octaves (8)',
+						name: 'two octaves (8 notes)',
 						intervals: [2, 4, 7, 9, 12, -10, -8, -5, -3, -12],
 						sequence_length: 8,
 					},
 					{
-						name: 'three octaves (8)',
+						name: 'three octaves (8 notes)',
 						intervals: [2, 4, 7, 9, 12, -10, -8, -5, -3, -12, 14, 16, 19, 21, 24],
 						sequence_length: 8,
 					},
