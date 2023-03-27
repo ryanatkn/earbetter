@@ -120,19 +120,18 @@ export class App {
 		this.selected_project_id.value = project_def.id;
 		this.selected_realm_id.value =
 			app_data.selected_realm_id || project_def.realm_defs[0]?.id || null;
-		// save changes to `selected_project_id` back to the `app_data`
+		// save changes to `selected_project_id` and `selected_realm_id` back to the `app_data`,
+		// these could be decoupled but are often fired together
 		effect(() => {
 			const app_data = this.app_data.peek();
 			const selected_project_id = this.selected_project_id.value;
-			if (selected_project_id === app_data.selected_project_id) return;
-			this.app_data.value = {...app_data, selected_project_id};
-		});
-		// save changes to `selected_realm_id` back to the `app_data`
-		effect(() => {
-			const app_data = this.app_data.peek();
 			const selected_realm_id = this.selected_realm_id.value;
-			if (selected_realm_id === app_data.selected_realm_id) return;
-			this.app_data.value = {...app_data, selected_realm_id};
+			if (
+				selected_project_id !== app_data.selected_project_id ||
+				selected_realm_id !== app_data.selected_realm_id
+			) {
+				this.app_data.value = {...app_data, selected_project_id, selected_realm_id};
+			}
 		});
 	}
 
