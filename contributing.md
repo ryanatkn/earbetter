@@ -11,6 +11,7 @@ hey cool thanks for your interest
    [discussions](https://github.com/ryanatkn/earbetter/discussions)
 1. [PRs](https://github.com/ryanatkn/earbetter/pulls)
    are welcome but they may be declined if they don't fit the project's goals,
-   which are currently unclear and open for discussion,
+   which are currently unclear and open for
+   [discussion](https://github.com/ryanatkn/earbetter/discussions),
    but everything is public domain and forking is encouraged
 1. please be kind and curious
