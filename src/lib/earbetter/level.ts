@@ -26,7 +26,7 @@ export const DEFAULT_INTERVALS = [5, 7];
 export const DEFAULT_NOTE_MIN = 48;
 export const DEFAULT_NOTE_MAX = 84;
 
-export type LevelId = Flavored<string, 'Level'>;
+export type LevelId = Flavored<string, 'LevelId'>;
 export const LevelId = z.string().uuid().transform<LevelId>(identity);
 export const create_level_id = (): LevelId => crypto.randomUUID();
 

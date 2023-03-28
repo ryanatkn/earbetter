@@ -4,7 +4,7 @@ import {identity} from '@feltjs/util/function.js';
 
 import {LevelDef} from '$lib/earbetter/level';
 
-export type RealmId = Flavored<string, 'Realm'>;
+export type RealmId = Flavored<string, 'RealmId'>;
 export const RealmId = z.string().uuid().transform<RealmId>(identity);
 export const create_realm_id = (): RealmId => crypto.randomUUID();
 

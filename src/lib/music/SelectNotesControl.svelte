@@ -2,17 +2,16 @@
 	import type {Signal} from '@preact/signals-core';
 
 	import type {Midi} from '$lib/music/midi';
-	import {note_sets, to_notes, type NoteSet} from '$lib/music/helpers';
+	import {scales, to_notes, type Scale} from '$lib/music/helpers';
 
 	export let notes: Signal<Set<Midi> | null>;
-	export let value: NoteSet | undefined = undefined;
+	export let value: Scale | undefined = undefined;
 
-	$: console.log(`value`, value);
 	$: value !== undefined && update_notes(value);
 
-	const update_notes = (note_set: NoteSet): void => {
-		console.log(`notes`, $notes);
-		notes.value = note_set === 'chromatic' ? null : to_notes(note_set);
+	const update_notes = (scale: Scale): void => {
+		console.log(`notes`, $notes, scale);
+		notes.value = scale.name === 'chromatic' ? null : to_notes(scale);
 	};
 </script>
 
@@ -21,8 +20,8 @@
 		<slot>select notes</slot>
 	</div>
 	<select bind:value>
-		{#each note_sets as note_set (note_set)}
-			<option value={note_set}>{note_set}</option>
+		{#each scales as scale (scale)}
+			<option value={scale}>{scale.name}</option>
 		{/each}
 	</select>
 </label>
