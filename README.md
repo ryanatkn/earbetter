@@ -9,7 +9,7 @@ see [contributing.md](contributing.md)
 
 In 2016 I made a simple ear training game named
 [Ear Sharpener](https://github.com/ryanatkn/ear-sharpener) to scratch an itch,
-and while interesting it wasn't a good training tool or much fun after the novelty wore off.
+and while interesting it wasn't a good training tool.
 The goal of earbetter is to be a useful ear trainer. (with MIDI support!)
 I also want it to be fun so it motivates more training.
 It's online at [earbetter.ryanatkn.com](https://earbetter.ryanatkn.com/).
