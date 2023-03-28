@@ -12,7 +12,7 @@ In 2016 I made a simple ear training game named
 and while interesting it wasn't a good training tool.
 The goal of earbetter is to be a useful ear trainer. (with MIDI support!)
 I also want it to be fun so it motivates more training.
-It's still early so I don't know how either is going.
+It's still early so I don't know how either goal is going.
 It's online at [earbetter.ryanatkn.com](https://earbetter.ryanatkn.com/).
 
 I'm a web developer not a musician, and I'm sure I got some music things wrong,
