@@ -49,17 +49,15 @@ export const get_enabled_keys = (): Signal<Set<Midi> | null> => getContext(ENABL
 export const set_enabled_keys = (store = signal(null)): Signal<Set<Midi> | null> =>
 	setContext(ENABLED_KEYS_KEY, store);
 
-// TODO BLOCK convert to zod
-
 export type ScaleName = Flavored<string, 'ScaleName'>;
 export const ScaleName = z.string().transform<ScaleName>(identity);
-export const ScaleDegree = z.number().min(1).max(11);
-export type RealmId = Flavored<string, 'Realm'>;
-export const RealmId = z.string().uuid().transform<RealmId>(identity);
+
+export type ScaleNoteIndex = Flavored<number, 'ScaleNoteIndex'>;
+export const ScaleNoteIndex = z.number().min(1).max(11).transform<ScaleNoteIndex>(identity);
 
 export const Scale = z.object({
 	name: ScaleName,
-	notes: z.array(ScaleDegree),
+	notes: z.array(ScaleNoteIndex),
 });
 export type Scale = z.infer<typeof Scale>;
 
