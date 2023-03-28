@@ -12,13 +12,13 @@
 	import {get_instrument, get_volume, with_velocity} from '$lib/audio/helpers';
 	import InstrumentControl from '$lib/audio/InstrumentControl.svelte';
 	import MidiRangeControl from '$lib/audio/MidiRangeControl.svelte';
-	import {get_enabled_keys} from '$lib/music/helpers';
+	import {get_enabled_notes} from '$lib/music/helpers';
 	import SelectNotesControl from '$lib/music/SelectNotesControl.svelte';
 
 	const ac = get_ac();
 	const volume = get_volume();
 	const instrument = get_instrument();
-	const enabled_keys = get_enabled_keys();
+	const enabled_notes = get_enabled_notes();
 
 	$: pressed_keys = $playing_notes;
 
@@ -30,7 +30,7 @@
 	const piano_padding = 20;
 
 	const play = (note: Midi, velocity: number | null = null): void => {
-		if (!$enabled_keys || $enabled_keys.has(note)) {
+		if (!$enabled_notes || $enabled_notes.has(note)) {
 			start_playing(ac, note, with_velocity($volume, velocity), $instrument);
 		}
 	};
@@ -54,7 +54,7 @@
 				{note_min}
 				{note_max}
 				{pressed_keys}
-				enabled_keys={$enabled_keys}
+				enabled_notes={$enabled_notes}
 				on:press={(e) => play(e.detail)}
 				on:release={(e) => stop_playing(e.detail)}
 			/>
@@ -64,7 +64,9 @@
 		<fieldset>
 			<VolumeControl {volume} />
 			<InstrumentControl {instrument} />
-			<SelectNotesControl notes={enabled_keys}>enabled notes</SelectNotesControl>
+			<div class="row">
+				<SelectNotesControl notes={enabled_notes} />
+			</div>
 		</fieldset>
 		<fieldset>
 			<InitMidiButton {midi_access} />

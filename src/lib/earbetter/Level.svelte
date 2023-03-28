@@ -174,7 +174,7 @@
 				width={clientWidth - piano_padding * 2}
 				note_min={$def.note_min}
 				note_max={$def.note_max}
-				enabled_keys={$trial?.valid_notes}
+				enabled_notes={$trial?.valid_notes}
 				{pressed_keys}
 				{highlighted_keys}
 				on:press={$status === 'waiting_for_input'

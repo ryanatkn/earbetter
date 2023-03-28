@@ -6,7 +6,7 @@
 	export let width: number;
 	export let note_min: Midi = MIDI_MIN;
 	export let note_max: Midi = MIDI_MAX;
-	export let enabled_keys: Set<Midi> | null = null;
+	export let enabled_notes: Set<Midi> | null = null;
 	export let pressed_keys: Set<Midi> | null = null;
 	export let highlighted_keys: Set<Midi> | null = null;
 	export let emphasized_keys: Set<Midi> | null = null;
@@ -35,7 +35,7 @@
 				on:release
 				{midi}
 				{left_offset}
-				enabled={!enabled_keys || enabled_keys.has(midi)}
+				enabled={!enabled_notes || enabled_notes.has(midi)}
 				pressed={pressed_keys?.has(midi)}
 				highlighted={highlighted_keys?.has(midi)}
 				emphasized={emphasized_keys?.has(midi)}

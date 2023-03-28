@@ -5,6 +5,7 @@ import type {Flavored} from '@feltjs/util';
 import {identity} from '@feltjs/util/function.js';
 
 import {MIDI_MAX, MIDI_MIN, type Midi} from '$lib/music/midi';
+import type {PitchClass} from '$lib/music/notes';
 
 export const DEFAULT_TUNING = 440; // https://en.wikipedia.org/wiki/A440_(pitch_standard)
 
@@ -44,10 +45,10 @@ export const interval_names = Object.freeze([
 
 export type IntervalNames = (typeof interval_names)[number];
 
-const ENABLED_KEYS_KEY = Symbol('enabled_keys');
-export const get_enabled_keys = (): Signal<Set<Midi> | null> => getContext(ENABLED_KEYS_KEY);
-export const set_enabled_keys = (store = signal(null)): Signal<Set<Midi> | null> =>
-	setContext(ENABLED_KEYS_KEY, store);
+const ENABLED_NOTES_KEY = Symbol('enabled_notes');
+export const get_enabled_notes = (): Signal<Set<Midi> | null> => getContext(ENABLED_NOTES_KEY);
+export const set_enabled_notes = (store = signal(null)): Signal<Set<Midi> | null> =>
+	setContext(ENABLED_NOTES_KEY, store);
 
 export type ScaleName = Flavored<string, 'ScaleName'>;
 export const ScaleName = z.string().transform<ScaleName>(identity);
@@ -79,6 +80,7 @@ export const scale_by_name: Map<ScaleName, Scale> = new Map(scales.map((s) => [s
 // TODO memoize?
 export const to_notes = (
 	scale: Scale,
+	pitch_class: PitchClass = 'C',
 	// TODO BLOCK pass `tonic` as a separate param? could default to C
 	midi_min: Midi = MIDI_MIN, // TODO BLOCK pass these in at the callsite using the "lowest/highest MIDI key"
 	midi_max: Midi = MIDI_MAX, // TODO BLOCK pass these in at the callsite using the "lowest/highest MIDI key"

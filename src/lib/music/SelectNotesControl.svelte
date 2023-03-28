@@ -3,25 +3,43 @@
 
 	import type {Midi} from '$lib/music/midi';
 	import {scales, to_notes, type Scale} from '$lib/music/helpers';
+	import {pitch_classes, type PitchClass} from '$lib/music/notes';
 
 	export let notes: Signal<Set<Midi> | null>;
-	export let value: Scale | undefined = undefined;
+	export let scale: Scale | undefined = undefined;
+	export let pitch_class: PitchClass | undefined = undefined;
 
-	$: value !== undefined && update_notes(value);
+	$: scale !== undefined && pitch_class !== undefined && update_notes(scale, pitch_class);
 
-	const update_notes = (scale: Scale): void => {
+	const update_notes = (scale: Scale, pitch_class: PitchClass): void => {
 		console.log(`notes`, $notes, scale);
-		notes.value = scale.name === 'chromatic' ? null : to_notes(scale);
+		notes.value = scale.name === 'chromatic' ? null : to_notes(scale, pitch_class);
 	};
 </script>
 
 <label>
 	<div class="title">
-		<slot>select notes</slot>
+		<slot>scale</slot>
 	</div>
-	<select bind:value>
+	<select bind:value={scale}>
 		{#each scales as scale (scale)}
 			<option value={scale}>{scale.name}</option>
 		{/each}
 	</select>
 </label>
+<label>
+	<div class="key">
+		<slot>key</slot>
+	</div>
+	<select bind:value={pitch_class}>
+		{#each pitch_classes as p (p)}
+			<option value={p}>{p}</option>
+		{/each}
+	</select>
+</label>
+
+<style>
+	label {
+		flex: 1;
+	}
+</style>
