@@ -21,7 +21,7 @@ import {
 import {ProjectDef, ProjectId, ProjectName} from '$lib/earbetter/project';
 import {load_from_storage, set_in_storage} from '$lib/util/storage';
 import {RealmId, type RealmDef} from '$lib/earbetter/realm';
-import default_project_def from '$lib/earbetter/projects/default-project';
+import default_project_def from '$lib/projects/default-project';
 
 const log = new Logger('[app]');
 

@@ -14,8 +14,11 @@ hey cool thanks for your interest
    [discussions](https://github.com/ryanatkn/earbetter/discussions)
 1. earbetter makes it easy to create and share challenges
    but for now the only official way to share content is through PRs on GitHub -
-   for now, please submit data in files like `$lib/data/{your_name}/my_cool_challenge.json`
-   (TODO link an example PR, and discussions for improving this situation)
+   for now, please submit projects, realms, and levels
+   like `$lib/projects/{your_name}/my_cool_project.ts`
+   or `$lib/projects/{your_name}/my_challenging_level.ts`
+   (here's [the default project](src/lib//projects/default-project.ts))
+   (TODO link to discussions for improving this situation)
 1. other [PRs](https://github.com/ryanatkn/earbetter/pulls)
    are welcome but they may be declined if they don't fit the project's goals,
    which are currently unclear and open for
