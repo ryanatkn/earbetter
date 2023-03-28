@@ -13,8 +13,8 @@ but it wasn't a very good training tool or much fun to use after the novelty wor
 This is a followup with a new design that's trying to be more useful and fun.
 It also has some experiences besides the ear trainer itself
 (like [/piano](https://earbetter.ryanatkn.com/piano)),
-and soon it'll publish Svelte components and JS/TS helpers
-for music and audio programming (like `Piano.svelte`).
+and soon it'll publish Svelte components and JS/TS helpers for music and audio programming
+(like [`Piano.svelte`](https://github.com/ryanatkn/earbetter/blob/main/src/lib/music/Piano.svelte)).
 It's online at [earbetter.ryanatkn.com](https://earbetter.ryanatkn.com/).
 
 earbetter is designed for MIDI devices like piano keyboards, but it also works without them.
