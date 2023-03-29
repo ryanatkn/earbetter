@@ -52,8 +52,8 @@ export const SMOOTH_GAIN_TIME_CONSTANT = 0.03;
 export type Instrument = 'sawtooth' | 'sine' | 'square' | 'triangle';
 
 export const instruments: Instrument[] = ['sawtooth', 'sine', 'square', 'triangle']; // TODO support "custom"
-export const DEFAULT_OSC_TYPE: Instrument = 'sine';
-const OSC_TYPE_KEY = Symbol('instrument');
-export const get_instrument = (): Signal<Instrument> => getContext(OSC_TYPE_KEY);
-export const set_instrument = (store = signal(DEFAULT_OSC_TYPE)): Signal<Instrument> =>
-	setContext(OSC_TYPE_KEY, store);
+export const DEFAULT_INSTRUMENT_TYPE: Instrument = 'sine';
+const INSTRUMENT_TYPE_KEY = Symbol('instrument');
+export const get_instrument = (): Signal<Instrument> => getContext(INSTRUMENT_TYPE_KEY);
+export const set_instrument = (store = signal(DEFAULT_INSTRUMENT_TYPE)): Signal<Instrument> =>
+	setContext(INSTRUMENT_TYPE_KEY, store);

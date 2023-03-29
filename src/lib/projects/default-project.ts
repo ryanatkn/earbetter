@@ -2,6 +2,9 @@ import {RealmDef} from '$lib/earbetter/realm';
 import {LevelDef, DEFAULT_NOTE_MIN} from '$lib/earbetter/level';
 import {create_project_id, ProjectDef} from '$lib/earbetter/project';
 
+// TODO more - modes, particular intervals, scales, chromatic, ...?
+// what's best for learning and understanding and covering the landscape?
+
 const def = (): ProjectDef =>
 	ProjectDef.parse({
 		id: create_project_id(),
@@ -131,70 +134,3 @@ const def = (): ProjectDef =>
 	});
 
 export default def;
-
-// TODO more - modes, particular intervals, scales, chromatic, ...?
-// what's best for learning and understanding and covering the landscape?
-// probably want helpers like
-// `create_mode_realm({name: 'Dorian mode', intervals: [2, 3, 5, 7, 9, 10, 12]})`
-// `create_mode_realm({name: 'chromatic', intervals: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]})`
-// and then you could have options for customizing the levels, and add new levels
-//
-// {
-// 	name: 'minor pentatonic',
-// 	intervals: [3, 5, 7, 10, 12, -9, -7, -5, -2, -12],
-// },
-// {
-// 	name: 'major second vs major third (long)',
-// 	intervals: [2, 4],
-// 	sequence_length: DEFAULT_SEQUENCE_LENGTH * 2,
-// },
-// {
-// 	name: 'major second vs major third vs perfect fourth (long)',
-// 	intervals: [2, 4, 5],
-// 	sequence_length: DEFAULT_SEQUENCE_LENGTH * 2,
-// },
-// {
-// 	name: 'major scale (Ionian mode)',
-// 	intervals: [2, 4, 5, 7, 9, 11, 12],
-// },
-// {
-// 	name: 'minor scale (Aeolian mode)',
-// 	intervals: [2, 3, 5, 7, 8, 10, 12],
-// },
-// {name: 'Dorian mode', intervals: [2, 3, 5, 7, 9, 10, 12]},
-// {name: 'Phrygian mode', intervals: [1, 3, 5, 7, 8, 10, 12]},
-// {name: 'Lydian mode', intervals: [2, 4, 6, 7, 9, 11, 12]},
-// {name: 'Mixolydian mode', intervals: [2, 4, 5, 7, 9, 10, 12]},
-// {name: 'Locrian mode', intervals: [1, 3, 5, 6, 8, 10, 12]},
-// {name: 'octatonic scale', intervals: [2, 3, 5, 6, 8, 9, 11]},
-// {
-// 	name: 'major scale (long)',
-// 	intervals: [2, 4, 5, 7, 9, 11, 12],
-// 	sequence_length: DEFAULT_SEQUENCE_LENGTH * 2,
-// },
-// {
-// 	name: 'major scale in both directions',
-// 	intervals: [2, 4, 5, 7, 9, 11, 12, -1, -3, -5, -7, -8, -10, -12],
-// },
-// {
-// 	name: 'major scale in both directions (long)',
-// 	intervals: [2, 4, 5, 7, 9, 11, 12, -1, -3, -5, -7, -8, -10, -12],
-// 	sequence_length: DEFAULT_SEQUENCE_LENGTH * 2,
-// },
-// {
-// 	name: 'major scale up two octaves',
-// 	intervals: [2, 4, 5, 7, 9, 11, 12, 14, 16, 17, 19, 21, 23, 24],
-// },
-// {
-// 	name: 'major scale up two octaves (long)',
-// 	intervals: [2, 4, 5, 7, 9, 11, 12, 14, 16, 17, 19, 21, 23, 24],
-// 	sequence_length: DEFAULT_SEQUENCE_LENGTH * 2,
-// },
-// {
-// 	name: 'chromatic scale (two octaves)',
-// 	intervals: Array.from({length: 25}, (_, i) => i - 12),
-// },
-// {
-// 	name: 'chromatic scale (four octaves)',
-// 	intervals: Array.from({length: 49}, (_, i) => i - 24),
-// },

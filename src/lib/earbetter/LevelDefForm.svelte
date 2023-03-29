@@ -15,8 +15,8 @@
 		LevelDef,
 		type LevelId,
 	} from '$lib/earbetter/level';
-	import {parse_intervals, serialize_intervals, midi_names} from '$lib/music/notes';
-	import {MIDI_MAX, MIDI_MIN, type Midi} from '$lib/music/midi';
+	import {parse_intervals, serialize_intervals} from '$lib/music/notes';
+	import {MIDI_MAX, MIDI_MIN, type Midi, midi_names} from '$lib/music/midi';
 
 	const dispatch = createEventDispatcher<{submit: LevelDef; remove: LevelId}>();
 

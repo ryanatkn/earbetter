@@ -2,8 +2,7 @@
 	import {createEventDispatcher} from 'svelte';
 	import {swallow} from '@feltjs/util/dom.js';
 
-	import {midi_naturals} from '$lib/music/notes';
-	import type {Midi} from '$lib/music/midi';
+	import {type Midi, midi_naturals} from '$lib/music/midi';
 
 	const dispatch = createEventDispatcher<{press: Midi; release: Midi}>();
 

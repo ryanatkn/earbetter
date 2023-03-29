@@ -2,7 +2,7 @@ import {z} from 'zod';
 import type {Flavored} from '@feltjs/util';
 import {identity} from '@feltjs/util/function.js';
 
-import {type Midi, midis, is_midi} from '$lib/music/midi';
+import {type Midi, is_midi, midi_naturals} from '$lib/music/midi';
 import {type Hsl, hsl_to_string, type Hue} from '$lib/util/colors';
 
 // `Midi` is our primary means of identifying notes,
@@ -32,8 +32,16 @@ export type NoteName =
 
 export const chromas = Object.freeze([1,  2,  3,  4,  5,  6,  7,  8,  9,  10,  11, 12] as const); // prettier-ignore
 export type Chroma = (typeof chromas)[number]; // corresponds to indices of `pitch_classes` + 1
-export const pitch_classes = Object.freeze(['C', 'C♯', 'D', 'D♯', 'E', 'F', 'F♯', 'G', 'G♯', 'A', 'A♯', 'B'] as const); // prettier-ignore
-export type PitchClass = (typeof pitch_classes)[number];
+export const PitchClass = z.enum(['C', 'C♯', 'D', 'D♯', 'E', 'F', 'F♯', 'G', 'G♯', 'A', 'A♯', 'B']);
+export type PitchClass = z.infer<typeof PitchClass>;
+export const pitch_classes = PitchClass.options;
+export const pitch_class_aliases: Record<PitchClass, string> = {
+	'C♯': 'D♭',
+	'D♯': 'E♭',
+	'F♯': 'G♭',
+	'G♯': 'A♭',
+	'A♯': 'B♭',
+} as Record<PitchClass, string>; // TODO the `♯` appear to cause TS to bug out? try to remove this later
 export type Octave = -1 | 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9;
 
 export type Semitones = Flavored<number, 'Semitones'>;
@@ -49,23 +57,6 @@ export const parse_intervals = (value: string): Intervals =>
 		.split(',')
 		.map((v) => Number(v.trim()) | 0)
 		.filter(Boolean); // exclude 0 intentionally
-
-// TODO consider converting all of these to `Map`s
-// TODO do we want to remove the `midi` part of these data array names, or otherwise rename them?
-// maybe instead of `midiFoos`, rename to `noteFoos`?
-export const midi_chromas: Chroma[] = Object.freeze(midis.map((m) => (m % 12) + 1)) as Chroma[];
-export const midi_pitch_classes: PitchClass[] = Object.freeze(
-	midis.map((m) => pitch_classes[midi_chromas[m] - 1]),
-) as PitchClass[];
-export const midi_octaves: Octave[] = Object.freeze(
-	midis.map((m) => Math.floor(m / 12) - 1),
-) as Octave[];
-export const midi_names: NoteName[] = Object.freeze(
-	midis.map((m) => midi_pitch_classes[m] + midi_octaves[m]),
-) as NoteName[];
-export const midi_naturals: Set<Midi> = new Set(
-	midis.filter((m) => midi_pitch_classes[m][1] !== NOTE_SHARP_SYMBOL),
-);
 
 export const compute_naturals = (min: Midi, max: Midi): Midi[] => {
 	const naturals: Midi[] = [];

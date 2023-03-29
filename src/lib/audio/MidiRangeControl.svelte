@@ -2,8 +2,7 @@
 	import Message from '@feltjs/felt-ui/Message.svelte';
 	import {slide} from 'svelte/transition';
 
-	import {MIDI_MAX, MIDI_MIN, type Midi} from '$lib/music/midi';
-	import {midi_names} from '$lib/music/notes';
+	import {midi_names, MIDI_MAX, MIDI_MIN, type Midi} from '$lib/music/midi';
 
 	export let note_min: Midi;
 	export let note_max: Midi;
@@ -15,13 +14,13 @@
 <div class="midi-range-control" class:error={!!error_message}>
 	<div class="centered-hz">
 		<label>
-			lowest MIDI key
+			<div class="title">lowest MIDI key</div>
 			<input type="number" bind:value={note_min} step={1} min={MIDI_MIN} max={MIDI_MAX} />
 			{midi_names[note_min]}
 			<input type="range" bind:value={note_min} step={1} min={MIDI_MIN} max={MIDI_MAX} />
 		</label>
 		<label>
-			highest MIDI key
+			<div class="title">highest MIDI key</div>
 			<input type="number" bind:value={note_max} step={1} min={MIDI_MIN} max={MIDI_MAX} />
 			{midi_names[note_max]}
 			<input type="range" bind:value={note_max} step={1} min={MIDI_MIN} max={MIDI_MAX} />

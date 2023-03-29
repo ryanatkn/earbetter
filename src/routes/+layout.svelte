@@ -14,10 +14,12 @@
 	import {App, set_app} from '$lib/earbetter/app';
 	import WebsiteMap from '$routes/WebsiteMap.svelte';
 	import {afterNavigate} from '$app/navigation';
+	import {set_enabled_notes} from '$lib/music/helpers';
 
 	const get_ac = set_ac();
 	const volume = set_volume();
 	const instrument = set_instrument();
+	set_enabled_notes();
 
 	const app = set_app(new App(get_ac));
 	if (browser) (window as any).app = app;
