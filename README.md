@@ -17,7 +17,7 @@ It's online at [earbetter.ryanatkn.com](https://earbetter.ryanatkn.com/).
 
 I'm a web developer not a musician, and I'm sure I got some music things wrong,
 and I can't possibly design all of the best ear training challenges.
-Knowing this, I designed the software so you can create and share custom challenges.
+Knowing this, the software is designed so you can create and share custom challenges.
 
 The core gameplay has "levels" broken up into "trials".
 Each trial is a sequence of notes that you hear and then play back.
