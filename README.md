@@ -17,29 +17,27 @@ It's online at [earbetter.ryanatkn.com](https://earbetter.ryanatkn.com/).
 
 I'm a web developer not a musician, and I'm sure I got some music things wrong,
 and I can't possibly design all of the best ear training challenges.
-Knowing this, I designed the software to be highly configurable
-so you can create and share custom challenges.
+Knowing this, I designed the software so you can create and share custom challenges.
 
-There's a core gameplay structure of "levels" broken up into "trials".
+The core gameplay has "levels" broken up into "trials".
 Each trial is a sequence of notes that you hear and then play back.
 While limited, it supports a decent range of ear training challenges
 and there's room to add more capabilities.
-On the level creation form, you can click the "import" button under levels
+In the level creator, you can click the "import" button
 to get copy-pastable data as text that you can share with others.
 
 "Realms" have many levels, and each realm may have a particular flavor, like the pentatonic scale.
 Realms can be created and shared just like importing/exporting levels.
 
 "Projects" are like save files. They group multiple realms together.
-They can also be imported/exported.
+They can similarly be imported/exported.
 
 In the future I'll probably add a way to share in-app,
 but that requires some kind of server infrastructure.
 For now I'm accepting content submissions in this repo,
 so we get the benefit having a lot of static content without needing a server.
-I'm open to input -- for now, feel free to open PRs with your exported data.
-For now I think it makes sense to namespace everything by user,
-so `$lib/data/{your_name}` with data files sounds like a start.
+I'm open to input -- for now, feel free to open PRs with your exported data
+following [the default example](src/lib//projects/default-project.ts).
 
 To help improve things, please see [contributing.md](contributing.md),
 and the GitHub [discussions](https://github.com/ryanatkn/earbetter/discussions)
