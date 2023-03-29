@@ -7,13 +7,13 @@
 
 	export let notes: Signal<Set<Midi> | null>;
 	export let scale: Scale | undefined = undefined;
-	export let pitch_class: PitchClass | undefined = undefined;
+	export let key: PitchClass | undefined = undefined;
 
-	$: scale !== undefined && pitch_class !== undefined && update_notes(scale, pitch_class);
+	$: scale !== undefined && key !== undefined && update_notes(scale, key);
 
-	const update_notes = (scale: Scale, pitch_class: PitchClass): void => {
+	const update_notes = (scale: Scale, key: PitchClass): void => {
 		console.log(`notes`, $notes, scale);
-		notes.value = scale.name === 'chromatic' ? null : to_notes(scale, pitch_class);
+		notes.value = scale.name === 'chromatic' ? null : to_notes(scale, key);
 	};
 </script>
 
@@ -31,7 +31,7 @@
 	<div class="key">
 		<slot>key</slot>
 	</div>
-	<select bind:value={pitch_class}>
+	<select bind:value={key}>
 		{#each pitch_classes as p (p)}
 			<option value={p}>{p}</option>
 		{/each}
