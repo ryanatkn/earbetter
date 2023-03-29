@@ -7,19 +7,39 @@
 	import Dialog from '@feltjs/felt-ui/Dialog.svelte';
 	import {slide} from 'svelte/transition';
 	import {browser} from '$app/environment';
+	import {effect, signal} from '@preact/signals-core';
+	import {afterNavigate} from '$app/navigation';
 
 	import {set_ac} from '$lib/audio/ac';
 	import {adjust_volume, set_instrument, set_volume} from '$lib/audio/helpers';
 	import {request_access} from '$lib/audio/midi_access';
 	import {App, set_app} from '$lib/earbetter/app';
-	import WebsiteMap from '$routes/WebsiteMap.svelte';
-	import {afterNavigate} from '$app/navigation';
 	import {set_enabled_notes} from '$lib/music/helpers';
+	import {load_from_storage, set_in_storage} from '$lib/util/storage';
+	import WebsiteMap from '$routes/WebsiteMap.svelte';
+	import {SiteData} from '$routes/site_data';
+
+	const SITE_DATA_STORAGE_KEY = 'site';
+	const initial_site_data = load_from_storage(
+		SITE_DATA_STORAGE_KEY,
+		() => SiteData.parse({}),
+		SiteData.parse,
+	);
 
 	const get_ac = set_ac();
-	const volume = set_volume();
+	const volume = set_volume(signal(initial_site_data.volume));
 	const instrument = set_instrument();
-	set_enabled_notes();
+	set_enabled_notes(); // TODO BLOCK the source of truth for this is a form, how to set in metadata? hoist it?
+
+	const to_site_data = (): SiteData => ({
+		volume: volume.value,
+		instrument: instrument.value,
+	});
+	const save_site_data = () => set_in_storage(SITE_DATA_STORAGE_KEY, to_site_data());
+	effect(() => {
+		console.log('SAVING SITE DATA');
+		save_site_data();
+	});
 
 	const app = set_app(new App(get_ac));
 	if (browser) (window as any).app = app;
