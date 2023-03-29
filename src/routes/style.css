@@ -108,7 +108,7 @@ code {
 .row label {
 	margin-bottom: 0 !important;
 }
-.markup .row {
+.markup .row:not(:last-child) {
 	margin-bottom: var(--spacing_lg);
 }
 
