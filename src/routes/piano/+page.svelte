@@ -12,12 +12,14 @@
 	import {get_instrument, get_volume, with_velocity} from '$lib/audio/helpers';
 	import InstrumentControl from '$lib/audio/InstrumentControl.svelte';
 	import MidiRangeControl from '$lib/audio/MidiRangeControl.svelte';
-	import {get_enabled_notes} from '$lib/music/helpers';
+	import {get_scale, get_key, get_enabled_notes} from '$lib/music/helpers';
 	import SelectNotesControl from '$lib/music/SelectNotesControl.svelte';
 
 	const ac = get_ac();
 	const volume = get_volume();
 	const instrument = get_instrument();
+	const scale = get_scale();
+	const key = get_key();
 	const enabled_notes = get_enabled_notes();
 
 	$: pressed_keys = $playing_notes;
@@ -34,10 +36,15 @@
 			start_playing(ac, note, with_velocity($volume, velocity), $instrument);
 		}
 	};
+
+	// TODO save settings
+	// export const PianoSettings = z.object({
+	//   note_min: Midi
+	// })
 </script>
 
 <svelte:head>
-	<title>earbetter: piano</title>
+	<title>Earbetter: piano</title>
 </svelte:head>
 
 <MidiInput
@@ -64,7 +71,7 @@
 		<fieldset>
 			<InstrumentControl {instrument} />
 			<div class="row">
-				<SelectNotesControl notes={enabled_notes} />
+				<SelectNotesControl {scale} {key} />
 			</div>
 			<VolumeControl {volume} />
 		</fieldset>

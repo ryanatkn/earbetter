@@ -2,15 +2,8 @@ import {z} from 'zod';
 import type {Flavored} from '@feltjs/util';
 
 import type {Frequency} from '$lib/audio/helpers';
-import {DEFAULT_TUNING} from '$lib/music/helpers';
-import {
-	NOTE_SHARP_SYMBOL,
-	pitch_classes,
-	type Chroma,
-	type NoteName,
-	type Octave,
-	type PitchClass,
-} from '$lib/music/notes';
+import {DEFAULT_TUNING, pitch_classes, type PitchClass} from '$lib/music/helpers';
+import {NOTE_SHARP_SYMBOL, type Chroma, type NoteName, type Octave} from '$lib/music/notes';
 
 // TODO min audible Midi (max too?)
 

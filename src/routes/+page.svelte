@@ -5,9 +5,6 @@
 	import Footer from '$routes/Footer.svelte';
 </script>
 
-<svelte:head>
-	<title>earbetter</title>
-</svelte:head>
 <main>
 	<Header />
 	<section class="panel padded-md markup">

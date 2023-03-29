@@ -52,10 +52,10 @@ export const SMOOTH_GAIN_TIME_CONSTANT = 0.03;
 export const Instrument = z.enum(['sawtooth', 'sine', 'square', 'triangle']);
 export type Instrument = z.infer<typeof Instrument>;
 export const instruments: Instrument[] = Instrument.options;
-export const DEFAULT_INSTRUMENT_TYPE: Instrument = 'sine';
+export const DEFAULT_INSTRUMENT: Instrument = 'sine';
 
-const INSTRUMENT_TYPE_KEY = Symbol('instrument');
-export const get_instrument = (): Signal<Instrument> => getContext(INSTRUMENT_TYPE_KEY);
+const INSTRUMENT_KEY = Symbol('instrument');
+export const get_instrument = (): Signal<Instrument> => getContext(INSTRUMENT_KEY);
 export const set_instrument = (
-	store: Signal<Instrument> = signal(DEFAULT_INSTRUMENT_TYPE),
-): Signal<Instrument> => setContext(INSTRUMENT_TYPE_KEY, store);
+	store: Signal<Instrument> = signal(DEFAULT_INSTRUMENT),
+): Signal<Instrument> => setContext(INSTRUMENT_KEY, store);

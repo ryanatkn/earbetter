@@ -1,30 +1,29 @@
 <script lang="ts">
 	import type {Signal} from '@preact/signals-core';
 
-	import type {Midi} from '$lib/music/midi';
-	import {scales, to_notes, type Scale} from '$lib/music/helpers';
-	import {pitch_classes, pitch_class_aliases, type PitchClass} from '$lib/music/notes';
+	import {
+		scales,
+		type Scale,
+		pitch_classes,
+		pitch_class_aliases,
+		type PitchClass,
+		lookup_scale,
+	} from '$lib/music/helpers';
 
-	// TODO BLOCK how to source this from the metadata?
-	export let notes: Signal<Set<Midi> | null>;
-	export let scale: Scale | undefined = undefined;
-	export let key: PitchClass | undefined = undefined;
+	export let scale: Signal<Scale>;
+	export let key: Signal<PitchClass>;
 
-	$: scale !== undefined && key !== undefined && update_notes(scale, key);
-
-	const update_notes = (scale: Scale, key: PitchClass): void => {
-		console.log(`notes`, $notes, scale);
-		notes.value = scale.name === 'chromatic' ? null : to_notes(scale, key);
-	};
+	const input_key = (e: Event & {currentTarget: HTMLSelectElement}) =>
+		(key.value = e.currentTarget.value as PitchClass);
 </script>
 
 <label>
 	<div class="title">
 		<slot>scale</slot>
 	</div>
-	<select bind:value={scale}>
-		{#each scales as scale (scale)}
-			<option value={scale}>{scale.name}</option>
+	<select value={$scale} on:input={(e) => (scale.value = lookup_scale(e.currentTarget.value))}>
+		{#each scales as s (s)}
+			<option value={s}>{s.name}</option>
 		{/each}
 	</select>
 </label>
@@ -32,11 +31,11 @@
 	<div class="key">
 		<slot>key</slot>
 	</div>
-	<select bind:value={key}>
+	<select value={$key} on:input={input_key}>
 		{#each pitch_classes as p (p)}
-			<option value={p}
-				>{p}{#if p in pitch_class_aliases}/{pitch_class_aliases[p]}{/if}</option
-			>
+			<option value={p}>
+				{p}{#if p in pitch_class_aliases}/{pitch_class_aliases[p]}{/if}
+			</option>
 		{/each}
 	</select>
 </label>

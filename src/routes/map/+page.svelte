@@ -5,7 +5,7 @@
 </script>
 
 <svelte:head>
-	<title>earbetter</title>
+	<title>Earbetter</title>
 </svelte:head>
 <main>
 	<Header />

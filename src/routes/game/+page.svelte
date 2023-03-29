@@ -9,7 +9,7 @@
 </script>
 
 <svelte:head>
-	<title>earbetter: game</title>
+	<title>Earbetter: game</title>
 </svelte:head>
 
 <main>
