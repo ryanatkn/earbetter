@@ -5,6 +5,7 @@
 	import {scales, to_notes, type Scale} from '$lib/music/helpers';
 	import {pitch_classes, pitch_class_aliases, type PitchClass} from '$lib/music/notes';
 
+	// TODO BLOCK how to source this from the metadata?
 	export let notes: Signal<Set<Midi> | null>;
 	export let scale: Scale | undefined = undefined;
 	export let key: PitchClass | undefined = undefined;

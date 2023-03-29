@@ -19,6 +19,7 @@
 	import WebsiteMap from '$routes/WebsiteMap.svelte';
 	import {SiteData} from '$routes/site_data';
 
+	// load site data
 	const SITE_DATA_STORAGE_KEY = 'site';
 	const initial_site_data = load_from_storage(
 		SITE_DATA_STORAGE_KEY,
@@ -31,15 +32,14 @@
 	const instrument = set_instrument(signal(initial_site_data.instrument));
 	set_enabled_notes(); // TODO BLOCK the source of truth for this is a form, how to set in metadata? hoist it?
 
+	// save site data
 	const to_site_data = (): SiteData => ({
+		// note these have to use `.value`, the `$`-prefix doesn't work for reactivity
 		volume: volume.value,
 		instrument: instrument.value,
 	});
 	const save_site_data = () => set_in_storage(SITE_DATA_STORAGE_KEY, to_site_data());
-	effect(() => {
-		console.log('SAVING SITE DATA');
-		save_site_data();
-	});
+	effect(save_site_data);
 
 	const app = set_app(new App(get_ac));
 	if (browser) (window as any).app = app;
