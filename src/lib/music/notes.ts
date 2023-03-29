@@ -35,14 +35,13 @@ export type Chroma = (typeof chromas)[number]; // corresponds to indices of `pit
 export const PitchClass = z.enum(['C', 'C♯', 'D', 'D♯', 'E', 'F', 'F♯', 'G', 'G♯', 'A', 'A♯', 'B']);
 export type PitchClass = z.infer<typeof PitchClass>;
 export const pitch_classes = PitchClass.options;
-// TODO BLOCK display these
-export const pitch_class_aliases = {
+export const pitch_class_aliases: Record<PitchClass, string> = {
 	'C♯': 'D♭',
 	'D♯': 'E♭',
 	'F♯': 'G♭',
 	'G♯': 'A♭',
 	'A♯': 'B♭',
-};
+} as Record<PitchClass, string>; // TODO the `♯` appear to cause TS to bug out? try to remove this later
 export type Octave = -1 | 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9;
 
 export type Semitones = Flavored<number, 'Semitones'>;

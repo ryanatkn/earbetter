@@ -3,7 +3,7 @@
 
 	import type {Midi} from '$lib/music/midi';
 	import {scales, to_notes, type Scale} from '$lib/music/helpers';
-	import {pitch_classes, type PitchClass} from '$lib/music/notes';
+	import {pitch_classes, pitch_class_aliases, type PitchClass} from '$lib/music/notes';
 
 	export let notes: Signal<Set<Midi> | null>;
 	export let scale: Scale | undefined = undefined;
@@ -33,7 +33,9 @@
 	</div>
 	<select bind:value={key}>
 		{#each pitch_classes as p (p)}
-			<option value={p}>{p}</option>
+			<option value={p}
+				>{p}{#if p in pitch_class_aliases}/{pitch_class_aliases[p]}{/if}</option
+			>
 		{/each}
 	</select>
 </label>
