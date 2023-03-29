@@ -5,7 +5,7 @@ import type {Flavored} from '@feltjs/util';
 import {identity} from '@feltjs/util/function.js';
 
 import {MIDI_MAX, MIDI_MIN, type Midi} from '$lib/music/midi';
-import type {PitchClass} from '$lib/music/notes';
+import {midi_pitch_classes, pitch_classes, type PitchClass} from '$lib/music/notes';
 
 export const DEFAULT_TUNING = 440; // https://en.wikipedia.org/wiki/A440_(pitch_standard)
 
@@ -77,17 +77,18 @@ export const scales: Scale[] = [
 
 export const scale_by_name: Map<ScaleName, Scale> = new Map(scales.map((s) => [s.name, s]));
 
-// TODO memoize?
 export const to_notes = (
 	scale: Scale,
 	pitch_class: PitchClass = 'C',
 	// TODO BLOCK pass `tonic` as a separate param? could default to C
-	midi_min: Midi = MIDI_MIN, // TODO BLOCK pass these in at the callsite using the "lowest/highest MIDI key"
-	midi_max: Midi = MIDI_MAX, // TODO BLOCK pass these in at the callsite using the "lowest/highest MIDI key"
+	min_note: Midi = MIDI_MIN, // TODO BLOCK pass these in at the callsite using the "lowest/highest MIDI key"
+	max_note: Midi = MIDI_MAX, // TODO BLOCK pass these in at the callsite using the "lowest/highest MIDI key"
 ): Set<Midi> => {
 	const midis: Midi[] = [];
-	const initial_offset = 0; // TODO BLOCK
-	for (let i = midi_min; i <= midi_max; i++) {
+	const pitch_class_offset = pitch_classes.indexOf(pitch_class);
+	const min_note_offset = pitch_classes.indexOf(midi_pitch_classes[min_note]);
+	const initial_offset = pitch_class_offset - min_note_offset;
+	for (let i = min_note; i <= max_note; i++) {
 		const offset = (i - initial_offset) % 12;
 		if (offset === 0 || scale.notes.includes(offset)) midis.push(i);
 	}
