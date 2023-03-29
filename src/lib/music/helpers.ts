@@ -79,13 +79,12 @@ export const scale_by_name: Map<ScaleName, Scale> = new Map(scales.map((s) => [s
 
 export const to_notes = (
 	scale: Scale,
-	pitch_class: PitchClass = 'C',
-	// TODO BLOCK pass `tonic` as a separate param? could default to C
-	min_note: Midi = MIDI_MIN, // TODO BLOCK pass these in at the callsite using the "lowest/highest MIDI key"
-	max_note: Midi = MIDI_MAX, // TODO BLOCK pass these in at the callsite using the "lowest/highest MIDI key"
+	key: PitchClass = 'C',
+	min_note: Midi = MIDI_MIN,
+	max_note: Midi = MIDI_MAX,
 ): Set<Midi> => {
 	const midis: Midi[] = [];
-	const pitch_class_offset = pitch_classes.indexOf(pitch_class);
+	const pitch_class_offset = pitch_classes.indexOf(key);
 	const min_note_offset = pitch_classes.indexOf(midi_pitch_classes[min_note]);
 	const initial_offset = pitch_class_offset - min_note_offset;
 	for (let i = min_note; i <= max_note; i++) {
