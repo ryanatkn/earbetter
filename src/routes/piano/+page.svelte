@@ -76,7 +76,7 @@
 			<VolumeControl {volume} />
 		</fieldset>
 		<fieldset>
-			<InitMidiButton {midi_access} />
+			<InitMidiButton />
 		</fieldset>
 		<fieldset class="row">
 			<MidiRangeControl bind:note_min bind:note_max />

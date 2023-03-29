@@ -16,8 +16,12 @@
 	import {App, set_app} from '$lib/earbetter/app';
 	import {set_enabled_notes, set_key, set_scale, to_notes} from '$lib/music/helpers';
 	import {load_from_storage, set_in_storage} from '$lib/util/storage';
-	import WebsiteMap from '$routes/WebsiteMap.svelte';
+	import SiteMap from '$routes/SiteMap.svelte';
 	import {SiteData} from '$routes/site_data';
+	import VolumeControl from '$lib/audio/VolumeControl.svelte';
+	import InstrumentControl from '$lib/audio/InstrumentControl.svelte';
+	import InitMidiButton from '$lib/audio/InitMidiButton.svelte';
+	import Footer from '$routes/Footer.svelte';
 
 	// load site data
 	const SITE_DATA_STORAGE_KEY = 'site';
@@ -115,10 +119,21 @@
 
 {#if show_main_menu}
 	<Dialog on:close={() => (show_main_menu = false)}>
-		<section>
-			<WebsiteMap><h2>earbetter</h2></WebsiteMap>
+		<section class="markup">
+			<h1 class="section-title">earbetter</h1>
+			<h2 class="section-title">settings</h2>
+			<form class="column-sm centered">
+				<VolumeControl {volume} />
+				<InstrumentControl {instrument} />
+				<aside>Earbetter supports MIDI devices like piano keyboards, connect and click:</aside>
+				<InitMidiButton />
+			</form>
 		</section>
-		<div class="padded-md centered">
+		<section>
+			<SiteMap />
+		</section>
+		<section class="centered">
+			<h2 class="section-title">data</h2>
 			<button on:click={() => (deleting = !deleting)}> clear saved data </button>
 			{#if deleting}
 				<div transition:slide|local>
@@ -132,6 +147,7 @@
 					</button>
 				</div>
 			{/if}
-		</div>
+		</section>
+		<Footer flush={true} />
 	</Dialog>
 {/if}

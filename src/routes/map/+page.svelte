@@ -1,7 +1,7 @@
 <script lang="ts">
 	import Header from '$routes/Header.svelte';
 	import Footer from '$routes/Footer.svelte';
-	import WebsiteMap from '$routes/WebsiteMap.svelte';
+	import SiteMap from '$routes/SiteMap.svelte';
 </script>
 
 <svelte:head>
@@ -9,7 +9,7 @@
 </svelte:head>
 <main>
 	<Header />
-	<WebsiteMap />
+	<SiteMap />
 	<Footer />
 </main>
 
