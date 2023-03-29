@@ -22,7 +22,7 @@ export const with_velocity = (volume: Volume, velocity: number | null | undefine
 
 const VOLUME_KEY = Symbol('volume');
 export const get_volume = (): Signal<Volume> => getContext(VOLUME_KEY);
-export const set_volume = (store = signal(DEFAULT_VOLUME)): Signal<Volume> =>
+export const set_volume = (store: Signal<Volume> = signal(DEFAULT_VOLUME)): Signal<Volume> =>
 	setContext(VOLUME_KEY, store);
 
 export const adjust_volume = (
@@ -56,5 +56,6 @@ export const DEFAULT_INSTRUMENT_TYPE: Instrument = 'sine';
 
 const INSTRUMENT_TYPE_KEY = Symbol('instrument');
 export const get_instrument = (): Signal<Instrument> => getContext(INSTRUMENT_TYPE_KEY);
-export const set_instrument = (store = signal(DEFAULT_INSTRUMENT_TYPE)): Signal<Instrument> =>
-	setContext(INSTRUMENT_TYPE_KEY, store);
+export const set_instrument = (
+	store: Signal<Instrument> = signal(DEFAULT_INSTRUMENT_TYPE),
+): Signal<Instrument> => setContext(INSTRUMENT_TYPE_KEY, store);

@@ -47,8 +47,9 @@ export type IntervalNames = (typeof interval_names)[number];
 
 const ENABLED_NOTES_KEY = Symbol('enabled_notes');
 export const get_enabled_notes = (): Signal<Set<Midi> | null> => getContext(ENABLED_NOTES_KEY);
-export const set_enabled_notes = (store = signal(null)): Signal<Set<Midi> | null> =>
-	setContext(ENABLED_NOTES_KEY, store);
+export const set_enabled_notes = (
+	store: Signal<Set<Midi> | null> = signal(null),
+): Signal<Set<Midi> | null> => setContext(ENABLED_NOTES_KEY, store);
 
 export type ScaleName = Flavored<string, 'ScaleName'>;
 export const ScaleName = z.string().transform<ScaleName>(identity);

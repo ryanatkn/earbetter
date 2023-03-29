@@ -28,7 +28,7 @@
 
 	const get_ac = set_ac();
 	const volume = set_volume(signal(initial_site_data.volume));
-	const instrument = set_instrument();
+	const instrument = set_instrument(signal(initial_site_data.instrument));
 	set_enabled_notes(); // TODO BLOCK the source of truth for this is a form, how to set in metadata? hoist it?
 
 	const to_site_data = (): SiteData => ({
