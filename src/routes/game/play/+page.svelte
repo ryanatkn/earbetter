@@ -24,7 +24,7 @@
 </script>
 
 <svelte:head>
-	<title>earbetter: play game</title>
+	<title>Earbetter: play game</title>
 </svelte:head>
 
 <main>

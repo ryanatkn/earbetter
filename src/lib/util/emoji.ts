@@ -15,7 +15,6 @@ export const emojis: Emoji[] = [
 	{icon: '🐯'},
 	{icon: '🐴'},
 	{icon: '🦄'},
-	{icon: '🦓'},
 	{icon: '🐮'},
 	{icon: '🐭'},
 	{icon: '🐹'},

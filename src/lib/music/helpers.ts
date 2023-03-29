@@ -5,7 +5,6 @@ import type {Flavored} from '@feltjs/util';
 import {identity} from '@feltjs/util/function.js';
 
 import {midi_pitch_classes, MIDI_MAX, MIDI_MIN, type Midi} from '$lib/music/midi';
-import {pitch_classes, type PitchClass} from '$lib/music/notes';
 
 export const DEFAULT_TUNING = 440; // https://en.wikipedia.org/wiki/A440_(pitch_standard)
 
@@ -47,8 +46,9 @@ export type IntervalNames = (typeof interval_names)[number];
 
 const ENABLED_NOTES_KEY = Symbol('enabled_notes');
 export const get_enabled_notes = (): Signal<Set<Midi> | null> => getContext(ENABLED_NOTES_KEY);
-export const set_enabled_notes = (store = signal(null)): Signal<Set<Midi> | null> =>
-	setContext(ENABLED_NOTES_KEY, store);
+export const set_enabled_notes = (
+	store: Signal<Set<Midi> | null> = signal(null),
+): Signal<Set<Midi> | null> => setContext(ENABLED_NOTES_KEY, store);
 
 export type ScaleName = Flavored<string, 'ScaleName'>;
 export const ScaleName = z.string().transform<ScaleName>(identity);
@@ -74,8 +74,36 @@ export const scales: Scale[] = [
 	{name: 'pentatonic', notes: [2, 4, 7, 9]},
 	{name: 'octatonic', notes: [2, 3, 5, 6, 8, 9, 11]},
 ];
+export const DEFAULT_SCALE = scales[0];
+
+const SCALE_KEY = Symbol('scale');
+export const get_scale = (): Signal<Scale> => getContext(SCALE_KEY);
+export const set_scale = (store: Signal<Scale> = signal(DEFAULT_SCALE)): Signal<Scale> =>
+	setContext(SCALE_KEY, store);
 
 export const scale_by_name: Map<ScaleName, Scale> = new Map(scales.map((s) => [s.name, s]));
+export const lookup_scale = (name: ScaleName): Scale => {
+	const found = scale_by_name.get(name);
+	if (!found) throw Error('unknown scale ' + name);
+	return found;
+};
+
+export const PitchClass = z.enum(['C', 'C♯', 'D', 'D♯', 'E', 'F', 'F♯', 'G', 'G♯', 'A', 'A♯', 'B']);
+export type PitchClass = z.infer<typeof PitchClass>;
+export const pitch_classes = PitchClass.options;
+export const DEFAULT_PITCH_CLASS = pitch_classes[0];
+export const pitch_class_aliases: Record<PitchClass, string> = {
+	'C♯': 'D♭',
+	'D♯': 'E♭',
+	'F♯': 'G♭',
+	'G♯': 'A♭',
+	'A♯': 'B♭',
+} as Record<PitchClass, string>; // TODO the `♯` appear to cause TS to bug out? try to remove this later
+
+const KEY_KEY = Symbol('key');
+export const get_key = (): Signal<PitchClass> => getContext(KEY_KEY);
+export const set_key = (store: Signal<PitchClass> = signal(pitch_classes[0])): Signal<PitchClass> =>
+	setContext(KEY_KEY, store);
 
 export const to_notes = (
 	scale: Scale,

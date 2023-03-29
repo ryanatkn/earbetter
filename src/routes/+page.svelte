@@ -5,12 +5,9 @@
 	import Footer from '$routes/Footer.svelte';
 </script>
 
-<svelte:head>
-	<title>earbetter</title>
-</svelte:head>
 <main>
 	<Header />
-	<section class="panel padded-md markup">
+	<section class="tagline panel">
 		<p>ear training game and tools for playing and programming music and audio</p>
 	</section>
 	<section>
@@ -40,5 +37,9 @@
 	menu a {
 		font-size: var(--font_size_xl3);
 		padding: var(--spacing_xl);
+	}
+	.tagline {
+		margin-top: var(--spacing_xl3);
+		padding: var(--spacing_md);
 	}
 </style>

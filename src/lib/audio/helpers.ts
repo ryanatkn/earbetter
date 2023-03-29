@@ -22,7 +22,7 @@ export const with_velocity = (volume: Volume, velocity: number | null | undefine
 
 const VOLUME_KEY = Symbol('volume');
 export const get_volume = (): Signal<Volume> => getContext(VOLUME_KEY);
-export const set_volume = (store = signal(DEFAULT_VOLUME)): Signal<Volume> =>
+export const set_volume = (store: Signal<Volume> = signal(DEFAULT_VOLUME)): Signal<Volume> =>
 	setContext(VOLUME_KEY, store);
 
 export const adjust_volume = (
@@ -48,12 +48,14 @@ export const volume_to_gain = (volume: Volume): number => volume ** VOLUME_TO_GA
 export const SMOOTH_GAIN_TIME_CONSTANT = 0.03;
 
 // TODO this is `OscillatorType` excluding "custom" because it can't be used directly,
-//  and we'll probably add to the type union the data for `createPeriodicWave`
-export type Instrument = 'sawtooth' | 'sine' | 'square' | 'triangle';
+// and we'll probably add to the type union the data for `createPeriodicWave`
+export const Instrument = z.enum(['sawtooth', 'sine', 'square', 'triangle']);
+export type Instrument = z.infer<typeof Instrument>;
+export const instruments: Instrument[] = Instrument.options;
+export const DEFAULT_INSTRUMENT: Instrument = 'sine';
 
-export const instruments: Instrument[] = ['sawtooth', 'sine', 'square', 'triangle']; // TODO support "custom"
-export const DEFAULT_INSTRUMENT_TYPE: Instrument = 'sine';
-const INSTRUMENT_TYPE_KEY = Symbol('instrument');
-export const get_instrument = (): Signal<Instrument> => getContext(INSTRUMENT_TYPE_KEY);
-export const set_instrument = (store = signal(DEFAULT_INSTRUMENT_TYPE)): Signal<Instrument> =>
-	setContext(INSTRUMENT_TYPE_KEY, store);
+const INSTRUMENT_KEY = Symbol('instrument');
+export const get_instrument = (): Signal<Instrument> => getContext(INSTRUMENT_KEY);
+export const set_instrument = (
+	store: Signal<Instrument> = signal(DEFAULT_INSTRUMENT),
+): Signal<Instrument> => setContext(INSTRUMENT_KEY, store);

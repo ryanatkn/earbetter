@@ -1,4 +1,4 @@
-# earbetter
+# Earbetter
 
 > ear training game and tools for playing and programming music and audio 🎶🦜
 > [earbetter.ryanatkn.com](https://earbetter.ryanatkn.com/)
@@ -10,7 +10,7 @@ see [contributing.md](contributing.md)
 In 2016 I made a simple ear training game named
 [Ear Sharpener](https://github.com/ryanatkn/ear-sharpener) to scratch an itch,
 and while interesting it wasn't a good training tool.
-The goal of earbetter is to be a useful ear trainer. (with MIDI support!)
+The goal of Earbetter is to be a useful ear trainer. (with MIDI support!)
 I also want it to be fun so it motivates more training.
 It's still early so I don't know how either goal is going.
 It's online at [earbetter.ryanatkn.com](https://earbetter.ryanatkn.com/).
@@ -20,7 +20,7 @@ and I can't possibly design all of the best ear training challenges.
 Knowing this, I designed the software so you can
 create and share custom challenges and other content.
 
-The core gameplay has "levels" broken up into "trials".
+Earbetter's core gameplay has "levels" broken up into "trials".
 Each trial is a sequence of notes that you hear and then play back.
 While limited, it supports a decent range of ear training challenges
 and there's room to add more capabilities.

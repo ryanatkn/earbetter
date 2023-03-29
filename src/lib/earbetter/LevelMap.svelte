@@ -86,7 +86,7 @@
 					<ControlsInstructions />
 					<VolumeControl {volume} />
 					<InstrumentControl {instrument} />
-					<aside>earbetter supports MIDI devices like piano keyboards, connect and click:</aside>
+					<aside>Earbetter supports MIDI devices like piano keyboards, connect and click:</aside>
 					<InitMidiButton {midi_access} />
 				</div>
 			</section>
@@ -98,7 +98,7 @@
 				<div class="panel padded-md">
 					<div class="markup">
 						<p>
-							earbetter is an <a href="https://en.wikipedia.org/wiki/Ear_training">ear training</a> tool/game:
+							Earbetter is an <a href="https://en.wikipedia.org/wiki/Ear_training">ear training</a> tool/game:
 						</p>
 						<ul>
 							<li>each level is a standalone challenge</li>
@@ -109,7 +109,7 @@
 							<li>realms group levels into bigger challenges</li>
 						</ul>
 						<aside>
-							earbetter is in early development, and many things are unfinished and unknown -
+							Earbetter is in early development, and many things are unfinished and unknown -
 							feedback is appreciated on <a href="https://github.com/ryanatkn/earbetter"
 								>the GitHub discussions and issues</a
 							>

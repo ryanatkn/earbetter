@@ -8,7 +8,7 @@
 	$: selected_slug = stripStart($page.url.pathname, base);
 </script>
 
-<header class="title panel padded-lg"><slot><h2>website map</h2></slot></header>
+<header class="section-title"><h2>site map</h2></header>
 <nav>
 	<menu>
 		{#each pages as p (p.slug)}
@@ -26,8 +26,7 @@
 		flex-direction: column;
 		align-items: center;
 	}
-	menu li:not(:last-child),
-	.title {
+	menu li:not(:last-child) {
 		margin-bottom: var(--spacing_md);
 	}
 	menu a {

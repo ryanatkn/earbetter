@@ -108,7 +108,7 @@ code {
 .row label {
 	margin-bottom: 0 !important;
 }
-.markup .row {
+.markup .row:not(:last-child) {
 	margin-bottom: var(--spacing_lg);
 }
 
@@ -151,4 +151,14 @@ button {
 /* TODO hacky but idk */
 .card .panel {
 	width: 100%;
+}
+
+.section-title {
+	padding: var(--spacing_lg);
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	background: var(--tint_light_0);
+	width: 100%;
+	margin-bottom: var(--spacing_md);
 }

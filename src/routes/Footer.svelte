@@ -3,11 +3,13 @@
 	import {page} from '$app/stores';
 	import {base} from '$app/paths';
 
+	export let flush = false;
+
 	$: pathname = $page.url.pathname;
 	$: home = pathname === base + '/';
 </script>
 
-<footer>
+<footer class:flush>
 	<div class="panel padded-md column-sm">
 		<a href="https://github.com/ryanatkn/earbetter">source code</a>
 		<div>public domain</div>
@@ -28,6 +30,13 @@
 		flex-direction: column;
 		align-items: center;
 		padding-bottom: var(--spacing_xl3);
+	}
+	.flush {
+		padding-bottom: 0;
+	}
+	.flush > .panel {
+		border-top-left-radius: 0;
+		border-top-right-radius: 0;
 	}
 	.panel {
 		display: flex;
