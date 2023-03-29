@@ -108,6 +108,9 @@ code {
 .row label {
 	margin-bottom: 0 !important;
 }
+.markup .row {
+	margin-bottom: var(--spacing_lg);
+}
 
 th,
 td {

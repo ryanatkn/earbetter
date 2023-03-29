@@ -62,11 +62,11 @@
 	</div>
 	<form class="column-sm markup">
 		<fieldset>
-			<VolumeControl {volume} />
 			<InstrumentControl {instrument} />
 			<div class="row">
 				<SelectNotesControl notes={enabled_notes} />
 			</div>
+			<VolumeControl {volume} />
 		</fieldset>
 		<fieldset>
 			<InitMidiButton {midi_access} />

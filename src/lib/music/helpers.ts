@@ -4,8 +4,8 @@ import {z} from 'zod';
 import type {Flavored} from '@feltjs/util';
 import {identity} from '@feltjs/util/function.js';
 
-import {MIDI_MAX, MIDI_MIN, type Midi} from '$lib/music/midi';
-import {midi_pitch_classes, pitch_classes, type PitchClass} from '$lib/music/notes';
+import {midi_pitch_classes, MIDI_MAX, MIDI_MIN, type Midi} from '$lib/music/midi';
+import {pitch_classes, type PitchClass} from '$lib/music/notes';
 
 export const DEFAULT_TUNING = 440; // https://en.wikipedia.org/wiki/A440_(pitch_standard)
 
