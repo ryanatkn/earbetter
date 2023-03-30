@@ -44,10 +44,10 @@ export interface PianoKey {
 export const compute_piano = (width: number, note_min: Midi, note_max: Midi): Piano => {
 	const note_count = note_max - note_min + 1;
 	const naturals = compute_naturals(note_min, note_max);
-	const natural_key_width = Math.floor(width / naturals.length);
-	const accidental_key_width = natural_key_width * ACCIDENTAL_KEY_WIDTH_MULT;
-	const natural_key_height = Math.min(600, accidental_key_width * KEY_HEIGHT_MULT);
-	const accidental_key_height = natural_key_height * ACCIDENTAL_KEY_HEIGHT_MULT;
+	const natural_key_width = (width / naturals.length) | 0;
+	const accidental_key_width = (natural_key_width * ACCIDENTAL_KEY_WIDTH_MULT) | 0;
+	const natural_key_height = Math.min(600, accidental_key_width * KEY_HEIGHT_MULT) | 0;
+	const accidental_key_height = (natural_key_height * ACCIDENTAL_KEY_HEIGHT_MULT) | 0;
 
 	let natural_index = 0;
 	const piano_keys: PianoKey[] = [];
