@@ -14,7 +14,7 @@
 	import {adjust_volume, set_instrument, set_volume} from '$lib/audio/helpers';
 	import {request_access} from '$lib/audio/midi_access';
 	import {App, set_app} from '$lib/earbetter/app';
-	import {set_enabled_notes, set_key, set_scale, to_notes} from '$lib/music/helpers';
+	import {set_enabled_notes, set_key, set_scale, to_notes} from '$lib/music/music';
 	import {load_from_storage, set_in_storage} from '$lib/util/storage';
 	import SiteMap from '$routes/SiteMap.svelte';
 	import {SiteData} from '$routes/site_data';

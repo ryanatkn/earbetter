@@ -3,7 +3,6 @@
 	import {get_ac} from '$lib/audio/ac';
 	import {midi_access} from '$lib/audio/midi_access';
 	import MidiInput from '$lib/audio/MidiInput.svelte';
-	import type {Midi} from '$lib/music/midi';
 	import {playing_notes, start_playing, stop_playing} from '$lib/audio/play_note';
 	import InitMidiButton from '$lib/audio/InitMidiButton.svelte';
 	import VolumeControl from '$lib/audio/VolumeControl.svelte';
@@ -12,7 +11,7 @@
 	import {get_instrument, get_volume, with_velocity} from '$lib/audio/helpers';
 	import InstrumentControl from '$lib/audio/InstrumentControl.svelte';
 	import MidiRangeControl from '$lib/audio/MidiRangeControl.svelte';
-	import {get_scale, get_key, get_enabled_notes} from '$lib/music/helpers';
+	import {get_scale, get_key, get_enabled_notes, Midi} from '$lib/music/music';
 	import SelectNotesControl from '$lib/music/SelectNotesControl.svelte';
 
 	const ac = get_ac();

@@ -2,7 +2,7 @@
 	import Message from '@feltjs/felt-ui/Message.svelte';
 	import {slide} from 'svelte/transition';
 
-	import {midi_names, MIDI_MAX, MIDI_MIN, type Midi} from '$lib/music/midi';
+	import {midi_names, MIDI_MAX, MIDI_MIN, type Midi} from '$lib/music/music';
 
 	export let note_min: Midi;
 	export let note_max: Midi;

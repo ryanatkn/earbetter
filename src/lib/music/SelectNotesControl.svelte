@@ -8,7 +8,7 @@
 		pitch_class_aliases,
 		type PitchClass,
 		lookup_scale,
-	} from '$lib/music/helpers';
+	} from '$lib/music/music';
 
 	export let scale: Signal<Scale>;
 	export let key: Signal<PitchClass>;
