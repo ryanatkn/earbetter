@@ -44,7 +44,8 @@ but that requires some kind of server infrastructure.
 For now I'm accepting content submissions in this repo,
 so we get the benefit having a lot of static content without needing a server.
 I'm open to input -- for now, feel free to open PRs with your exported data
-following [the default example](src/lib//projects/default-project.ts).
+following [the default example](src/lib//projects/default-project.ts),
+or email me if you don't use GitHub.
 
 To help improve things, please see [contributing.md](contributing.md),
 and the GitHub [discussions](https://github.com/ryanatkn/earbetter/discussions)
