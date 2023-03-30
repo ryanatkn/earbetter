@@ -47,7 +47,7 @@ I'm open to input -- for now, feel free to open PRs with your exported data
 following [the default example](src/lib//projects/default-project.ts),
 or email me if you don't use GitHub.
 
-To help improve things, please see [contributing.md](contributing.md),
+For more please see [contributing.md](contributing.md),
 and the GitHub [discussions](https://github.com/ryanatkn/earbetter/discussions)
 and [issues](https://github.com/ryanatkn/earbetter/issues).
 
