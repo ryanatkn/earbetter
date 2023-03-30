@@ -9,7 +9,7 @@
 - supports MIDI devices like piano keyboards
 - TODO publish to npm as `@ryanatkn/earbetter` with audio/music utils/types and Svelte components
 
-for more see [contributing.md](contributing.md)
+to help see [contributing.md](contributing.md)
 
 play at [earbetter.ryanatkn.com](https://earbetter.ryanatkn.com/)
 
