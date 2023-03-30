@@ -66,6 +66,9 @@
 </button>
 
 <style>
+	button {
+		width: 100%;
+	}
 	li {
 		list-style: none;
 		text-align: left;

@@ -209,6 +209,7 @@
 			</label>
 		</fieldset>
 		<button
+			class="accent"
 			type="button"
 			on:click={() => dispatch('submit', to_data())}
 			disabled={editing && !changed}

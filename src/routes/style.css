@@ -9,7 +9,7 @@
 	--text_color_light: hsl(var(--primary_hue), 8%, 65%);
 	--text_color_lighter: hsl(var(--primary_hue), 8%, 45%);
 	--text_color_dark: hsl(var(--primary_hue), 8%, 91%);
-	--link_color: var(--accent_text_color);
+	--link_color: var(--primary_text_color);
 	--button_color: var(--tint_light_1);
 	--button_color_dark: var(--tint_light_0);
 	--button_color_hover: var(--tint_dark_1);
@@ -25,9 +25,13 @@
 	--accent_hue: 185;
 	--primary_hue: 275;
 	--border_color: hsla(var(--primary_hue), 100%, 98%, 0.2);
-	--accent_text_color: hsl(var(--primary_hue), 90%, 60%);
+	--primary_text_color: hsl(var(--primary_hue), 90%, 60%);
+	--accent_text_color: hsl(var(--accent_hue), 50%, 55%);
 	--light_text_color: hsl(var(--accent_hue), 80%, 60%);
-	--accent_border_color: hsla(var(--primary_hue), 50%, 50%, 0.4);
+	/* TODO upstream `accent` stuff */
+	--accent_border_color: hsla(var(--accent_hue), 100%, 58%, 0.5);
+	--accent_border_color_dark: hsla(var(--accent_hue), 100%, 43%, 0.5);
+	--accent_border_color_darker: hsla(var(--accent_hue), 100%, 28%, 0.5);
 	--light_border_color: hsla(var(--accent_hue), 50%, 50%, 0.4);
 	--spacing_lg: 20px;
 	--font_size_lg: 20px;
@@ -70,7 +74,7 @@ a:hover {
 	color: var(--light_text_color);
 }
 a:active {
-	color: var(--accent_text_color);
+	color: var(--primary_text_color);
 }
 
 /* TODO maybe upstream? */
@@ -161,4 +165,18 @@ button {
 	background: var(--tint_light_0);
 	width: 100%;
 	margin-bottom: var(--spacing_md);
+}
+
+.accent {
+	--text_color: var(--accent_text_color);
+	--border_color: var(--accent_border_color);
+}
+.accent:focus {
+	--outline_color: var(--accent_border_color);
+}
+.accent:hover {
+	--border_color: var(--accent_border_color_dark);
+}
+.accent:active {
+	--border_color: var(--accent_border_color_darker);
 }
