@@ -10,6 +10,10 @@ const KEY_HEIGHT_MULT = 5; // width * mult = height // TODO - make dependent on 
 const ACCIDENTAL_KEY_WIDTH_MULT = 7 / 12;
 const ACCIDENTAL_KEY_HEIGHT_MULT = 0.7;
 
+// this is used to prevent accidentals from overflowing,
+// the 3/4 subtracts the lowest offset_pct below, 1/4
+const LEFT_OFFSET = ACCIDENTAL_KEY_WIDTH_MULT * (3 / 4);
+
 // TODO calculate layout more precisely? these are eyeballed
 const pc_left_offset_pct: Record<Chroma, number> = {
 	1: 0,
@@ -44,7 +48,7 @@ export interface PianoKey {
 export const compute_piano = (width: number, note_min: Midi, note_max: Midi): Piano => {
 	const note_count = note_max - note_min + 1;
 	const naturals = compute_naturals(note_min, note_max);
-	const natural_key_width = (width / naturals.length) | 0;
+	const natural_key_width = (width / (naturals.length + 2 * LEFT_OFFSET)) | 0;
 	const accidental_key_width = (natural_key_width * ACCIDENTAL_KEY_WIDTH_MULT) | 0;
 	const natural_key_height = Math.min(600, accidental_key_width * KEY_HEIGHT_MULT) | 0;
 	const accidental_key_height = (natural_key_height * ACCIDENTAL_KEY_HEIGHT_MULT) | 0;
@@ -59,7 +63,7 @@ export const compute_piano = (width: number, note_min: Midi, note_max: Midi): Pi
 		if (midi_naturals.has(midi)) {
 			key_width = natural_key_width;
 			key_height = natural_key_height;
-			left_offset = natural_index * natural_key_width;
+			left_offset = natural_index * natural_key_width + accidental_key_width;
 			natural_index++;
 		} else {
 			key_width = accidental_key_width;
@@ -67,7 +71,8 @@ export const compute_piano = (width: number, note_min: Midi, note_max: Midi): Pi
 			// this could be improved but it's kinda close
 			left_offset =
 				natural_index * natural_key_width +
-				pc_left_offset_pct[midi_chromas[midi]] * accidental_key_width;
+				pc_left_offset_pct[midi_chromas[midi]] * accidental_key_width +
+				accidental_key_width;
 		}
 
 		piano_keys.push({
