@@ -5,7 +5,9 @@
 
 see [contributing.md](contributing.md)
 
-- configurable ear training challenges (first pass at functionality, more features to come)
+- features [a configurable ear trainer](https://earbetter.ryanatkn.com/play)
+  (first pass at functionality, more to come)
+- also has [a playable piano](https://earbetter.ryanatkn.com/piano)
 - supports MIDI devices like piano keyboards
 - TODO publish to npm as `@ryanatkn/earbetter` with audio/music utils/types and Svelte components
 
