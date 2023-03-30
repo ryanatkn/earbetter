@@ -64,7 +64,7 @@ See [SvelteKit](https://github.com/sveltejs/kit),
 [Vite](https://github.com/vitejs/vite),
 [Svelte](https://github.com/sveltejs/svelte),
 [Gro](https://github.com/feltjs/gro),
-and [Felt](https://github.com/feltjs/felt-ui) for more.
+and [felt-ui](https://github.com/feltjs/felt-ui) for more.
 
 ## build
 
