@@ -28,12 +28,12 @@ create and share custom challenges and other content.
 
 Earbetter's core gameplay has "levels" broken up into "trials".
 Each trial is a sequence of notes that you hear and then play back.
-While limited, it supports a decent range of ear training challenges
+It's limited but supports a decent range of ear training challenges
 and there's room to add more capabilities.
 In the level creator, you can click the "import" button
 to get copy-pastable data as text that you can share with others.
 
-"Realms" have many levels, and each realm may have a particular flavor, like the pentatonic scale.
+"Realms" have many levels, and each realm may have a particular flavor like a scale.
 Realms can be created and shared just like importing/exporting levels.
 
 "Projects" are like save files. They group multiple realms together.
