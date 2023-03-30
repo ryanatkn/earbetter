@@ -104,7 +104,7 @@ customize or delete [src/static/CNAME](/src/static/CNAME).
 [TypeScript](https://github.com/microsoft/TypeScript) ∙
 [ESLint](https://github.com/eslint/eslint) ∙
 [Prettier](https://github.com/prettier/prettier) ∙
-[Felt](https://github.com/feltjs/felt-ui) ∙
+[felt-ui](https://github.com/feltjs/felt-ui) ∙
 [@feltjs/util](https://github.com/feltjs/util) ∙
 [Gro](https://github.com/feltjs/gro)
 & [more](package.json)
