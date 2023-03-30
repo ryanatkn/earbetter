@@ -9,7 +9,7 @@
 	import TrialProgressIndicator from '$lib/earbetter/TrialProgressIndicator.svelte';
 	import {get_ac} from '$lib/audio/ac';
 	import MidiInput from '$lib/audio/MidiInput.svelte';
-	import type {Midi} from '$lib/music/midi';
+	import type {Midi} from '$lib/music/music';
 	import {playing_notes, start_playing, stop_playing} from '$lib/audio/play_note';
 	import {get_instrument, get_volume, with_velocity} from '$lib/audio/helpers';
 	import {midi_access} from '$lib/audio/midi_access';

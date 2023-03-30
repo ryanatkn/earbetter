@@ -1,6 +1,6 @@
 <script lang="ts">
 	import PianoKey from '$lib/music/PianoKey.svelte';
-	import {MIDI_MIN, MIDI_MAX, type Midi} from '$lib/music/midi';
+	import {MIDI_MIN, MIDI_MAX, type Midi} from '$lib/music/music';
 	import {compute_piano} from '$lib/music/piano';
 
 	export let width: number;

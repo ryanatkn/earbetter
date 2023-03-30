@@ -5,12 +5,16 @@
 
 see [contributing.md](contributing.md)
 
+- configurable ear training challenges (first pass at functionality, more features to come)
+- supports MIDI devices like piano keyboards
+- TODO publish to npm as `@ryanatkn/earbetter` with audio/music utils/types and Svelte components
+
 ## intro
 
 In 2016 I made a simple ear training game named
 [Ear Sharpener](https://github.com/ryanatkn/ear-sharpener) to scratch an itch,
 and while interesting it wasn't a good training tool.
-The goal of Earbetter is to be a useful ear trainer. (with MIDI support!)
+The goal of Earbetter is to be a useful ear trainer.
 I also want it to be fun so it motivates more training.
 It's still early so I don't know how either goal is going.
 It's online at [earbetter.ryanatkn.com](https://earbetter.ryanatkn.com/).

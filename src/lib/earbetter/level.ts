@@ -6,8 +6,7 @@ import {Logger} from '@feltjs/util/log.js';
 import {signal, batch, Signal, effect} from '@preact/signals-core';
 import {base} from '$app/paths';
 
-import {Midi} from '$lib/music/midi';
-import {Intervals} from '$lib/music/notes';
+import {Midi, Intervals} from '$lib/music/music';
 import {play_note} from '$lib/audio/play_note';
 import type {Instrument, Volume} from '$lib/audio/helpers';
 

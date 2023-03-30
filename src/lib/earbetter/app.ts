@@ -313,28 +313,28 @@ export class App {
 		this.save_project(id);
 	};
 
-	play_level_def = async (id: LevelId): Promise<void> => {
-		log.debug('play_level_def', id);
+	play_level = async (id: LevelId): Promise<void> => {
+		log.debug('play_level', id);
 		const level_def = this.level_defs.peek()?.find((d) => d.id === id);
 		if (!level_def) {
 			console.error('cannot find level_def with id', id);
 			return;
 		}
-		void this.get_ac().resume(); // TODO where's the best place for this? needs to be synchronous with a click or similar, so this breaks if `play_level_def` is called without a user action
+		void this.get_ac().resume(); // TODO where's the best place for this? needs to be synchronous with a click or similar, so this breaks if `play_level` is called without a user action
 		this.editing_level_def.value = level_def; // for better UX, so when the user navigates back it's still being edited
 		await goto(to_play_level_url(level_def));
 	};
 
-	edit_level_def = (level_def: LevelDef | null): void => {
-		log.debug('edit_level_def', level_def);
+	edit_level = (level_def: LevelDef | null): void => {
+		log.debug('edit_level', level_def);
 		batch(() => {
 			this.editing_level.value = !!level_def;
 			this.editing_level_def.value = level_def;
 		});
 	};
 
-	remove_level_def = (id: LevelId): void => {
-		log.debug('remove_level_def', id);
+	remove_level = (id: LevelId): void => {
+		log.debug('remove_level', id);
 		const project_def = this.selected_project_def.peek();
 		if (!project_def) {
 			console.error('cannot remove level_def without a project', project_def, id);
@@ -362,8 +362,8 @@ export class App {
 	};
 
 	// TODO inconsistent naming with `realm` having the `_def` prefix here
-	create_level_def = (level_def: LevelDef): void => {
-		log.debug('create_level_def', level_def);
+	create_level = (level_def: LevelDef): void => {
+		log.debug('create_level', level_def);
 		const project_def = this.selected_project_def.peek();
 		if (!project_def) {
 			console.error('cannot create level_def without a project', project_def, level_def);
@@ -403,8 +403,8 @@ export class App {
 		return;
 	};
 
-	update_level_def = (level_def: LevelDef): void => {
-		log.debug('update_level_def', level_def);
+	update_level = (level_def: LevelDef): void => {
+		log.debug('update_level', level_def);
 		const project_def = this.selected_project_def.peek();
 		if (!project_def) {
 			console.error('cannot update level_def without a project', project_def, level_def);

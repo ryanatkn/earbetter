@@ -8,7 +8,7 @@ import {
 	type Milliseconds,
 	type Volume,
 } from '$lib/audio/helpers';
-import {type Midi, midi_to_freq} from '$lib/music/midi';
+import {type Midi, midi_to_freq} from '$lib/music/music';
 
 // TODO this API is haphazard, in particular `play_note` versus `start_playing` and `stop_playing`,
 // and we need to support more options like `velocity`, should probably have a single options object
