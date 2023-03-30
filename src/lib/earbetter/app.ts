@@ -325,16 +325,16 @@ export class App {
 		await goto(to_play_level_url(level_def));
 	};
 
-	edit_level_def = (level_def: LevelDef | null): void => {
-		log.debug('edit_level_def', level_def);
+	edit_level = (level_def: LevelDef | null): void => {
+		log.debug('edit_level', level_def);
 		batch(() => {
 			this.editing_level.value = !!level_def;
 			this.editing_level_def.value = level_def;
 		});
 	};
 
-	remove_level_def = (id: LevelId): void => {
-		log.debug('remove_level_def', id);
+	remove_level = (id: LevelId): void => {
+		log.debug('remove_level', id);
 		const project_def = this.selected_project_def.peek();
 		if (!project_def) {
 			console.error('cannot remove level_def without a project', project_def, id);
@@ -362,8 +362,8 @@ export class App {
 	};
 
 	// TODO inconsistent naming with `realm` having the `_def` prefix here
-	create_level_def = (level_def: LevelDef): void => {
-		log.debug('create_level_def', level_def);
+	create_level = (level_def: LevelDef): void => {
+		log.debug('create_level', level_def);
 		const project_def = this.selected_project_def.peek();
 		if (!project_def) {
 			console.error('cannot create level_def without a project', project_def, level_def);
@@ -403,8 +403,8 @@ export class App {
 		return;
 	};
 
-	update_level_def = (level_def: LevelDef): void => {
-		log.debug('update_level_def', level_def);
+	update_level = (level_def: LevelDef): void => {
+		log.debug('update_level', level_def);
 		const project_def = this.selected_project_def.peek();
 		if (!project_def) {
 			console.error('cannot update level_def without a project', project_def, level_def);

@@ -8,8 +8,7 @@
 	export let app: App;
 	export let level_def: LevelDef;
 
-	$: ({editing_level_def, selected_project_def, play_level, edit_level_def, remove_level_def} =
-		app);
+	$: ({editing_level_def, selected_project_def, play_level, edit_level, remove_level} = app);
 
 	$: editing = $editing_level_def === level_def;
 	$: level_stats = $selected_project_def?.level_stats;
@@ -34,7 +33,7 @@
 		class:selected={!removing && editing}
 		title={removing ? 'remove level' : editing ? 'stop editing level' : 'edit level'}
 		on:click={() =>
-			removing ? remove_level_def(level_def.id) : edit_level_def(editing ? null : level_def)}
+			removing ? remove_level(level_def.id) : edit_level(editing ? null : level_def)}
 	>
 		{#if removing}✖{:else}✎{/if}
 	</button>

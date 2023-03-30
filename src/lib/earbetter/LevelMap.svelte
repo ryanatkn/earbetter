@@ -38,10 +38,10 @@
 		show_game_help,
 		toggle_game_help,
 		play_level,
-		edit_level_def,
-		remove_level_def,
-		create_level_def,
-		update_level_def,
+		edit_level,
+		remove_level,
+		create_level,
+		update_level,
 	} = app);
 
 	const ac = get_ac();
@@ -144,23 +144,23 @@
 							{editing}
 							bind:id
 							level_def={$editing_level_def}
-							on:submit={(editing ? update_level_def : create_level_def)
-								? (e) => (editing ? update_level_def : create_level_def)(e.detail)
+							on:submit={(editing ? update_level : create_level)
+								? (e) => (editing ? update_level : create_level)(e.detail)
 								: undefined}
-							on:remove={(e) => remove_level_def(e.detail)}
+							on:remove={(e) => remove_level(e.detail)}
 						>
 							<svelte:fragment slot="footer" let:changed let:to_data>
 								{#if editing}
 									<button
 										type="button"
 										on:click={() => {
-											if (changed) update_level_def(to_data());
+											if (changed) update_level(to_data());
 											play_level(id);
 										}}
 									>
 										play!
 									</button>
-									<button type="button" on:click={() => edit_level_def(null)}>
+									<button type="button" on:click={() => edit_level(null)}>
 										{#if changed}discard changes and stop editing{:else}stop editing this level{/if}
 									</button>
 								{/if}

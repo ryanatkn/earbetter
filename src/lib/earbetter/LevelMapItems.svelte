@@ -6,7 +6,7 @@
 	export let app: App;
 	export let level_defs: LevelDef[]; // TODO making this a prop here, but using `app` most places, maybe change it to context?
 
-	$: ({selected_realm_def, editing_level, editing_level_def, edit_level_def} = app);
+	$: ({selected_realm_def, editing_level, editing_level_def, edit_level} = app);
 
 	$: editing_draft = $editing_level && !level_defs.some((d) => d === $editing_level_def);
 
@@ -18,7 +18,7 @@
 		if (no_levels) {
 			(document.querySelector('.level-def-form input') as HTMLInputElement | null)?.focus?.();
 		} else {
-			edit_level_def(editing_draft ? null : LevelDef.parse({}));
+			edit_level(editing_draft ? null : LevelDef.parse({}));
 		}
 	};
 </script>
