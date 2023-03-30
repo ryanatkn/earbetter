@@ -8,7 +8,7 @@
 	export let app: App;
 	export let level_def: LevelDef;
 
-	$: ({editing_level_def, selected_project_def, play_level_def, edit_level_def, remove_level_def} =
+	$: ({editing_level_def, selected_project_def, play_level, edit_level_def, remove_level_def} =
 		app);
 
 	$: editing = $editing_level_def === level_def;
@@ -23,7 +23,8 @@
 	{/if}
 	<button
 		class="level-button deselectable"
-		on:click={() => play_level_def(level_def.id)}
+		title="play this level"
+		on:click={() => play_level(level_def.id)}
 		class:selected={editing}
 	>
 		{level_def.name}

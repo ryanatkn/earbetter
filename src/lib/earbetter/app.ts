@@ -313,14 +313,14 @@ export class App {
 		this.save_project(id);
 	};
 
-	play_level_def = async (id: LevelId): Promise<void> => {
-		log.debug('play_level_def', id);
+	play_level = async (id: LevelId): Promise<void> => {
+		log.debug('play_level', id);
 		const level_def = this.level_defs.peek()?.find((d) => d.id === id);
 		if (!level_def) {
 			console.error('cannot find level_def with id', id);
 			return;
 		}
-		void this.get_ac().resume(); // TODO where's the best place for this? needs to be synchronous with a click or similar, so this breaks if `play_level_def` is called without a user action
+		void this.get_ac().resume(); // TODO where's the best place for this? needs to be synchronous with a click or similar, so this breaks if `play_level` is called without a user action
 		this.editing_level_def.value = level_def; // for better UX, so when the user navigates back it's still being edited
 		await goto(to_play_level_url(level_def));
 	};

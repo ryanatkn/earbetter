@@ -37,7 +37,7 @@
 		selected_realm_id,
 		show_game_help,
 		toggle_game_help,
-		play_level_def,
+		play_level,
 		edit_level_def,
 		remove_level_def,
 		create_level_def,
@@ -155,7 +155,7 @@
 										type="button"
 										on:click={() => {
 											if (changed) update_level_def(to_data());
-											play_level_def(id);
+											play_level(id);
 										}}
 									>
 										play!
