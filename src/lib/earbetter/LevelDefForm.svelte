@@ -23,6 +23,7 @@
 		type Midi,
 		midi_names,
 	} from '$lib/music/music';
+	import IntervalsInput from '$lib/music/IntervalsInput.svelte';
 
 	const dispatch = createEventDispatcher<{submit: LevelDef; remove: LevelId}>();
 
@@ -256,6 +257,7 @@
 {/if}
 {#if picking_intervals}
 	<Dialog
+		let:close
 		on:close={() => {
 			picking_intervals = false;
 			intervals_el.focus();
@@ -263,7 +265,12 @@
 	>
 		<div class="markup padded-xl column centered">
 			<h2>pick intervals</h2>
-			TODO render buttons for all the scales at varios octaves (octave picker?)
+			<IntervalsInput
+				on:input={(e) => {
+					intervals = e.detail;
+					close();
+				}}
+			/>
 		</div>
 	</Dialog>
 {/if}
