@@ -35,53 +35,53 @@ const def = (): ProjectDef =>
 					},
 					{
 						name: 'one octave',
-						intervals: lookup_scale('pentatonic').notes,
+						intervals: lookup_scale('major pentatonic').notes,
 						sequence_length: 2,
 					},
 					{
 						name: 'two octaves',
-						intervals: to_scale_notes(lookup_scale('pentatonic'), 2),
+						intervals: to_scale_notes(lookup_scale('major pentatonic'), 2),
 						sequence_length: 2,
 					},
 					{
 						name: 'four octaves',
-						intervals: to_scale_notes(lookup_scale('pentatonic'), 4),
+						intervals: to_scale_notes(lookup_scale('major pentatonic'), 4),
 						sequence_length: 2,
 					},
 					{
 						name: 'one octave (4 notes)',
-						intervals: lookup_scale('pentatonic').notes,
+						intervals: lookup_scale('major pentatonic').notes,
 						sequence_length: 4,
 					},
 					{
 						name: 'two octaves (4 notes)',
-						intervals: to_scale_notes(lookup_scale('pentatonic'), 2),
+						intervals: to_scale_notes(lookup_scale('major pentatonic'), 2),
 						sequence_length: 4,
 					},
 					{
 						name: 'four octaves (4 notes)',
-						intervals: to_scale_notes(lookup_scale('pentatonic'), 4),
+						intervals: to_scale_notes(lookup_scale('major pentatonic'), 4),
 						sequence_length: 4,
 					},
 					{
 						name: 'one octave (8 notes)',
-						intervals: lookup_scale('pentatonic').notes,
+						intervals: lookup_scale('major pentatonic').notes,
 						sequence_length: 8,
 					},
 					{
 						name: 'two octaves (8 notes)',
-						intervals: to_scale_notes(lookup_scale('pentatonic'), 2),
+						intervals: to_scale_notes(lookup_scale('major pentatonic'), 2),
 						sequence_length: 8,
 					},
 					{
 						name: 'four octaves (8 notes)',
-						intervals: to_scale_notes(lookup_scale('pentatonic'), 4),
+						intervals: to_scale_notes(lookup_scale('major pentatonic'), 4),
 						sequence_length: 8,
 					},
 				].map((v) => LevelDef.parse(v)),
 			},
 			{
-				name: 'major scale',
+				name: 'major scale (Ionian)',
 				level_defs: [
 					{
 						name: 'major second vs major third',
@@ -156,7 +156,7 @@ const def = (): ProjectDef =>
 				].map((v) => LevelDef.parse(v)),
 			},
 			{
-				name: 'minor scale',
+				name: 'minor scale (Aeolian)',
 				level_defs: [
 					// TODO maybe arrange these by difficulty?
 					{

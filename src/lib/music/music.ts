@@ -108,6 +108,8 @@ export const Scale = z.object({
 });
 export type Scale = z.infer<typeof Scale>;
 
+// https://en.wikipedia.org/wiki/Scale_(music)
+// https://en.wikipedia.org/wiki/Mode_(music)
 export const scales: Scale[] = [
 	{name: 'chromatic', notes: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11]},
 	{name: 'major', notes: [2, 4, 5, 7, 9, 11]},
@@ -117,8 +119,8 @@ export const scales: Scale[] = [
 	{name: 'Lydian', notes: [2, 4, 6, 7, 9, 11]},
 	{name: 'Mixolydian', notes: [2, 4, 5, 7, 9, 10]},
 	{name: 'Locrian', notes: [1, 3, 5, 6, 8, 10]},
-	{name: 'pentatonic', notes: [2, 4, 7, 9]},
-	{name: 'octatonic', notes: [2, 3, 5, 6, 8, 9, 11]},
+	{name: 'major pentatonic', notes: [2, 4, 7, 9]}, // https://en.wikipedia.org/wiki/Pentatonic_scale
+	{name: 'octatonic collection', notes: [2, 3, 5, 6, 8, 9, 11]}, // https://en.wikipedia.org/wiki/Octatonic_scale
 ];
 export const DEFAULT_SCALE = scales[0];
 
