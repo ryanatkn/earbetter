@@ -12,6 +12,7 @@
 <div class="instrument-control">
 	<label>
 		<div class="title">instrument</div>
+		<!-- TODO use `bind:value={$instrument}` when this PR is in: https://github.com/preactjs/signals/pull/325  -->
 		<select value={$instrument} on:input={input}>
 			{#each instruments as t}
 				<option value={t}>{t}</option>
