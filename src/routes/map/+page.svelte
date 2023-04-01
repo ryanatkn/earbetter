@@ -9,7 +9,9 @@
 </svelte:head>
 <main>
 	<Header />
-	<SiteMap />
+	<div class="column-sm panel">
+		<SiteMap />
+	</div>
 	<Footer />
 </main>
 
@@ -19,5 +21,13 @@
 		flex-direction: column;
 		align-items: center;
 		margin: 0 auto;
+	}
+	.column-sm {
+		margin-top: var(--spacing_xl3);
+	}
+	/* TODO hacky */
+	.column-sm :global(.section-title) {
+		border-top-left-radius: var(--border_radius_sm);
+		border-top-right-radius: var(--border_radius_sm);
 	}
 </style>
