@@ -103,8 +103,8 @@ const def = (): ProjectDef =>
 						sequence_length: 2,
 					},
 					{
-						name: 'three octaves',
-						intervals: [2, 4, 5, 7, 9, 11, 12, -10, -8, -7, -5, -3, -1, -12, 14, 16, 17, 19, 21, 23, 24], // prettier-ignore
+						name: 'four octaves',
+						intervals: [2, 4, 5, 7, 9, 11, 12, -10, -8, -7, -5, -3, -1, -12, 14, 16, 17, 19, 21, 23, 24, -24, -22, -20, -19, -17, -15, -13], // prettier-ignore
 						sequence_length: 2,
 					},
 					{
@@ -118,8 +118,8 @@ const def = (): ProjectDef =>
 						sequence_length: 4,
 					},
 					{
-						name: 'three octaves (4 notes)',
-						intervals: [2, 4, 5, 7, 9, 11, 12, -10, -8, -7, -5, -3, -1, -12, 14, 16, 17, 19, 21, 23, 24], // prettier-ignore
+						name: 'four octaves (4 notes)',
+						intervals: [2, 4, 5, 7, 9, 11, 12, -10, -8, -7, -5, -3, -1, -12, 14, 16, 17, 19, 21, 23, 24, -24, -22, -20, -19, -17, -15, -13], // prettier-ignore
 						sequence_length: 4,
 					},
 					{
@@ -133,8 +133,8 @@ const def = (): ProjectDef =>
 						sequence_length: 8,
 					},
 					{
-						name: 'three octaves (8 notes)',
-						intervals: [2, 4, 5, 7, 9, 11, 12, -10, -8, -7, -5, -3, -1, -12, 14, 16, 17, 19, 21, 23, 24], // prettier-ignore
+						name: 'four octaves (8 notes)',
+						intervals: [2, 4, 5, 7, 9, 11, 12, -10, -8, -7, -5, -3, -1, -12, 14, 16, 17, 19, 21, 23, 24, -24, -22, -20, -19, -17, -15, -13], // prettier-ignore
 						sequence_length: 8,
 					},
 				].map((v) => LevelDef.parse(v)),
@@ -153,8 +153,8 @@ const def = (): ProjectDef =>
 						sequence_length: 2,
 					},
 					{
-						name: 'three octaves',
-						intervals: [2, 3, 5, 7, 8, 10, 12, -10, -9, -7, -5, -4, -2, -12, 14, 15, 17, 19, 20, 22, 24], // prettier-ignore
+						name: 'four octaves',
+						intervals: [2, 3, 5, 7, 8, 10, 12, -10, -9, -7, -5, -4, -2, -12, 14, 15, 17, 19, 20, 22, 24, -24, -22, -21, -19, -17, -16, -14], // prettier-ignore
 						sequence_length: 2,
 					},
 					{
@@ -168,8 +168,8 @@ const def = (): ProjectDef =>
 						sequence_length: 4,
 					},
 					{
-						name: 'three octaves (4 notes)',
-						intervals: [2, 3, 5, 7, 8, 10, 12, -10, -9, -7, -5, -4, -2, -12, 14, 15, 17, 19, 20, 22, 24], // prettier-ignore
+						name: 'four octaves (4 notes)',
+						intervals: [2, 3, 5, 7, 8, 10, 12, -10, -9, -7, -5, -4, -2, -12, 14, 15, 17, 19, 20, 22, 24, -24, -22, -21, -19, -17, -16, -14], // prettier-ignore
 						sequence_length: 4,
 					},
 					{
@@ -183,8 +183,8 @@ const def = (): ProjectDef =>
 						sequence_length: 8,
 					},
 					{
-						name: 'three octaves (8 notes)',
-						intervals: [2, 3, 5, 7, 8, 10, 12, -10, -9, -7, -5, -4, -2, -12, 14, 15, 17, 19, 20, 22, 24], // prettier-ignore
+						name: 'four octaves (8 notes)',
+						intervals: [2, 3, 5, 7, 8, 10, 12, -10, -9, -7, -5, -4, -2, -12, 14, 15, 17, 19, 20, 22, 24, -24, -22, -21, -19, -17, -16, -14], // prettier-ignore
 						sequence_length: 8,
 					},
 				].map((v) => LevelDef.parse(v)),
@@ -203,11 +203,6 @@ const def = (): ProjectDef =>
 						intervals: [4, 5, -8, -7],
 					},
 					{
-						name: 'three octaves',
-						sequence_length: 2,
-						intervals: [4, 5, -8, -7, 16, 17],
-					},
-					{
 						name: 'four octaves',
 						sequence_length: 2,
 						intervals: [4, 5, -8, -7, 16, 17, -20, -19],
@@ -219,11 +214,6 @@ const def = (): ProjectDef =>
 						sequence_length: 4,
 					},
 					{
-						name: 'three octaves (4 notes)',
-						intervals: [4, 5, -8, -7, 16, 17],
-						sequence_length: 4,
-					},
-					{
 						name: 'four octaves (4 notes)',
 						intervals: [4, 5, -8, -7, 16, 17, -20, -19],
 						sequence_length: 4,
@@ -231,11 +221,6 @@ const def = (): ProjectDef =>
 					{
 						name: 'two octaves (8 notes)',
 						intervals: [4, 5, -8, -7],
-						sequence_length: 8,
-					},
-					{
-						name: 'three octaves (8 notes)',
-						intervals: [4, 5, -8, -7, 16, 17],
 						sequence_length: 8,
 					},
 					{
