@@ -35,7 +35,7 @@ const def = (): ProjectDef =>
 					},
 					{
 						name: 'one octave',
-						intervals: [2, 4, 7, 9],
+						intervals: lookup_scale('pentatonic'),
 						sequence_length: 2,
 					},
 					{
@@ -50,7 +50,7 @@ const def = (): ProjectDef =>
 					},
 					{
 						name: 'one octave (4 notes)',
-						intervals: [2, 4, 7, 9],
+						intervals: lookup_scale('pentatonic'),
 						sequence_length: 4,
 					},
 					{
@@ -65,7 +65,7 @@ const def = (): ProjectDef =>
 					},
 					{
 						name: 'one octave (8 notes)',
-						intervals: [2, 4, 7, 9],
+						intervals: lookup_scale('pentatonic'),
 						sequence_length: 8,
 					},
 					{
