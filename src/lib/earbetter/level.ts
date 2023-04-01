@@ -339,9 +339,6 @@ export type LevelStats = z.infer<typeof LevelStats>;
 
 export const DEFAULT_LEVEL_STATS: LevelStats = {mistakes: {}};
 
-// TODO refactor - parameter? needs care tho, see comment below
-export const MISTAKE_HISTORY_LENGTH = 4;
-
 export const add_mistakes_to_level_stats = (
 	level_stats: LevelStats,
 	id: LevelId,
@@ -352,6 +349,9 @@ export const add_mistakes_to_level_stats = (
 	s.mistakes[id] = add_mistakes(s.mistakes[id], mistakes);
 	return s;
 };
+
+// TODO refactor - parameter?
+export const MISTAKE_HISTORY_LENGTH = 4;
 
 const add_mistakes = (data: number[] | undefined, mistakes: number): number[] => {
 	const updated = data?.slice() || [];
