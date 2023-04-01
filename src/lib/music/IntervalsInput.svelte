@@ -5,8 +5,8 @@
 
 	const dispatch = createEventDispatcher<{input: Semitones[]}>();
 
-	let selected_scale: Scale = scales[0];
-	let octaves = 1;
+	export let selected_scale: Scale = scales[0];
+	export let octaves = 1;
 
 	let intervals: Semitones[];
 	$: intervals = to_scale_notes(selected_scale, octaves);

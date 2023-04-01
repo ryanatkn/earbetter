@@ -22,6 +22,7 @@
 		MIDI_MIN,
 		type Midi,
 		midi_names,
+		Scale,
 	} from '$lib/music/music';
 	import IntervalsInput from '$lib/music/IntervalsInput.svelte';
 
@@ -111,6 +112,11 @@
 		serialized = updated = JSON.stringify(to_data());
 		importing = true;
 	};
+
+	// this persists form values across UI states but not across page nav,
+	// would use SvelteKit snapshots for that - https://kit.svelte.dev/docs/snapshots
+	let intervals_input_selected_scale: Scale;
+	let intervals_input_octaves: number;
 </script>
 
 <form class="level-def-form">
@@ -266,6 +272,8 @@
 		<div class="markup padded-xl column centered">
 			<h2>pick intervals</h2>
 			<IntervalsInput
+				bind:selected_scale={intervals_input_selected_scale}
+				bind:octaves={intervals_input_octaves}
 				on:input={(e) => {
 					intervals = e.detail;
 					close();
