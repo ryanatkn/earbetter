@@ -81,7 +81,7 @@ const def = (): ProjectDef =>
 				].map((v) => LevelDef.parse(v)),
 			},
 			{
-				name: 'major scale (Ionian)',
+				name: 'major scale',
 				level_defs: [
 					{
 						name: 'major second vs major third',
@@ -110,7 +110,7 @@ const def = (): ProjectDef =>
 					},
 					{
 						name: 'one octave',
-						intervals: lookup_scale('major (Ionian)').notes,
+						intervals: lookup_scale('major').notes,
 						sequence_length: 2,
 					},
 					{
@@ -125,7 +125,7 @@ const def = (): ProjectDef =>
 					},
 					{
 						name: 'one octave (4 notes)',
-						intervals: lookup_scale('major (Ionian)').notes,
+						intervals: lookup_scale('major').notes,
 						sequence_length: 4,
 					},
 					{
@@ -140,7 +140,7 @@ const def = (): ProjectDef =>
 					},
 					{
 						name: 'one octave (8 notes)',
-						intervals: lookup_scale('major (Ionian)').notes,
+						intervals: lookup_scale('major').notes,
 						sequence_length: 8,
 					},
 					{
@@ -156,7 +156,7 @@ const def = (): ProjectDef =>
 				].map((v) => LevelDef.parse(v)),
 			},
 			{
-				name: 'minor scale (Aeolian)',
+				name: 'minor scale',
 				level_defs: [
 					// TODO maybe arrange these by difficulty?
 					{
