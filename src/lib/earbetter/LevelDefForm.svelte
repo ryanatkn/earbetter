@@ -22,7 +22,9 @@
 		MIDI_MIN,
 		type Midi,
 		midi_names,
+		Scale,
 	} from '$lib/music/music';
+	import IntervalsInput from '$lib/music/IntervalsInput.svelte';
 
 	const dispatch = createEventDispatcher<{submit: LevelDef; remove: LevelId}>();
 
@@ -81,6 +83,7 @@
 
 	// TODO lots of similarity with `ProjectForm`
 	let importing = false;
+	let picking_intervals = false;
 	let serialized = '';
 	let updated = '';
 	$: changed_serialized = serialized !== updated;
@@ -88,6 +91,7 @@
 	$: level_def, id, (parse_error_message = '');
 	let level_data_el: HTMLTextAreaElement;
 	let start_importing_el: HTMLButtonElement;
+	let intervals_el: HTMLInputElement;
 
 	const import_data = async (): Promise<void> => {
 		parse_error_message = '';
@@ -108,36 +112,13 @@
 		serialized = updated = JSON.stringify(to_data());
 		importing = true;
 	};
+
+	// this persists form values across UI states but not across page nav,
+	// would use SvelteKit snapshots for that - https://kit.svelte.dev/docs/snapshots
+	let intervals_input_selected_scale: Scale;
+	let intervals_input_octaves: number;
 </script>
 
-{#if importing}
-	<Dialog
-		on:close={() => {
-			importing = false;
-			start_importing_el.focus();
-		}}
-	>
-		<div class="importing markup padded-xl column centered">
-			<h2>import level data</h2>
-			<button
-				on:click={() => {
-					void navigator.clipboard.writeText(updated);
-					level_data_el.select();
-				}}
-			>
-				copy to clipboard
-			</button>
-			<textarea bind:value={updated} bind:this={level_data_el} />
-			<button
-				on:click={import_data}
-				disabled={!changed_serialized}
-				title={changed_serialized ? undefined : 'data has not changed'}
-			>
-				import project data
-			</button>
-		</div>
-	</Dialog>
-{/if}
 <form class="level-def-form">
 	<header>
 		<h2>
@@ -155,10 +136,12 @@
 			<label>
 				<div class="title">intervals</div>
 				<input
+					bind:this={intervals_el}
 					value={serialize_intervals(intervals)}
 					on:input={(e) => (intervals = parse_intervals(e.currentTarget.value))}
 				/>
 			</label>
+			<button type="button" on:click={() => (picking_intervals = true)}> pick intervals </button>
 			<details>
 				<summary>more info</summary>
 				<p>
@@ -250,6 +233,55 @@
 		<slot name="footer" {changed} {to_data} />
 	</div>
 </form>
+{#if importing}
+	<Dialog
+		on:close={() => {
+			importing = false;
+			start_importing_el.focus();
+		}}
+	>
+		<div class="importing markup padded-xl column centered">
+			<h2>import level data</h2>
+			<button
+				on:click={() => {
+					void navigator.clipboard.writeText(updated);
+					level_data_el.select();
+				}}
+			>
+				copy to clipboard
+			</button>
+			<textarea bind:value={updated} bind:this={level_data_el} />
+			<button
+				on:click={import_data}
+				disabled={!changed_serialized}
+				title={changed_serialized ? undefined : 'data has not changed'}
+			>
+				import project data
+			</button>
+		</div>
+	</Dialog>
+{/if}
+{#if picking_intervals}
+	<Dialog
+		let:close
+		on:close={() => {
+			picking_intervals = false;
+			intervals_el.focus();
+		}}
+	>
+		<div class="markup padded-xl column centered">
+			<h2>pick intervals</h2>
+			<IntervalsInput
+				bind:selected_scale={intervals_input_selected_scale}
+				bind:octaves={intervals_input_octaves}
+				on:input={(e) => {
+					intervals = e.detail;
+					close();
+				}}
+			/>
+		</div>
+	</Dialog>
+{/if}
 
 <style>
 	.level-def-form {

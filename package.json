@@ -34,7 +34,7 @@
   },
   "devDependencies": {
     "@feltjs/eslint-config": "^0.2.1",
-    "@feltjs/felt-ui": "^0.52.0",
+    "@feltjs/felt-ui": "^0.52.2",
     "@feltjs/gro": "^0.73.0",
     "@feltjs/util": "^0.8.0",
     "@preact/signals-core": "^1.2.3",

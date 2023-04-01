@@ -6,24 +6,24 @@ import {Logger} from '@feltjs/util/log.js';
 import {signal, batch, Signal, effect} from '@preact/signals-core';
 import {base} from '$app/paths';
 
-import {Midi, Intervals} from '$lib/music/music';
+import {Midi, Intervals, Semitones} from '$lib/music/music';
 import {play_note} from '$lib/audio/play_note';
-import type {Instrument, Volume} from '$lib/audio/helpers';
+import type {Instrument, Milliseconds, Volume} from '$lib/audio/helpers';
 
 // TODO this isn't idiomatic signals code yet, uses `peek` too much
 
 const log = new Logger('[level]');
 
-export const DEFAULT_NOTE_DURATION = 333; // TODO adjust this to make more challenging games
-export const DEFAULT_NOTE_DURATION_2 = 500; // TODO adjust this to make more challenging games
-export const DEFAULT_NOTE_DURATION_FAILED = 67;
-export const DEFAULT_FEEDBACK_DURATION = 1000; // TODO configurable
+export const DEFAULT_NOTE_DURATION: Milliseconds = 333; // TODO adjust this to make more challenging games
+export const DEFAULT_NOTE_DURATION_2: Milliseconds = 500; // TODO adjust this to make more challenging games
+export const DEFAULT_NOTE_DURATION_FAILED: Milliseconds = 67;
+export const DEFAULT_FEEDBACK_DURATION: Milliseconds = 1000; // TODO configurable
 export const DEFAULT_SEQUENCE_LENGTH = 4;
 export const DEFAULT_TRIAL_COUNT = 5;
 export const DEFAULT_LEVEL_NAME = 'new level';
-export const DEFAULT_INTERVALS = [5, 7];
-export const DEFAULT_NOTE_MIN = 48;
-export const DEFAULT_NOTE_MAX = 84;
+export const DEFAULT_INTERVALS: Semitones[] = [5, 7];
+export const DEFAULT_NOTE_MIN: Midi = 48;
+export const DEFAULT_NOTE_MAX: Midi = 84;
 
 export type LevelId = Flavored<string, 'LevelId'>;
 export const LevelId = z.string().uuid().transform<LevelId>(identity);
