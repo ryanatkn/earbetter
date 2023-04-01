@@ -186,47 +186,47 @@ const def = (): ProjectDef =>
 					},
 					{
 						name: 'one octave',
-						intervals: [2, 3, 5, 7, 8, 10],
+						intervals: to_scale_notes(lookup_scale('minor'), 1),
 						sequence_length: 2,
 					},
 					{
 						name: 'two octaves',
-						intervals: [2, 3, 5, 7, 8, 10, 12, -10, -9, -7, -5, -4, -2, -12],
+						intervals: to_scale_notes(lookup_scale('minor'), 2),
 						sequence_length: 2,
 					},
 					{
 						name: 'four octaves',
-						intervals: [2, 3, 5, 7, 8, 10, 12, -10, -9, -7, -5, -4, -2, -12, 14, 15, 17, 19, 20, 22, 24, -24, -22, -21, -19, -17, -16, -14], // prettier-ignore
+						intervals: to_scale_notes(lookup_scale('minor'), 4),
 						sequence_length: 2,
 					},
 					{
 						name: 'one octave (4 notes)',
-						intervals: [2, 3, 5, 7, 8, 10],
+						intervals: to_scale_notes(lookup_scale('minor'), 1),
 						sequence_length: 4,
 					},
 					{
 						name: 'two octaves (4 notes)',
-						intervals: [2, 3, 5, 7, 8, 10, 12, -10, -9, -7, -5, -4, -2, -12],
+						intervals: to_scale_notes(lookup_scale('minor'), 2),
 						sequence_length: 4,
 					},
 					{
 						name: 'four octaves (4 notes)',
-						intervals: [2, 3, 5, 7, 8, 10, 12, -10, -9, -7, -5, -4, -2, -12, 14, 15, 17, 19, 20, 22, 24, -24, -22, -21, -19, -17, -16, -14], // prettier-ignore
+						intervals: to_scale_notes(lookup_scale('minor'), 4),
 						sequence_length: 4,
 					},
 					{
 						name: 'one octave (8 notes)',
-						intervals: [2, 3, 5, 7, 8, 10],
+						intervals: to_scale_notes(lookup_scale('minor'), 1),
 						sequence_length: 8,
 					},
 					{
 						name: 'two octaves (8 notes)',
-						intervals: [2, 3, 5, 7, 8, 10, 12, -10, -9, -7, -5, -4, -2, -12],
+						intervals: to_scale_notes(lookup_scale('minor'), 2),
 						sequence_length: 8,
 					},
 					{
 						name: 'four octaves (8 notes)',
-						intervals: [2, 3, 5, 7, 8, 10, 12, -10, -9, -7, -5, -4, -2, -12, 14, 15, 17, 19, 20, 22, 24, -24, -22, -21, -19, -17, -16, -14], // prettier-ignore
+						intervals: to_scale_notes(lookup_scale('minor'), 4),
 						sequence_length: 8,
 					},
 				].map((v) => LevelDef.parse(v)),
