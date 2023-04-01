@@ -7,16 +7,6 @@ import {getContext, setContext} from 'svelte';
 import {type Hsl, hsl_to_string, type Hue} from '$lib/util/colors';
 import type {Frequency} from '$lib/audio/helpers';
 
-// `Midi` is our primary means of identifying notes,
-// and its type is a number with a min of 0, just like array indices.
-// The result is that arrays are great for storing static `Midi` data.
-// Using the `Midi` number everywhere as array indices has its drawbacks,
-// but it's really nice to program with, and it's efficient.
-// Using flat data structures instead of objects to pack up this data
-// makes the code very naturally extensible - any new data associated to `Midi`
-// is just an array of anything that can live anywhere,
-// and these arrays are always indexed by `Midi` number.
-
 export const DEFAULT_TUNING = 440; // https://en.wikipedia.org/wiki/A440_(pitch_standard)
 
 export const NOTE_FLAT_SYMBOL = '♭';
@@ -193,15 +183,17 @@ export const to_notes = (
 	return new Set(midis);
 };
 
-// TODO min audible Midi (max too?)
+/**
+ * This code uses `Midi`, the midi index from 0 to 127,
+ * as the standard musical note identity.
+ * This comes with drawbacks, the obvious one being that
+ * midi indices are meaningless to most people,
+ * but for our purposes the benefits seem to outweight the downsides.
+ * The midi index is unambiguous, efficient,
+ * and easy to work with both programmatically and mathematically.
+ */
 
-// This project uses `Midi`, the midi number,
-// as the standard musical note identity.
-// This comes with drawbacks, the obvious one being that
-// midi numbers are meaningless to most people,
-// but for our purposes the benefits seem to outweight the downsides.
-// `Midi` is unambiguous, efficient,
-// and easy to work with both programmatically and mathematically.
+// TODO how to do this type? trying to avoid zod's `brand` but maybe the ergonomic tradeoff is ok
 // export type Midi = Flavored<number, 'Midi'>;
 export const Midi = z.number().int().min(0).max(127);
 export type Midi = Flavored<z.infer<typeof Midi>, 'Midi'>;
@@ -232,16 +224,22 @@ export const freq_to_midi_safe = (freq: Frequency, tuning: Frequency): Midi | nu
 // TODO consider converting all of these to `Map`s
 // TODO do we want to remove the `midi` part of these data array names, or otherwise rename them?
 // maybe instead of `midiFoos`, rename to `noteFoos`?
-export const midi_chromas: Chroma[] = Object.freeze(midis.map((m) => (m % 12) + 1)) as Chroma[];
-export const midi_pitch_classes: PitchClass[] = Object.freeze(
+export const midi_chromas: Chroma[] & Record<Midi, Chroma> = Object.freeze(
+	midis.map((m) => (m % 12) + 1),
+) as Chroma[];
+
+export const midi_pitch_classes: PitchClass[] & Record<Midi, PitchClass> = Object.freeze(
 	midis.map((m) => pitch_classes[midi_chromas[m] - 1]),
 ) as PitchClass[];
-export const midi_octaves: Octave[] = Object.freeze(
+
+export const midi_octaves: Octave[] & Record<Midi, Octave> = Object.freeze(
 	midis.map((m) => Math.floor(m / 12) - 1),
 ) as Octave[];
-export const midi_names: NoteName[] = Object.freeze(
+
+export const midi_names: NoteName[] & Record<Midi, NoteName> = Object.freeze(
 	midis.map((m) => midi_pitch_classes[m] + midi_octaves[m]),
 ) as NoteName[];
+
 export const midi_naturals: Set<Midi> = new Set(
 	midis.filter((m) => midi_pitch_classes[m][1] !== NOTE_SHARP_SYMBOL),
 );
