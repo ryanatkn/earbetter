@@ -45,7 +45,7 @@ const def = (): ProjectDef =>
 					},
 					{
 						name: 'four octaves',
-						intervals: [2, 4, 7, 9, 12, -10, -8, -5, -3, -12, 14, 16, 19, 21, 24, -22, -20, -17, -15, -24], // prettier-ignore
+						intervals: to_scale_notes(lookup_scale('pentatonic'), 4),
 						sequence_length: 2,
 					},
 					{
@@ -60,7 +60,7 @@ const def = (): ProjectDef =>
 					},
 					{
 						name: 'four octaves (4 notes)',
-						intervals: [2, 4, 7, 9, 12, -10, -8, -5, -3, -12, 14, 16, 19, 21, 24, -22, -20, -17, -15, -24], // prettier-ignore
+						intervals: to_scale_notes(lookup_scale('pentatonic'), 4),
 						sequence_length: 4,
 					},
 					{
@@ -75,7 +75,7 @@ const def = (): ProjectDef =>
 					},
 					{
 						name: 'four octaves (8 notes)',
-						intervals: [2, 4, 7, 9, 12, -10, -8, -5, -3, -12, 14, 16, 19, 21, 24, -22, -20, -17, -15, -24], // prettier-ignore
+						intervals: to_scale_notes(lookup_scale('pentatonic'), 4),
 						sequence_length: 8,
 					},
 				].map((v) => LevelDef.parse(v)),
