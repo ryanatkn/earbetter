@@ -1,6 +1,7 @@
 import {RealmDef} from '$lib/earbetter/realm';
 import {LevelDef, DEFAULT_NOTE_MIN} from '$lib/earbetter/level';
 import {create_project_id, ProjectDef} from '$lib/earbetter/project';
+import {lookup_scale, to_scale_notes} from '$lib/music/music';
 
 // TODO more - modes, particular intervals, scales, chromatic, ...?
 // what's best for learning and understanding and covering the landscape?
@@ -34,53 +35,53 @@ const def = (): ProjectDef =>
 					},
 					{
 						name: 'one octave',
-						intervals: [2, 4, 7, 9],
+						intervals: lookup_scale('pentatonic').notes,
 						sequence_length: 2,
 					},
 					{
 						name: 'two octaves',
-						intervals: [2, 4, 7, 9, 12, -10, -8, -5, -3, -12],
+						intervals: to_scale_notes(lookup_scale('pentatonic'), 2),
 						sequence_length: 2,
 					},
 					{
 						name: 'four octaves',
-						intervals: [2, 4, 7, 9, 12, -10, -8, -5, -3, -12, 14, 16, 19, 21, 24, -24, -22, -20, -17, -15], // prettier-ignore
+						intervals: to_scale_notes(lookup_scale('pentatonic'), 4),
 						sequence_length: 2,
 					},
 					{
 						name: 'one octave (4 notes)',
-						intervals: [2, 4, 7, 9],
+						intervals: lookup_scale('pentatonic').notes,
 						sequence_length: 4,
 					},
 					{
 						name: 'two octaves (4 notes)',
-						intervals: [2, 4, 7, 9, 12, -10, -8, -5, -3, -12],
+						intervals: to_scale_notes(lookup_scale('pentatonic'), 2),
 						sequence_length: 4,
 					},
 					{
 						name: 'four octaves (4 notes)',
-						intervals: [2, 4, 7, 9, 12, -10, -8, -5, -3, -12, 14, 16, 19, 21, 24, -24, -22, -20, -17, -15], // prettier-ignore
+						intervals: to_scale_notes(lookup_scale('pentatonic'), 4),
 						sequence_length: 4,
 					},
 					{
 						name: 'one octave (8 notes)',
-						intervals: [2, 4, 7, 9],
+						intervals: lookup_scale('pentatonic').notes,
 						sequence_length: 8,
 					},
 					{
 						name: 'two octaves (8 notes)',
-						intervals: [2, 4, 7, 9, 12, -10, -8, -5, -3, -12],
+						intervals: to_scale_notes(lookup_scale('pentatonic'), 2),
 						sequence_length: 8,
 					},
 					{
 						name: 'four octaves (8 notes)',
-						intervals: [2, 4, 7, 9, 12, -10, -8, -5, -3, -12, 14, 16, 19, 21, 24, -24, -22, -20, -17, -15], // prettier-ignore
+						intervals: to_scale_notes(lookup_scale('pentatonic'), 4),
 						sequence_length: 8,
 					},
 				].map((v) => LevelDef.parse(v)),
 			},
 			{
-				name: 'major scale (Ionian)',
+				name: 'major scale',
 				level_defs: [
 					{
 						name: 'major second vs major third',
@@ -109,53 +110,53 @@ const def = (): ProjectDef =>
 					},
 					{
 						name: 'one octave',
-						intervals: [2, 4, 5, 7, 9, 11],
+						intervals: lookup_scale('major').notes,
 						sequence_length: 2,
 					},
 					{
 						name: 'two octaves',
-						intervals: [2, 4, 5, 7, 9, 11, 12, -10, -8, -7, -5, -3, -1, -12],
+						intervals: to_scale_notes(lookup_scale('major'), 2),
 						sequence_length: 2,
 					},
 					{
 						name: 'four octaves',
-						intervals: [2, 4, 5, 7, 9, 11, 12, -10, -8, -7, -5, -3, -1, -12, 14, 16, 17, 19, 21, 23, 24, -24, -22, -20, -19, -17, -15, -13], // prettier-ignore
+						intervals: to_scale_notes(lookup_scale('major'), 4),
 						sequence_length: 2,
 					},
 					{
 						name: 'one octave (4 notes)',
-						intervals: [2, 4, 5, 7, 9, 11],
+						intervals: lookup_scale('major').notes,
 						sequence_length: 4,
 					},
 					{
 						name: 'two octaves (4 notes)',
-						intervals: [2, 4, 5, 7, 9, 11, 12, -10, -8, -7, -5, -3, -1, -12],
+						intervals: to_scale_notes(lookup_scale('major'), 2),
 						sequence_length: 4,
 					},
 					{
 						name: 'four octaves (4 notes)',
-						intervals: [2, 4, 5, 7, 9, 11, 12, -10, -8, -7, -5, -3, -1, -12, 14, 16, 17, 19, 21, 23, 24, -24, -22, -20, -19, -17, -15, -13], // prettier-ignore
+						intervals: to_scale_notes(lookup_scale('major'), 4),
 						sequence_length: 4,
 					},
 					{
 						name: 'one octave (8 notes)',
-						intervals: [2, 4, 5, 7, 9, 11],
+						intervals: lookup_scale('major').notes,
 						sequence_length: 8,
 					},
 					{
 						name: 'two octaves (8 notes)',
-						intervals: [2, 4, 5, 7, 9, 11, 12, -10, -8, -7, -5, -3, -1, -12],
+						intervals: to_scale_notes(lookup_scale('major'), 2),
 						sequence_length: 8,
 					},
 					{
 						name: 'four octaves (8 notes)',
-						intervals: [2, 4, 5, 7, 9, 11, 12, -10, -8, -7, -5, -3, -1, -12, 14, 16, 17, 19, 21, 23, 24, -24, -22, -20, -19, -17, -15, -13], // prettier-ignore
+						intervals: to_scale_notes(lookup_scale('major'), 4),
 						sequence_length: 8,
 					},
 				].map((v) => LevelDef.parse(v)),
 			},
 			{
-				name: 'minor scale (Aeolian)',
+				name: 'minor scale',
 				level_defs: [
 					// TODO maybe arrange these by difficulty?
 					{
@@ -185,47 +186,47 @@ const def = (): ProjectDef =>
 					},
 					{
 						name: 'one octave',
-						intervals: [2, 3, 5, 7, 8, 10],
+						intervals: to_scale_notes(lookup_scale('minor'), 1),
 						sequence_length: 2,
 					},
 					{
 						name: 'two octaves',
-						intervals: [2, 3, 5, 7, 8, 10, 12, -10, -9, -7, -5, -4, -2, -12],
+						intervals: to_scale_notes(lookup_scale('minor'), 2),
 						sequence_length: 2,
 					},
 					{
 						name: 'four octaves',
-						intervals: [2, 3, 5, 7, 8, 10, 12, -10, -9, -7, -5, -4, -2, -12, 14, 15, 17, 19, 20, 22, 24, -24, -22, -21, -19, -17, -16, -14], // prettier-ignore
+						intervals: to_scale_notes(lookup_scale('minor'), 4),
 						sequence_length: 2,
 					},
 					{
 						name: 'one octave (4 notes)',
-						intervals: [2, 3, 5, 7, 8, 10],
+						intervals: to_scale_notes(lookup_scale('minor'), 1),
 						sequence_length: 4,
 					},
 					{
 						name: 'two octaves (4 notes)',
-						intervals: [2, 3, 5, 7, 8, 10, 12, -10, -9, -7, -5, -4, -2, -12],
+						intervals: to_scale_notes(lookup_scale('minor'), 2),
 						sequence_length: 4,
 					},
 					{
 						name: 'four octaves (4 notes)',
-						intervals: [2, 3, 5, 7, 8, 10, 12, -10, -9, -7, -5, -4, -2, -12, 14, 15, 17, 19, 20, 22, 24, -24, -22, -21, -19, -17, -16, -14], // prettier-ignore
+						intervals: to_scale_notes(lookup_scale('minor'), 4),
 						sequence_length: 4,
 					},
 					{
 						name: 'one octave (8 notes)',
-						intervals: [2, 3, 5, 7, 8, 10],
+						intervals: to_scale_notes(lookup_scale('minor'), 1),
 						sequence_length: 8,
 					},
 					{
 						name: 'two octaves (8 notes)',
-						intervals: [2, 3, 5, 7, 8, 10, 12, -10, -9, -7, -5, -4, -2, -12],
+						intervals: to_scale_notes(lookup_scale('minor'), 2),
 						sequence_length: 8,
 					},
 					{
 						name: 'four octaves (8 notes)',
-						intervals: [2, 3, 5, 7, 8, 10, 12, -10, -9, -7, -5, -4, -2, -12, 14, 15, 17, 19, 20, 22, 24, -24, -22, -21, -19, -17, -16, -14], // prettier-ignore
+						intervals: to_scale_notes(lookup_scale('minor'), 4),
 						sequence_length: 8,
 					},
 				].map((v) => LevelDef.parse(v)),

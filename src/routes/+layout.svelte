@@ -132,7 +132,7 @@
 		<section>
 			<SiteMap />
 		</section>
-		<section class="centered">
+		<section class="centered column-sm">
 			<h2 class="section-title">data</h2>
 			<button on:click={() => (deleting = !deleting)}> clear saved data </button>
 			{#if deleting}
@@ -147,6 +147,16 @@
 					</button>
 				</div>
 			{/if}
+		</section>
+		<section class="centered markup column-sm">
+			<h2 class="section-title">privacy</h2>
+			<p class="padded-md">
+				this website collects no data - the only server it talks to is <a
+					href="https://pages.github.com/">GitHub Pages</a
+				>
+				to serve static files, see
+				<a href="https://github.com/ryanatkn/earbetter">the source code</a> for more
+			</p>
 		</section>
 		<Footer flush={true} />
 	</Dialog>
