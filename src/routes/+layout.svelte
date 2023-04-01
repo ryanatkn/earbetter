@@ -148,6 +148,16 @@
 				</div>
 			{/if}
 		</section>
+		<section class="centered markup column-sm">
+			<h2 class="section-title">privacy</h2>
+			<p class="padded-md">
+				this website collects no data - the only server it talks to is <a
+					href="https://pages.github.com/">GitHub Pages</a
+				>
+				to serve static files, see
+				<a href="https://github.com/ryanatkn/earbetter">the source code</a> for more
+			</p>
+		</section>
 		<Footer flush={true} />
 	</Dialog>
 {/if}
