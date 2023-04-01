@@ -112,20 +112,16 @@ export const set_enabled_notes = (
 export type ScaleName = Flavored<string, 'ScaleName'>;
 export const ScaleName = z.string().transform<ScaleName>(identity);
 
-// TODO this type is like `Semitone` with more restrictions
-export type ScaleNoteIndex = Flavored<number, 'ScaleNoteIndex'>;
-export const ScaleNoteIndex = z.number().min(1).max(11).transform<ScaleNoteIndex>(identity);
-
 export const Scale = z.object({
 	name: ScaleName,
-	notes: z.array(ScaleNoteIndex),
+	notes: z.array(Semitones),
 });
 export type Scale = z.infer<typeof Scale>;
 
 export const scales: Scale[] = [
 	{name: 'chromatic', notes: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11]},
-	{name: 'major (Ionian)', notes: [2, 4, 5, 7, 9, 11]},
-	{name: 'minor (Aeolian)', notes: [2, 3, 5, 7, 8, 10]},
+	{name: 'major (Ionian)', notes: [2, 4, 5, 7, 9, 11]}, // TODO maybe need a different property with the `(Ionian)`
+	{name: 'minor (Aeolian)', notes: [2, 3, 5, 7, 8, 10]}, // TODO maybe need a different property with the `(Aeolian)`
 	{name: 'Dorian', notes: [2, 3, 5, 7, 9, 10]},
 	{name: 'Phrygian', notes: [1, 3, 5, 7, 8, 10]},
 	{name: 'Lydian', notes: [2, 4, 6, 7, 9, 11]},
