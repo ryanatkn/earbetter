@@ -115,7 +115,7 @@ const def = (): ProjectDef =>
 					},
 					{
 						name: 'two octaves',
-						intervals: [2, 4, 5, 7, 9, 11, 12, -10, -8, -7, -5, -3, -1, -12],
+						intervals: to_scale_notes(lookup_scale('major'), 2),
 						sequence_length: 2,
 					},
 					{
@@ -130,7 +130,7 @@ const def = (): ProjectDef =>
 					},
 					{
 						name: 'two octaves (4 notes)',
-						intervals: [2, 4, 5, 7, 9, 11, 12, -10, -8, -7, -5, -3, -1, -12],
+						intervals: to_scale_notes(lookup_scale('major'), 2),
 						sequence_length: 4,
 					},
 					{
@@ -145,7 +145,7 @@ const def = (): ProjectDef =>
 					},
 					{
 						name: 'two octaves (8 notes)',
-						intervals: [2, 4, 5, 7, 9, 11, 12, -10, -8, -7, -5, -3, -1, -12],
+						intervals: to_scale_notes(lookup_scale('major'), 2),
 						sequence_length: 8,
 					},
 					{
