@@ -140,6 +140,56 @@ const def = (): ProjectDef =>
 				].map((v) => LevelDef.parse(v)),
 			},
 			{
+				name: 'minor scale (Aeolian)',
+				level_defs: [
+					{
+						name: 'one octave',
+						intervals: [2, 3, 5, 7, 8, 10],
+						sequence_length: 2,
+					},
+					{
+						name: 'two octaves',
+						intervals: [2, 3, 5, 7, 8, 10, 12, -10, -9, -7, -5, -4, -2, -12],
+						sequence_length: 2,
+					},
+					{
+						name: 'three octaves',
+						intervals: [2, 3, 5, 7, 8, 10, 12, -10, -9, -7, -5, -4, -2, -12, 14, 15, 17, 19, 20, 22, 24], // prettier-ignore
+						sequence_length: 2,
+					},
+					{
+						name: 'one octave (4 notes)',
+						intervals: [2, 3, 5, 7, 8, 10],
+						sequence_length: 4,
+					},
+					{
+						name: 'two octaves (4 notes)',
+						intervals: [2, 3, 5, 7, 8, 10, 12, -10, -9, -7, -5, -4, -2, -12],
+						sequence_length: 4,
+					},
+					{
+						name: 'three octaves (4 notes)',
+						intervals: [2, 3, 5, 7, 8, 10, 12, -10, -9, -7, -5, -4, -2, -12, 14, 15, 17, 19, 20, 22, 24], // prettier-ignore
+						sequence_length: 4,
+					},
+					{
+						name: 'one octave (8 notes)',
+						intervals: [2, 3, 5, 7, 8, 10],
+						sequence_length: 8,
+					},
+					{
+						name: 'two octaves (8 notes)',
+						intervals: [2, 3, 5, 7, 8, 10, 12, -10, -9, -7, -5, -4, -2, -12],
+						sequence_length: 8,
+					},
+					{
+						name: 'three octaves (8 notes)',
+						intervals: [2, 3, 5, 7, 8, 10, 12, -10, -9, -7, -5, -4, -2, -12, 14, 15, 17, 19, 20, 22, 24], // prettier-ignore
+						sequence_length: 8,
+					},
+				].map((v) => LevelDef.parse(v)),
+			},
+			{
 				name: 'major third vs perfect fourth',
 				level_defs: [
 					{
