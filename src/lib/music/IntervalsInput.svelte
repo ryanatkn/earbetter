@@ -29,6 +29,7 @@
 <button type="button" on:click={() => dispatch('input', intervals)}> use this interval </button>
 
 <style>
+	/* TODO this is hacky, extract or reuse something? */
 	.preview {
 		padding: var(--spacing_md);
 		margin-bottom: var(--spacing_lg);
