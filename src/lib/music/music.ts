@@ -149,7 +149,7 @@ export const to_scale_notes = (scale: Scale, octaves: number): Semitones[] => {
 		for (const n of scale.notes) {
 			notes.push(n + 12 * direction * degree);
 		}
-		notes.push(12 * direction * (up ? degree + 1 : degree)); // include the octave up, but not 0
+		notes.push(12 * direction * (up ? degree + 1 : degree)); // include the octave up, but not 0 (do we want 0 tho?)
 	}
 	return notes;
 };
