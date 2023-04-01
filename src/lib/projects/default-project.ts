@@ -13,13 +13,8 @@ const def = (): ProjectDef =>
 				name: 'major pentatonic',
 				level_defs: [
 					{
-						name: 'perfect fourth vs perfect octave',
-						intervals: [5, 12],
-						sequence_length: 2,
-					},
-					{
-						name: 'major third vs major sixth',
-						intervals: [4, 9],
+						name: 'major second vs perfect fifth',
+						intervals: [2, 7],
 						sequence_length: 2,
 					},
 					{
@@ -33,13 +28,8 @@ const def = (): ProjectDef =>
 						sequence_length: 2,
 					},
 					{
-						name: 'major third vs perfect fourth',
-						intervals: [4, 5],
-						sequence_length: 2,
-					},
-					{
-						name: 'major third vs perfect fourth vs perfect fifth',
-						intervals: [4, 5, 7],
+						name: 'perfect fifth vs major sixth',
+						intervals: [7, 9],
 						sequence_length: 2,
 					},
 					{
@@ -53,8 +43,8 @@ const def = (): ProjectDef =>
 						sequence_length: 2,
 					},
 					{
-						name: 'three octaves',
-						intervals: [2, 4, 7, 9, 12, -10, -8, -5, -3, -12, 14, 16, 19, 21, 24],
+						name: 'four octaves',
+						intervals: [2, 4, 7, 9, 12, -10, -8, -5, -3, -12, 14, 16, 19, 21, 24, -24, -22, -20, -17, -15], // prettier-ignore
 						sequence_length: 2,
 					},
 					{
@@ -68,8 +58,8 @@ const def = (): ProjectDef =>
 						sequence_length: 4,
 					},
 					{
-						name: 'three octaves (4 notes)',
-						intervals: [2, 4, 7, 9, 12, -10, -8, -5, -3, -12, 14, 16, 19, 21, 24],
+						name: 'four octaves (4 notes)',
+						intervals: [2, 4, 7, 9, 12, -10, -8, -5, -3, -12, 14, 16, 19, 21, 24, -24, -22, -20, -17, -15], // prettier-ignore
 						sequence_length: 4,
 					},
 					{
@@ -83,8 +73,8 @@ const def = (): ProjectDef =>
 						sequence_length: 8,
 					},
 					{
-						name: 'three octaves (8 notes)',
-						intervals: [2, 4, 7, 9, 12, -10, -8, -5, -3, -12, 14, 16, 19, 21, 24],
+						name: 'four octaves (8 notes)',
+						intervals: [2, 4, 7, 9, 12, -10, -8, -5, -3, -12, 14, 16, 19, 21, 24, -24, -22, -20, -17, -15], // prettier-ignore
 						sequence_length: 8,
 					},
 				].map((v) => LevelDef.parse(v)),
@@ -92,6 +82,31 @@ const def = (): ProjectDef =>
 			{
 				name: 'major scale (Ionian)',
 				level_defs: [
+					{
+						name: 'major second vs major third',
+						intervals: [2, 4],
+						sequence_length: 2,
+					},
+					{
+						name: 'major third vs perfect fourth',
+						intervals: [4, 5],
+						sequence_length: 2,
+					},
+					{
+						name: 'perfect fourth vs perfect fifth',
+						intervals: [5, 7],
+						sequence_length: 2,
+					},
+					{
+						name: 'perfect fifth vs major sixth',
+						intervals: [7, 9],
+						sequence_length: 2,
+					},
+					{
+						name: 'major sixth vs major seventh',
+						intervals: [9, 11],
+						sequence_length: 2,
+					},
 					{
 						name: 'one octave',
 						intervals: [2, 4, 5, 7, 9, 11],
@@ -142,6 +157,32 @@ const def = (): ProjectDef =>
 			{
 				name: 'minor scale (Aeolian)',
 				level_defs: [
+					// TODO maybe arrange these by difficulty?
+					{
+						name: 'major second vs minor third',
+						intervals: [2, 3],
+						sequence_length: 2,
+					},
+					{
+						name: 'minor third vs perfect fourth',
+						intervals: [3, 5],
+						sequence_length: 2,
+					},
+					{
+						name: 'perfect fourth vs perfect fifth',
+						intervals: [5, 7],
+						sequence_length: 2,
+					},
+					{
+						name: 'perfect fifth vs minor sixth',
+						intervals: [7, 8],
+						sequence_length: 2,
+					},
+					{
+						name: 'minor sixth vs minor seventh',
+						intervals: [8, 10],
+						sequence_length: 2,
+					},
 					{
 						name: 'one octave',
 						intervals: [2, 3, 5, 7, 8, 10],
@@ -189,6 +230,7 @@ const def = (): ProjectDef =>
 					},
 				].map((v) => LevelDef.parse(v)),
 			},
+			// TODO this will change, just including to see where to go next
 			{
 				name: 'major third vs perfect fourth',
 				level_defs: [
