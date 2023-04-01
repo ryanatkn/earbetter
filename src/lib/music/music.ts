@@ -81,21 +81,7 @@ export const chroma_to_hsl_string: Map<Chroma, string> = new Map(
 	chromas.map((chroma) => [chroma, hsl_to_string(...chroma_to_hsl.get(chroma)!)]),
 );
 
-export const interval_short_names = Object.freeze([
-	'P1',
-	'm2',
-	'M2',
-	'm3',
-	'M3',
-	'P4',
-	'd5',
-	'P5',
-	'm6',
-	'M6',
-	'm7',
-	'M7',
-	'P8',
-] as const);
+export const interval_short_names = Object.freeze(['P1', 'm2', 'M2', 'm3', 'M3', 'P4', 'd5', 'P5', 'm6', 'M6', 'm7', 'M7', 'P8'] as const); // prettier-ignore
 
 export type IntervalShortNames = (typeof interval_short_names)[number];
 
@@ -157,19 +143,17 @@ export const lookup_scale = (name: ScaleName): Scale => {
 	return found;
 };
 
-// TODO BLOCK name?
 export const to_scale_notes = (scale: Scale, octaves: number): Semitones[] => {
 	const notes: number[] = [];
 	for (let i = 0; i < octaves; i++) {
 		const up = i % 2 === 0;
-		const direction = up ? 1 : -1; // up, up, down, up, down, up, ...
+		const direction = up ? 1 : -1;
 		// `degree` is the offset multiplier from the base scale, so 2 is the second octave both up and down
 		const degree = up ? i / 2 : (i + 1) / 2;
 		for (const n of scale.notes) {
-			console.log(`i, n, up, direction, degree`, i, n, up, direction, degree);
 			notes.push(n + 12 * direction * degree);
 		}
-		notes.push(12 * direction * (degree || 1)); // include the octave up, but not 0
+		notes.push(12 * direction * (up ? degree + 1 : degree)); // include the octave up, but not 0
 	}
 	return notes;
 };
