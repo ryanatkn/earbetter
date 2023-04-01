@@ -16,7 +16,7 @@ const log = new Logger('[level]');
 
 export const DEFAULT_NOTE_DURATION = 333; // TODO adjust this to make more challenging games
 export const DEFAULT_NOTE_DURATION_2 = 500; // TODO adjust this to make more challenging games
-export const DEFAULT_NOTE_DURATION_FAILED = 50;
+export const DEFAULT_NOTE_DURATION_FAILED = 67;
 export const DEFAULT_FEEDBACK_DURATION = 1000; // TODO configurable
 export const DEFAULT_SEQUENCE_LENGTH = 4;
 export const DEFAULT_TRIAL_COUNT = 5;
