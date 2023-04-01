@@ -174,7 +174,7 @@ button {
 .accent:focus {
 	--outline_color: var(--accent_border_color);
 }
-.accent:hover {
+.accent:hover:not(:disabled) {
 	--border_color: var(--accent_border_color_dark);
 }
 .accent:active {
