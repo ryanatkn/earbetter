@@ -90,6 +90,56 @@ const def = (): ProjectDef =>
 				].map((v) => LevelDef.parse(v)),
 			},
 			{
+				name: 'major scale (Ionian)',
+				level_defs: [
+					{
+						name: 'one octave',
+						intervals: [2, 4, 5, 7, 9, 11],
+						sequence_length: 2,
+					},
+					{
+						name: 'two octaves',
+						intervals: [2, 4, 5, 7, 9, 11, 12, -10, -8, -7, -5, -3, -1, -12],
+						sequence_length: 2,
+					},
+					{
+						name: 'three octaves',
+						intervals: [2, 4, 5, 7, 9, 11, 12, -10, -8, -7, -5, -3, -1, -12, 14, 16, 17, 19, 21, 23, 24], // prettier-ignore
+						sequence_length: 2,
+					},
+					{
+						name: 'one octave (4 notes)',
+						intervals: [2, 4, 5, 7, 9, 11],
+						sequence_length: 4,
+					},
+					{
+						name: 'two octaves (4 notes)',
+						intervals: [2, 4, 5, 7, 9, 11, 12, -10, -8, -7, -5, -3, -1, -12],
+						sequence_length: 4,
+					},
+					{
+						name: 'three octaves (4 notes)',
+						intervals: [2, 4, 5, 7, 9, 11, 12, -10, -8, -7, -5, -3, -1, -12, 14, 16, 17, 19, 21, 23, 24], // prettier-ignore
+						sequence_length: 4,
+					},
+					{
+						name: 'one octave (8 notes)',
+						intervals: [2, 4, 5, 7, 9, 11],
+						sequence_length: 8,
+					},
+					{
+						name: 'two octaves (8 notes)',
+						intervals: [2, 4, 5, 7, 9, 11, 12, -10, -8, -7, -5, -3, -1, -12],
+						sequence_length: 8,
+					},
+					{
+						name: 'three octaves (8 notes)',
+						intervals: [2, 4, 5, 7, 9, 11, 12, -10, -8, -7, -5, -3, -1, -12, 14, 16, 17, 19, 21, 23, 24], // prettier-ignore
+						sequence_length: 8,
+					},
+				].map((v) => LevelDef.parse(v)),
+			},
+			{
 				name: 'major third vs perfect fourth',
 				level_defs: [
 					{
@@ -114,17 +164,32 @@ const def = (): ProjectDef =>
 						note_min: DEFAULT_NOTE_MIN - 12,
 					},
 					{
-						name: 'two long octaves',
+						name: 'two octaves (4 notes)',
+						intervals: [4, 5, -8, -7],
+						sequence_length: 4,
+					},
+					{
+						name: 'three octaves (4 notes)',
+						intervals: [4, 5, -8, -7, 16, 17],
+						sequence_length: 4,
+					},
+					{
+						name: 'four octaves (4 notes)',
+						intervals: [4, 5, -8, -7, 16, 17, -20, -19],
+						sequence_length: 4,
+					},
+					{
+						name: 'two octaves (8 notes)',
 						intervals: [4, 5, -8, -7],
 						sequence_length: 8,
 					},
 					{
-						name: 'three long octaves',
+						name: 'three octaves (8 notes)',
 						intervals: [4, 5, -8, -7, 16, 17],
 						sequence_length: 8,
 					},
 					{
-						name: 'four long octaves',
+						name: 'four octaves (8 notes)',
 						intervals: [4, 5, -8, -7, 16, 17, -20, -19],
 						sequence_length: 8,
 					},
