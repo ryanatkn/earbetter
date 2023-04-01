@@ -132,7 +132,7 @@
 		<section>
 			<SiteMap />
 		</section>
-		<section class="centered">
+		<section class="centered column-sm">
 			<h2 class="section-title">data</h2>
 			<button on:click={() => (deleting = !deleting)}> clear saved data </button>
 			{#if deleting}
