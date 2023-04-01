@@ -134,7 +134,7 @@
 					on:input={(e) => (intervals = parse_intervals(e.currentTarget.value))}
 				/>
 			</label>
-			<button on:click={() => (picking_intervals = true)}>pick interval</button>
+			<button type="button" on:click={() => (picking_intervals = true)}>pick interval</button>
 			<details>
 				<summary>more info</summary>
 				<p>
