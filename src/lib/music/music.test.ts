@@ -17,6 +17,10 @@ test('to_scale_notes', () => {
 		to_scale_notes(lookup_scale('major'), 2),
 		[2, 4, 5, 7, 9, 11, 12, -10, -8, -7, -5, -3, -1, -12],
 	);
+	assert.equal(
+		to_scale_notes(lookup_scale('major'), 4),
+		[2, 4, 5, 7, 9, 11, 12, -10, -8, -7, -5, -3, -1, -12, 14, 16, 17, 19, 21, 23, 24, -22, -20, -19, -17, -15, -13, -24], // prettier-ignore
+	);
 });
 
 test.run();

@@ -120,7 +120,7 @@ const def = (): ProjectDef =>
 					},
 					{
 						name: 'four octaves',
-						intervals: [2, 4, 5, 7, 9, 11, 12, -10, -8, -7, -5, -3, -1, -12, 14, 16, 17, 19, 21, 23, 24, -24, -22, -20, -19, -17, -15, -13], // prettier-ignore
+						intervals: to_scale_notes(lookup_scale('major'), 4),
 						sequence_length: 2,
 					},
 					{
@@ -135,7 +135,7 @@ const def = (): ProjectDef =>
 					},
 					{
 						name: 'four octaves (4 notes)',
-						intervals: [2, 4, 5, 7, 9, 11, 12, -10, -8, -7, -5, -3, -1, -12, 14, 16, 17, 19, 21, 23, 24, -24, -22, -20, -19, -17, -15, -13], // prettier-ignore
+						intervals: to_scale_notes(lookup_scale('major'), 4),
 						sequence_length: 4,
 					},
 					{
@@ -150,7 +150,7 @@ const def = (): ProjectDef =>
 					},
 					{
 						name: 'four octaves (8 notes)',
-						intervals: [2, 4, 5, 7, 9, 11, 12, -10, -8, -7, -5, -3, -1, -12, 14, 16, 17, 19, 21, 23, 24, -24, -22, -20, -19, -17, -15, -13], // prettier-ignore
+						intervals: to_scale_notes(lookup_scale('major'), 4),
 						sequence_length: 8,
 					},
 				].map((v) => LevelDef.parse(v)),
