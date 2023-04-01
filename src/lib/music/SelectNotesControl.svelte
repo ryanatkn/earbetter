@@ -21,9 +21,12 @@
 	<div class="title">
 		<slot>scale</slot>
 	</div>
-	<select value={$scale} on:input={(e) => (scale.value = lookup_scale(e.currentTarget.value))}>
+	<select
+		value={$scale.name}
+		on:change={(e) => (scale.value = lookup_scale(e.currentTarget.value))}
+	>
 		{#each scales as s (s)}
-			<option value={s}>{s.name}</option>
+			<option value={s.name}>{s.name}</option>
 		{/each}
 	</select>
 </label>
