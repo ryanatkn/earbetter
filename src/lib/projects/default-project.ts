@@ -1,6 +1,7 @@
 import {RealmDef} from '$lib/earbetter/realm';
 import {LevelDef, DEFAULT_NOTE_MIN} from '$lib/earbetter/level';
 import {create_project_id, ProjectDef} from '$lib/earbetter/project';
+import {lookup_scale, to_scale_notes} from '$lib/music/music';
 
 // TODO more - modes, particular intervals, scales, chromatic, ...?
 // what's best for learning and understanding and covering the landscape?
@@ -39,7 +40,7 @@ const def = (): ProjectDef =>
 					},
 					{
 						name: 'two octaves',
-						intervals: [2, 4, 7, 9, 12, -10, -8, -5, -3, -12],
+						intervals: to_scale_notes(lookup_scale('pentatonic'), 2),
 						sequence_length: 2,
 					},
 					{
@@ -54,7 +55,7 @@ const def = (): ProjectDef =>
 					},
 					{
 						name: 'two octaves (4 notes)',
-						intervals: [2, 4, 7, 9, 12, -10, -8, -5, -3, -12],
+						intervals: to_scale_notes(lookup_scale('pentatonic'), 2),
 						sequence_length: 4,
 					},
 					{
@@ -69,7 +70,7 @@ const def = (): ProjectDef =>
 					},
 					{
 						name: 'two octaves (8 notes)',
-						intervals: [2, 4, 7, 9, 12, -10, -8, -5, -3, -12],
+						intervals: to_scale_notes(lookup_scale('pentatonic'), 2),
 						sequence_length: 8,
 					},
 					{

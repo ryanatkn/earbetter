@@ -126,6 +126,7 @@ export const set_enabled_notes = (
 export type ScaleName = Flavored<string, 'ScaleName'>;
 export const ScaleName = z.string().transform<ScaleName>(identity);
 
+// TODO this type is like `Semitone` with more restrictions
 export type ScaleNoteIndex = Flavored<number, 'ScaleNoteIndex'>;
 export const ScaleNoteIndex = z.number().min(1).max(11).transform<ScaleNoteIndex>(identity);
 
@@ -149,17 +150,34 @@ export const scales: Scale[] = [
 ];
 export const DEFAULT_SCALE = scales[0];
 
-const SCALE_KEY = Symbol('scale');
-export const get_scale = (): Signal<Scale> => getContext(SCALE_KEY);
-export const set_scale = (store: Signal<Scale> = signal(DEFAULT_SCALE)): Signal<Scale> =>
-	setContext(SCALE_KEY, store);
-
 export const scale_by_name: Map<ScaleName, Scale> = new Map(scales.map((s) => [s.name, s]));
 export const lookup_scale = (name: ScaleName): Scale => {
 	const found = scale_by_name.get(name);
 	if (!found) throw Error('unknown scale ' + name);
 	return found;
 };
+
+// TODO BLOCK name?
+export const to_scale_notes = (scale: Scale, octaves: number): Semitones[] => {
+	const notes: number[] = [];
+	for (let i = 0; i < octaves; i++) {
+		const up = i % 2 === 0;
+		const direction = up ? 1 : -1; // up, up, down, up, down, up, ...
+		// `degree` is the offset multiplier from the base scale, so 2 is the second octave both up and down
+		const degree = up ? i / 2 : (i + 1) / 2;
+		for (const n of scale.notes) {
+			console.log(`i, n, up, direction, degree`, i, n, up, direction, degree);
+			notes.push(n + 12 * direction * degree);
+		}
+		notes.push(12 * direction * (degree || 1)); // include the octave up, but not 0
+	}
+	return notes;
+};
+
+const SCALE_KEY = Symbol('scale');
+export const get_scale = (): Signal<Scale> => getContext(SCALE_KEY);
+export const set_scale = (store: Signal<Scale> = signal(DEFAULT_SCALE)): Signal<Scale> =>
+	setContext(SCALE_KEY, store);
 
 export const PitchClass = z.enum(['C', 'C♯', 'D', 'D♯', 'E', 'F', 'F♯', 'G', 'G♯', 'A', 'A♯', 'B']);
 export type PitchClass = z.infer<typeof PitchClass>;
