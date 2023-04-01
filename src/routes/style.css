@@ -180,3 +180,8 @@ button {
 .accent:active {
 	--border_color: var(--accent_border_color_darker);
 }
+
+/* TODO hacky, just being lazy */
+.padded-md-x {
+	padding: 0 var(--spacing_md);
+}

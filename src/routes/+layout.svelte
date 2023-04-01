@@ -58,6 +58,7 @@
 	let show_main_menu = false;
 	afterNavigate(() => (show_main_menu = false));
 
+	// TODO refactor
 	const keydown = (e: KeyboardEvent) => {
 		if (isEditable(e.target)) return;
 		switch (e.key) {
@@ -122,7 +123,7 @@
 		<section class="markup">
 			<h1 class="section-title">earbetter</h1>
 			<h2 class="section-title">settings</h2>
-			<form class="column-sm centered">
+			<form class="column-sm centered padded-md-x">
 				<VolumeControl {volume} />
 				<InstrumentControl {instrument} />
 				<aside>Earbetter supports MIDI devices like piano keyboards, connect and click:</aside>
