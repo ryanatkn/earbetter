@@ -8,9 +8,20 @@
 	export let app: App;
 	export let level_def: LevelDef;
 
-	$: ({editing_level_def, selected_project_def, play_level, edit_level, remove_level} = app);
+	$: ({
+		editing_level,
+		editing_level_def,
+		selected_project_def,
+		play_level,
+		edit_level,
+		remove_level,
+	} = app);
 
-	$: editing = $editing_level_def === level_def;
+	// TODO hacky - the `editing_this_def` is needed when clicking into a level and going back,
+	// the `editing_level_def` is set but `editing_level` may be false,
+	// and we need to show it selected but not the edit button (needs restructuring for a proper fix)
+	$: editing_this_def = $editing_level_def === level_def;
+	$: editing = $editing_level && editing_this_def;
 	$: level_stats = $selected_project_def?.level_stats;
 
 	let removing = false;
@@ -24,7 +35,7 @@
 		class="level-button deselectable"
 		title="play this level"
 		on:click={() => play_level(level_def.id)}
-		class:selected={editing}
+		class:selected={editing || editing_this_def}
 	>
 		{level_def.name}
 	</button>
