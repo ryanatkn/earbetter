@@ -25,4 +25,14 @@
 	{octaves}
 	<input type="range" min={1} max={6} bind:value={octaves} />
 </label>
+<small class="preview column-sm panel">{intervals.join(', ')}</small>
 <button type="button" on:click={() => dispatch('input', intervals)}> use this interval </button>
+
+<style>
+	.preview {
+		padding: var(--spacing_md);
+		margin-bottom: var(--spacing_lg);
+		text-align: center;
+		font-family: var(--font_family_mono);
+	}
+</style>
