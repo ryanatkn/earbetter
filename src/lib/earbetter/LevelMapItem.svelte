@@ -11,7 +11,7 @@
 	$: ({
 		editing_level,
 		editing_level_def,
-		selected_project_def,
+		selected_project_data,
 		play_level,
 		edit_level,
 		remove_level,
@@ -22,7 +22,7 @@
 	// and we need to show it selected but not the edit button (needs restructuring for a proper fix)
 	$: editing_this_def = $editing_level_def === level_def;
 	$: editing = $editing_level && editing_this_def;
-	$: level_stats = $selected_project_def?.level_stats;
+	$: level_stats = $selected_project_data?.level_stats;
 
 	let removing = false;
 </script>

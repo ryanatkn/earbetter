@@ -24,10 +24,10 @@
 	export let midi_access: Signal<MIDIAccess | null>;
 
 	$: ({
-		project_defs,
+		project_datas,
 		editing_project,
-		editing_project_def,
-		selected_project_def,
+		editing_project_data,
+		selected_project_data,
 		realm_defs,
 		editing_realm,
 		editing_realm_def,
@@ -66,14 +66,14 @@
 	}}
 />
 <div class="map">
-	{#if $project_defs.length}
+	{#if $project_datas.length}
 		<div class="column-sm">
-			{#if $selected_project_def}
+			{#if $selected_project_data}
 				<section class="card" transition:slide|local>
 					<Projects {app} />
 				</section>
 			{/if}
-			{#if ($editing_project && $editing_project_def) || !$selected_project_def}
+			{#if ($editing_project && $editing_project_data) || !$selected_project_data}
 				<section class="card" transition:slide|local>
 					<ProjectEditor {app} />
 				</section>
@@ -130,7 +130,7 @@
 			</section>
 		{/if}
 	</div>
-	{#if $project_defs.length}
+	{#if $project_datas.length}
 		<div class="column-sm">
 			{#if $level_defs}
 				<section class="card" transition:slide|local>

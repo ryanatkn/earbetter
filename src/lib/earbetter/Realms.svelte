@@ -4,12 +4,12 @@
 	import {RealmDef} from '$lib/earbetter/realm';
 	import RealmItems from '$lib/earbetter/RealmItems.svelte';
 	import type {App} from '$lib/earbetter/app';
-	import default_project_def from '$lib/projects/default-project';
+	import default_project_data from '$lib/projects/default-project';
 
 	export let app: App; // TODO maybe change to be more granular objects?
 
 	$: ({
-		selected_project_def,
+		selected_project_data,
 		realm_defs,
 		selected_realm_def,
 		editing_realm,
@@ -43,10 +43,10 @@
 			<h2>realms</h2>
 		</header>
 	</div>
-	{#if $realm_defs && $selected_project_def}
+	{#if $realm_defs && $selected_project_data}
 		<div class="realm-items-wrapper" transition:slide|local>
 			<RealmItems
-				project_def={$selected_project_def}
+				project_data={$selected_project_data}
 				selected_realm_def={$selected_realm_def}
 				realm_defs={$realm_defs}
 				editing_realm_id={$editing_realm ? $editing_realm_id : null}
@@ -67,7 +67,7 @@
 		<div class="create-default-realms-wrapper" transition:slide|local>
 			<button
 				on:click={() => {
-					for (const realm_def of default_project_def().realm_defs) {
+					for (const realm_def of default_project_data().realm_defs) {
 						create_realm(realm_def);
 					}
 				}}
