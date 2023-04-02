@@ -6,7 +6,7 @@ import {lookup_scale, to_scale_notes} from '$lib/music/music';
 // TODO more - modes, particular intervals, scales, chromatic, ...?
 // what's best for learning and understanding and covering the landscape?
 
-const def = (): ProjectData =>
+const data = (): ProjectData =>
 	ProjectData.parse({
 		id: create_project_id(),
 		realm_datas: [
@@ -276,4 +276,4 @@ const def = (): ProjectData =>
 		].map((v) => RealmData.parse(v)),
 	});
 
-export default def;
+export default data;
