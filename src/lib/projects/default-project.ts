@@ -1,13 +1,13 @@
 import {RealmDef} from '$lib/earbetter/realm';
 import {LevelDef, DEFAULT_NOTE_MIN} from '$lib/earbetter/level';
-import {create_project_id, ProjectDef} from '$lib/earbetter/project';
+import {create_project_id, ProjectData} from '$lib/earbetter/project';
 import {lookup_scale, to_scale_notes} from '$lib/music/music';
 
 // TODO more - modes, particular intervals, scales, chromatic, ...?
 // what's best for learning and understanding and covering the landscape?
 
-const def = (): ProjectDef =>
-	ProjectDef.parse({
+const def = (): ProjectData =>
+	ProjectData.parse({
 		id: create_project_id(),
 		realm_defs: [
 			{

@@ -5,28 +5,28 @@
 	import Dialog from '@feltjs/felt-ui/Dialog.svelte';
 	import Message from '@feltjs/felt-ui/Message.svelte';
 
-	import {create_project_id, ProjectDef, type ProjectId} from '$lib/earbetter/project';
+	import {create_project_id, ProjectData, type ProjectId} from '$lib/earbetter/project';
 
-	const dispatch = createEventDispatcher<{submit: ProjectDef; remove: ProjectId}>();
+	const dispatch = createEventDispatcher<{submit: ProjectData; remove: ProjectId}>();
 
 	const DEFAULT_NAME = 'new project';
 
-	export let project_def: ProjectDef | null = null;
+	export let project_def: ProjectData | null = null;
 	export let id = create_project_id();
 	export let name = DEFAULT_NAME;
 	export let editing = false;
 
 	let removing = false;
 
-	const to_data = (): ProjectDef =>
-		ProjectDef.parse({
+	const to_data = (): ProjectData =>
+		ProjectData.parse({
 			...project_def,
 			id,
 			name,
 		});
 
 	$: set_project_def(project_def);
-	const set_project_def = (project_def: ProjectDef | null): void => {
+	const set_project_def = (project_def: ProjectData | null): void => {
 		console.log(`set_project_def`, project_def);
 		if (project_def) {
 			id = project_def.id;
@@ -55,7 +55,7 @@
 			const json = JSON.parse(updated);
 			// add an `id` if there is none
 			if (json && !json.id) json.id = create_project_id();
-			const parsed = ProjectDef.parse(json);
+			const parsed = ProjectData.parse(json);
 			dispatch('submit', parsed);
 		} catch (err) {
 			console.error('failed to import data', err);

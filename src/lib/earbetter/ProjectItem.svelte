@@ -1,13 +1,13 @@
 <script lang="ts">
 	import {slide} from 'svelte/transition';
 
-	import type {ProjectDef, ProjectId, ProjectMetadata} from '$lib/earbetter/project';
+	import type {ProjectData, ProjectId, ProjectMetadata} from '$lib/earbetter/project';
 
 	export let project: ProjectMetadata;
-	export let project_def: ProjectDef | undefined; // may not be loaded
-	export let load: (id: ProjectId) => ProjectDef | null;
+	export let project_def: ProjectData | undefined; // may not be loaded
+	export let load: (id: ProjectId) => ProjectData | null;
 	export let select: ((id: ProjectId) => void) | null = null; // TODO event? or is the ability to have a return value for ephemeral state desired?
-	export let edit: ((project_def: ProjectDef | null) => void) | null = null; // TODO event? or is the ability to have a return value for ephemeral state desired?
+	export let edit: ((project_def: ProjectData | null) => void) | null = null; // TODO event? or is the ability to have a return value for ephemeral state desired?
 	export let remove: ((id: ProjectId) => void) | null = null; // TODO event? or is the ability to have a return value for ephemeral state desired?
 	export let selected: boolean;
 	export let editing: boolean;

@@ -15,31 +15,31 @@ export type ProjectName = Flavored<string, 'ProjectName'>;
 export const ProjectName = z.string().min(1).max(1000).transform<ProjectName>(identity); // TODO better way to do this?
 const random_project_name = (): ProjectName => randomItem(emojis).icon + randomItem(emojis).icon;
 
-// Like `ProjectDef` but just the stuff needed for display.
+// Like `ProjectData` but just the stuff needed for display.
 // Used to avoid loading every project into memory at startup.
 export const ProjectMetadata = z.object({
 	id: ProjectId,
-	name: z.string(),
+	name: ProjectName,
 });
 export type ProjectMetadata = z.infer<typeof ProjectMetadata>;
 
 // TODO add restrictions to the below def
-export const ProjectDef = z.object({
+export const ProjectData = z.object({
 	id: ProjectId.default(create_project_id),
-	name: z.string().default(random_project_name),
+	name: ProjectName.default(random_project_name),
 	realm_defs: z.array(RealmDef).default([]),
 	level_stats: LevelStats.default(DEFAULT_LEVEL_STATS),
 });
-export type ProjectDef = z.infer<typeof ProjectDef>;
+export type ProjectData = z.infer<typeof ProjectData>;
 
 export interface Project {
-	def: Signal<ProjectDef>;
+	def: Signal<ProjectData>;
 }
 
 export class Project {
-	def: Signal<ProjectDef>;
+	def: Signal<ProjectData>;
 
-	constructor(def: ProjectDef) {
+	constructor(def: ProjectData) {
 		this.def = signal(def);
 	}
 }

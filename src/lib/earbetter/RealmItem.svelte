@@ -3,10 +3,10 @@
 
 	import type {RealmDef, RealmId} from '$lib/earbetter/realm';
 	import RealmStatsSummary from '$lib/earbetter/RealmStatsSummary.svelte';
-	import type {ProjectDef} from '$lib/earbetter/project';
+	import type {ProjectData} from '$lib/earbetter/project';
 
 	export let realm_def: RealmDef;
-	export let project_def: ProjectDef;
+	export let project_def: ProjectData;
 	export let select: ((id: RealmId) => void) | null = null; // TODO event? or is the ability to have a return value for ephemeral state desired?
 	export let edit: ((realm_def: RealmDef | null) => void) | null = null; // TODO event? or is the ability to have a return value for ephemeral state desired?
 	export let remove: ((id: RealmId) => void) | null = null; // TODO event? or is the ability to have a return value for ephemeral state desired?

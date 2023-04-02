@@ -1,5 +1,5 @@
 <script lang="ts">
-	import {ProjectDef} from '$lib/earbetter/project';
+	import {ProjectData} from '$lib/earbetter/project';
 	import ProjectItems from '$lib/earbetter/ProjectItems.svelte';
 	import type {App} from '$lib/earbetter/app';
 
@@ -46,7 +46,7 @@
 			if (creating) {
 				editing_project.value = false;
 			} else {
-				edit_project(ProjectDef.parse({}));
+				edit_project(ProjectData.parse({}));
 			}
 		}}
 	>

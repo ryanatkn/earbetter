@@ -18,7 +18,7 @@ import {
 	type LevelDef,
 	type LevelId,
 } from '$lib/earbetter/level';
-import {ProjectDef, ProjectId, ProjectName} from '$lib/earbetter/project';
+import {ProjectData, ProjectId, ProjectName} from '$lib/earbetter/project';
 import {load_from_storage, set_in_storage} from '$lib/util/storage';
 import {RealmId, type RealmDef} from '$lib/earbetter/realm';
 import default_project_def from '$lib/projects/default-project';
@@ -52,10 +52,10 @@ export class App {
 		this.app_data.value = {...this.app_data.peek(), show_game_help: !this.show_game_help.peek()};
 	};
 
-	project_defs: Signal<ProjectDef[]> = signal([]);
+	project_defs: Signal<ProjectData[]> = signal([]);
 
 	selected_project_id: Signal<ProjectId | null> = signal(null);
-	selected_project_def: ReadonlySignal<ProjectDef | null> = computed(() => {
+	selected_project_def: ReadonlySignal<ProjectData | null> = computed(() => {
 		const id = this.selected_project_id.value;
 		return this.project_defs.value.find((p) => p.id === id) || null;
 	});
@@ -64,13 +64,13 @@ export class App {
 	);
 	editing_project: Signal<boolean> = signal(false);
 	editing_project_draft: Signal<boolean> = signal(false);
-	project_draft_def: Signal<ProjectDef | null> = signal(null);
+	project_draft_def: Signal<ProjectData | null> = signal(null);
 	editing_project_id: ReadonlySignal<ProjectId | null> = computed(() =>
 		this.editing_project_draft.value
 			? this.project_draft_def.value?.id || null
 			: this.selected_project_def.value?.id || null,
 	); // this may be `selected_project_def`, or a new project def draft that hasn't been created yet
-	editing_project_def: ReadonlySignal<ProjectDef | null> = computed(() =>
+	editing_project_def: ReadonlySignal<ProjectData | null> = computed(() =>
 		this.editing_project_draft.value
 			? this.project_draft_def.value
 			: this.selected_project_def.value,
@@ -185,9 +185,9 @@ export class App {
 		}
 	};
 
-	load_project = (id: ProjectId | null): ProjectDef | null => {
+	load_project = (id: ProjectId | null): ProjectData | null => {
 		log.debug('load_project', id);
-		const loaded = id ? load_from_storage(id, null, ProjectDef.parse) : null;
+		const loaded = id ? load_from_storage(id, null, ProjectData.parse) : null;
 		log.debug(`loaded`, loaded);
 		if (loaded) {
 			// TODO batch if this code stays imperative like this
@@ -195,7 +195,7 @@ export class App {
 			return loaded;
 		} else {
 			log.debug(`load_project failed, creating new`, id);
-			const project_def = ProjectDef.parse({});
+			const project_def = ProjectData.parse({});
 			this.create_project(project_def);
 			return project_def;
 		}
@@ -216,7 +216,7 @@ export class App {
 		});
 	};
 
-	edit_project = (project_def: ProjectDef | null): void => {
+	edit_project = (project_def: ProjectData | null): void => {
 		log.debug('edit_project', project_def);
 		batch(() => {
 			if (!project_def) {
@@ -261,7 +261,7 @@ export class App {
 		});
 	};
 
-	create_project = (project_def: ProjectDef): ProjectDef => {
+	create_project = (project_def: ProjectData): ProjectData => {
 		log.debug('create_project', project_def);
 		const project_defs = this.project_defs.peek();
 		const {id} = project_def;
@@ -287,7 +287,7 @@ export class App {
 		return project_def;
 	};
 
-	update_project = (project_def: ProjectDef): void => {
+	update_project = (project_def: ProjectData): void => {
 		log.debug('update_project', project_def);
 		const project_defs = this.project_defs.peek();
 		const {id} = project_def;
