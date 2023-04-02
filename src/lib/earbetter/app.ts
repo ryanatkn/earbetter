@@ -59,8 +59,8 @@ export class App {
 		const id = this.selected_project_id.value;
 		return this.project_datas.value.find((p) => p.id === id) || null;
 	});
-	realm_datas: ReadonlySignal<RealmData[] | null> = computed(
-		() => this.selected_project_data.value?.realm_datas || null,
+	realms: ReadonlySignal<RealmData[] | null> = computed(
+		() => this.selected_project_data.value?.realms || null,
 	);
 	editing_project: Signal<boolean> = signal(false);
 	editing_project_draft: Signal<boolean> = signal(false);
@@ -79,7 +79,7 @@ export class App {
 	selected_realm_id: Signal<RealmId | null> = signal(null);
 	selected_realm_data: ReadonlySignal<RealmData | null> = computed(() => {
 		const id = this.selected_realm_id.value;
-		return this.realm_datas.value?.find((p) => p.id === id) || null;
+		return this.realms.value?.find((p) => p.id === id) || null;
 	});
 	editing_realm: Signal<boolean> = signal(false);
 	editing_realm_draft: Signal<boolean> = signal(false);
@@ -95,8 +95,8 @@ export class App {
 
 	level: Signal<Level | null> = signal(null); // TODO set hackily
 
-	level_datas: ReadonlySignal<LevelData[] | null> = computed(
-		() => this.selected_realm_data.value?.level_datas || null,
+	levels: ReadonlySignal<LevelData[] | null> = computed(
+		() => this.selected_realm_data.value?.levels || null,
 	);
 	active_level_data: Signal<LevelData | null> = signal(null);
 	editing_level: Signal<boolean> = signal(false);
@@ -118,8 +118,7 @@ export class App {
 				this.create_project(default_project_data()).id,
 		)!;
 		this.selected_project_id.value = project_data.id;
-		this.selected_realm_id.value =
-			app_data.selected_realm_id || project_data.realm_datas[0]?.id || null;
+		this.selected_realm_id.value = app_data.selected_realm_id || project_data.realms[0]?.id || null;
 		// save changes to `selected_project_id` and `selected_realm_id` back to the `app_data`,
 		// these could be decoupled but are often fired together
 		effect(() => {
@@ -212,7 +211,7 @@ export class App {
 				this.project_datas.peek().find((d) => d.id === id) || this.load_project(id);
 			if (!project_data) console.error('failed to find or load def', id);
 			this.selected_project_id.value = project_data?.id || null;
-			this.selected_realm_id.value = project_data?.realm_datas[0]?.id || null;
+			this.selected_realm_id.value = project_data?.realms[0]?.id || null;
 		});
 	};
 
@@ -315,7 +314,7 @@ export class App {
 
 	play_level = async (id: LevelId): Promise<void> => {
 		log.debug('play_level', id);
-		const level_data = this.level_datas.peek()?.find((d) => d.id === id);
+		const level_data = this.levels.peek()?.find((d) => d.id === id);
 		if (!level_data) {
 			console.error('cannot find level_data with id', id);
 			return;
@@ -340,21 +339,21 @@ export class App {
 			console.error('cannot remove level_data without a project', project_data, id);
 			return; // no active project
 		}
-		const {realm_datas} = project_data;
-		for (let i = 0; i < realm_datas.length; i++) {
-			const realm_data = realm_datas[i];
-			const {level_datas} = realm_data;
-			const level_data_index = level_datas.findIndex((d) => d.id === id);
+		const {realms} = project_data;
+		for (let i = 0; i < realms.length; i++) {
+			const realm_data = realms[i];
+			const {levels} = realm_data;
+			const level_data_index = levels.findIndex((d) => d.id === id);
 			if (level_data_index === -1) continue;
 			batch(() => {
 				if (id === this.editing_level_data.value?.id) {
 					this.editing_level_data.value = null;
 				}
-				const next_realm_datas = realm_datas.slice();
-				const next_level_datas = level_datas.slice();
-				next_level_datas.splice(level_data_index, 1);
-				next_realm_datas[i] = {...realm_data, level_datas: next_level_datas};
-				this.update_project({...project_data, realm_datas: next_realm_datas});
+				const next_realms = realms.slice();
+				const next_levels = levels.slice();
+				next_levels.splice(level_data_index, 1);
+				next_realms[i] = {...realm_data, levels: next_levels};
+				this.update_project({...project_data, realms: next_realms});
 			});
 			return;
 		}
@@ -369,33 +368,33 @@ export class App {
 			console.error('cannot create level_data without a project', project_data, level_data);
 			return; // no active project
 		}
-		const {realm_datas} = project_data;
+		const {realms} = project_data;
 		const realm_data = this.selected_realm_data.peek();
 		if (!realm_data) {
 			console.error('cannot create level_data without a selected realm');
 			return;
 		}
-		const {level_datas} = realm_data;
+		const {levels} = realm_data;
 
-		const existing = level_datas.find((d) => d.id === level_data.id);
+		const existing = levels.find((d) => d.id === level_data.id);
 		if (existing) {
 			log.debug('level_data already exists', level_data, existing);
 			return;
 		}
 
-		const next_realm_datas = realm_datas.slice();
-		const realm_data_index = realm_datas.indexOf(realm_data);
+		const next_realms = realms.slice();
+		const realm_data_index = realms.indexOf(realm_data);
 		if (realm_data_index === -1) {
-			console.error('expected selected realm def to be in array', realm_data, realm_datas);
+			console.error('expected selected realm def to be in array', realm_data, realms);
 			return;
 		}
-		next_realm_datas[realm_data_index] = {
+		next_realms[realm_data_index] = {
 			...realm_data,
-			level_datas: realm_data.level_datas.concat(level_data),
+			levels: realm_data.levels.concat(level_data),
 		};
 
 		batch(() => {
-			this.update_project({...project_data, realm_datas: next_realm_datas});
+			this.update_project({...project_data, realms: next_realms});
 			this.editing_level.value = false;
 			this.editing_level_data.value = null;
 		});
@@ -410,19 +409,19 @@ export class App {
 			console.error('cannot update level_data without a project', project_data, level_data);
 			return; // no active project
 		}
-		const {realm_datas} = project_data;
+		const {realms} = project_data;
 		const {id} = level_data;
-		for (let i = 0; i < realm_datas.length; i++) {
-			const realm_data = realm_datas[i];
-			const {level_datas} = realm_data;
-			const level_data_index = level_datas.findIndex((d) => d.id === id);
+		for (let i = 0; i < realms.length; i++) {
+			const realm_data = realms[i];
+			const {levels} = realm_data;
+			const level_data_index = levels.findIndex((d) => d.id === id);
 			if (level_data_index === -1) continue;
 			batch(() => {
-				const next_level_datas = level_datas.slice();
-				next_level_datas[level_data_index] = level_data;
-				const next_realm_datas = realm_datas.slice();
-				next_realm_datas[i] = {...realm_data, level_datas: next_level_datas};
-				this.update_project({...project_data, realm_datas: next_realm_datas});
+				const next_levels = levels.slice();
+				next_levels[level_data_index] = level_data;
+				const next_realms = realms.slice();
+				next_realms[i] = {...realm_data, levels: next_levels};
+				this.update_project({...project_data, realms: next_realms});
 				this.editing_level_data.value = level_data; // TODO maybe push to the component?
 			});
 			return;
@@ -436,7 +435,7 @@ export class App {
 			this.selected_realm_id.value = null;
 			return;
 		}
-		const realm_data = this.realm_datas.peek()?.find((d) => d.id === id);
+		const realm_data = this.realms.peek()?.find((d) => d.id === id);
 		if (!realm_data) return; // TODO hm, report an error? how to handle?
 		batch(() => {
 			this.selected_realm_id.value = id;
@@ -444,7 +443,7 @@ export class App {
 			// TODO derive instead of manually checking? might not be needed with a restructuring that saves the editing state in the tree
 			if (
 				this.editing_level_data.peek() &&
-				!realm_data.level_datas.includes(this.editing_level_data.peek()!)
+				!realm_data.levels.includes(this.editing_level_data.peek()!)
 			) {
 				this.editing_level_data.value = null;
 			}
@@ -461,7 +460,7 @@ export class App {
 			}
 			this.editing_realm.value = true;
 			const {id} = realm_data;
-			const found = this.realm_datas.peek()?.find((d) => d.id === id);
+			const found = this.realms.peek()?.find((d) => d.id === id);
 			if (found) {
 				// existing realm
 				this.selected_realm_id.value = id;
@@ -481,8 +480,8 @@ export class App {
 			console.error('cannot remove realm_data without a project', project_data, id);
 			return; // no active project
 		}
-		const {realm_datas} = project_data;
-		const realm_data = realm_datas.find((d) => d.id === id);
+		const {realms} = project_data;
+		const realm_data = realms.find((d) => d.id === id);
 		if (!realm_data) {
 			console.error('cannot find realm_data with id', id);
 			return;
@@ -495,7 +494,7 @@ export class App {
 		}
 		this.update_project({
 			...project_data,
-			realm_datas: realm_datas.filter((d) => d !== realm_data),
+			realms: realms.filter((d) => d !== realm_data),
 		});
 	};
 
@@ -506,17 +505,17 @@ export class App {
 			console.error('cannot create a realm_data without a project', project_data, realm_data);
 			return; // no active project
 		}
-		const {realm_datas} = project_data;
-		// TODO is it weird that these access both `this.realm_datas` and the source of truth `project_data`,
+		const {realms} = project_data;
+		// TODO is it weird that these access both `this.realms` and the source of truth `project_data`,
 		// or would it be better to always go through the `project_data`?
-		const existing = realm_datas.find((d) => d.id === realm_data.id);
+		const existing = realms.find((d) => d.id === realm_data.id);
 		if (existing) {
 			log.debug('realm_data already exists', realm_data, existing);
 			return;
 		}
 
 		batch(() => {
-			this.update_project({...project_data, realm_datas: realm_datas.concat(realm_data)});
+			this.update_project({...project_data, realms: realms.concat(realm_data)});
 			this.selected_realm_id.value = realm_data.id;
 			// TODO is awkward but works, should it be an effect?
 			if (this.draft_realm_data.peek()?.id === realm_data.id) {
@@ -532,17 +531,17 @@ export class App {
 			console.error('cannot update realm_data without a project', project_data, realm_data);
 			return; // no active project
 		}
-		const {realm_datas} = project_data;
+		const {realms} = project_data;
 		const {id} = realm_data;
-		const index = realm_datas.findIndex((d) => d.id === id);
+		const index = realms.findIndex((d) => d.id === id);
 		if (index === -1) {
-			console.error('cannot find realm_data to update', id, realm_datas);
+			console.error('cannot find realm_data to update', id, realms);
 			return;
 		}
-		const updated = realm_datas.slice();
+		const updated = realms.slice();
 		updated[index] = realm_data;
 		batch(() => {
-			this.update_project({...project_data, realm_datas: updated});
+			this.update_project({...project_data, realms: updated});
 			this.selected_realm_id.value = id;
 		});
 	};

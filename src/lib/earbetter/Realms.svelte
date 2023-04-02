@@ -10,7 +10,7 @@
 
 	$: ({
 		selected_project_data,
-		realm_datas,
+		realms,
 		selected_realm_data,
 		editing_realm,
 		editing_realm_id,
@@ -24,7 +24,7 @@
 	$: creating =
 		$editing_realm && !!$editing_realm_data && $selected_realm_data?.id !== $editing_realm_data?.id;
 
-	$: no_realms = !$realm_datas?.length;
+	$: no_realms = !$realms?.length;
 
 	const click_create_new = () => {
 		if (no_realms) {
@@ -43,12 +43,12 @@
 			<h2>realms</h2>
 		</header>
 	</div>
-	{#if $realm_datas && $selected_project_data}
+	{#if $realms && $selected_project_data}
 		<div class="realm-items-wrapper" transition:slide|local>
 			<RealmItems
 				project_data={$selected_project_data}
 				selected_realm_data={$selected_realm_data}
-				realm_datas={$realm_datas}
+				realms={$realms}
 				editing_realm_id={$editing_realm ? $editing_realm_id : null}
 				{select_realm}
 				edit_realm={(p) => edit_realm(p === $editing_realm_data && $editing_realm ? null : p)}
@@ -67,7 +67,7 @@
 		<div class="create-default-realms-wrapper" transition:slide|local>
 			<button
 				on:click={() => {
-					for (const realm_data of default_project_data().realm_datas) {
+					for (const realm_data of default_project_data().realms) {
 						create_realm(realm_data);
 					}
 				}}

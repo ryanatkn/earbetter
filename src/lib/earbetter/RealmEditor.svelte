@@ -5,7 +5,7 @@
 	export let app: App; // TODO maybe change to be more granular objects?
 
 	$: ({
-		realm_datas,
+		realms,
 		selected_realm_data,
 		editing_realm,
 		editing_realm_data,
@@ -15,10 +15,10 @@
 	} = app);
 
 	let id: string;
-	$: editing = $realm_datas ? $realm_datas.some((d) => d.id === id) : false;
+	$: editing = $realms ? $realms.some((d) => d.id === id) : false;
 
 	$: console.log(`$selected_realm_data`, $selected_realm_data);
-	$: console.log(`$realm_datas`, $realm_datas);
+	$: console.log(`$realms`, $realms);
 </script>
 
 <div class="panel padded-md markup">

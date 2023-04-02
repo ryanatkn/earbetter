@@ -16,6 +16,6 @@ const DEFAULT_REALM_NAME = 'new realm';
 export const RealmData = z.object({
 	id: RealmId.default(create_realm_id),
 	name: RealmName.default(DEFAULT_REALM_NAME),
-	level_datas: z.array(LevelData).default([]),
+	levels: z.array(LevelData).default([]),
 });
 export type RealmData = z.infer<typeof RealmData>;

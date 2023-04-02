@@ -9,10 +9,10 @@ import {lookup_scale, to_scale_notes} from '$lib/music/music';
 const data = (): ProjectData =>
 	ProjectData.parse({
 		id: create_project_id(),
-		realm_datas: [
+		realms: [
 			{
 				name: 'major pentatonic',
-				level_datas: [
+				levels: [
 					{
 						name: 'major second vs perfect fifth',
 						intervals: [2, 7],
@@ -82,7 +82,7 @@ const data = (): ProjectData =>
 			},
 			{
 				name: 'major scale (Ionian)',
-				level_datas: [
+				levels: [
 					{
 						name: 'major second vs major third',
 						intervals: [2, 4],
@@ -157,7 +157,7 @@ const data = (): ProjectData =>
 			},
 			{
 				name: 'minor scale (Aeolian)',
-				level_datas: [
+				levels: [
 					// TODO maybe arrange these by difficulty?
 					{
 						name: 'major second vs minor third',
@@ -234,7 +234,7 @@ const data = (): ProjectData =>
 			// TODO this will change, just including to see where to go next
 			{
 				name: 'major third vs perfect fourth',
-				level_datas: [
+				levels: [
 					{
 						name: 'one octave',
 						sequence_length: 2,

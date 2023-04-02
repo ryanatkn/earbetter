@@ -28,10 +28,10 @@
 		editing_project,
 		editing_project_data,
 		selected_project_data,
-		realm_datas,
+		realms,
 		editing_realm,
 		editing_realm_data,
-		level_datas,
+		levels,
 		editing_level,
 		editing_level_data,
 		selected_realm_id,
@@ -51,9 +51,9 @@
 	const instrument = get_instrument();
 
 	let id: string;
-	$: editing = $level_datas ? $level_datas.some((d) => d.id === id) : false;
+	$: editing = $levels ? $levels.some((d) => d.id === id) : false;
 
-	$: no_realms = !$realm_datas?.length;
+	$: no_realms = !$realms?.length;
 </script>
 
 <MidiInput
@@ -108,6 +108,7 @@
 							</li>
 							<li>realms group levels into bigger challenges</li>
 						</ul>
+						<p>more info in <a href="https://github.com/ryanatkn/earbetter">the readme</a></p>
 						<aside>
 							Earbetter is in early development, and many things are unfinished and unknown -
 							feedback is appreciated on <a href="https://github.com/ryanatkn/earbetter"
@@ -132,12 +133,12 @@
 	</div>
 	{#if $project_datas.length}
 		<div class="column-sm">
-			{#if $level_datas}
+			{#if $levels}
 				<section class="card" transition:slide|local>
-					<LevelMapItems {app} level_datas={$level_datas} />
+					<LevelMapItems {app} levels={$levels} />
 				</section>
 			{/if}
-			{#if $selected_realm_id && (($editing_level && $level_datas) || $level_datas?.length === 0)}
+			{#if $selected_realm_id && (($editing_level && $levels) || $levels?.length === 0)}
 				<section class="card" transition:slide|local>
 					<div class="panel padded-md markup">
 						<LevelForm

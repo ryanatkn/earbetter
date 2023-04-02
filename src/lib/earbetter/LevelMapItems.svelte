@@ -4,15 +4,15 @@
 	import {LevelData} from '$lib/earbetter/level';
 
 	export let app: App;
-	export let level_datas: LevelData[]; // TODO making this a prop here, but using `app` most places, maybe change it to context?
+	export let levels: LevelData[]; // TODO making this a prop here, but using `app` most places, maybe change it to context?
 
 	$: ({selected_realm_data, editing_level, editing_level_data, edit_level} = app);
 
-	$: editing_draft = $editing_level && !level_datas.some((d) => d === $editing_level_data);
+	$: editing_draft = $editing_level && !levels.some((d) => d === $editing_level_data);
 
-	$: no_levels = !level_datas.length;
+	$: no_levels = !levels.length;
 
-	$: console.log(`level_datas`, level_datas);
+	$: console.log(`levels`, levels);
 
 	const click_create_new = () => {
 		if (no_levels) {
@@ -30,7 +30,7 @@
 		</header>
 	</div>
 	<menu class="levels">
-		{#each level_datas as d (d.id)}
+		{#each levels as d (d.id)}
 			<LevelMapItem {app} level_data={d} />
 		{/each}
 	</menu>

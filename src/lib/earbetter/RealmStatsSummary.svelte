@@ -5,7 +5,7 @@
 	export let realm_data: RealmData;
 	export let level_stats: LevelStats;
 
-	$: mistakes = realm_data.level_datas.map((l) => level_stats.mistakes[l.id] || []);
+	$: mistakes = realm_data.levels.map((l) => level_stats.mistakes[l.id] || []);
 	$: length = mistakes.reduce((sum, v) => sum + v.length, 0);
 	$: target = MISTAKE_HISTORY_LENGTH * mistakes.length;
 	$: full_history = !!length && length >= target;
