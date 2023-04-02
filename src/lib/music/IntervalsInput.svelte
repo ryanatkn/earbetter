@@ -26,7 +26,7 @@
 	<input type="range" min={1} max={6} bind:value={octaves} />
 </label>
 <small class="preview column-sm panel">{intervals.join(', ')}</small>
-<button type="button" on:click={() => dispatch('input', intervals)}> use this interval </button>
+<button type="button" on:click={() => dispatch('input', intervals)}> use these intervals </button>
 
 <style>
 	/* TODO this is hacky, extract or reuse something? */
