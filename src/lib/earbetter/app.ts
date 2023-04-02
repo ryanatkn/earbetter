@@ -64,15 +64,15 @@ export class App {
 	);
 	editing_project: Signal<boolean> = signal(false);
 	editing_project_draft: Signal<boolean> = signal(false);
-	project_draft_def: Signal<ProjectData | null> = signal(null);
+	project_draft_data: Signal<ProjectData | null> = signal(null);
 	editing_project_id: ReadonlySignal<ProjectId | null> = computed(() =>
 		this.editing_project_draft.value
-			? this.project_draft_def.value?.id || null
+			? this.project_draft_data.value?.id || null
 			: this.selected_project_data.value?.id || null,
 	); // this may be `selected_project_data`, or a new project def draft that hasn't been created yet
 	editing_project_data: ReadonlySignal<ProjectData | null> = computed(() =>
 		this.editing_project_draft.value
-			? this.project_draft_def.value
+			? this.project_draft_data.value
 			: this.selected_project_data.value,
 	);
 
@@ -221,7 +221,7 @@ export class App {
 		batch(() => {
 			if (!project_data) {
 				this.editing_project.value = false;
-				this.project_draft_def.value = null;
+				this.project_draft_data.value = null;
 				return;
 			}
 			this.editing_project.value = true;
@@ -233,7 +233,7 @@ export class App {
 				this.editing_project_draft.value = false;
 			} else {
 				// draft project
-				this.project_draft_def.value = project_data;
+				this.project_draft_data.value = project_data;
 				this.editing_project_draft.value = true;
 			}
 		});
@@ -279,8 +279,8 @@ export class App {
 			this.project_datas.value = project_datas.concat(project_data);
 			this.selected_project_id.value = id;
 			this.editing_project.value = false;
-			if (this.project_draft_def.peek() === project_data) {
-				this.project_draft_def.value = null;
+			if (this.project_draft_data.peek() === project_data) {
+				this.project_draft_data.value = null;
 			}
 			this.save_project(id);
 		});
