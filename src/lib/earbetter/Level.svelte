@@ -25,7 +25,7 @@
 	const instrument = get_instrument();
 
 	export let level = create_level(level_data, ac, volume, instrument);
-	// $: level.setDef(level_data); // TODO update if level_data prop changes
+	// $: level.setData(level_data); // TODO update if level_data prop changes
 	$: ({def, status, trial} = level);
 	$: guessing_index = $trial?.guessing_index;
 
