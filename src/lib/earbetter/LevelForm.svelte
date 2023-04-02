@@ -133,7 +133,7 @@
 			</label>
 		</fieldset>
 		<fieldset>
-			<label>
+			<label style:margin-bottom={0}>
 				<div class="title">intervals</div>
 				<input
 					bind:this={intervals_el}
