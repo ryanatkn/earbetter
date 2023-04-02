@@ -19,7 +19,7 @@ In 2016 I made a simple ear training game named
 [Ear Sharpener](https://github.com/ryanatkn/ear-sharpener) to scratch an itch,
 and while interesting it wasn't a good training tool.
 The goal of Earbetter is to be a useful ear trainer.
-I also want it to be fun so it motivates more training.
+I also want it to be fun so it motivates more training, but it's not there yet.
 
 I'm a web developer, not a musician,
 and I can't possibly design all of the best ear training challenges.
@@ -32,7 +32,7 @@ Your score for the level is the sum of mistakes made in each trial,
 and you'll get a ★ when you reach 0 across four runs of the level.
 
 When a sequence is two notes long, it trains individual intervals,
-and longer sequences train a combination of relative pitch and memory. 
+and longer sequences train a combination of relative pitch and memory.
 
 It's limited but supports a decent range of ear training challenges
 and there's room to add more capabilities.
