@@ -28,6 +28,12 @@ create and share custom challenges and other content.
 
 Earbetter's core gameplay has "levels" broken up into "trials".
 Each trial is a sequence of notes that you hear and then play back.
+Your score for the level is the sum of mistakes made in each trial,
+and you'll get a ★ when you reach 0.
+
+When a sequence is two notes long, it trains individual intervals,
+and longer sequences train a combination of relative pitch and memory. 
+
 It's limited but supports a decent range of ear training challenges
 and there's room to add more capabilities.
 In the level creator, you can click the "import" button
