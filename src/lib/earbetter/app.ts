@@ -15,7 +15,7 @@ import {
 	add_mistakes_to_level_stats,
 	to_play_level_url,
 	type Level,
-	type LevelDef,
+	type LevelData,
 	type LevelId,
 } from '$lib/earbetter/level';
 import {ProjectData, ProjectId, ProjectName} from '$lib/earbetter/project';
@@ -95,12 +95,12 @@ export class App {
 
 	level: Signal<Level | null> = signal(null); // TODO set hackily
 
-	level_defs: ReadonlySignal<LevelDef[] | null> = computed(
-		() => this.selected_realm_def.value?.level_defs || null,
+	level_datas: ReadonlySignal<LevelData[] | null> = computed(
+		() => this.selected_realm_def.value?.level_datas || null,
 	);
-	active_level_def: Signal<LevelDef | null> = signal(null);
+	active_level_data: Signal<LevelData | null> = signal(null);
 	editing_level: Signal<boolean> = signal(false);
-	editing_level_def: Signal<LevelDef | null> = signal(null);
+	editing_level_data: Signal<LevelData | null> = signal(null);
 
 	constructor(public readonly get_ac: () => AudioContext, public readonly storage_key = 'app') {
 		// TODO maybe `new App(App.load())` ?
@@ -315,21 +315,21 @@ export class App {
 
 	play_level = async (id: LevelId): Promise<void> => {
 		log.debug('play_level', id);
-		const level_def = this.level_defs.peek()?.find((d) => d.id === id);
-		if (!level_def) {
-			console.error('cannot find level_def with id', id);
+		const level_data = this.level_datas.peek()?.find((d) => d.id === id);
+		if (!level_data) {
+			console.error('cannot find level_data with id', id);
 			return;
 		}
 		void this.get_ac().resume(); // TODO where's the best place for this? needs to be synchronous with a click or similar, so this breaks if `play_level` is called without a user action
-		this.editing_level_def.value = level_def; // for better UX, so when the user navigates back it's still being edited
-		await goto(to_play_level_url(level_def));
+		this.editing_level_data.value = level_data; // for better UX, so when the user navigates back it's still being edited
+		await goto(to_play_level_url(level_data));
 	};
 
-	edit_level = (level_def: LevelDef | null): void => {
-		log.debug('edit_level', level_def);
+	edit_level = (level_data: LevelData | null): void => {
+		log.debug('edit_level', level_data);
 		batch(() => {
-			this.editing_level.value = !!level_def;
-			this.editing_level_def.value = level_def;
+			this.editing_level.value = !!level_data;
+			this.editing_level_data.value = level_data;
 		});
 	};
 
@@ -337,49 +337,49 @@ export class App {
 		log.debug('remove_level', id);
 		const project_data = this.selected_project_data.peek();
 		if (!project_data) {
-			console.error('cannot remove level_def without a project', project_data, id);
+			console.error('cannot remove level_data without a project', project_data, id);
 			return; // no active project
 		}
 		const {realm_defs} = project_data;
 		for (let i = 0; i < realm_defs.length; i++) {
 			const realm_def = realm_defs[i];
-			const {level_defs} = realm_def;
-			const level_def_index = level_defs.findIndex((d) => d.id === id);
-			if (level_def_index === -1) continue;
+			const {level_datas} = realm_def;
+			const level_data_index = level_datas.findIndex((d) => d.id === id);
+			if (level_data_index === -1) continue;
 			batch(() => {
-				if (id === this.editing_level_def.value?.id) {
-					this.editing_level_def.value = null;
+				if (id === this.editing_level_data.value?.id) {
+					this.editing_level_data.value = null;
 				}
 				const next_realm_defs = realm_defs.slice();
-				const next_level_defs = level_defs.slice();
-				next_level_defs.splice(level_def_index, 1);
-				next_realm_defs[i] = {...realm_def, level_defs: next_level_defs};
+				const next_level_datas = level_datas.slice();
+				next_level_datas.splice(level_data_index, 1);
+				next_realm_defs[i] = {...realm_def, level_datas: next_level_datas};
 				this.update_project({...project_data, realm_defs: next_realm_defs});
 			});
 			return;
 		}
-		console.error('cannot find level_def with id', id);
+		console.error('cannot find level_data with id', id);
 	};
 
 	// TODO inconsistent naming with `realm` having the `_def` prefix here
-	create_level = (level_def: LevelDef): void => {
-		log.debug('create_level', level_def);
+	create_level = (level_data: LevelData): void => {
+		log.debug('create_level', level_data);
 		const project_data = this.selected_project_data.peek();
 		if (!project_data) {
-			console.error('cannot create level_def without a project', project_data, level_def);
+			console.error('cannot create level_data without a project', project_data, level_data);
 			return; // no active project
 		}
 		const {realm_defs} = project_data;
 		const realm_def = this.selected_realm_def.peek();
 		if (!realm_def) {
-			console.error('cannot create level_def without a selected realm');
+			console.error('cannot create level_data without a selected realm');
 			return;
 		}
-		const {level_defs} = realm_def;
+		const {level_datas} = realm_def;
 
-		const existing = level_defs.find((d) => d.id === level_def.id);
+		const existing = level_datas.find((d) => d.id === level_data.id);
 		if (existing) {
-			log.debug('level_def already exists', level_def, existing);
+			log.debug('level_data already exists', level_data, existing);
 			return;
 		}
 
@@ -391,43 +391,43 @@ export class App {
 		}
 		next_realm_defs[realm_def_index] = {
 			...realm_def,
-			level_defs: realm_def.level_defs.concat(level_def),
+			level_datas: realm_def.level_datas.concat(level_data),
 		};
 
 		batch(() => {
 			this.update_project({...project_data, realm_defs: next_realm_defs});
 			this.editing_level.value = false;
-			this.editing_level_def.value = null;
+			this.editing_level_data.value = null;
 		});
 
 		return;
 	};
 
-	update_level = (level_def: LevelDef): void => {
-		log.debug('update_level', level_def);
+	update_level = (level_data: LevelData): void => {
+		log.debug('update_level', level_data);
 		const project_data = this.selected_project_data.peek();
 		if (!project_data) {
-			console.error('cannot update level_def without a project', project_data, level_def);
+			console.error('cannot update level_data without a project', project_data, level_data);
 			return; // no active project
 		}
 		const {realm_defs} = project_data;
-		const {id} = level_def;
+		const {id} = level_data;
 		for (let i = 0; i < realm_defs.length; i++) {
 			const realm_def = realm_defs[i];
-			const {level_defs} = realm_def;
-			const level_def_index = level_defs.findIndex((d) => d.id === id);
-			if (level_def_index === -1) continue;
+			const {level_datas} = realm_def;
+			const level_data_index = level_datas.findIndex((d) => d.id === id);
+			if (level_data_index === -1) continue;
 			batch(() => {
-				const next_level_defs = level_defs.slice();
-				next_level_defs[level_def_index] = level_def;
+				const next_level_datas = level_datas.slice();
+				next_level_datas[level_data_index] = level_data;
 				const next_realm_defs = realm_defs.slice();
-				next_realm_defs[i] = {...realm_def, level_defs: next_level_defs};
+				next_realm_defs[i] = {...realm_def, level_datas: next_level_datas};
 				this.update_project({...project_data, realm_defs: next_realm_defs});
-				this.editing_level_def.value = level_def; // TODO maybe push to the component?
+				this.editing_level_data.value = level_data; // TODO maybe push to the component?
 			});
 			return;
 		}
-		console.error('cannot find level_def with id', id);
+		console.error('cannot find level_data with id', id);
 	};
 
 	select_realm = (id: RealmId | null): void => {
@@ -443,10 +443,10 @@ export class App {
 			this.editing_realm_draft.value = false;
 			// TODO derive instead of manually checking? might not be needed with a restructuring that saves the editing state in the tree
 			if (
-				this.editing_level_def.peek() &&
-				!realm_def.level_defs.includes(this.editing_level_def.peek()!)
+				this.editing_level_data.peek() &&
+				!realm_def.level_datas.includes(this.editing_level_data.peek()!)
 			) {
-				this.editing_level_def.value = null;
+				this.editing_level_data.value = null;
 			}
 		});
 	};
@@ -558,9 +558,9 @@ export class App {
 
 	exit_level_to_map = async (): Promise<void> => {
 		log.debug('exit_level_to_map');
-		const $active_level_def = this.active_level_def.peek();
-		if (!$active_level_def) return;
-		this.active_level_def.value = null;
+		const $active_level_data = this.active_level_data.peek();
+		if (!$active_level_data) return;
+		this.active_level_data.value = null;
 		await goto('#');
 	};
 }

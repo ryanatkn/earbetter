@@ -39,7 +39,7 @@
 
 	$: changed = !project_data || id !== project_data.id || name !== project_data.name;
 
-	// TODO lots of similarity with `LevelDefForm`
+	// TODO lots of similarity with `LevelDataForm`
 	let importing = false;
 	let serialized = '';
 	let updated = '';

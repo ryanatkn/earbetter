@@ -1,24 +1,24 @@
 <script lang="ts">
 	import LevelMapItem from '$lib/earbetter/LevelMapItem.svelte';
 	import type {App} from '$lib/earbetter/app';
-	import {LevelDef} from '$lib/earbetter/level';
+	import {LevelData} from '$lib/earbetter/level';
 
 	export let app: App;
-	export let level_defs: LevelDef[]; // TODO making this a prop here, but using `app` most places, maybe change it to context?
+	export let level_datas: LevelData[]; // TODO making this a prop here, but using `app` most places, maybe change it to context?
 
-	$: ({selected_realm_def, editing_level, editing_level_def, edit_level} = app);
+	$: ({selected_realm_def, editing_level, editing_level_data, edit_level} = app);
 
-	$: editing_draft = $editing_level && !level_defs.some((d) => d === $editing_level_def);
+	$: editing_draft = $editing_level && !level_datas.some((d) => d === $editing_level_data);
 
-	$: no_levels = !level_defs.length;
+	$: no_levels = !level_datas.length;
 
-	$: console.log(`level_defs`, level_defs);
+	$: console.log(`level_datas`, level_datas);
 
 	const click_create_new = () => {
 		if (no_levels) {
 			(document.querySelector('.level-def-form input') as HTMLInputElement | null)?.focus?.();
 		} else {
-			edit_level(editing_draft ? null : LevelDef.parse({}));
+			edit_level(editing_draft ? null : LevelData.parse({}));
 		}
 	};
 </script>
@@ -30,8 +30,8 @@
 		</header>
 	</div>
 	<menu class="levels">
-		{#each level_defs as d (d.id)}
-			<LevelMapItem {app} level_def={d} />
+		{#each level_datas as d (d.id)}
+			<LevelMapItem {app} level_data={d} />
 		{/each}
 	</menu>
 	<button

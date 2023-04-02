@@ -1,5 +1,5 @@
 import {RealmDef} from '$lib/earbetter/realm';
-import {LevelDef, DEFAULT_NOTE_MIN} from '$lib/earbetter/level';
+import {LevelData, DEFAULT_NOTE_MIN} from '$lib/earbetter/level';
 import {create_project_id, ProjectData} from '$lib/earbetter/project';
 import {lookup_scale, to_scale_notes} from '$lib/music/music';
 
@@ -12,7 +12,7 @@ const def = (): ProjectData =>
 		realm_defs: [
 			{
 				name: 'major pentatonic',
-				level_defs: [
+				level_datas: [
 					{
 						name: 'major second vs perfect fifth',
 						intervals: [2, 7],
@@ -78,11 +78,11 @@ const def = (): ProjectData =>
 						intervals: to_scale_notes(lookup_scale('major pentatonic'), 4),
 						sequence_length: 8,
 					},
-				].map((v) => LevelDef.parse(v)),
+				].map((v) => LevelData.parse(v)),
 			},
 			{
 				name: 'major scale (Ionian)',
-				level_defs: [
+				level_datas: [
 					{
 						name: 'major second vs major third',
 						intervals: [2, 4],
@@ -153,11 +153,11 @@ const def = (): ProjectData =>
 						intervals: to_scale_notes(lookup_scale('major'), 4),
 						sequence_length: 8,
 					},
-				].map((v) => LevelDef.parse(v)),
+				].map((v) => LevelData.parse(v)),
 			},
 			{
 				name: 'minor scale (Aeolian)',
-				level_defs: [
+				level_datas: [
 					// TODO maybe arrange these by difficulty?
 					{
 						name: 'major second vs minor third',
@@ -229,12 +229,12 @@ const def = (): ProjectData =>
 						intervals: to_scale_notes(lookup_scale('minor'), 4),
 						sequence_length: 8,
 					},
-				].map((v) => LevelDef.parse(v)),
+				].map((v) => LevelData.parse(v)),
 			},
 			// TODO this will change, just including to see where to go next
 			{
 				name: 'major third vs perfect fourth',
-				level_defs: [
+				level_datas: [
 					{
 						name: 'one octave',
 						sequence_length: 2,
@@ -271,7 +271,7 @@ const def = (): ProjectData =>
 						intervals: [4, 5, -8, -7, 16, 17, -20, -19],
 						sequence_length: 8,
 					},
-				].map((v) => LevelDef.parse(v)),
+				].map((v) => LevelData.parse(v)),
 			},
 		].map((v) => RealmDef.parse(v)),
 	});

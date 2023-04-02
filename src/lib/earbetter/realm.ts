@@ -2,7 +2,7 @@ import {z} from 'zod';
 import type {Flavored} from '@feltjs/util';
 import {identity} from '@feltjs/util/function.js';
 
-import {LevelDef} from '$lib/earbetter/level';
+import {LevelData} from '$lib/earbetter/level';
 
 export type RealmId = Flavored<string, 'RealmId'>;
 export const RealmId = z.string().uuid().transform<RealmId>(identity);
@@ -16,6 +16,6 @@ const DEFAULT_REALM_NAME = 'new realm';
 export const RealmDef = z.object({
 	id: RealmId.default(create_realm_id),
 	name: RealmName.default(DEFAULT_REALM_NAME),
-	level_defs: z.array(LevelDef).default([]),
+	level_datas: z.array(LevelData).default([]),
 });
 export type RealmDef = z.infer<typeof RealmDef>;

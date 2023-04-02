@@ -12,7 +12,7 @@
 		DEFAULT_NOTE_MIN,
 		DEFAULT_SEQUENCE_LENGTH,
 		DEFAULT_TRIAL_COUNT,
-		LevelDef,
+		LevelData,
 		type LevelId,
 	} from '$lib/earbetter/level';
 	import {
@@ -26,9 +26,9 @@
 	} from '$lib/music/music';
 	import IntervalsInput from '$lib/music/IntervalsInput.svelte';
 
-	const dispatch = createEventDispatcher<{submit: LevelDef; remove: LevelId}>();
+	const dispatch = createEventDispatcher<{submit: LevelData; remove: LevelId}>();
 
-	export let level_def: LevelDef | null = null;
+	export let level_data: LevelData | null = null;
 	export let id = create_level_id();
 	export let name = DEFAULT_LEVEL_NAME;
 	export let intervals = DEFAULT_INTERVALS;
@@ -40,7 +40,7 @@
 
 	let removing = false;
 
-	const to_data = (): LevelDef => ({
+	const to_data = (): LevelData => ({
 		id,
 		name,
 		intervals,
@@ -50,16 +50,16 @@
 		note_max,
 	});
 
-	$: set_level_def(level_def);
-	const set_level_def = (level_def: LevelDef | null): void => {
-		if (level_def) {
-			id = level_def.id;
-			name = level_def.name;
-			intervals = level_def.intervals;
-			trial_count = level_def.trial_count;
-			sequence_length = level_def.sequence_length;
-			note_min = level_def.note_min;
-			note_max = level_def.note_max;
+	$: set_level_data(level_data);
+	const set_level_data = (level_data: LevelData | null): void => {
+		if (level_data) {
+			id = level_data.id;
+			name = level_data.name;
+			intervals = level_data.intervals;
+			trial_count = level_data.trial_count;
+			sequence_length = level_data.sequence_length;
+			note_min = level_data.note_min;
+			note_max = level_data.note_max;
 		} else {
 			id = create_level_id();
 			name = DEFAULT_LEVEL_NAME;
@@ -72,14 +72,14 @@
 	};
 
 	$: changed =
-		!level_def ||
-		id !== level_def.id ||
-		name !== level_def.name ||
-		trial_count !== level_def.trial_count ||
-		sequence_length !== level_def.sequence_length ||
-		note_min !== level_def.note_min ||
-		note_max !== level_def.note_max ||
-		intervals.toString() !== level_def.intervals.toString();
+		!level_data ||
+		id !== level_data.id ||
+		name !== level_data.name ||
+		trial_count !== level_data.trial_count ||
+		sequence_length !== level_data.sequence_length ||
+		note_min !== level_data.note_min ||
+		note_max !== level_data.note_max ||
+		intervals.toString() !== level_data.intervals.toString();
 
 	// TODO lots of similarity with `ProjectForm`
 	let importing = false;
@@ -88,7 +88,7 @@
 	let updated = '';
 	$: changed_serialized = serialized !== updated;
 	let parse_error_message = '';
-	$: level_def, id, (parse_error_message = '');
+	$: level_data, id, (parse_error_message = '');
 	let level_data_el: HTMLTextAreaElement;
 	let start_importing_el: HTMLButtonElement;
 	let intervals_el: HTMLInputElement;
@@ -99,7 +99,7 @@
 			const json = JSON.parse(updated);
 			// add an `id` if there is none
 			if (json && !json.id) json.id = create_level_id();
-			const parsed = LevelDef.parse(json);
+			const parsed = LevelData.parse(json);
 			dispatch('submit', parsed);
 		} catch (err) {
 			console.error('failed to import data', err);

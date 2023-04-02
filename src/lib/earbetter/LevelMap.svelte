@@ -5,7 +5,7 @@
 	import type {MIDIAccess} from '$lib/audio/WebMIDI';
 	import {get_ac} from '$lib/audio/ac';
 	import InitMidiButton from '$lib/audio/InitMidiButton.svelte';
-	import LevelDefForm from '$lib/earbetter/LevelDefForm.svelte';
+	import LevelDataForm from '$lib/earbetter/LevelDataForm.svelte';
 	import Projects from '$lib/earbetter/Projects.svelte';
 	import VolumeControl from '$lib/audio/VolumeControl.svelte';
 	import {get_instrument, get_volume, with_velocity} from '$lib/audio/helpers';
@@ -31,9 +31,9 @@
 		realm_defs,
 		editing_realm,
 		editing_realm_def,
-		level_defs,
+		level_datas,
 		editing_level,
-		editing_level_def,
+		editing_level_data,
 		selected_realm_id,
 		show_game_help,
 		toggle_game_help,
@@ -51,7 +51,7 @@
 	const instrument = get_instrument();
 
 	let id: string;
-	$: editing = $level_defs ? $level_defs.some((d) => d.id === id) : false;
+	$: editing = $level_datas ? $level_datas.some((d) => d.id === id) : false;
 
 	$: no_realms = !$realm_defs?.length;
 </script>
@@ -132,18 +132,18 @@
 	</div>
 	{#if $project_datas.length}
 		<div class="column-sm">
-			{#if $level_defs}
+			{#if $level_datas}
 				<section class="card" transition:slide|local>
-					<LevelMapItems {app} level_defs={$level_defs} />
+					<LevelMapItems {app} level_datas={$level_datas} />
 				</section>
 			{/if}
-			{#if $selected_realm_id && (($editing_level && $level_defs) || $level_defs?.length === 0)}
+			{#if $selected_realm_id && (($editing_level && $level_datas) || $level_datas?.length === 0)}
 				<section class="card" transition:slide|local>
 					<div class="panel padded-md markup">
-						<LevelDefForm
+						<LevelDataForm
 							{editing}
 							bind:id
-							level_def={$editing_level_def}
+							level_data={$editing_level_data}
 							on:submit={(editing ? update_level : create_level)
 								? (e) => (editing ? update_level : create_level)(e.detail)
 								: undefined}
@@ -165,7 +165,7 @@
 									</button>
 								{/if}
 							</svelte:fragment>
-						</LevelDefForm>
+						</LevelDataForm>
 					</div>
 				</section>
 			{/if}

@@ -33,7 +33,7 @@ export type LevelName = Flavored<string, 'LevelName'>;
 export const LevelName = z.string().min(1).max(1000).transform<LevelName>(identity); // TODO better way to do this?
 
 // TODO add restrictions to the below def
-export const LevelDef = z.object({
+export const LevelData = z.object({
 	id: LevelId.default(create_level_id),
 	name: LevelName.default(DEFAULT_LEVEL_NAME),
 	intervals: Intervals.default(DEFAULT_INTERVALS),
@@ -43,7 +43,7 @@ export const LevelDef = z.object({
 	note_max: Midi.default(DEFAULT_NOTE_MAX),
 });
 
-export type LevelDef = z.infer<typeof LevelDef>;
+export type LevelData = z.infer<typeof LevelData>;
 
 export type Status =
 	| 'initial'
@@ -56,7 +56,7 @@ export type Status =
 // TODO ambiguity with `Level.svelte` -- consider combining the two? or renaming the component, maybe it's the `LevelScene`
 // (hm not sure about that, but the ergnomics of components may be worth it)
 export interface Level {
-	def: Signal<LevelDef>;
+	def: Signal<LevelData>;
 	status: Signal<Status>;
 	mistakes: Signal<number>;
 	trial: Signal<Trial | null>;
@@ -85,7 +85,7 @@ export interface Trial {
 	retry_count: number;
 }
 
-const create_next_trial = (def: LevelDef, current_trial: Trial | null): Trial => {
+const create_next_trial = (def: LevelData, current_trial: Trial | null): Trial => {
 	const {note_min, note_max} = def;
 
 	const interval_max = def.intervals.reduce((max, v) => Math.max(max, v));
@@ -134,12 +134,12 @@ const DEFAULT_TRIAL: Trial | null = null;
 const DEFAULT_TRIALS: Trial[] = [];
 
 export const create_level = (
-	level_def: LevelDef, // TODO maybe make optional?
+	level_data: LevelData, // TODO maybe make optional?
 	ac: AudioContext,
 	volume: Signal<Volume>,
 	instrument: Signal<Instrument>,
 ): Level => {
-	const def: Signal<LevelDef> = signal(level_def);
+	const def: Signal<LevelData> = signal(level_data);
 	const status: Signal<Status> = signal(DEFAULT_STATUS);
 	const mistakes: Signal<number> = signal(0);
 	const trial: Signal<Trial | null> = signal(DEFAULT_TRIAL);
@@ -284,7 +284,7 @@ export const create_level = (
 		trials,
 		reset: () => {
 			batch(() => {
-				def.value = level_def;
+				def.value = level_data;
 				status.value = DEFAULT_STATUS;
 				trial.value = DEFAULT_TRIAL;
 				trials.value = DEFAULT_TRIALS;
@@ -326,8 +326,8 @@ const to_fallback_tonic = (note_min: Midi, note_max: Midi): Midi => {
 	return randomInt(note_min + offset, note_max - offset) as Midi;
 };
 
-export const to_play_level_url = (level_def: LevelDef): string =>
-	`${base}/game/play#` + encodeURIComponent(JSON.stringify(level_def));
+export const to_play_level_url = (level_data: LevelData): string =>
+	`${base}/game/play#` + encodeURIComponent(JSON.stringify(level_data));
 
 export const MistakesLevelStats = z.record(LevelId, z.array(z.number()));
 export type MistakesLevelStats = z.infer<typeof MistakesLevelStats>;

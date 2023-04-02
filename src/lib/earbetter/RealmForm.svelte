@@ -39,7 +39,7 @@
 
 	$: changed = !realm_def || id !== realm_def.id || name !== realm_def.name;
 
-	// TODO lots of similarity with `LevelDefForm`
+	// TODO lots of similarity with `LevelDataForm`
 	let importing = false;
 	let serialized = '';
 	let updated = '';

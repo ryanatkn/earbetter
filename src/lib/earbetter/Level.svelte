@@ -3,7 +3,7 @@
 	import {isEditable, swallow} from '@feltjs/util/dom.js';
 	import {scale} from 'svelte/transition';
 
-	import {create_level, LevelId, type LevelDef} from '$lib/earbetter/level';
+	import {create_level, LevelId, type LevelData} from '$lib/earbetter/level';
 	import Piano from '$lib/music/Piano.svelte';
 	import LevelProgressIndicator from '$lib/earbetter/LevelProgressIndicator.svelte';
 	import TrialProgressIndicator from '$lib/earbetter/TrialProgressIndicator.svelte';
@@ -14,7 +14,7 @@
 	import {get_instrument, get_volume, with_velocity} from '$lib/audio/helpers';
 	import {midi_access} from '$lib/audio/midi_access';
 
-	export let level_def: LevelDef;
+	export let level_data: LevelData;
 	export let exit_level_to_map: () => void;
 	export let register_success: (id: LevelId, mistakes: number) => void;
 
@@ -24,8 +24,8 @@
 	const volume = get_volume();
 	const instrument = get_instrument();
 
-	export let level = create_level(level_def, ac, volume, instrument);
-	// $: level.setDef(level_def); // TODO update if level_def prop changes
+	export let level = create_level(level_data, ac, volume, instrument);
+	// $: level.setDef(level_data); // TODO update if level_data prop changes
 	$: ({def, status, trial} = level);
 	$: guessing_index = $trial?.guessing_index;
 
@@ -53,7 +53,7 @@
 	$: initial = waiting && guessing_index === 0; // the initial user-prompting trial state before any inputs have been entered by the player (related, "prompting")
 
 	$: if (complete) {
-		register_success(level_def.id, level.mistakes.peek());
+		register_success(level_data.id, level.mistakes.peek());
 	}
 
 	const piano_padding = 20;
