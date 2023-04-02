@@ -141,7 +141,7 @@ export class App {
 	}
 
 	load(): AppData {
-		const loaded = load_from_storage(this.storage_key, AppData.parse({}), AppData.parse);
+		const loaded = load_from_storage(this.storage_key, () => AppData.parse({}), AppData.parse);
 		let ids_to_delete: ProjectId[] | null = null;
 		for (const p of loaded.projects) {
 			if (localStorage.getItem(p.id) === null) {
