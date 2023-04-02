@@ -31,10 +31,10 @@ Your score for the level is the sum of mistakes made in each trial,
 and you'll get a ★ when you reach 0 across four runs of the level.
 
 When a sequence is two notes long, it trains individual intervals,
-and longer sequences train a combination of relative pitch and memory.
+and longer sequences train a combination of relative pitch and working memory.
 
 It's limited but supports a decent range of ear training challenges
-and there's room to add more capabilities.
+and there's room to add more capabilities. (if you have ideas please share!)
 In the level creator, you can click the "import" button
 to get copy-pastable data as text that you can share with others.
 
