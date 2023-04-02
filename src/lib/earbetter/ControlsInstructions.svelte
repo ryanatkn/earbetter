@@ -33,3 +33,9 @@
 		<td>cheat</td>
 	</tr>
 </table>
+
+<style>
+	td {
+		padding: var(--spacing_xs3) 0;
+	}
+</style>

@@ -1,30 +1,30 @@
 <script lang="ts">
 	import {slide} from 'svelte/transition';
 
-	import type {RealmDef, RealmId} from '$lib/earbetter/realm';
+	import type {RealmData, RealmId} from '$lib/earbetter/realm';
 	import RealmStatsSummary from '$lib/earbetter/RealmStatsSummary.svelte';
-	import type {ProjectDef} from '$lib/earbetter/project';
+	import type {ProjectData} from '$lib/earbetter/project';
 
-	export let realm_def: RealmDef;
-	export let project_def: ProjectDef;
+	export let realm_data: RealmData;
+	export let project_data: ProjectData;
 	export let select: ((id: RealmId) => void) | null = null; // TODO event? or is the ability to have a return value for ephemeral state desired?
-	export let edit: ((realm_def: RealmDef | null) => void) | null = null; // TODO event? or is the ability to have a return value for ephemeral state desired?
+	export let edit: ((realm_data: RealmData | null) => void) | null = null; // TODO event? or is the ability to have a return value for ephemeral state desired?
 	export let remove: ((id: RealmId) => void) | null = null; // TODO event? or is the ability to have a return value for ephemeral state desired?
 	export let selected: boolean;
 	export let editing: boolean;
 
 	let removing = false;
 
-	$: level_stats = project_def?.level_stats;
+	$: level_stats = project_data?.level_stats;
 </script>
 
 <li class="realm-item" transition:slide|local>
 	{#if level_stats}
-		<RealmStatsSummary {realm_def} {level_stats} />
+		<RealmStatsSummary {realm_data} {level_stats} />
 	{/if}
 	{#if select}
-		<button class="realm-button" on:click={() => select?.(realm_def.id)} class:selected>
-			{realm_def.name}
+		<button class="realm-button" on:click={() => select?.(realm_data.id)} class:selected>
+			{realm_data.name}
 		</button>
 	{/if}
 	{#if (removing && remove) || (!removing && edit)}
@@ -32,7 +32,7 @@
 			class="icon-button plain-button deselectable"
 			class:selected={selected && !removing && editing}
 			title={removing ? 'remove realm' : editing ? 'stop editing realm' : 'edit realm'}
-			on:click={() => (removing ? remove?.(realm_def.id) : edit?.(realm_def))}
+			on:click={() => (removing ? remove?.(realm_data.id) : edit?.(realm_data))}
 		>
 			{#if removing}✖{:else}✎{/if}
 		</button>

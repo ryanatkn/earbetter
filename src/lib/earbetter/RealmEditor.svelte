@@ -5,27 +5,27 @@
 	export let app: App; // TODO maybe change to be more granular objects?
 
 	$: ({
-		realm_defs,
-		selected_realm_def,
+		realm_datas,
+		selected_realm_data,
 		editing_realm,
-		editing_realm_def,
+		editing_realm_data,
 		remove_realm,
 		update_realm,
 		create_realm,
 	} = app);
 
 	let id: string;
-	$: editing = $realm_defs ? $realm_defs.some((d) => d.id === id) : false;
+	$: editing = $realm_datas ? $realm_datas.some((d) => d.id === id) : false;
 
-	$: console.log(`$selected_realm_def`, $selected_realm_def);
-	$: console.log(`$realm_defs`, $realm_defs);
+	$: console.log(`$selected_realm_data`, $selected_realm_data);
+	$: console.log(`$realm_datas`, $realm_datas);
 </script>
 
 <div class="panel padded-md markup">
 	<RealmForm
 		{editing}
 		bind:id
-		realm_def={$editing_realm_def}
+		realm_data={$editing_realm_data}
 		on:submit={(editing ? update_realm : create_realm)
 			? (e) => (editing ? update_realm : create_realm)?.(e.detail)
 			: undefined}

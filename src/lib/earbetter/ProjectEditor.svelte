@@ -5,23 +5,23 @@
 	export let app: App; // TODO maybe change to be more granular objects?
 
 	$: ({
-		project_defs,
+		project_datas,
 		editing_project,
-		editing_project_def,
+		editing_project_data,
 		remove_project,
 		update_project,
 		create_project,
 	} = app);
 
 	let id: string;
-	$: editing = $project_defs.some((d) => d.id === id);
+	$: editing = $project_datas.some((d) => d.id === id);
 </script>
 
 <div class="panel padded-md markup">
 	<ProjectForm
 		{editing}
 		bind:id
-		project_def={$editing_project_def}
+		project_data={$editing_project_data}
 		on:submit={(editing ? update_project : create_project)
 			? (e) => (editing ? update_project : create_project)?.(e.detail)
 			: undefined}

@@ -5,7 +5,7 @@
 	import type {MIDIAccess} from '$lib/audio/WebMIDI';
 	import {get_ac} from '$lib/audio/ac';
 	import InitMidiButton from '$lib/audio/InitMidiButton.svelte';
-	import LevelDefForm from '$lib/earbetter/LevelDefForm.svelte';
+	import LevelForm from '$lib/earbetter/LevelForm.svelte';
 	import Projects from '$lib/earbetter/Projects.svelte';
 	import VolumeControl from '$lib/audio/VolumeControl.svelte';
 	import {get_instrument, get_volume, with_velocity} from '$lib/audio/helpers';
@@ -24,16 +24,16 @@
 	export let midi_access: Signal<MIDIAccess | null>;
 
 	$: ({
-		project_defs,
+		project_datas,
 		editing_project,
-		editing_project_def,
-		selected_project_def,
-		realm_defs,
+		editing_project_data,
+		selected_project_data,
+		realm_datas,
 		editing_realm,
-		editing_realm_def,
-		level_defs,
+		editing_realm_data,
+		level_datas,
 		editing_level,
-		editing_level_def,
+		editing_level_data,
 		selected_realm_id,
 		show_game_help,
 		toggle_game_help,
@@ -51,9 +51,9 @@
 	const instrument = get_instrument();
 
 	let id: string;
-	$: editing = $level_defs ? $level_defs.some((d) => d.id === id) : false;
+	$: editing = $level_datas ? $level_datas.some((d) => d.id === id) : false;
 
-	$: no_realms = !$realm_defs?.length;
+	$: no_realms = !$realm_datas?.length;
 </script>
 
 <MidiInput
@@ -66,14 +66,14 @@
 	}}
 />
 <div class="map">
-	{#if $project_defs.length}
+	{#if $project_datas.length}
 		<div class="column-sm">
-			{#if $selected_project_def}
+			{#if $selected_project_data}
 				<section class="card" transition:slide|local>
 					<Projects {app} />
 				</section>
 			{/if}
-			{#if ($editing_project && $editing_project_def) || !$selected_project_def}
+			{#if ($editing_project && $editing_project_data) || !$selected_project_data}
 				<section class="card" transition:slide|local>
 					<ProjectEditor {app} />
 				</section>
@@ -124,26 +124,26 @@
 		<section class="card">
 			<Realms {app} />
 		</section>
-		{#if ($editing_realm && $editing_realm_def) || no_realms}
+		{#if ($editing_realm && $editing_realm_data) || no_realms}
 			<section class="card" transition:slide|local>
 				<RealmEditor {app} />
 			</section>
 		{/if}
 	</div>
-	{#if $project_defs.length}
+	{#if $project_datas.length}
 		<div class="column-sm">
-			{#if $level_defs}
+			{#if $level_datas}
 				<section class="card" transition:slide|local>
-					<LevelMapItems {app} level_defs={$level_defs} />
+					<LevelMapItems {app} level_datas={$level_datas} />
 				</section>
 			{/if}
-			{#if $selected_realm_id && (($editing_level && $level_defs) || $level_defs?.length === 0)}
+			{#if $selected_realm_id && (($editing_level && $level_datas) || $level_datas?.length === 0)}
 				<section class="card" transition:slide|local>
 					<div class="panel padded-md markup">
-						<LevelDefForm
+						<LevelForm
 							{editing}
 							bind:id
-							level_def={$editing_level_def}
+							level_data={$editing_level_data}
 							on:submit={(editing ? update_level : create_level)
 								? (e) => (editing ? update_level : create_level)(e.detail)
 								: undefined}
@@ -165,7 +165,7 @@
 									</button>
 								{/if}
 							</svelte:fragment>
-						</LevelDefForm>
+						</LevelForm>
 					</div>
 				</section>
 			{/if}

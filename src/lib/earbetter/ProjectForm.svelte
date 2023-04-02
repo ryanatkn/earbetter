@@ -5,47 +5,47 @@
 	import Dialog from '@feltjs/felt-ui/Dialog.svelte';
 	import Message from '@feltjs/felt-ui/Message.svelte';
 
-	import {create_project_id, ProjectDef, type ProjectId} from '$lib/earbetter/project';
+	import {create_project_id, ProjectData, type ProjectId} from '$lib/earbetter/project';
 
-	const dispatch = createEventDispatcher<{submit: ProjectDef; remove: ProjectId}>();
+	const dispatch = createEventDispatcher<{submit: ProjectData; remove: ProjectId}>();
 
 	const DEFAULT_NAME = 'new project';
 
-	export let project_def: ProjectDef | null = null;
+	export let project_data: ProjectData | null = null;
 	export let id = create_project_id();
 	export let name = DEFAULT_NAME;
 	export let editing = false;
 
 	let removing = false;
 
-	const to_data = (): ProjectDef =>
-		ProjectDef.parse({
-			...project_def,
+	const to_data = (): ProjectData =>
+		ProjectData.parse({
+			...project_data,
 			id,
 			name,
 		});
 
-	$: set_project_def(project_def);
-	const set_project_def = (project_def: ProjectDef | null): void => {
-		console.log(`set_project_def`, project_def);
-		if (project_def) {
-			id = project_def.id;
-			name = project_def.name;
+	$: set_project_data(project_data);
+	const set_project_data = (project_data: ProjectData | null): void => {
+		console.log(`set_project_data`, project_data);
+		if (project_data) {
+			id = project_data.id;
+			name = project_data.name;
 		} else {
-			id = create_project_id(); // TODO duplicates work on first mount with no project_def, but not sure it's worth fixing, maybe there's a better pattern without this?
+			id = create_project_id(); // TODO duplicates work on first mount with no project_data, but not sure it's worth fixing, maybe there's a better pattern without this?
 			name = DEFAULT_NAME;
 		}
 	};
 
-	$: changed = !project_def || id !== project_def.id || name !== project_def.name;
+	$: changed = !project_data || id !== project_data.id || name !== project_data.name;
 
-	// TODO lots of similarity with `LevelDefForm`
+	// TODO lots of similarity with `LevelForm`
 	let importing = false;
 	let serialized = '';
 	let updated = '';
 	$: changed_serialized = serialized !== updated;
 	let parse_error_message = '';
-	$: project_def, id, (parse_error_message = '');
+	$: project_data, id, (parse_error_message = '');
 	let project_data_el: HTMLTextAreaElement;
 	let start_importing_el: HTMLButtonElement;
 
@@ -55,7 +55,7 @@
 			const json = JSON.parse(updated);
 			// add an `id` if there is none
 			if (json && !json.id) json.id = create_project_id();
-			const parsed = ProjectDef.parse(json);
+			const parsed = ProjectData.parse(json);
 			dispatch('submit', parsed);
 		} catch (err) {
 			console.error('failed to import data', err);

@@ -1,5 +1,5 @@
 <script lang="ts">
-	import {ProjectDef} from '$lib/earbetter/project';
+	import {ProjectData} from '$lib/earbetter/project';
 	import ProjectItems from '$lib/earbetter/ProjectItems.svelte';
 	import type {App} from '$lib/earbetter/app';
 
@@ -7,11 +7,11 @@
 
 	$: ({
 		app_data,
-		project_defs,
+		project_datas,
 		selected_project_id,
 		editing_project,
 		editing_project_id,
-		editing_project_def,
+		editing_project_data,
 		load_project,
 		select_project,
 		edit_project,
@@ -33,10 +33,10 @@
 		selected_project_id={$selected_project_id}
 		editing_project_id={$editing_project ? $editing_project_id : null}
 		{projects}
-		project_defs={$project_defs}
+		project_datas={$project_datas}
 		{load_project}
 		{select_project}
-		edit_project={(p) => edit_project(p === $editing_project_def && $editing_project ? null : p)}
+		edit_project={(p) => edit_project(p === $editing_project_data && $editing_project ? null : p)}
 		{remove_project}
 	/>
 	<button
@@ -46,7 +46,7 @@
 			if (creating) {
 				editing_project.value = false;
 			} else {
-				edit_project(ProjectDef.parse({}));
+				edit_project(ProjectData.parse({}));
 			}
 		}}
 	>
