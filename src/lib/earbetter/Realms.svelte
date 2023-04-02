@@ -1,7 +1,7 @@
 <script lang="ts">
 	import {slide} from 'svelte/transition';
 
-	import {RealmDef} from '$lib/earbetter/realm';
+	import {RealmData} from '$lib/earbetter/realm';
 	import RealmItems from '$lib/earbetter/RealmItems.svelte';
 	import type {App} from '$lib/earbetter/app';
 	import default_project_data from '$lib/projects/default-project';
@@ -10,11 +10,11 @@
 
 	$: ({
 		selected_project_data,
-		realm_defs,
-		selected_realm_def,
+		realm_datas,
+		selected_realm_data,
 		editing_realm,
 		editing_realm_id,
-		editing_realm_def,
+		editing_realm_data,
 		select_realm,
 		create_realm,
 		edit_realm,
@@ -22,9 +22,9 @@
 	} = app);
 
 	$: creating =
-		$editing_realm && !!$editing_realm_def && $selected_realm_def?.id !== $editing_realm_def?.id;
+		$editing_realm && !!$editing_realm_data && $selected_realm_data?.id !== $editing_realm_data?.id;
 
-	$: no_realms = !$realm_defs?.length;
+	$: no_realms = !$realm_datas?.length;
 
 	const click_create_new = () => {
 		if (no_realms) {
@@ -32,7 +32,7 @@
 		} else if (creating) {
 			editing_realm.value = false;
 		} else {
-			edit_realm(RealmDef.parse({}));
+			edit_realm(RealmData.parse({}));
 		}
 	};
 </script>
@@ -43,15 +43,15 @@
 			<h2>realms</h2>
 		</header>
 	</div>
-	{#if $realm_defs && $selected_project_data}
+	{#if $realm_datas && $selected_project_data}
 		<div class="realm-items-wrapper" transition:slide|local>
 			<RealmItems
 				project_data={$selected_project_data}
-				selected_realm_def={$selected_realm_def}
-				realm_defs={$realm_defs}
+				selected_realm_data={$selected_realm_data}
+				realm_datas={$realm_datas}
 				editing_realm_id={$editing_realm ? $editing_realm_id : null}
 				{select_realm}
-				edit_realm={(p) => edit_realm(p === $editing_realm_def && $editing_realm ? null : p)}
+				edit_realm={(p) => edit_realm(p === $editing_realm_data && $editing_realm ? null : p)}
 				{remove_realm}
 			/>
 		</div>
@@ -67,8 +67,8 @@
 		<div class="create-default-realms-wrapper" transition:slide|local>
 			<button
 				on:click={() => {
-					for (const realm_def of default_project_data().realm_defs) {
-						create_realm(realm_def);
+					for (const realm_data of default_project_data().realm_datas) {
+						create_realm(realm_data);
 					}
 				}}
 			>

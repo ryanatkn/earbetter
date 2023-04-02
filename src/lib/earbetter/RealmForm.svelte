@@ -5,47 +5,47 @@
 	import Dialog from '@feltjs/felt-ui/Dialog.svelte';
 	import Message from '@feltjs/felt-ui/Message.svelte';
 
-	import {create_realm_id, RealmDef, type RealmId} from '$lib/earbetter/realm';
+	import {create_realm_id, RealmData, type RealmId} from '$lib/earbetter/realm';
 
-	const dispatch = createEventDispatcher<{submit: RealmDef; remove: RealmId}>();
+	const dispatch = createEventDispatcher<{submit: RealmData; remove: RealmId}>();
 
 	const DEFAULT_NAME = 'new realm';
 
-	export let realm_def: RealmDef | null = null;
+	export let realm_data: RealmData | null = null;
 	export let id = create_realm_id();
 	export let name = DEFAULT_NAME;
 	export let editing = false;
 
 	let removing = false;
 
-	const to_data = (): RealmDef =>
-		RealmDef.parse({
-			...realm_def,
+	const to_data = (): RealmData =>
+		RealmData.parse({
+			...realm_data,
 			id,
 			name,
 		});
 
-	$: set_realm_def(realm_def);
-	const set_realm_def = (realm_def: RealmDef | null): void => {
-		console.log(`set_realm_def`, realm_def);
-		if (realm_def) {
-			id = realm_def.id;
-			name = realm_def.name;
+	$: set_realm_data(realm_data);
+	const set_realm_data = (realm_data: RealmData | null): void => {
+		console.log(`set_realm_data`, realm_data);
+		if (realm_data) {
+			id = realm_data.id;
+			name = realm_data.name;
 		} else {
-			id = create_realm_id(); // TODO duplicates work on first mount with no realm_def, but not sure it's worth fixing, maybe there's a better pattern without this?
+			id = create_realm_id(); // TODO duplicates work on first mount with no realm_data, but not sure it's worth fixing, maybe there's a better pattern without this?
 			name = DEFAULT_NAME;
 		}
 	};
 
-	$: changed = !realm_def || id !== realm_def.id || name !== realm_def.name;
+	$: changed = !realm_data || id !== realm_data.id || name !== realm_data.name;
 
-	// TODO lots of similarity with `LevelDataForm`
+	// TODO lots of similarity with `LevelForm`
 	let importing = false;
 	let serialized = '';
 	let updated = '';
 	$: changed_serialized = serialized !== updated;
 	let parse_error_message = '';
-	$: realm_def, id, (parse_error_message = '');
+	$: realm_data, id, (parse_error_message = '');
 	let realm_data_el: HTMLTextAreaElement;
 	let start_importing_el: HTMLButtonElement;
 
@@ -55,7 +55,7 @@
 			const json = JSON.parse(updated);
 			// add an `id` if there is none
 			if (json && !json.id) json.id = create_realm_id();
-			const parsed = RealmDef.parse(json);
+			const parsed = RealmData.parse(json);
 			dispatch('submit', parsed);
 		} catch (err) {
 			console.error('failed to import data', err);

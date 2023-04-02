@@ -20,7 +20,7 @@ import {
 } from '$lib/earbetter/level';
 import {ProjectData, ProjectId, ProjectName} from '$lib/earbetter/project';
 import {load_from_storage, set_in_storage} from '$lib/util/storage';
-import {RealmId, type RealmDef} from '$lib/earbetter/realm';
+import {RealmId, type RealmData} from '$lib/earbetter/realm';
 import default_project_data from '$lib/projects/default-project';
 
 const log = new Logger('[app]');
@@ -59,8 +59,8 @@ export class App {
 		const id = this.selected_project_id.value;
 		return this.project_datas.value.find((p) => p.id === id) || null;
 	});
-	realm_defs: ReadonlySignal<RealmDef[] | null> = computed(
-		() => this.selected_project_data.value?.realm_defs || null,
+	realm_datas: ReadonlySignal<RealmData[] | null> = computed(
+		() => this.selected_project_data.value?.realm_datas || null,
 	);
 	editing_project: Signal<boolean> = signal(false);
 	editing_project_draft: Signal<boolean> = signal(false);
@@ -77,26 +77,26 @@ export class App {
 	);
 
 	selected_realm_id: Signal<RealmId | null> = signal(null);
-	selected_realm_def: ReadonlySignal<RealmDef | null> = computed(() => {
+	selected_realm_data: ReadonlySignal<RealmData | null> = computed(() => {
 		const id = this.selected_realm_id.value;
-		return this.realm_defs.value?.find((p) => p.id === id) || null;
+		return this.realm_datas.value?.find((p) => p.id === id) || null;
 	});
 	editing_realm: Signal<boolean> = signal(false);
 	editing_realm_draft: Signal<boolean> = signal(false);
-	draft_realm_def: Signal<RealmDef | null> = signal(null);
+	draft_realm_data: Signal<RealmData | null> = signal(null);
 	editing_realm_id: ReadonlySignal<RealmId | null> = computed(() =>
 		this.editing_realm_draft.value
-			? this.draft_realm_def.value?.id || null
-			: this.selected_realm_def.value?.id || null,
-	); // this may be `selected_realm_def`, or a new realm def draft that hasn't been created yet
-	editing_realm_def: ReadonlySignal<RealmDef | null> = computed(() =>
-		this.editing_realm_draft.value ? this.draft_realm_def.value : this.selected_realm_def.value,
+			? this.draft_realm_data.value?.id || null
+			: this.selected_realm_data.value?.id || null,
+	); // this may be `selected_realm_data`, or a new realm def draft that hasn't been created yet
+	editing_realm_data: ReadonlySignal<RealmData | null> = computed(() =>
+		this.editing_realm_draft.value ? this.draft_realm_data.value : this.selected_realm_data.value,
 	);
 
 	level: Signal<Level | null> = signal(null); // TODO set hackily
 
 	level_datas: ReadonlySignal<LevelData[] | null> = computed(
-		() => this.selected_realm_def.value?.level_datas || null,
+		() => this.selected_realm_data.value?.level_datas || null,
 	);
 	active_level_data: Signal<LevelData | null> = signal(null);
 	editing_level: Signal<boolean> = signal(false);
@@ -119,7 +119,7 @@ export class App {
 		)!;
 		this.selected_project_id.value = project_data.id;
 		this.selected_realm_id.value =
-			app_data.selected_realm_id || project_data.realm_defs[0]?.id || null;
+			app_data.selected_realm_id || project_data.realm_datas[0]?.id || null;
 		// save changes to `selected_project_id` and `selected_realm_id` back to the `app_data`,
 		// these could be decoupled but are often fired together
 		effect(() => {
@@ -212,7 +212,7 @@ export class App {
 				this.project_datas.peek().find((d) => d.id === id) || this.load_project(id);
 			if (!project_data) console.error('failed to find or load def', id);
 			this.selected_project_id.value = project_data?.id || null;
-			this.selected_realm_id.value = project_data?.realm_defs[0]?.id || null;
+			this.selected_realm_id.value = project_data?.realm_datas[0]?.id || null;
 		});
 	};
 
@@ -340,21 +340,21 @@ export class App {
 			console.error('cannot remove level_data without a project', project_data, id);
 			return; // no active project
 		}
-		const {realm_defs} = project_data;
-		for (let i = 0; i < realm_defs.length; i++) {
-			const realm_def = realm_defs[i];
-			const {level_datas} = realm_def;
+		const {realm_datas} = project_data;
+		for (let i = 0; i < realm_datas.length; i++) {
+			const realm_data = realm_datas[i];
+			const {level_datas} = realm_data;
 			const level_data_index = level_datas.findIndex((d) => d.id === id);
 			if (level_data_index === -1) continue;
 			batch(() => {
 				if (id === this.editing_level_data.value?.id) {
 					this.editing_level_data.value = null;
 				}
-				const next_realm_defs = realm_defs.slice();
+				const next_realm_datas = realm_datas.slice();
 				const next_level_datas = level_datas.slice();
 				next_level_datas.splice(level_data_index, 1);
-				next_realm_defs[i] = {...realm_def, level_datas: next_level_datas};
-				this.update_project({...project_data, realm_defs: next_realm_defs});
+				next_realm_datas[i] = {...realm_data, level_datas: next_level_datas};
+				this.update_project({...project_data, realm_datas: next_realm_datas});
 			});
 			return;
 		}
@@ -369,13 +369,13 @@ export class App {
 			console.error('cannot create level_data without a project', project_data, level_data);
 			return; // no active project
 		}
-		const {realm_defs} = project_data;
-		const realm_def = this.selected_realm_def.peek();
-		if (!realm_def) {
+		const {realm_datas} = project_data;
+		const realm_data = this.selected_realm_data.peek();
+		if (!realm_data) {
 			console.error('cannot create level_data without a selected realm');
 			return;
 		}
-		const {level_datas} = realm_def;
+		const {level_datas} = realm_data;
 
 		const existing = level_datas.find((d) => d.id === level_data.id);
 		if (existing) {
@@ -383,19 +383,19 @@ export class App {
 			return;
 		}
 
-		const next_realm_defs = realm_defs.slice();
-		const realm_def_index = realm_defs.indexOf(realm_def);
-		if (realm_def_index === -1) {
-			console.error('expected selected realm def to be in array', realm_def, realm_defs);
+		const next_realm_datas = realm_datas.slice();
+		const realm_data_index = realm_datas.indexOf(realm_data);
+		if (realm_data_index === -1) {
+			console.error('expected selected realm def to be in array', realm_data, realm_datas);
 			return;
 		}
-		next_realm_defs[realm_def_index] = {
-			...realm_def,
-			level_datas: realm_def.level_datas.concat(level_data),
+		next_realm_datas[realm_data_index] = {
+			...realm_data,
+			level_datas: realm_data.level_datas.concat(level_data),
 		};
 
 		batch(() => {
-			this.update_project({...project_data, realm_defs: next_realm_defs});
+			this.update_project({...project_data, realm_datas: next_realm_datas});
 			this.editing_level.value = false;
 			this.editing_level_data.value = null;
 		});
@@ -410,19 +410,19 @@ export class App {
 			console.error('cannot update level_data without a project', project_data, level_data);
 			return; // no active project
 		}
-		const {realm_defs} = project_data;
+		const {realm_datas} = project_data;
 		const {id} = level_data;
-		for (let i = 0; i < realm_defs.length; i++) {
-			const realm_def = realm_defs[i];
-			const {level_datas} = realm_def;
+		for (let i = 0; i < realm_datas.length; i++) {
+			const realm_data = realm_datas[i];
+			const {level_datas} = realm_data;
 			const level_data_index = level_datas.findIndex((d) => d.id === id);
 			if (level_data_index === -1) continue;
 			batch(() => {
 				const next_level_datas = level_datas.slice();
 				next_level_datas[level_data_index] = level_data;
-				const next_realm_defs = realm_defs.slice();
-				next_realm_defs[i] = {...realm_def, level_datas: next_level_datas};
-				this.update_project({...project_data, realm_defs: next_realm_defs});
+				const next_realm_datas = realm_datas.slice();
+				next_realm_datas[i] = {...realm_data, level_datas: next_level_datas};
+				this.update_project({...project_data, realm_datas: next_realm_datas});
 				this.editing_level_data.value = level_data; // TODO maybe push to the component?
 			});
 			return;
@@ -436,55 +436,55 @@ export class App {
 			this.selected_realm_id.value = null;
 			return;
 		}
-		const realm_def = this.realm_defs.peek()?.find((d) => d.id === id);
-		if (!realm_def) return; // TODO hm, report an error? how to handle?
+		const realm_data = this.realm_datas.peek()?.find((d) => d.id === id);
+		if (!realm_data) return; // TODO hm, report an error? how to handle?
 		batch(() => {
 			this.selected_realm_id.value = id;
 			this.editing_realm_draft.value = false;
 			// TODO derive instead of manually checking? might not be needed with a restructuring that saves the editing state in the tree
 			if (
 				this.editing_level_data.peek() &&
-				!realm_def.level_datas.includes(this.editing_level_data.peek()!)
+				!realm_data.level_datas.includes(this.editing_level_data.peek()!)
 			) {
 				this.editing_level_data.value = null;
 			}
 		});
 	};
 
-	edit_realm = (realm_def: RealmDef | null): void => {
-		log.debug('edit_realm', realm_def);
+	edit_realm = (realm_data: RealmData | null): void => {
+		log.debug('edit_realm', realm_data);
 		batch(() => {
-			if (!realm_def) {
+			if (!realm_data) {
 				this.editing_realm.value = false;
-				this.draft_realm_def.value = null;
+				this.draft_realm_data.value = null;
 				return;
 			}
 			this.editing_realm.value = true;
-			const {id} = realm_def;
-			const found = this.realm_defs.peek()?.find((d) => d.id === id);
+			const {id} = realm_data;
+			const found = this.realm_datas.peek()?.find((d) => d.id === id);
 			if (found) {
 				// existing realm
 				this.selected_realm_id.value = id;
 				this.editing_realm_draft.value = false;
 			} else {
 				// draft realm
-				this.draft_realm_def.value = realm_def;
+				this.draft_realm_data.value = realm_data;
 				this.editing_realm_draft.value = true;
 			}
 		});
 	};
 
 	remove_realm = (id: RealmId): void => {
-		log.debug('remove_realm_def', id);
+		log.debug('remove_realm_data', id);
 		const project_data = this.selected_project_data.peek();
 		if (!project_data) {
-			console.error('cannot remove realm_def without a project', project_data, id);
+			console.error('cannot remove realm_data without a project', project_data, id);
 			return; // no active project
 		}
-		const {realm_defs} = project_data;
-		const realm_def = realm_defs.find((d) => d.id === id);
-		if (!realm_def) {
-			console.error('cannot find realm_def with id', id);
+		const {realm_datas} = project_data;
+		const realm_data = realm_datas.find((d) => d.id === id);
+		if (!realm_data) {
+			console.error('cannot find realm_data with id', id);
 			return;
 		}
 		if (id === this.editing_realm_id.peek()) {
@@ -495,54 +495,54 @@ export class App {
 		}
 		this.update_project({
 			...project_data,
-			realm_defs: realm_defs.filter((d) => d !== realm_def),
+			realm_datas: realm_datas.filter((d) => d !== realm_data),
 		});
 	};
 
-	create_realm = (realm_def: RealmDef): void => {
-		log.debug('create_realm', realm_def);
+	create_realm = (realm_data: RealmData): void => {
+		log.debug('create_realm', realm_data);
 		const project_data = this.selected_project_data.peek();
 		if (!project_data) {
-			console.error('cannot create a realm_def without a project', project_data, realm_def);
+			console.error('cannot create a realm_data without a project', project_data, realm_data);
 			return; // no active project
 		}
-		const {realm_defs} = project_data;
-		// TODO is it weird that these access both `this.realm_defs` and the source of truth `project_data`,
+		const {realm_datas} = project_data;
+		// TODO is it weird that these access both `this.realm_datas` and the source of truth `project_data`,
 		// or would it be better to always go through the `project_data`?
-		const existing = realm_defs.find((d) => d.id === realm_def.id);
+		const existing = realm_datas.find((d) => d.id === realm_data.id);
 		if (existing) {
-			log.debug('realm_def already exists', realm_def, existing);
+			log.debug('realm_data already exists', realm_data, existing);
 			return;
 		}
 
 		batch(() => {
-			this.update_project({...project_data, realm_defs: realm_defs.concat(realm_def)});
-			this.selected_realm_id.value = realm_def.id;
+			this.update_project({...project_data, realm_datas: realm_datas.concat(realm_data)});
+			this.selected_realm_id.value = realm_data.id;
 			// TODO is awkward but works, should it be an effect?
-			if (this.draft_realm_def.peek()?.id === realm_def.id) {
+			if (this.draft_realm_data.peek()?.id === realm_data.id) {
 				this.editing_realm.value = false;
 			}
 		});
 	};
 
-	update_realm = (realm_def: RealmDef): void => {
-		log.debug('update_realm_def', realm_def);
+	update_realm = (realm_data: RealmData): void => {
+		log.debug('update_realm_data', realm_data);
 		const project_data = this.selected_project_data.peek();
 		if (!project_data) {
-			console.error('cannot update realm_def without a project', project_data, realm_def);
+			console.error('cannot update realm_data without a project', project_data, realm_data);
 			return; // no active project
 		}
-		const {realm_defs} = project_data;
-		const {id} = realm_def;
-		const index = realm_defs.findIndex((d) => d.id === id);
+		const {realm_datas} = project_data;
+		const {id} = realm_data;
+		const index = realm_datas.findIndex((d) => d.id === id);
 		if (index === -1) {
-			console.error('cannot find realm_def to update', id, realm_defs);
+			console.error('cannot find realm_data to update', id, realm_datas);
 			return;
 		}
-		const updated = realm_defs.slice();
-		updated[index] = realm_def;
+		const updated = realm_datas.slice();
+		updated[index] = realm_data;
 		batch(() => {
-			this.update_project({...project_data, realm_defs: updated});
+			this.update_project({...project_data, realm_datas: updated});
 			this.selected_realm_id.value = id;
 		});
 	};

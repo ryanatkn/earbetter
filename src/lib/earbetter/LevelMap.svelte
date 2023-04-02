@@ -5,7 +5,7 @@
 	import type {MIDIAccess} from '$lib/audio/WebMIDI';
 	import {get_ac} from '$lib/audio/ac';
 	import InitMidiButton from '$lib/audio/InitMidiButton.svelte';
-	import LevelDataForm from '$lib/earbetter/LevelDataForm.svelte';
+	import LevelForm from '$lib/earbetter/LevelForm.svelte';
 	import Projects from '$lib/earbetter/Projects.svelte';
 	import VolumeControl from '$lib/audio/VolumeControl.svelte';
 	import {get_instrument, get_volume, with_velocity} from '$lib/audio/helpers';
@@ -28,9 +28,9 @@
 		editing_project,
 		editing_project_data,
 		selected_project_data,
-		realm_defs,
+		realm_datas,
 		editing_realm,
-		editing_realm_def,
+		editing_realm_data,
 		level_datas,
 		editing_level,
 		editing_level_data,
@@ -53,7 +53,7 @@
 	let id: string;
 	$: editing = $level_datas ? $level_datas.some((d) => d.id === id) : false;
 
-	$: no_realms = !$realm_defs?.length;
+	$: no_realms = !$realm_datas?.length;
 </script>
 
 <MidiInput
@@ -124,7 +124,7 @@
 		<section class="card">
 			<Realms {app} />
 		</section>
-		{#if ($editing_realm && $editing_realm_def) || no_realms}
+		{#if ($editing_realm && $editing_realm_data) || no_realms}
 			<section class="card" transition:slide|local>
 				<RealmEditor {app} />
 			</section>
@@ -140,7 +140,7 @@
 			{#if $selected_realm_id && (($editing_level && $level_datas) || $level_datas?.length === 0)}
 				<section class="card" transition:slide|local>
 					<div class="panel padded-md markup">
-						<LevelDataForm
+						<LevelForm
 							{editing}
 							bind:id
 							level_data={$editing_level_data}
@@ -165,7 +165,7 @@
 									</button>
 								{/if}
 							</svelte:fragment>
-						</LevelDataForm>
+						</LevelForm>
 					</div>
 				</section>
 			{/if}

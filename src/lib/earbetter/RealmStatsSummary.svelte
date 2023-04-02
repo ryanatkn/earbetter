@@ -1,11 +1,11 @@
 <script lang="ts">
-	import type {RealmDef} from '$lib/earbetter/realm';
+	import type {RealmData} from '$lib/earbetter/realm';
 	import {MISTAKE_HISTORY_LENGTH, type LevelStats} from '$lib/earbetter/level';
 
-	export let realm_def: RealmDef;
+	export let realm_data: RealmData;
 	export let level_stats: LevelStats;
 
-	$: mistakes = realm_def.level_datas.map((l) => level_stats.mistakes[l.id] || []);
+	$: mistakes = realm_data.level_datas.map((l) => level_stats.mistakes[l.id] || []);
 	$: length = mistakes.reduce((sum, v) => sum + v.length, 0);
 	$: target = MISTAKE_HISTORY_LENGTH * mistakes.length;
 	$: full_history = !!length && length >= target;

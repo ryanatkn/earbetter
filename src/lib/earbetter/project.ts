@@ -5,7 +5,7 @@ import {identity} from '@feltjs/util/function.js';
 
 import {DEFAULT_LEVEL_STATS, LevelStats} from '$lib/earbetter/level';
 import {emojis} from '$lib/util/emoji';
-import {RealmDef} from '$lib/earbetter/realm';
+import {RealmData} from '$lib/earbetter/realm';
 
 export type ProjectId = Flavored<string, 'ProjectId'>;
 export const ProjectId = z.string().uuid().transform<ProjectId>(identity); // TODO better way to do this?
@@ -27,7 +27,7 @@ export type ProjectMetadata = z.infer<typeof ProjectMetadata>;
 export const ProjectData = z.object({
 	id: ProjectId.default(create_project_id),
 	name: ProjectName.default(random_project_name),
-	realm_defs: z.array(RealmDef).default([]),
+	realm_datas: z.array(RealmData).default([]),
 	level_stats: LevelStats.default(DEFAULT_LEVEL_STATS),
 });
 export type ProjectData = z.infer<typeof ProjectData>;

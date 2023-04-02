@@ -1,4 +1,4 @@
-import {RealmDef} from '$lib/earbetter/realm';
+import {RealmData} from '$lib/earbetter/realm';
 import {LevelData, DEFAULT_NOTE_MIN} from '$lib/earbetter/level';
 import {create_project_id, ProjectData} from '$lib/earbetter/project';
 import {lookup_scale, to_scale_notes} from '$lib/music/music';
@@ -9,7 +9,7 @@ import {lookup_scale, to_scale_notes} from '$lib/music/music';
 const def = (): ProjectData =>
 	ProjectData.parse({
 		id: create_project_id(),
-		realm_defs: [
+		realm_datas: [
 			{
 				name: 'major pentatonic',
 				level_datas: [
@@ -273,7 +273,7 @@ const def = (): ProjectData =>
 					},
 				].map((v) => LevelData.parse(v)),
 			},
-		].map((v) => RealmDef.parse(v)),
+		].map((v) => RealmData.parse(v)),
 	});
 
 export default def;
