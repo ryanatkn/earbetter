@@ -10,7 +10,7 @@
 
 	export let app: App;
 
-	$: ({active_level_data, exit_level_to_map, register_success} = app);
+	$: ({active_level_data, exit_level_to_map, register_success, selected_project_data} = app);
 
 	const ac = get_ac();
 	(window as any).audio = ac;
@@ -21,11 +21,19 @@
 	onDestroy(() => {
 		if (level && level === app.level.peek()) app.level.value = null;
 	});
+
+	$: level_stats = $selected_project_data?.level_stats;
 </script>
 
-{#if $active_level_data}
+{#if $active_level_data && level_stats}
 	<div class="level">
-		<Level level_data={$active_level_data} {exit_level_to_map} {register_success} bind:level />
+		<Level
+			level_data={$active_level_data}
+			{level_stats}
+			{exit_level_to_map}
+			{register_success}
+			bind:level
+		/>
 	</div>
 {:else}
 	<slot name="header" />

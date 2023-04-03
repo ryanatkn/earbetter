@@ -2,8 +2,15 @@
 	import {onDestroy, onMount} from 'svelte';
 	import {isEditable, swallow} from '@feltjs/util/dom.js';
 	import {scale} from 'svelte/transition';
+	import {plural} from '@feltjs/util/string.js';
 
-	import {create_level, LevelId, type LevelData} from '$lib/earbetter/level';
+	import {
+		create_level,
+		LevelId,
+		LevelStats,
+		type Level,
+		type LevelData,
+	} from '$lib/earbetter/level';
 	import Piano from '$lib/music/Piano.svelte';
 	import LevelProgressIndicator from '$lib/earbetter/LevelProgressIndicator.svelte';
 	import TrialProgressIndicator from '$lib/earbetter/TrialProgressIndicator.svelte';
@@ -13,10 +20,12 @@
 	import {playing_notes, start_playing, stop_playing} from '$lib/audio/play_note';
 	import {get_instrument, get_volume, with_velocity} from '$lib/audio/helpers';
 	import {midi_access} from '$lib/audio/midi_access';
+	import LevelStatsSummary from '$lib/earbetter/LevelStatsSummary.svelte';
 
-	export let level_data: LevelData;
+	export let level_data: LevelData; // TODO currently is not reactive, see below
+	export let level_stats: LevelStats;
 	export let exit_level_to_map: () => void;
-	export let register_success: (id: LevelId, mistakes: number) => void;
+	export let register_success: (id: LevelId, mistake_count: number) => void; // TODO naming this param `mistakes` breaks svelte-check, should be fixed in next release
 
 	let clientWidth: number | undefined;
 
@@ -24,9 +33,9 @@
 	const volume = get_volume();
 	const instrument = get_instrument();
 
-	export let level = create_level(level_data, ac, volume, instrument);
+	export let level: Level = create_level(level_data, ac, volume, instrument);
 	// $: level.setData(level_data); // TODO update if level_data prop changes
-	$: ({def, status, trial} = level);
+	$: ({def, mistakes, status, trial} = level);
 	$: guessing_index = $trial?.guessing_index;
 
 	$: pressed_keys = $status === 'presenting_prompt' ? null : $playing_notes;
@@ -159,6 +168,12 @@
 	<div class="feedback" class:success class:failure class:complete>
 		{#if complete}
 			<div class="icons" in:scale|local>🎵🎶</div>
+			<div class="panel padded-md centered">
+				<div style:margin-bottom="var(--spacing_xs)">
+					{$mistakes} mistake{plural($mistakes)} this run
+				</div>
+				<LevelStatsSummary {level_data} {level_stats} />
+			</div>
 			<button class="big" on:click={() => exit_level_to_map()}>
 				go back to the map &nbsp;<code>Escape</code></button
 			>

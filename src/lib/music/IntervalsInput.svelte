@@ -3,6 +3,8 @@
 
 	import {Scale, scales, Semitones, to_scale_notes} from '$lib/music/music';
 
+	// TODO naming convention between `IntervalsInput` and `SelectNotesControl`?
+
 	const dispatch = createEventDispatcher<{input: Semitones[]}>();
 
 	export let selected_scale: Scale = scales[0];

@@ -241,9 +241,19 @@ const data = (): ProjectData =>
 						intervals: [4, 5],
 					},
 					{
+						name: 'one octave down',
+						sequence_length: 2,
+						intervals: [-8, -7],
+					},
+					{
 						name: 'two octaves',
 						sequence_length: 2,
 						intervals: [4, 5, -8, -7],
+					},
+					{
+						name: 'two octaves down',
+						sequence_length: 2,
+						intervals: [-8, -7, -20, -19],
 					},
 					{
 						name: 'four octaves',
