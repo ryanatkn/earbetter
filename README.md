@@ -38,7 +38,7 @@ and there's room to add more capabilities. (if you have ideas please share!)
 In the level creator, you can click the "import" button
 to get copy-pastable data as text that you can share with others.
 
-"Realms" have many levels, and each realm may have a particular flavor like a scale.
+"Realms" group multiple levels together, and each realm may have a particular flavor like a scale.
 Realms can be created and shared just like importing/exporting levels.
 
 "Projects" are like save files. They group multiple realms together.
@@ -48,7 +48,8 @@ In the future I'll probably add a way to share in-app,
 but that requires some kind of server infrastructure.
 For now I'm accepting content submissions in this repo,
 so we get the benefit having a lot of static content without needing a server.
-I'm open to input -- for now, feel free to open PRs with your exported data
+I'm open to input but I'm hesitant to operate any kind of service or add non-static dependencies --
+for now, you're invited to open PRs with your exported data
 following [the default example](src/lib//projects/default-project.ts),
 or email me if you don't use GitHub.
 
