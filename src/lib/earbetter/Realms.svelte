@@ -4,7 +4,7 @@
 	import {RealmData} from '$lib/earbetter/realm';
 	import RealmItems from '$lib/earbetter/RealmItems.svelte';
 	import type {App} from '$lib/earbetter/app';
-	import default_project_data from '$lib/projects/default-project';
+	import default_project_data from '$lib/projects/default_project';
 
 	export let app: App; // TODO maybe change to be more granular objects?
 

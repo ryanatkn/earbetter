@@ -17,7 +17,7 @@ hey cool thanks for your interest
    for now, please submit projects, realms, and levels
    like `$lib/projects/{your_name}/my_cool_project.ts`
    or `$lib/projects/{your_name}/my_challenging_level.ts`
-   (as an example see [the default project](src/lib//projects/default-project.ts))
+   (as an example see [the default project](src/lib//projects/default_project.ts))
    (TODO link to discussions for improving this situation)
 1. other [PRs](https://github.com/ryanatkn/earbetter/pulls)
    are welcome but they may be declined if they don't fit the project's goals,
