@@ -7,3 +7,7 @@ export const parse_from_hash = <T = any>(hash: string): T | null => {
 		return null;
 	}
 };
+
+// TODO maybe handle failures?
+export const serialize_to_hash = (data: any): string =>
+	'#' + encodeURIComponent(JSON.stringify(data));

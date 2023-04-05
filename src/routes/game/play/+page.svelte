@@ -6,7 +6,7 @@
 	import Earbetter from '$lib/earbetter/Earbetter.svelte';
 	import Header from '$routes/Header.svelte';
 	import Footer from '$routes/Footer.svelte';
-	import type {LevelData} from '$lib/earbetter/level';
+	import {LevelHashData} from '$lib/earbetter/level';
 	import {parse_from_hash} from '$lib/util/url';
 	import {get_app} from '$lib/earbetter/app';
 
@@ -15,11 +15,12 @@
 	const app = get_app();
 
 	// TODO add this to the app data so it's persisted when we navigate, and can be saved if it's not in the list
-	$: active_level_data = parse_from_hash<LevelData>($page.url.hash);
+	$: parsed = LevelHashData.safeParse(parse_from_hash($page.url.hash));
+	$: active_level_data = parsed.success ? parsed.data : null;
 	$: if (active_level_data === null) {
 		void go_back();
 	} else {
-		app.active_level_data.value = active_level_data;
+		app.active_level_data.value = active_level_data.level;
 	}
 </script>
 

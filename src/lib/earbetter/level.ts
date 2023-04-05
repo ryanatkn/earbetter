@@ -9,6 +9,7 @@ import {base} from '$app/paths';
 import {Midi, Intervals, Semitones} from '$lib/music/music';
 import {play_note} from '$lib/audio/play_note';
 import type {Instrument, Milliseconds, Volume} from '$lib/audio/helpers';
+import {serialize_to_hash} from '$lib/util/url';
 
 // TODO this isn't idiomatic signals code yet, uses `peek` too much
 
@@ -42,8 +43,12 @@ export const LevelData = z.object({
 	note_min: Midi.default(DEFAULT_NOTE_MIN),
 	note_max: Midi.default(DEFAULT_NOTE_MAX),
 });
-
 export type LevelData = z.infer<typeof LevelData>;
+
+export const LevelHashData = z.object({
+	level: LevelData,
+});
+export type LevelHashData = z.infer<typeof LevelHashData>;
 
 export type Status =
 	| 'initial'
@@ -326,8 +331,10 @@ const to_fallback_tonic = (note_min: Midi, note_max: Midi): Midi => {
 	return randomInt(note_min + offset, note_max - offset) as Midi;
 };
 
-export const to_play_level_url = (level_data: LevelData): string =>
-	`${base}/game/play#` + encodeURIComponent(JSON.stringify(level_data));
+export const to_play_level_url = (level_data: LevelData): string => {
+	const data: LevelHashData = {level: level_data};
+	return `${base}/game/play` + serialize_to_hash(data);
+};
 
 export const MistakesLevelStats = z.record(LevelId, z.array(z.number()));
 export type MistakesLevelStats = z.infer<typeof MistakesLevelStats>;
