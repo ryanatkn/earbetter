@@ -3,12 +3,6 @@ import {LevelData, DEFAULT_NOTE_MIN} from '$lib/earbetter/level';
 import {ProjectData} from '$lib/earbetter/project';
 import {to_default_scale_realm} from '$lib/earbetter/realm_helpers';
 
-const a = to_default_scale_realm('major pentatonic');
-console.log(`a`, a);
-
-// TODO probably write a helper for the basic scale pattern here:
-// `to_default_scale_realm('major pentatonic')`
-
 const data = (): ProjectData =>
 	ProjectData.parse({
 		realms: [
