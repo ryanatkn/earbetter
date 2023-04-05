@@ -458,6 +458,81 @@ const data = (): ProjectData =>
 					},
 				].map((v) => LevelData.parse(v)),
 			},
+			{
+				name: 'Mixolydian',
+				levels: [
+					{
+						name: 'major second vs major third',
+						intervals: [2, 4],
+						sequence_length: 2,
+					},
+					{
+						name: 'major third vs perfect fourth',
+						intervals: [4, 5],
+						sequence_length: 2,
+					},
+					{
+						name: 'perfect fourth vs perfect fifth',
+						intervals: [5, 7],
+						sequence_length: 2,
+					},
+					{
+						name: 'perfect fifth vs major sixth',
+						intervals: [7, 9],
+						sequence_length: 2,
+					},
+					{
+						name: 'major sixth vs minor seventh',
+						intervals: [9, 10],
+						sequence_length: 2,
+					},
+					{
+						name: 'one octave',
+						intervals: lookup_scale('Mixolydian').notes,
+						sequence_length: 2,
+					},
+					{
+						name: 'two octaves',
+						intervals: to_scale_notes(lookup_scale('Mixolydian'), 2),
+						sequence_length: 2,
+					},
+					{
+						name: 'four octaves',
+						intervals: to_scale_notes(lookup_scale('Mixolydian'), 4),
+						sequence_length: 2,
+					},
+					{
+						name: 'one octave (4 notes)',
+						intervals: lookup_scale('Mixolydian').notes,
+						sequence_length: 4,
+					},
+					{
+						name: 'two octaves (4 notes)',
+						intervals: to_scale_notes(lookup_scale('Mixolydian'), 2),
+						sequence_length: 4,
+					},
+					{
+						name: 'four octaves (4 notes)',
+						intervals: to_scale_notes(lookup_scale('Mixolydian'), 4),
+						sequence_length: 4,
+					},
+					{
+						name: 'one octave (8 notes)',
+						intervals: lookup_scale('Mixolydian').notes,
+						sequence_length: 8,
+					},
+					{
+						name: 'two octaves (8 notes)',
+						intervals: to_scale_notes(lookup_scale('Mixolydian'), 2),
+						sequence_length: 8,
+					},
+					{
+						name: 'four octaves (8 notes)',
+						intervals: to_scale_notes(lookup_scale('Mixolydian'), 4),
+						sequence_length: 8,
+					},
+				].map((v) => LevelData.parse(v)),
+			},
 			// TODO this will change, just including to see where to go next
 			{
 				name: 'major third vs perfect fourth',
