@@ -64,9 +64,9 @@ const data = (): ProjectData =>
 						intervals: [4, 5, -8, -7, 16, 17, -20, -19],
 						sequence_length: 8,
 					},
-				].map((v) => LevelData.parse(v)),
+				],
 			},
-		].map((v) => RealmData.parse(v)),
+		],
 	});
 
 export default data;
