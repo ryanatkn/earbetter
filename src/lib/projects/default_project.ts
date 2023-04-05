@@ -533,6 +533,82 @@ const data = (): ProjectData =>
 					},
 				].map((v) => LevelData.parse(v)),
 			},
+			{
+				name: 'Locrian',
+				levels: [
+					// TODO maybe arrange these by difficulty?
+					{
+						name: 'minor second vs minor third',
+						intervals: [1, 3],
+						sequence_length: 2,
+					},
+					{
+						name: 'minor third vs perfect fourth',
+						intervals: [3, 5],
+						sequence_length: 2,
+					},
+					{
+						name: 'perfect fourth vs diminished fifth/augmented fourth',
+						intervals: [5, 6],
+						sequence_length: 2,
+					},
+					{
+						name: 'diminished fifth/augmented fourth vs minor sixth',
+						intervals: [6, 8],
+						sequence_length: 2,
+					},
+					{
+						name: 'minor sixth vs minor seventh',
+						intervals: [8, 10],
+						sequence_length: 2,
+					},
+					{
+						name: 'one octave',
+						intervals: to_scale_notes(lookup_scale('Locrian'), 1),
+						sequence_length: 2,
+					},
+					{
+						name: 'two octaves',
+						intervals: to_scale_notes(lookup_scale('Locrian'), 2),
+						sequence_length: 2,
+					},
+					{
+						name: 'four octaves',
+						intervals: to_scale_notes(lookup_scale('Locrian'), 4),
+						sequence_length: 2,
+					},
+					{
+						name: 'one octave (4 notes)',
+						intervals: to_scale_notes(lookup_scale('Locrian'), 1),
+						sequence_length: 4,
+					},
+					{
+						name: 'two octaves (4 notes)',
+						intervals: to_scale_notes(lookup_scale('Locrian'), 2),
+						sequence_length: 4,
+					},
+					{
+						name: 'four octaves (4 notes)',
+						intervals: to_scale_notes(lookup_scale('Locrian'), 4),
+						sequence_length: 4,
+					},
+					{
+						name: 'one octave (8 notes)',
+						intervals: to_scale_notes(lookup_scale('Locrian'), 1),
+						sequence_length: 8,
+					},
+					{
+						name: 'two octaves (8 notes)',
+						intervals: to_scale_notes(lookup_scale('Locrian'), 2),
+						sequence_length: 8,
+					},
+					{
+						name: 'four octaves (8 notes)',
+						intervals: to_scale_notes(lookup_scale('Locrian'), 4),
+						sequence_length: 8,
+					},
+				].map((v) => LevelData.parse(v)),
+			},
 			// TODO this will change, just including to see where to go next
 			{
 				name: 'major third vs perfect fourth',
