@@ -17,11 +17,11 @@
 		remove_level,
 	} = app);
 
-	// TODO hacky - the `editing_this_def` is needed when clicking into a level and going back,
+	// TODO hacky - the `editing_this_level` is needed when clicking into a level and going back,
 	// the `editing_level_data` is set but `editing_level` may be false,
 	// and we need to show it selected but not the edit button (needs restructuring for a proper fix)
-	$: editing_this_def = $editing_level_data === level_data;
-	$: editing = $editing_level && editing_this_def;
+	$: editing_this_level = $editing_level_data === level_data;
+	$: editing = $editing_level && editing_this_level;
 	$: level_stats = $selected_project_data?.level_stats;
 
 	let removing = false;
@@ -35,7 +35,7 @@
 		class="level-button deselectable"
 		title="play this level"
 		on:click={() => play_level(level_data.id)}
-		class:selected={editing || editing_this_def}
+		class:selected={editing || editing_this_level}
 	>
 		{level_data.name}
 	</button>

@@ -82,7 +82,7 @@ export const interval_names = Object.freeze([
 	'minor third',
 	'major third',
 	'perfect fourth',
-	'diminished fifth',
+	'tritone', // TODO maybe instead use "diminished fifth/augmented fourth"? is pretty wordy tho
 	'perfect fifth',
 	'minor sixth',
 	'major sixth',

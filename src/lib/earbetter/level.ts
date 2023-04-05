@@ -10,6 +10,7 @@ import {Midi, Intervals, Semitones} from '$lib/music/music';
 import {play_note} from '$lib/audio/play_note';
 import type {Instrument, Milliseconds, Volume} from '$lib/audio/helpers';
 import {serialize_to_hash} from '$lib/util/url';
+import {to_random_id} from '$lib/util/id';
 
 // TODO this isn't idiomatic signals code yet, uses `peek` too much
 
@@ -19,7 +20,7 @@ export const DEFAULT_NOTE_DURATION: Milliseconds = 333; // TODO adjust this to m
 export const DEFAULT_NOTE_DURATION_2: Milliseconds = 500; // TODO adjust this to make more challenging games
 export const DEFAULT_NOTE_DURATION_FAILED: Milliseconds = 67;
 export const DEFAULT_FEEDBACK_DURATION: Milliseconds = 1000; // TODO configurable
-export const DEFAULT_SEQUENCE_LENGTH = 4;
+export const DEFAULT_SEQUENCE_LENGTH = 2;
 export const DEFAULT_TRIAL_COUNT = 5;
 export const DEFAULT_LEVEL_NAME = 'new level';
 export const DEFAULT_INTERVALS: Semitones[] = [5, 7];
@@ -27,13 +28,12 @@ export const DEFAULT_NOTE_MIN: Midi = 48;
 export const DEFAULT_NOTE_MAX: Midi = 84;
 
 export type LevelId = Flavored<string, 'LevelId'>;
-export const LevelId = z.string().uuid().transform<LevelId>(identity);
-export const create_level_id = (): LevelId => crypto.randomUUID();
+export const LevelId = z.string().transform<LevelId>(identity);
+export const create_level_id = (): LevelId => to_random_id();
 
 export type LevelName = Flavored<string, 'LevelName'>;
 export const LevelName = z.string().min(1).max(1000).transform<LevelName>(identity); // TODO better way to do this?
 
-// TODO add restrictions to the below def
 export const LevelData = z.object({
 	id: LevelId.default(create_level_id),
 	name: LevelName.default(DEFAULT_LEVEL_NAME),

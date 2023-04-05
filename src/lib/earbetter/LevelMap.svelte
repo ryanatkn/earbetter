@@ -107,6 +107,7 @@
 								runs, win a ★ at 0
 							</li>
 							<li>realms group levels into bigger challenges</li>
+							<li>projects group realms so you can customize various experiences</li>
 						</ul>
 						<p>more info in <a href="https://github.com/ryanatkn/earbetter">the readme</a></p>
 						<aside>
