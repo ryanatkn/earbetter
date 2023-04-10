@@ -1,5 +1,4 @@
-import {RealmData} from '$lib/earbetter/realm';
-import {LevelData, DEFAULT_NOTE_MIN} from '$lib/earbetter/level';
+import {DEFAULT_NOTE_MIN} from '$lib/earbetter/level';
 import {ProjectData} from '$lib/earbetter/project';
 import {to_default_scale_realm} from '$lib/earbetter/realm_helpers';
 
