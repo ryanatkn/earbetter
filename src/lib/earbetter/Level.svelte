@@ -165,23 +165,26 @@
 		<TrialProgressIndicator {level} />
 	</div>
 
-	<div class="feedback" class:success class:failure class:complete>
-		{#if complete}
-			<div class="icons" in:scale|local>🎵🎶</div>
-			<div class="panel padded-md centered">
-				<div style:margin-bottom="var(--spacing_xs)">
-					{$mistakes} mistake{plural($mistakes)} this run
+	{#if success || failure || complete}
+		<div class="feedback" class:success class:failure class:complete>
+			<div transition:scale|local={{duration: 150}} class="feedback-bg" />
+			{#if complete}
+				<div class="icons" in:scale|local>🎵🎶</div>
+				<div class="panel padded-md centered" in:scale|local={{delay: 150}}>
+					<div style:margin-bottom="var(--spacing_xs)">
+						{$mistakes} mistake{plural($mistakes)} this run
+					</div>
+					<LevelStatsSummary {level_data} {level_stats} />
 				</div>
-				<LevelStatsSummary {level_data} {level_stats} />
-			</div>
-			<button class="big" on:click={() => exit_level_to_map()}>
-				go back to the map &nbsp;<code>Escape</code></button
-			>
-			<button class="big" on:click={() => level.reset()}>
-				replay level &nbsp;<code>r</code>
-			</button>
-		{/if}
-	</div>
+				<button class="big" on:click={() => exit_level_to_map()} in:scale|local={{delay: 300}}>
+					go back to the map &nbsp;<code>Escape</code></button
+				>
+				<button class="big" on:click={() => level.reset()} in:scale|local={{delay: 450}}>
+					replay level &nbsp;<code>r</code>
+				</button>
+			{/if}
+		</div>
+	{/if}
 
 	<div class="piano-wrapper" style:padding="{piano_padding}px">
 		{#if clientWidth}
@@ -250,18 +253,25 @@
 	}
 	.feedback {
 		position: absolute;
-		top: 50px;
-		min-height: 50px;
-		right: 0;
+		top: 0;
+		left: 0;
 		width: 100%;
 		display: flex;
 		align-items: center;
 		flex-direction: column;
 	}
-	.feedback.success {
+	.feedback-bg {
+		position: absolute;
+		top: 50px;
+		height: 50px;
+		min-height: 50px;
+		right: 0;
+		width: 100%;
+	}
+	.success .feedback-bg {
 		background-color: var(--success_color, green);
 	}
-	.feedback.failure {
+	.failure .feedback-bg {
 		background-color: var(--failure_color, red);
 	}
 

@@ -1,4 +1,6 @@
 <script lang="ts">
+	import {fade} from 'svelte/transition';
+
 	import type {Level, Status} from '$lib/earbetter/level';
 
 	export let level: Level;
@@ -23,7 +25,7 @@
 </script>
 
 {#if $trial}
-	<div class="trial-progress-indicator">
+	<div class="trial-progress-indicator" transition:fade|local={{duration: 70}}>
 		{#each {length: $trial.sequence.length} as _, index}
 			<div class="trial" style="background-color: {get_bg_color($status, index)}" />
 		{/each}
@@ -39,5 +41,6 @@
 	.trial {
 		flex: 1;
 		border: var(--border_width) var(--border_style) var(--border_color);
+		transition: background-color linear var(--duration_1);
 	}
 </style>
