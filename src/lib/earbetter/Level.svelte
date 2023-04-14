@@ -10,6 +10,7 @@
 		LevelStats,
 		type Level,
 		type LevelData,
+		DEFAULT_FEEDBACK_DURATION,
 	} from '$lib/earbetter/level';
 	import Piano from '$lib/music/Piano.svelte';
 	import LevelProgressIndicator from '$lib/earbetter/LevelProgressIndicator.svelte';
@@ -21,6 +22,7 @@
 	import {get_instrument, get_volume, with_velocity} from '$lib/audio/helpers';
 	import {midi_access} from '$lib/audio/midi_access';
 	import LevelStatsSummary from '$lib/earbetter/LevelStatsSummary.svelte';
+	import TextBurst from '$lib/TextBurst.svelte';
 
 	export let level_data: LevelData; // TODO currently is not reactive, see below
 	export let level_stats: LevelStats;
@@ -167,7 +169,18 @@
 
 	{#if success || failure || complete}
 		<div class="feedback" class:success class:failure class:complete>
-			<div transition:scale|local={{duration: 150}} class="feedback-bg" />
+			<div class="feedback-text-bursts">
+				{#if success}
+					<TextBurst
+						count={47}
+						items={['🎵', '🎶', '🌸', '🌻', '🌼', '🌷']}
+						duration={DEFAULT_FEEDBACK_DURATION}
+					/>
+				{/if}
+				{#if failure}
+					<TextBurst count={47} items={['🦜', '⁉', '❌']} duration={DEFAULT_FEEDBACK_DURATION} />
+				{/if}
+			</div>
 			{#if complete}
 				<div class="icons" in:scale|local>🎵🎶</div>
 				<div class="panel padded-md centered" in:scale|local={{delay: 150}}>
@@ -260,25 +273,19 @@
 		align-items: center;
 		flex-direction: column;
 	}
-	.feedback-bg {
-		position: absolute;
-		top: 50px;
-		height: 50px;
-		min-height: 50px;
-		right: 0;
-		width: 100%;
-	}
-	.success .feedback-bg {
-		background-color: var(--success_color, green);
-	}
-	.failure .feedback-bg {
-		background-color: var(--failure_color, red);
-	}
 
 	.icons {
 		font-size: var(--icon_size_xl);
 		word-break: break-all;
 		text-align: center;
 		word-wrap: break-word;
+	}
+
+	.feedback-text-bursts {
+		font-size: var(--font_size_xl3);
+		position: absolute;
+		left: 50vw;
+		top: 50vh;
+		z-index: 10;
 	}
 </style>
