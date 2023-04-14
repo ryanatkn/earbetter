@@ -20,7 +20,7 @@ import {
 } from '$lib/earbetter/level';
 import {ProjectData, ProjectId, ProjectName} from '$lib/earbetter/project';
 import {load_from_storage, set_in_storage} from '$lib/util/storage';
-import {RealmId, type RealmData} from '$lib/earbetter/realm';
+import {RealmId, RealmData} from '$lib/earbetter/realm';
 import default_project_data from '$lib/projects/default_project';
 
 const log = new Logger('[app]');
@@ -495,6 +495,32 @@ export class App {
 		this.update_project({
 			...project_data,
 			realms: realms.filter((d) => d !== realm_data),
+		});
+	};
+
+	duplicate_realm = (id: RealmId): void => {
+		log.debug('duplicate_realm_data', id);
+		const project_data = this.selected_project_data.peek();
+		if (!project_data) {
+			console.error('cannot duplicate realm_data without a project', project_data, id);
+			return; // no active project
+		}
+		const {realms} = project_data;
+		const realm_data = realms.find((d) => d.id === id);
+		if (!realm_data) {
+			console.error('cannot find realm_data with id', id);
+			return;
+		}
+		batch(() => {
+			const {id: _, name, ...rest} = realm_data;
+			const new_realm_data = RealmData.parse({...rest, name: name + '_'});
+			this.create_realm(new_realm_data);
+			if (id === this.editing_realm_id.peek()) {
+				this.editing_realm.value = false; // TODO move to component?
+			}
+			if (id === this.selected_realm_id.peek()) {
+				this.selected_realm_id.value = new_realm_data.id;
+			}
 		});
 	};
 

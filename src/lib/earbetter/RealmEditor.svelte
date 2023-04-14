@@ -10,6 +10,7 @@
 		editing_realm,
 		editing_realm_data,
 		remove_realm,
+		duplicate_realm,
 		update_realm,
 		create_realm,
 	} = app);
@@ -30,6 +31,7 @@
 			? (e) => (editing ? update_realm : create_realm)?.(e.detail)
 			: undefined}
 		on:remove={remove_realm ? (e) => remove_realm?.(e.detail) : undefined}
+		on:duplicate={duplicate_realm ? (e) => duplicate_realm?.(e.detail) : undefined}
 	>
 		<svelte:fragment slot="footer" let:changed>
 			{#if editing}

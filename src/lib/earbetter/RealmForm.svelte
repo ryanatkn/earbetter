@@ -7,7 +7,11 @@
 
 	import {create_realm_id, RealmData, type RealmId} from '$lib/earbetter/realm';
 
-	const dispatch = createEventDispatcher<{submit: RealmData; remove: RealmId}>();
+	const dispatch = createEventDispatcher<{
+		submit: RealmData;
+		remove: RealmId;
+		duplicate: RealmId;
+	}>();
 
 	const DEFAULT_NAME = 'new realm';
 
@@ -132,9 +136,6 @@
 	>
 		{#if editing}save changes to realm{:else}create realm{/if}
 	</button>
-	<button type="button" on:click={start_importing_data} bind:this={start_importing_el}>
-		{#if editing}import/export data{:else}import data{/if}
-	</button>
 	{#if parse_error_message}
 		<div class="message-wrapper">
 			<Message status="error"><pre>{parse_error_message}</pre></Message>
@@ -156,6 +157,10 @@
 				</button>
 			</div>
 		{/if}
+		<button type="button" on:click={() => dispatch('duplicate', id)}> duplicate </button>
+		<button type="button" on:click={start_importing_data} bind:this={start_importing_el}>
+			{#if editing}import/export data{:else}import data{/if}
+		</button>
 	{/if}
 	<slot name="footer" {changed} />
 </form>
