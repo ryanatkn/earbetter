@@ -1,4 +1,6 @@
 <script lang="ts">
+	import {fade} from 'svelte/transition';
+
 	import type {Level, Status} from '$lib/earbetter/level';
 
 	export let level: Level;
@@ -23,7 +25,9 @@
 	$: percent_complete =
 		$status === 'initial'
 			? 0
-			: $status === 'complete'
+			: $status === 'complete' ||
+			  $status === 'showing_success_feedback' ||
+			  $status === 'showing_failure_feedback'
 			? 1
 			: $trial?.presenting_index != null
 			? ($trial.presenting_index + 0.5) / $trial.sequence.length
@@ -32,16 +36,21 @@
 			: 0;
 	$: console.log(`percent_complete`, percent_complete);
 	$: console.log(`$trial`, $trial);
+	$: console.log(`$status`, $status);
 </script>
 
-<div class="trial-progress-indicator" style:--progress_bar_percent={percent_complete}>
-	{#if $trial}
+{#if $trial}
+	<div
+		class="trial-progress-indicator"
+		style:--progress_bar_percent={percent_complete}
+		transition:fade
+	>
 		{#each {length: $trial.sequence.length} as _, index}
 			<div class="trial" style="background-color: {to_bg_color($status, index)}" />
 		{/each}
-	{/if}
-	<div class="progress-bar" />
-</div>
+		<div class="progress-bar" />
+	</div>
+{/if}
 
 <style>
 	.trial-progress-indicator {
