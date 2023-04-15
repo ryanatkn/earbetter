@@ -262,6 +262,10 @@ export const create_level = (
 	};
 
 	const next_trial = (): void => {
+		const $status = status.peek();
+		if ($status === 'complete') {
+			return;
+		}
 		batch(() => {
 			const next_trial = create_next_trial(def.peek(), trial.peek());
 			log.debug('next trial', next_trial);
@@ -275,6 +279,10 @@ export const create_level = (
 	};
 
 	const complete_level = (): void => {
+		const $status = status.peek();
+		if ($status === 'complete') {
+			return;
+		}
 		batch(() => {
 			status.value = 'complete';
 			trial.value = null;

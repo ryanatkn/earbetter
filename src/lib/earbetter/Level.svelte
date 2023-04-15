@@ -10,7 +10,6 @@
 		LevelStats,
 		type Level,
 		type LevelData,
-		DEFAULT_FEEDBACK_DURATION,
 	} from '$lib/earbetter/level';
 	import Piano from '$lib/music/Piano.svelte';
 	import LevelProgressIndicator from '$lib/earbetter/LevelProgressIndicator.svelte';
@@ -60,6 +59,18 @@
 	$: failure = $status === 'showing_failure_feedback';
 	$: complete = $status === 'complete';
 	$: waiting = $status === 'waiting_for_input';
+
+	let feedback_count = 0;
+
+	let last_feedback_status: null | 'success' | 'failure' = null;
+	$: if (success) {
+		feedback_count++;
+		last_feedback_status = 'success';
+	}
+	$: if (failure) {
+		feedback_count++;
+		last_feedback_status = 'failure';
+	}
 
 	$: initial = waiting && guessing_index === 0; // the initial user-prompting trial state before any inputs have been entered by the player (related, "prompting")
 
@@ -167,37 +178,38 @@
 		<TrialProgressIndicator {level} />
 	</div>
 
-	{#if success || failure || complete}
-		<div class="feedback" class:success class:failure class:complete>
+	<div class="feedback" class:success class:failure class:complete>
+		{#if last_feedback_status !== null}
 			<div class="feedback-text-bursts">
-				{#if success}
-					<TextBurst
-						count={47}
-						items={['🎵', '🎶', '🌸', '🌻', '🌼', '🌷']}
-						duration={DEFAULT_FEEDBACK_DURATION}
-					/>
+				{#if last_feedback_status === 'success'}
+					{#key feedback_count}
+						<TextBurst count={47} items={['🎵', '🎶', '🌸', '🌻', '🌼', '🍀']} />
+					{/key}
 				{/if}
-				{#if failure}
-					<TextBurst count={47} items={['🦜', '⁉', '❌']} duration={DEFAULT_FEEDBACK_DURATION} />
+				{#if last_feedback_status === 'failure'}
+					<!-- TODO grayscale? -->
+					{#key feedback_count}
+						<TextBurst count={47} items={['🦜', '⁉', '❌']} />
+					{/key}
 				{/if}
 			</div>
-			{#if complete}
-				<div class="icons" in:scale|local>🎵🎶</div>
-				<div class="panel padded-md centered" in:scale|local={{delay: 150}}>
-					<div style:margin-bottom="var(--spacing_xs)">
-						{$mistakes} mistake{plural($mistakes)} this run
-					</div>
-					<LevelStatsSummary {level_data} {level_stats} />
+		{/if}
+		{#if complete}
+			<div class="icons" in:scale|local>🎵🎶</div>
+			<div class="panel padded-md centered" in:scale|local={{delay: 250}}>
+				<div style:margin-bottom="var(--spacing_xs)">
+					{$mistakes} mistake{plural($mistakes)} this run
 				</div>
-				<button class="big" on:click={() => exit_level_to_map()} in:scale|local={{delay: 300}}>
-					go back to the map &nbsp;<code>Escape</code></button
-				>
-				<button class="big" on:click={() => level.reset()} in:scale|local={{delay: 450}}>
-					replay level &nbsp;<code>r</code>
-				</button>
-			{/if}
-		</div>
-	{/if}
+				<LevelStatsSummary {level_data} {level_stats} />
+			</div>
+			<button class="big" on:click={() => exit_level_to_map()} in:scale|local={{delay: 500}}>
+				go back to the map &nbsp;<code>Escape</code></button
+			>
+			<button class="big" on:click={() => level.reset()} in:scale|local={{delay: 750}}>
+				replay level &nbsp;<code>r</code>
+			</button>
+		{/if}
+	</div>
 
 	<div class="piano-wrapper" style:padding="{piano_padding}px">
 		{#if clientWidth}
