@@ -7,7 +7,7 @@
 
 	$: ({
 		app_data,
-		projects,
+		project_datas,
 		selected_project_id,
 		editing_project,
 		editing_project_id,
@@ -33,7 +33,7 @@
 		selected_project_id={$selected_project_id}
 		editing_project_id={$editing_project ? $editing_project_id : null}
 		{projects}
-		projects={$projects}
+		project_datas={$project_datas}
 		{load_project}
 		{select_project}
 		edit_project={(p) => edit_project(p === $editing_project_data && $editing_project ? null : p)}

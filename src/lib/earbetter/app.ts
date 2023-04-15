@@ -52,12 +52,12 @@ export class App {
 		this.app_data.value = {...this.app_data.peek(), show_game_help: !this.show_game_help.peek()};
 	};
 
-	projects: Signal<ProjectData[]> = signal([]);
+	project_datas: Signal<ProjectData[]> = signal([]);
 
 	selected_project_id: Signal<ProjectId | null> = signal(null);
 	selected_project_data: ReadonlySignal<ProjectData | null> = computed(() => {
 		const id = this.selected_project_id.value;
-		return this.projects.value.find((p) => p.id === id) || null;
+		return this.project_datas.value.find((p) => p.id === id) || null;
 	});
 	realms: ReadonlySignal<RealmData[] | null> = computed(
 		() => this.selected_project_data.value?.realms || null,
@@ -166,7 +166,7 @@ export class App {
 
 	save_project = (id: ProjectId): void => {
 		log.debug('save_project', id);
-		const project_data = this.projects.peek().find((p) => p.id === id);
+		const project_data = this.project_datas.peek().find((p) => p.id === id);
 		set_in_storage(id, project_data); // correctly deletes the storage key if `undefined`
 		const app_data = this.app_data.peek();
 		const {projects} = app_data;
@@ -190,7 +190,7 @@ export class App {
 		log.debug(`loaded`, loaded);
 		if (loaded) {
 			// TODO batch if this code stays imperative like this
-			this.projects.value = this.projects.peek().concat(loaded);
+			this.project_datas.value = this.project_datas.peek().concat(loaded);
 			return loaded;
 		} else {
 			log.debug(`load_project failed, creating new`, id);
@@ -207,7 +207,8 @@ export class App {
 			return;
 		}
 		batch(() => {
-			const project_data = this.projects.peek().find((d) => d.id === id) || this.load_project(id);
+			const project_data =
+				this.project_datas.peek().find((d) => d.id === id) || this.load_project(id);
 			if (!project_data) console.error('failed to find or load def', id);
 			this.selected_project_id.value = project_data?.id || null;
 			this.selected_realm_id.value = project_data?.realms[0]?.id || null;
@@ -224,7 +225,7 @@ export class App {
 			}
 			this.editing_project.value = true;
 			const {id} = project_data;
-			const found = this.projects.peek().find((d) => d.id === id);
+			const found = this.project_datas.peek().find((d) => d.id === id);
 			if (found) {
 				// existing project
 				this.selected_project_id.value = id;
@@ -248,10 +249,10 @@ export class App {
 				...this.app_data.peek(),
 				projects: projects.filter((p) => p.id !== id),
 			};
-			this.projects.value = this.projects.peek().filter((p) => p.id !== id);
+			this.project_datas.value = this.project_datas.peek().filter((p) => p.id !== id);
 			if (this.selected_project_id.peek() === id) {
 				this.selected_project_id.value =
-					this.projects.peek()[0]?.id ||
+					this.project_datas.peek()[0]?.id ||
 					this.load_project(this.app_data.peek().projects[0]?.id)?.id ||
 					null;
 			}
@@ -261,7 +262,7 @@ export class App {
 
 	create_project = (project_data: ProjectData): ProjectData => {
 		log.debug('create_project', project_data);
-		const projects = this.projects.peek();
+		const projects = this.project_datas.peek();
 		const {id} = project_data;
 		const existing = projects.find((d) => d.id === id);
 		if (existing) {
@@ -274,7 +275,7 @@ export class App {
 				...this.app_data.peek(),
 				projects: this.app_data.peek().projects.concat({id, name: project_data.name}),
 			};
-			this.projects.value = projects.concat(project_data);
+			this.project_datas.value = projects.concat(project_data);
 			this.selected_project_id.value = id;
 			this.editing_project.value = false;
 			if (this.project_draft_data.peek() === project_data) {
@@ -287,7 +288,7 @@ export class App {
 
 	duplicate_project = (id: ProjectId): void => {
 		log.debug('duplicate_project_data', id);
-		const {projects} = this;
+		const {project_datas: projects} = this;
 		const project_data = projects.value.find((d) => d.id === id);
 		if (!project_data) {
 			console.error('cannot find project_data with id', id);
@@ -304,7 +305,7 @@ export class App {
 
 	update_project = (project_data: ProjectData): void => {
 		log.debug('update_project', project_data);
-		const projects = this.projects.peek();
+		const projects = this.project_datas.peek();
 		const {id} = project_data;
 		const index = projects.findIndex((p) => p.id === id);
 		if (index === -1) {
@@ -324,7 +325,7 @@ export class App {
 		}
 		const updated = projects.slice();
 		updated[index] = project_data;
-		this.projects.value = updated;
+		this.project_datas.value = updated;
 		this.save_project(id);
 	};
 

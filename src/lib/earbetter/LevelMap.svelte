@@ -24,7 +24,7 @@
 	export let midi_access: Signal<MIDIAccess | null>;
 
 	$: ({
-		projects,
+		project_datas: projects,
 		editing_project,
 		editing_project_data,
 		selected_project_data,

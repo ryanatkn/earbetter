@@ -5,7 +5,7 @@
 	export let selected_project_id: ProjectId | null = null;
 	export let editing_project_id: ProjectId | null = null;
 	export let projects: ProjectMetadata[] = [];
-	export let projects: ProjectData[] = [];
+	export let project_datas: ProjectData[] = [];
 	export let load_project: (id: ProjectId) => ProjectData | null;
 	export let select_project: (id: ProjectId) => void;
 	export let edit_project: (project_data: ProjectData | null) => void;
@@ -16,7 +16,7 @@
 	{#each projects as project (project.id)}
 		<ProjectItem
 			{project}
-			project_data={projects.find((p) => p.id === project.id)}
+			project_data={project_datas.find((p) => p.id === project.id)}
 			load={load_project}
 			select={select_project}
 			edit={edit_project}
