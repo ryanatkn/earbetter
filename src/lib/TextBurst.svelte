@@ -6,16 +6,16 @@
 	export let count: number;
 	export let items: string[];
 	export let duration = 2000;
-	export let xRadius = 250;
-	export let yRadius = 250;
-	export let scaleMin = 1;
-	export let scaleMax = GR2;
-	export let hueRotationMin = 0;
-	export let hueRotationMax = 0; // set to 360 to get a random range of colors
-	export let startRotationMin = 0;
-	export let startRotationMax = 360;
-	export let endRotationMin = 0;
-	export let endRotationMax = 360;
+	export let x_radius = 250;
+	export let y_radius = 250;
+	export let scale_min = 1;
+	export let scale_max = GR2;
+	export let hue_rotation_min = 0;
+	export let hue_rotation_max = 0; // set to 360 to get a random range of colors
+	export let start_rotation_min = 0;
+	export let start_rotation_max = 360;
+	export let end_rotation_min = 0;
+	export let end_rotation_max = 360;
 
 	// TODO BLOCK add `xOffset` and `yOffset` (or w/o `Offset`) to position it, maybe a min and max?
 
@@ -32,12 +32,12 @@
 	<div class="burst" style:--animation_timer="{duration}ms">
 		{#each {length: count} as _}<div
 				class="burst-item"
-				style:--target_x="{randomInt(-xRadius, xRadius)}px"
-				style:--target_y="{randomInt(-yRadius, yRadius)}px"
-				style:--scale={randomFloat(scaleMin, scaleMax)}
-				style:--start_rotation="{randomInt(startRotationMin, startRotationMax)}deg"
-				style:--end_rotation="{randomInt(endRotationMin, endRotationMax)}deg"
-				style:--hue_rotation="{randomInt(hueRotationMin, hueRotationMax)}deg"
+				style:--target_x="{randomInt(-x_radius, x_radius)}px"
+				style:--target_y="{randomInt(-y_radius, y_radius)}px"
+				style:--scale={randomFloat(scale_min, scale_max)}
+				style:--start_rotation="{randomInt(start_rotation_min, start_rotation_max)}deg"
+				style:--end_rotation="{randomInt(end_rotation_min, end_rotation_max)}deg"
+				style:--hue_rotation="{randomInt(hue_rotation_min, hue_rotation_max)}deg"
 			>
 				{randomItem(items)}
 			</div>{/each}

@@ -66,13 +66,24 @@
 	$: if (success) {
 		feedback_count++;
 		last_feedback_status = 'success';
-		// TODO BLOCK calculate position based on last midi in sequence
+		update_text_burst_position();
 	}
 	$: if (failure) {
 		feedback_count++;
 		last_feedback_status = 'failure';
-		// TODO BLOCK calculate position based on last midi in sequence
+		update_text_burst_position();
 	}
+
+	let text_burst_offset_x = 0;
+	let text_burst_offset_y = 0;
+	const update_text_burst_position = () => {
+		const last_in_sequence = $trial?.sequence.at(-1);
+		if (last_in_sequence === undefined) return;
+		// TODO BLOCK get the position of the piano key for midi value `last_in_sequence` and set it to the offset
+		last_in_sequence;
+		text_burst_offset_x;
+		text_burst_offset_y;
+	};
 
 	$: initial = waiting && guessing_index === 0; // the initial user-prompting trial state before any inputs have been entered by the player (related, "prompting")
 
@@ -201,15 +212,18 @@
 
 	<div class="feedback" class:success class:failure class:complete>
 		{#if complete}
-			<div class="completed-level-feedback pane">
+			<div class="completed-level-feedback pane" transition:scale|local>
 				<div class="panel centered padded-md">
-					<div class="centered-hz" in:scale={{duration: 3000}}>
+					<div class="centered-hz" in:scale|local={{duration: 3000}}>
 						<div class="icons" in:fly|local={{duration: 4000, x: -200}}>🎵</div>
 						<div class="icons" in:fly|local={{duration: 4000, x: 200}}>🎶</div>
 					</div>
 					<div class="panel padded-md centered" in:scale|local={{delay: 250}}>
+						<div style:font-size="var(--font_size_xl3)">
+							{$mistakes}
+						</div>
 						<div style:margin-bottom="var(--spacing_xs)">
-							{$mistakes} mistake{plural($mistakes)} this run
+							mistake{plural($mistakes)} this run
 						</div>
 						<LevelStatsSummary {level_data} {level_stats} />
 					</div>
