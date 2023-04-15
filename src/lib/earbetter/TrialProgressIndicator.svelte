@@ -13,11 +13,11 @@
 			: $trial.presenting_index
 		: null;
 
-	const to_bg_color = (s: Status, index: number): string =>
-		s === 'complete'
-			? 'var(--tint_light_5)'
-			: index === current_index
+	const to_bg_color = (s: Status, index: number, current_index: number | null): string =>
+		s === 'complete' || s === 'showing_success_feedback' || s === 'showing_failure_feedback'
 			? 'var(--tint_light_4)'
+			: index === current_index
+			? 'var(--tint_light_3)'
 			: current_index !== null && index < current_index
 			? 'var(--tint_light_2)'
 			: 'transparent';
@@ -34,9 +34,6 @@
 			: $trial?.guessing_index != null
 			? ($trial.guessing_index + 0.5) / $trial.sequence.length
 			: 0;
-	$: console.log(`percent_complete`, percent_complete);
-	$: console.log(`$trial`, $trial);
-	$: console.log(`$status`, $status);
 </script>
 
 {#if $trial}
@@ -46,7 +43,7 @@
 		transition:fade
 	>
 		{#each {length: $trial.sequence.length} as _, index}
-			<div class="trial" style="background-color: {to_bg_color($status, index)}" />
+			<div class="trial" style="background-color: {to_bg_color($status, index, current_index)}" />
 		{/each}
 		<div class="progress-bar" />
 	</div>
