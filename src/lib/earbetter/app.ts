@@ -22,6 +22,7 @@ import {ProjectData, ProjectId, ProjectName} from '$lib/earbetter/project';
 import {load_from_storage, set_in_storage} from '$lib/util/storage';
 import {RealmId, RealmData} from '$lib/earbetter/realm';
 import default_project_data from '$lib/projects/default_project';
+import {to_next_name} from '$lib/util/entity';
 
 const log = new Logger('[app]');
 
@@ -288,15 +289,18 @@ export class App {
 
 	duplicate_project = (id: ProjectId): void => {
 		log.debug('duplicate_project_data', id);
-		const {project_datas: projects} = this;
-		const project_data = projects.value.find((d) => d.id === id);
+		const projects = this.project_datas.peek();
+		const project_data = projects.find((d) => d.id === id);
 		if (!project_data) {
 			console.error('cannot find project_data with id', id);
 			return;
 		}
 		batch(() => {
 			const {id: _, name, ...rest} = project_data;
-			const new_project_data = ProjectData.parse({...rest, name: name + '_'});
+			const new_project_data = ProjectData.parse({
+				...rest,
+				name: to_next_name(name, projects),
+			});
 			this.create_project(new_project_data);
 			this.project_draft_data.value = new_project_data; // TODO move to component?
 			this.selected_project_id.value = new_project_data.id;
@@ -413,7 +417,7 @@ export class App {
 		}
 		batch(() => {
 			const {id: _, name, ...rest} = realm_data;
-			const new_realm_data = RealmData.parse({...rest, name: name + '_'});
+			const new_realm_data = RealmData.parse({...rest, name: to_next_name(name, realms)});
 			this.create_realm(new_realm_data);
 			this.draft_realm_data.value = new_realm_data; // TODO move to component?
 			this.selected_realm_id.value = new_realm_data.id;
@@ -573,8 +577,9 @@ export class App {
 		}
 		batch(() => {
 			const {id: _, name, ...rest} = level_data;
-			const new_level_data = LevelData.parse({...rest, name: name + '_'});
+			const new_level_data = LevelData.parse({...rest, name: to_next_name(name, levels)});
 			this.create_level(new_level_data);
+			this.editing_level.value = true;
 			this.editing_level_data.value = new_level_data; // TODO move to component?
 		});
 	};
