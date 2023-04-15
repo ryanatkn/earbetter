@@ -127,6 +127,7 @@
 		  }
 		: undefined}
 	aria-label="piano key for midi {midi}"
+	data-note={midi}
 	style:left="{left_offset}px"
 >
 	{#if middle_c && show_middle_c}

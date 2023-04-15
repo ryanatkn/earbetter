@@ -66,6 +66,7 @@ export interface Level {
 	mistakes: Signal<number>;
 	trial: Signal<Trial | null>;
 	trials: Signal<Trial[]>;
+	last_guess: Signal<Midi | null>;
 	reset: () => void;
 	// game methods
 	start: () => void;
@@ -149,6 +150,7 @@ export const create_level = (
 	const mistakes: Signal<number> = signal(0);
 	const trial: Signal<Trial | null> = signal(DEFAULT_TRIAL);
 	const trials: Signal<Trial[]> = signal(DEFAULT_TRIALS);
+	const last_guess: Signal<Midi | null> = signal(null);
 
 	const start = (): void => {
 		if (status.peek() !== 'initial') return;
@@ -197,6 +199,8 @@ export const create_level = (
 		batch(() => {
 			const actual = get_correct_guess($trial);
 			log.debug('guess', guessing_index, note, actual);
+
+			last_guess.value = note;
 
 			// if incorrect -> FAILURE -> showing_failure_feedback -> REPROMPT
 			if (actual !== note) {
@@ -295,6 +299,7 @@ export const create_level = (
 		mistakes,
 		trial,
 		trials,
+		last_guess,
 		reset: () => {
 			batch(() => {
 				def.value = level_data;

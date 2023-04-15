@@ -17,8 +17,6 @@
 	export let end_rotation_min = 0;
 	export let end_rotation_max = 360;
 
-	// TODO BLOCK add `xOffset` and `yOffset` (or w/o `Offset`) to position it, maybe a min and max?
-
 	let done = false;
 
 	let timeout: number;
@@ -64,9 +62,9 @@
 		0% {
 			transform: translate3d(0, 0, 0) scale3d(0, 0, 0) rotate(var(--start_rotation));
 		}
-		7% {
+		9% {
 			transform: translate3d(0, 0, 0) scale3d(var(--scale), var(--scale), var(--scale))
-				rotate(calc(0.93 * var(--start_rotation) + 0.07 * var(--end_rotation)));
+				rotate(calc(0.91 * var(--start_rotation) + 0.09 * var(--end_rotation)));
 		}
 		100% {
 			transform: translate3d(var(--target_x), var(--target_y), 0) scale3d(0, 0, 0)
