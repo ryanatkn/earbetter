@@ -140,7 +140,7 @@
 					<aside>
 						<a href="https://developer.mozilla.org/en-US/docs/Web/API/Window/localStorage"
 							><code>localStorage</code></a
-						> is used to save your data locally on your computer.
+						> is used to save your data locally on your computer
 					</aside>
 				</div>
 			</div>
