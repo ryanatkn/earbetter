@@ -175,8 +175,9 @@ export const chroma_to_hsl_string: Map<Chroma, string> = new Map(
  * and easy to work with both programmatically and mathematically.
  */
 
+// https://wikipedia.org/wiki/MIDI
 // TODO how to do this type? trying to avoid zod's `brand` but maybe the ergonomic tradeoff is ok
-// export type Midi = Flavored<number, 'Midi'>;
+// export type Midi = Flavored<number, 'Midi'>; // TODO consider the `identity` pattern used elsewhere
 export const Midi = z.number().int().min(0).max(127);
 export type Midi = Flavored<z.infer<typeof Midi>, 'Midi'>;
 
