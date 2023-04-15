@@ -6,9 +6,9 @@
 	export let app: App;
 	export let levels: LevelData[]; // TODO making this a prop here, but using `app` most places, maybe change it to context?
 
-	$: ({selected_realm_data, editing_level, editing_level_data, edit_level} = app);
+	$: ({selected_realm_data, editing_level, draft_level_data, edit_level} = app);
 
-	$: editing_draft = $editing_level && !levels.some((d) => d === $editing_level_data);
+	$: editing_draft = $editing_level && !levels.some((d) => d === $draft_level_data);
 
 	$: no_levels = !levels.length;
 

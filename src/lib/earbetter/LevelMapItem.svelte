@@ -10,7 +10,7 @@
 
 	$: ({
 		editing_level,
-		editing_level_data,
+		draft_level_data,
 		selected_project_data,
 		play_level,
 		edit_level,
@@ -18,9 +18,9 @@
 	} = app);
 
 	// TODO hacky - the `editing_this_level` is needed when clicking into a level and going back,
-	// the `editing_level_data` is set but `editing_level` may be false,
+	// the `draft_level_data` is set but `editing_level` may be false,
 	// and we need to show it selected but not the edit button (needs restructuring for a proper fix)
-	$: editing_this_level = $editing_level_data === level_data;
+	$: editing_this_level = $draft_level_data === level_data;
 	$: editing = $editing_level && editing_this_level;
 	$: level_stats = $selected_project_data?.level_stats;
 

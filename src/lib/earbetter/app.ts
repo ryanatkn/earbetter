@@ -15,13 +15,14 @@ import {
 	add_mistakes_to_level_stats,
 	to_play_level_url,
 	type Level,
-	type LevelData,
+	LevelData,
 	type LevelId,
 } from '$lib/earbetter/level';
 import {ProjectData, ProjectId, ProjectName} from '$lib/earbetter/project';
 import {load_from_storage, set_in_storage} from '$lib/util/storage';
 import {RealmId, RealmData} from '$lib/earbetter/realm';
 import default_project_data from '$lib/projects/default_project';
+import {to_next_name} from '$lib/util/entity';
 
 const log = new Logger('[app]');
 
@@ -43,7 +44,7 @@ export const set_app = (store: App): App => setContext(APP_KEY, store);
 
 export class App {
 	// TODO wheres the source of truth?
-	// currently manually syncing the same changes to both `app_data` `project_datas` --
+	// currently manually syncing the same changes to both `app_data` `projects` --
 	// mixing serialization concerns with runtime representations
 	app_data: Signal<AppData>;
 
@@ -64,15 +65,15 @@ export class App {
 	);
 	editing_project: Signal<boolean> = signal(false);
 	editing_project_draft: Signal<boolean> = signal(false);
-	project_draft_data: Signal<ProjectData | null> = signal(null);
+	draft_project_data: Signal<ProjectData | null> = signal(null);
 	editing_project_id: ReadonlySignal<ProjectId | null> = computed(() =>
 		this.editing_project_draft.value
-			? this.project_draft_data.value?.id || null
+			? this.draft_project_data.value?.id || null
 			: this.selected_project_data.value?.id || null,
 	); // this may be `selected_project_data`, or a new project def draft that hasn't been created yet
 	editing_project_data: ReadonlySignal<ProjectData | null> = computed(() =>
 		this.editing_project_draft.value
-			? this.project_draft_data.value
+			? this.draft_project_data.value
 			: this.selected_project_data.value,
 	);
 
@@ -100,7 +101,7 @@ export class App {
 	);
 	active_level_data: Signal<LevelData | null> = signal(null);
 	editing_level: Signal<boolean> = signal(false);
-	editing_level_data: Signal<LevelData | null> = signal(null);
+	draft_level_data: Signal<LevelData | null> = signal(null);
 
 	constructor(public readonly get_ac: () => AudioContext, public readonly storage_key = 'app') {
 		// TODO maybe `new App(App.load())` ?
@@ -220,7 +221,7 @@ export class App {
 		batch(() => {
 			if (!project_data) {
 				this.editing_project.value = false;
-				this.project_draft_data.value = null;
+				this.draft_project_data.value = null;
 				return;
 			}
 			this.editing_project.value = true;
@@ -232,7 +233,7 @@ export class App {
 				this.editing_project_draft.value = false;
 			} else {
 				// draft project
-				this.project_draft_data.value = project_data;
+				this.draft_project_data.value = project_data;
 				this.editing_project_draft.value = true;
 			}
 		});
@@ -243,7 +244,7 @@ export class App {
 		const {projects} = this.app_data.peek();
 		const existing = projects.find((d) => d.id === id);
 		if (!existing) return;
-		// TODO syncing `app_data` with `project_datas` is awkward
+		// TODO syncing `app_data` with `projects` is awkward
 		batch(() => {
 			this.app_data.value = {
 				...this.app_data.peek(),
@@ -262,41 +263,63 @@ export class App {
 
 	create_project = (project_data: ProjectData): ProjectData => {
 		log.debug('create_project', project_data);
-		const project_datas = this.project_datas.peek();
+		const projects = this.project_datas.peek();
 		const {id} = project_data;
-		const existing = project_datas.find((d) => d.id === id);
+		const existing = projects.find((d) => d.id === id);
 		if (existing) {
 			log.debug('project already exists', project_data, existing);
 			return existing;
 		}
 		batch(() => {
-			// TODO syncing `app_data` with `project_datas` is awkward
+			// TODO syncing `app_data` with `projects` is awkward
 			this.app_data.value = {
 				...this.app_data.peek(),
 				projects: this.app_data.peek().projects.concat({id, name: project_data.name}),
 			};
-			this.project_datas.value = project_datas.concat(project_data);
+			this.project_datas.value = projects.concat(project_data);
 			this.selected_project_id.value = id;
 			this.editing_project.value = false;
-			if (this.project_draft_data.peek() === project_data) {
-				this.project_draft_data.value = null;
+			if (this.draft_project_data.peek() === project_data) {
+				this.draft_project_data.value = null;
 			}
 			this.save_project(id);
 		});
 		return project_data;
 	};
 
+	duplicate_project = (id: ProjectId): void => {
+		log.debug('duplicate_project_data', id);
+		const projects = this.project_datas.peek();
+		const project_data = projects.find((d) => d.id === id);
+		if (!project_data) {
+			console.error('cannot find project_data with id', id);
+			return;
+		}
+		batch(() => {
+			const {id: _, name, ...rest} = project_data;
+			const new_project_data = ProjectData.parse({
+				...rest,
+				name: to_next_name(name, projects),
+			});
+			this.create_project(new_project_data);
+			this.draft_project_data.value = new_project_data; // TODO move to component?
+			this.selected_project_id.value = new_project_data.id;
+			this.editing_project_draft.value = true;
+			this.editing_project.value = true;
+		});
+	};
+
 	update_project = (project_data: ProjectData): void => {
 		log.debug('update_project', project_data);
-		const project_datas = this.project_datas.peek();
+		const projects = this.project_datas.peek();
 		const {id} = project_data;
-		const index = project_datas.findIndex((p) => p.id === id);
+		const index = projects.findIndex((p) => p.id === id);
 		if (index === -1) {
-			console.error('cannot find project_data to update', id, project_datas);
+			console.error('cannot find project_data to update', id, projects);
 			return; // no active project
 		}
-		const existing = project_datas[index];
-		// TODO syncing `app_data` with `project_datas` is awkward
+		const existing = projects[index];
+		// TODO syncing `app_data` with `projects` is awkward
 		if (project_data.name !== existing.name) {
 			const app_data = this.app_data.peek();
 			this.app_data.value = {
@@ -306,127 +329,10 @@ export class App {
 				),
 			};
 		}
-		const updated = project_datas.slice();
+		const updated = projects.slice();
 		updated[index] = project_data;
 		this.project_datas.value = updated;
 		this.save_project(id);
-	};
-
-	play_level = async (id: LevelId): Promise<void> => {
-		log.debug('play_level', id);
-		const level_data = this.levels.peek()?.find((d) => d.id === id);
-		if (!level_data) {
-			console.error('cannot find level_data with id', id);
-			return;
-		}
-		void this.get_ac().resume(); // TODO where's the best place for this? needs to be synchronous with a click or similar, so this breaks if `play_level` is called without a user action
-		this.editing_level_data.value = level_data; // for better UX, so when the user navigates back it's still being edited
-		await goto(to_play_level_url(level_data));
-	};
-
-	edit_level = (level_data: LevelData | null): void => {
-		log.debug('edit_level', level_data);
-		batch(() => {
-			this.editing_level.value = !!level_data;
-			this.editing_level_data.value = level_data;
-		});
-	};
-
-	remove_level = (id: LevelId): void => {
-		log.debug('remove_level', id);
-		const project_data = this.selected_project_data.peek();
-		if (!project_data) {
-			console.error('cannot remove level_data without a project', project_data, id);
-			return; // no active project
-		}
-		const {realms} = project_data;
-		for (let i = 0; i < realms.length; i++) {
-			const realm_data = realms[i];
-			const {levels} = realm_data;
-			const level_data_index = levels.findIndex((d) => d.id === id);
-			if (level_data_index === -1) continue;
-			batch(() => {
-				if (id === this.editing_level_data.value?.id) {
-					this.editing_level_data.value = null;
-				}
-				const next_realms = realms.slice();
-				const next_levels = levels.slice();
-				next_levels.splice(level_data_index, 1);
-				next_realms[i] = {...realm_data, levels: next_levels};
-				this.update_project({...project_data, realms: next_realms});
-			});
-			return;
-		}
-		console.error('cannot find level_data with id', id);
-	};
-
-	// TODO inconsistent naming with `realm` having the `_def` prefix here
-	create_level = (level_data: LevelData): void => {
-		log.debug('create_level', level_data);
-		const project_data = this.selected_project_data.peek();
-		if (!project_data) {
-			console.error('cannot create level_data without a project', project_data, level_data);
-			return; // no active project
-		}
-		const {realms} = project_data;
-		const realm_data = this.selected_realm_data.peek();
-		if (!realm_data) {
-			console.error('cannot create level_data without a selected realm');
-			return;
-		}
-		const {levels} = realm_data;
-
-		const existing = levels.find((d) => d.id === level_data.id);
-		if (existing) {
-			log.debug('level_data already exists', level_data, existing);
-			return;
-		}
-
-		const next_realms = realms.slice();
-		const realm_data_index = realms.indexOf(realm_data);
-		if (realm_data_index === -1) {
-			console.error('expected selected realm def to be in array', realm_data, realms);
-			return;
-		}
-		next_realms[realm_data_index] = {
-			...realm_data,
-			levels: realm_data.levels.concat(level_data),
-		};
-
-		batch(() => {
-			this.update_project({...project_data, realms: next_realms});
-			this.editing_level.value = false;
-			this.editing_level_data.value = null;
-		});
-
-		return;
-	};
-
-	update_level = (level_data: LevelData): void => {
-		log.debug('update_level', level_data);
-		const project_data = this.selected_project_data.peek();
-		if (!project_data) {
-			console.error('cannot update level_data without a project', project_data, level_data);
-			return; // no active project
-		}
-		const {realms} = project_data;
-		const {id} = level_data;
-		for (let i = 0; i < realms.length; i++) {
-			const realm_data = realms[i];
-			const {levels} = realm_data;
-			const level_data_index = levels.findIndex((d) => d.id === id);
-			if (level_data_index === -1) continue;
-			batch(() => {
-				const next_levels = levels.slice();
-				next_levels[level_data_index] = level_data;
-				const next_realms = realms.slice();
-				next_realms[i] = {...realm_data, levels: next_levels};
-				this.update_project({...project_data, realms: next_realms});
-				this.editing_level_data.value = level_data; // TODO maybe push to the component?
-			});
-			return;
-		}
-		console.error('cannot find level_data with id', id);
 	};
 
 	select_realm = (id: RealmId | null): void => {
@@ -442,10 +348,10 @@ export class App {
 			this.editing_realm_draft.value = false;
 			// TODO derive instead of manually checking? might not be needed with a restructuring that saves the editing state in the tree
 			if (
-				this.editing_level_data.peek() &&
-				!realm_data.levels.includes(this.editing_level_data.peek()!)
+				this.draft_level_data.peek() &&
+				!realm_data.levels.includes(this.draft_level_data.peek()!)
 			) {
-				this.editing_level_data.value = null;
+				this.draft_level_data.value = null;
 			}
 		});
 	};
@@ -513,14 +419,10 @@ export class App {
 		}
 		batch(() => {
 			const {id: _, name, ...rest} = realm_data;
-			const new_realm_data = RealmData.parse({...rest, name: name + '_'});
+			const new_realm_data = RealmData.parse({...rest, name: to_next_name(name, realms)});
 			this.create_realm(new_realm_data);
-			if (id === this.editing_realm_id.peek()) {
-				this.editing_realm.value = false; // TODO move to component?
-			}
-			if (id === this.selected_realm_id.peek()) {
-				this.selected_realm_id.value = new_realm_data.id;
-			}
+			this.draft_realm_data.value = new_realm_data; // TODO move to component?
+			this.selected_realm_id.value = new_realm_data.id;
 		});
 	};
 
@@ -570,6 +472,145 @@ export class App {
 			this.update_project({...project_data, realms: updated});
 			this.selected_realm_id.value = id;
 		});
+	};
+
+	play_level = async (id: LevelId): Promise<void> => {
+		log.debug('play_level', id);
+		const level_data = this.levels.peek()?.find((d) => d.id === id);
+		if (!level_data) {
+			console.error('cannot find level_data with id', id);
+			return;
+		}
+		void this.get_ac().resume(); // TODO where's the best place for this? needs to be synchronous with a click or similar, so this breaks if `play_level` is called without a user action
+		this.draft_level_data.value = level_data; // for better UX, so when the user navigates back it's still being edited
+		await goto(to_play_level_url(level_data));
+	};
+
+	edit_level = (level_data: LevelData | null): void => {
+		log.debug('edit_level', level_data);
+		batch(() => {
+			this.editing_level.value = !!level_data;
+			this.draft_level_data.value = level_data;
+		});
+	};
+
+	remove_level = (id: LevelId): void => {
+		log.debug('remove_level', id);
+		const project_data = this.selected_project_data.peek();
+		if (!project_data) {
+			console.error('cannot remove level_data without a project', project_data, id);
+			return; // no active project
+		}
+		const {realms} = project_data;
+		for (let i = 0; i < realms.length; i++) {
+			const realm_data = realms[i];
+			const {levels} = realm_data;
+			const level_data_index = levels.findIndex((d) => d.id === id);
+			if (level_data_index === -1) continue;
+			batch(() => {
+				if (id === this.draft_level_data.value?.id) {
+					this.draft_level_data.value = null;
+				}
+				const next_realms = realms.slice();
+				const next_levels = levels.slice();
+				next_levels.splice(level_data_index, 1);
+				next_realms[i] = {...realm_data, levels: next_levels};
+				this.update_project({...project_data, realms: next_realms});
+			});
+			return;
+		}
+		console.error('cannot find level_data with id', id);
+	};
+
+	// TODO inconsistent naming with `realm` having the `_def` prefix here
+	create_level = (level_data: LevelData): void => {
+		log.debug('create_level', level_data);
+		const project_data = this.selected_project_data.peek();
+		if (!project_data) {
+			console.error('cannot create level_data without a project', project_data, level_data);
+			return; // no active project
+		}
+		const {realms} = project_data;
+		const realm_data = this.selected_realm_data.peek();
+		if (!realm_data) {
+			console.error('cannot create level_data without a selected realm');
+			return;
+		}
+		const {levels} = realm_data;
+
+		const existing = levels.find((d) => d.id === level_data.id);
+		if (existing) {
+			log.debug('level_data already exists', level_data, existing);
+			return;
+		}
+
+		const next_realms = realms.slice();
+		const realm_data_index = realms.indexOf(realm_data);
+		if (realm_data_index === -1) {
+			console.error('expected selected realm def to be in array', realm_data, realms);
+			return;
+		}
+		next_realms[realm_data_index] = {
+			...realm_data,
+			levels: realm_data.levels.concat(level_data),
+		};
+
+		batch(() => {
+			this.update_project({...project_data, realms: next_realms});
+			this.editing_level.value = false;
+			this.draft_level_data.value = null;
+		});
+
+		return;
+	};
+
+	duplicate_level = (id: LevelId): void => {
+		log.debug('duplicate_level_data', id);
+		const realm_data = this.selected_realm_data.peek();
+		if (!realm_data) {
+			console.error('cannot duplicate level_data without a realm', realm_data, id);
+			return; // no active realm
+		}
+		const {levels} = realm_data;
+		const level_data = levels.find((d) => d.id === id);
+		if (!level_data) {
+			console.error('cannot find level_data with id', id);
+			return;
+		}
+		batch(() => {
+			const {id: _, name, ...rest} = level_data;
+			const new_level_data = LevelData.parse({...rest, name: to_next_name(name, levels)});
+			this.create_level(new_level_data);
+			this.editing_level.value = true;
+			this.draft_level_data.value = new_level_data; // TODO move to component?
+		});
+	};
+
+	update_level = (level_data: LevelData): void => {
+		log.debug('update_level', level_data);
+		const project_data = this.selected_project_data.peek();
+		if (!project_data) {
+			console.error('cannot update level_data without a project', project_data, level_data);
+			return; // no active project
+		}
+		const {realms} = project_data;
+		const {id} = level_data;
+		for (let i = 0; i < realms.length; i++) {
+			const realm_data = realms[i];
+			const {levels} = realm_data;
+			const level_data_index = levels.findIndex((d) => d.id === id);
+			if (level_data_index === -1) continue;
+			batch(() => {
+				const next_levels = levels.slice();
+				next_levels[level_data_index] = level_data;
+				const next_realms = realms.slice();
+				next_realms[i] = {...realm_data, levels: next_levels};
+				this.update_project({...project_data, realms: next_realms});
+				this.draft_level_data.value = level_data; // TODO maybe push to the component?
+			});
+			return;
+		}
+		console.error('cannot find level_data with id', id);
 	};
 
 	register_success = (id: LevelId, mistakes: number): void => {

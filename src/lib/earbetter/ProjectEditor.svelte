@@ -5,16 +5,17 @@
 	export let app: App; // TODO maybe change to be more granular objects?
 
 	$: ({
-		project_datas,
+		project_datas: projects,
 		editing_project,
 		editing_project_data,
 		remove_project,
+		duplicate_project,
 		update_project,
 		create_project,
 	} = app);
 
 	let id: string;
-	$: editing = $project_datas.some((d) => d.id === id);
+	$: editing = $projects.some((d) => d.id === id);
 </script>
 
 <div class="panel padded-md markup">
@@ -26,6 +27,7 @@
 			? (e) => (editing ? update_project : create_project)?.(e.detail)
 			: undefined}
 		on:remove={remove_project ? (e) => remove_project?.(e.detail) : undefined}
+		on:duplicate={duplicate_project ? (e) => duplicate_project?.(e.detail) : undefined}
 	>
 		<svelte:fragment slot="footer" let:changed>
 			{#if editing}

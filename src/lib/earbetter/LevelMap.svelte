@@ -24,7 +24,7 @@
 	export let midi_access: Signal<MIDIAccess | null>;
 
 	$: ({
-		project_datas,
+		project_datas: projects,
 		editing_project,
 		editing_project_data,
 		selected_project_data,
@@ -33,13 +33,14 @@
 		editing_realm_data,
 		levels,
 		editing_level,
-		editing_level_data,
+		draft_level_data,
 		selected_realm_id,
 		show_game_help,
 		toggle_game_help,
 		play_level,
 		edit_level,
 		remove_level,
+		duplicate_level,
 		create_level,
 		update_level,
 	} = app);
@@ -66,7 +67,7 @@
 	}}
 />
 <div class="map">
-	{#if $project_datas.length}
+	{#if $projects.length}
 		<div class="column-sm">
 			{#if $selected_project_data}
 				<section class="card" transition:slide|local>
@@ -132,7 +133,7 @@
 			</section>
 		{/if}
 	</div>
-	{#if $project_datas.length}
+	{#if $projects.length}
 		<div class="column-sm">
 			{#if $levels}
 				<section class="card" transition:slide|local>
@@ -145,11 +146,12 @@
 						<LevelForm
 							{editing}
 							bind:id
-							level_data={$editing_level_data}
+							level_data={$draft_level_data}
 							on:submit={(editing ? update_level : create_level)
 								? (e) => (editing ? update_level : create_level)(e.detail)
 								: undefined}
 							on:remove={(e) => remove_level(e.detail)}
+							on:duplicate={(e) => duplicate_level(e.detail)}
 						>
 							<svelte:fragment slot="footer" let:changed let:to_data>
 								{#if editing}

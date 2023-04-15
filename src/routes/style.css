@@ -185,3 +185,17 @@ button {
 .padded-md-x {
 	padding: 0 var(--spacing_md);
 }
+
+.progress-bar {
+	position: var(--progress_bar_position, absolute);
+	left: var(--progress_bar_left, 0);
+	top: var(--progress_bar_top, calc(50% - var(--progress_bar_height, var(--spacing_md)) / 2));
+	width: calc(var(--progress_bar_percent, 0) * 100%);
+	height: var(--progress_bar_height, var(--spacing_md));
+	background-color: var(--progress_bar_bg, var(--tint_light_4));
+	border-radius: var(--border_radius);
+	transition: var(
+		--progress_bar_transition,
+		width var(--progress_bar_duration, var(--duration_4)) ease
+	);
+}
