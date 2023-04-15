@@ -32,5 +32,7 @@
 	.level {
 		flex: 1;
 		border: var(--border_width) var(--border_style) var(--border_color);
+		background-color: transparent;
+		transition: background-color linear var(--duration_1);
 	}
 </style>
