@@ -222,13 +222,17 @@
 						<div class="icons" in:fly|local={{duration: 4000, x: 200}}>🎶</div>
 					</div>
 					<div class="panel padded-md centered" in:scale|local={{delay: 250}}>
-						<div style:font-size="var(--font_size_xl3)">
-							{$mistakes}
+						<div class="panel padded-md centered" style:margin-bottom="var(--spacing_md)">
+							<div style:font-size="var(--font_size_xl3)">
+								{$mistakes}
+							</div>
+							<div>
+								mistake{plural($mistakes)} this run
+							</div>
 						</div>
-						<div style:margin-bottom="var(--spacing_xs)">
-							mistake{plural($mistakes)} this run
+						<div class="panel padded-md">
+							<LevelStatsSummary {level_data} {level_stats} />
 						</div>
-						<LevelStatsSummary {level_data} {level_stats} />
 					</div>
 					<button class="big" on:click={() => exit_level_to_map()} in:scale|local={{delay: 500}}>
 						go back to the map &nbsp;<code>Escape</code></button
