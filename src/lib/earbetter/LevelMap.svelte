@@ -24,7 +24,7 @@
 	export let midi_access: Signal<MIDIAccess | null>;
 
 	$: ({
-		project_datas,
+		projects: project_datas,
 		editing_project,
 		editing_project_data,
 		selected_project_data,
@@ -40,6 +40,7 @@
 		play_level,
 		edit_level,
 		remove_level,
+		duplicate_level,
 		create_level,
 		update_level,
 	} = app);
@@ -150,6 +151,7 @@
 								? (e) => (editing ? update_level : create_level)(e.detail)
 								: undefined}
 							on:remove={(e) => remove_level(e.detail)}
+							on:duplicate={(e) => duplicate_level(e.detail)}
 						>
 							<svelte:fragment slot="footer" let:changed let:to_data>
 								{#if editing}

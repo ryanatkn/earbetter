@@ -7,7 +7,7 @@
 
 	$: ({
 		app_data,
-		project_datas,
+		projects: project_datas,
 		selected_project_id,
 		editing_project,
 		editing_project_id,

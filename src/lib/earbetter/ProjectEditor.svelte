@@ -5,7 +5,7 @@
 	export let app: App; // TODO maybe change to be more granular objects?
 
 	$: ({
-		project_datas,
+		projects: project_datas,
 		editing_project,
 		editing_project_data,
 		remove_project,
