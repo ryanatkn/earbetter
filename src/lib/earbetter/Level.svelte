@@ -135,11 +135,6 @@
 				}
 				return;
 			}
-			case 'Escape': {
-				swallow(e);
-				exit_level_to_map(); // TODO confirmation dialog
-				return;
-			}
 		}
 	};
 </script>
@@ -239,7 +234,7 @@
 						</div>
 					</div>
 					<button class="big" on:click={() => exit_level_to_map()} in:scale|local={{delay: 500}}>
-						go back to the map &nbsp;<code>Escape</code></button
+						go back to the map &nbsp;<code>Space</code></button
 					>
 					<button class="big" on:click={() => level.reset()} in:scale|local={{delay: 750}}>
 						replay level &nbsp;<code>r</code>
