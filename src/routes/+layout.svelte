@@ -22,6 +22,7 @@
 	import InstrumentControl from '$lib/audio/InstrumentControl.svelte';
 	import InitMidiButton from '$lib/audio/InitMidiButton.svelte';
 	import Footer from '$routes/Footer.svelte';
+	import SiteBreadcrumbs from '$routes/SiteBreadcrumbs.svelte';
 
 	// load site data
 	const SITE_DATA_STORAGE_KEY = 'site';
@@ -121,7 +122,9 @@
 {#if show_main_menu}
 	<Dialog on:close={() => (show_main_menu = false)}>
 		<section class="markup">
-			<h1 class="section-title">earbetter</h1>
+			<h1 class="section-title centered">
+				earbetter <div class="breadcrumbs-wrapper"><SiteBreadcrumbs /></div>
+			</h1>
 			<h2 class="section-title">settings</h2>
 			<form class="column-sm centered padded-md-x">
 				<VolumeControl {volume} />
@@ -171,3 +174,9 @@
 		<Footer flush={true} />
 	</Dialog>
 {/if}
+
+<style>
+	.breadcrumbs-wrapper {
+		font-size: var(--font_size_md);
+	}
+</style>

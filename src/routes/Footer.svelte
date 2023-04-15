@@ -1,12 +1,7 @@
 <script lang="ts">
-	import Breadcrumbs from '@feltjs/felt-ui/Breadcrumbs.svelte';
-	import {page} from '$app/stores';
-	import {base} from '$app/paths';
+	import SiteBreadcrumbs from '$routes/SiteBreadcrumbs.svelte';
 
 	export let flush = false;
-
-	$: pathname = $page.url.pathname;
-	$: home = pathname === base + '/';
 </script>
 
 <footer class:flush>
@@ -14,10 +9,7 @@
 		<a href="https://github.com/ryanatkn/earbetter">source code</a>
 		<div>public domain</div>
 		<div class="breadcrumbs-wrapper">
-			<!-- TODO this awkwardly nests a link -->
-			<Breadcrumbs
-				>{#if home}<a href="{base}/map">🎶🦜</a>{:else}🎶🦜{/if}</Breadcrumbs
-			>
+			<SiteBreadcrumbs />
 		</div>
 	</div>
 </footer>
