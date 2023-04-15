@@ -14,7 +14,9 @@
 		: null;
 
 	const to_bg_color = (s: Status, index: number, current_index: number | null): string =>
-		s === 'complete' || s === 'showing_success_feedback' || s === 'showing_failure_feedback'
+		s === 'showing_failure_feedback'
+			? 'transparent'
+			: s === 'complete' || s === 'showing_success_feedback'
 			? 'var(--tint_light_4)'
 			: index === current_index
 			? 'var(--tint_light_3)'
@@ -23,11 +25,9 @@
 			: 'transparent';
 
 	$: percent_complete =
-		$status === 'initial'
+		$status === 'initial' || $status === 'showing_failure_feedback'
 			? 0
-			: $status === 'complete' ||
-			  $status === 'showing_success_feedback' ||
-			  $status === 'showing_failure_feedback'
+			: $status === 'complete' || $status === 'showing_success_feedback'
 			? 1
 			: $trial?.presenting_index != null
 			? ($trial.presenting_index + 0.5) / $trial.sequence.length
