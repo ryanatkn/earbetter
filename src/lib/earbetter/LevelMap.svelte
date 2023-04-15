@@ -99,7 +99,7 @@
 				<div class="panel padded-md">
 					<div class="markup">
 						<p>
-							Earbetter is an <a href="https://en.wikipedia.org/wiki/Ear_training">ear training</a> tool/game:
+							Earbetter is an <a href="https://wikipedia.org/wiki/Ear_training">ear training</a> tool/game:
 						</p>
 						<ul>
 							<li>each level is a standalone challenge</li>
