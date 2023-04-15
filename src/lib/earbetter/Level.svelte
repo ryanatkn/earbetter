@@ -316,6 +316,11 @@
 		text-align: center;
 		word-wrap: break-word;
 	}
+	@media (max-width: 500px) {
+		.icons {
+			font-size: var(--icon_size_lg);
+		}
+	}
 
 	.feedback-text-bursts {
 		font-size: var(--font_size_xl3);
