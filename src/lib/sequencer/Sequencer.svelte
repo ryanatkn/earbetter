@@ -17,27 +17,27 @@
 	import {load_from_storage, set_in_storage} from '$lib/util/storage';
 
 	// TODO extract? is pretty specific
-	const PianoSettings = z.object({
+	const SequencerSettings = z.object({
 		note_min: Midi.default(36),
 		note_max: Midi.default(96),
 	});
-	type PianoSettings = z.infer<typeof PianoSettings>;
-	const SITE_DATA_STORAGE_KEY = 'piano';
-	const initial_piano_settings = load_from_storage(
+	type SequencerSettings = z.infer<typeof SequencerSettings>;
+	const SITE_DATA_STORAGE_KEY = 'sequencer';
+	const initial_sequencer_settings = load_from_storage(
 		SITE_DATA_STORAGE_KEY,
-		() => PianoSettings.parse({}),
-		PianoSettings.parse,
+		() => SequencerSettings.parse({}),
+		SequencerSettings.parse,
 	);
 
-	const note_min = signal(initial_piano_settings.note_min);
-	const note_max = signal(initial_piano_settings.note_max);
+	const note_min = signal(initial_sequencer_settings.note_min);
+	const note_max = signal(initial_sequencer_settings.note_max);
 
-	const to_piano_data = (): PianoSettings => ({
+	const to_sequencer_data = (): SequencerSettings => ({
 		note_min: note_min.value,
 		note_max: note_max.value,
 	});
-	const save_piano_data = () => set_in_storage(SITE_DATA_STORAGE_KEY, to_piano_data());
-	effect(save_piano_data);
+	const save_sequencer_data = () => set_in_storage(SITE_DATA_STORAGE_KEY, to_sequencer_data());
+	effect(save_sequencer_data);
 
 	const ac = get_ac();
 	const volume = get_volume();
