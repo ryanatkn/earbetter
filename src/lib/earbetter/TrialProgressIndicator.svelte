@@ -40,7 +40,7 @@
 	<div
 		class="trial-progress-indicator"
 		style:--progress_bar_percent={percent_complete}
-		transition:fade
+		transition:fade|local
 	>
 		{#each {length: $trial.sequence.length} as _, index}
 			<div class="trial" style="background-color: {to_bg_color($status, index, current_index)}" />
