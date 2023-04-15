@@ -1,6 +1,6 @@
 <script lang="ts">
 	import {randomInt, randomItem, randomFloat} from '@feltjs/util/random.js';
-	import {GR2i} from '@feltjs/util/maths.js';
+	import {GR2} from '@feltjs/util/maths.js';
 	import {onMount} from 'svelte';
 
 	export let count: number;
@@ -8,8 +8,8 @@
 	export let duration = 2000;
 	export let xRadius = 250;
 	export let yRadius = 250;
-	export let scaleMin = GR2i;
-	export let scaleMax = 1;
+	export let scaleMin = 1;
+	export let scaleMax = GR2;
 	export let hueRotationMin = 0;
 	export let hueRotationMax = 0; // set to 360 to get a random range of colors
 	export let startRotationMin = 0;
