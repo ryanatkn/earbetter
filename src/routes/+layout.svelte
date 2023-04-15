@@ -134,7 +134,16 @@
 			<SiteMap />
 		</section>
 		<section class="centered column-sm">
-			<h2 class="section-title">data</h2>
+			<div class="markup">
+				<h2 class="section-title">data</h2>
+				<div class="padded-md-x">
+					<aside>
+						<a href="https://developer.mozilla.org/en-US/docs/Web/API/Window/localStorage"
+							><code>localStorage</code></a
+						> is used to save your data locally on your computer.
+					</aside>
+				</div>
+			</div>
 			<button on:click={() => (deleting = !deleting)}> clear saved data </button>
 			{#if deleting}
 				<div transition:slide|local>

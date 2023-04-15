@@ -17,6 +17,8 @@
 	export let endRotationMin = 0;
 	export let endRotationMax = 360;
 
+	// TODO BLOCK add `xOffset` and `yOffset` (or w/o `Offset`) to position it, maybe a min and max?
+
 	let done = false;
 
 	let timeout: number;
@@ -45,6 +47,7 @@
 <style>
 	.burst {
 		position: relative;
+		pointer-events: none;
 	}
 	.burst-item {
 		position: absolute;

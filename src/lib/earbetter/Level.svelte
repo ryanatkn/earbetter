@@ -1,7 +1,7 @@
 <script lang="ts">
 	import {onDestroy, onMount} from 'svelte';
 	import {isEditable, swallow} from '@feltjs/util/dom.js';
-	import {scale} from 'svelte/transition';
+	import {scale, fly} from 'svelte/transition';
 	import {plural} from '@feltjs/util/string.js';
 
 	import {
@@ -66,10 +66,12 @@
 	$: if (success) {
 		feedback_count++;
 		last_feedback_status = 'success';
+		// TODO BLOCK calculate position based on last midi in sequence
 	}
 	$: if (failure) {
 		feedback_count++;
 		last_feedback_status = 'failure';
+		// TODO BLOCK calculate position based on last midi in sequence
 	}
 
 	$: initial = waiting && guessing_index === 0; // the initial user-prompting trial state before any inputs have been entered by the player (related, "prompting")
@@ -178,39 +180,6 @@
 		<TrialProgressIndicator {level} />
 	</div>
 
-	<div class="feedback" class:success class:failure class:complete>
-		{#if last_feedback_status !== null}
-			<div class="feedback-text-bursts">
-				{#if last_feedback_status === 'success'}
-					{#key feedback_count}
-						<TextBurst count={47} items={['🎵', '🎶', '🌸', '🌻', '🌼', '🍀']} />
-					{/key}
-				{/if}
-				{#if last_feedback_status === 'failure'}
-					<!-- TODO grayscale? -->
-					{#key feedback_count}
-						<TextBurst count={47} items={['🦜', '⁉', '❌']} />
-					{/key}
-				{/if}
-			</div>
-		{/if}
-		{#if complete}
-			<div class="icons" in:scale|local>🎵🎶</div>
-			<div class="panel padded-md centered" in:scale|local={{delay: 250}}>
-				<div style:margin-bottom="var(--spacing_xs)">
-					{$mistakes} mistake{plural($mistakes)} this run
-				</div>
-				<LevelStatsSummary {level_data} {level_stats} />
-			</div>
-			<button class="big" on:click={() => exit_level_to_map()} in:scale|local={{delay: 500}}>
-				go back to the map &nbsp;<code>Escape</code></button
-			>
-			<button class="big" on:click={() => level.reset()} in:scale|local={{delay: 750}}>
-				replay level &nbsp;<code>r</code>
-			</button>
-		{/if}
-	</div>
-
 	<div class="piano-wrapper" style:padding="{piano_padding}px">
 		{#if clientWidth}
 			<Piano
@@ -227,6 +196,46 @@
 					: undefined}
 				on:release={$status === 'complete' ? (e) => stop_playing(e.detail) : undefined}
 			/>
+		{/if}
+	</div>
+
+	<div class="feedback" class:success class:failure class:complete>
+		{#if complete}
+			<div class="completed-level-feedback pane">
+				<div class="panel centered padded-md">
+					<div class="centered-hz" in:scale={{duration: 3000}}>
+						<div class="icons" in:fly|local={{duration: 4000, x: -200}}>🎵</div>
+						<div class="icons" in:fly|local={{duration: 4000, x: 200}}>🎶</div>
+					</div>
+					<div class="panel padded-md centered" in:scale|local={{delay: 250}}>
+						<div style:margin-bottom="var(--spacing_xs)">
+							{$mistakes} mistake{plural($mistakes)} this run
+						</div>
+						<LevelStatsSummary {level_data} {level_stats} />
+					</div>
+					<button class="big" on:click={() => exit_level_to_map()} in:scale|local={{delay: 500}}>
+						go back to the map &nbsp;<code>Escape</code></button
+					>
+					<button class="big" on:click={() => level.reset()} in:scale|local={{delay: 750}}>
+						replay level &nbsp;<code>r</code>
+					</button>
+				</div>
+			</div>
+		{/if}
+		{#if last_feedback_status !== null}
+			<div class="feedback-text-bursts">
+				{#if last_feedback_status === 'success'}
+					{#key feedback_count}
+						<TextBurst count={47} items={['🎵', '🎶', '🌸', '🌻', '🌼', '🍀']} />
+					{/key}
+				{/if}
+				{#if last_feedback_status === 'failure'}
+					<!-- TODO grayscale? -->
+					{#key feedback_count}
+						<TextBurst count={47} items={['🦜', '⁉', '❌']} />
+					{/key}
+				{/if}
+			</div>
 		{/if}
 	</div>
 </div>
@@ -280,6 +289,7 @@
 		position: absolute;
 		top: 0;
 		left: 0;
+		z-index: 2;
 		width: 100%;
 		display: flex;
 		align-items: center;
@@ -295,9 +305,15 @@
 
 	.feedback-text-bursts {
 		font-size: var(--font_size_xl3);
-		position: absolute;
-		left: 50vw;
-		top: 50vh;
-		z-index: 10;
+		position: fixed;
+		inset: 0;
+		z-index: 5;
+		pointer-events: none;
+		/* overflow: hidden; */
+	}
+
+	.completed-level-feedback {
+		margin-top: var(--spacing_lg);
+		overflow: hidden;
 	}
 </style>
