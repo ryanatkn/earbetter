@@ -136,11 +136,6 @@
 	>
 		{#if editing}save changes to realm{:else}create realm{/if}
 	</button>
-	{#if parse_error_message}
-		<div class="message-wrapper">
-			<Message status="error"><pre>{parse_error_message}</pre></Message>
-		</div>
-	{/if}
 	{#if editing}
 		<button type="button" on:click={() => (removing = !removing)}> remove realm </button>
 		{#if removing}
@@ -158,9 +153,14 @@
 			</div>
 		{/if}
 		<button type="button" on:click={() => dispatch('duplicate', id)}> duplicate </button>
-		<button type="button" on:click={start_importing_data} bind:this={start_importing_el}>
-			{#if editing}import/export data{:else}import data{/if}
-		</button>
+	{/if}
+	<button type="button" on:click={start_importing_data} bind:this={start_importing_el}>
+		{#if editing}import/export data{:else}import data{/if}
+	</button>
+	{#if parse_error_message}
+		<div class="message-wrapper">
+			<Message status="error"><pre>{parse_error_message}</pre></Message>
+		</div>
 	{/if}
 	<slot name="footer" {changed} />
 </form>

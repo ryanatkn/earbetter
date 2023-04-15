@@ -7,7 +7,11 @@
 
 	import {create_project_id, ProjectData, type ProjectId} from '$lib/earbetter/project';
 
-	const dispatch = createEventDispatcher<{submit: ProjectData; remove: ProjectId}>();
+	const dispatch = createEventDispatcher<{
+		submit: ProjectData;
+		remove: ProjectId;
+		duplicate: ProjectId;
+	}>();
 
 	const DEFAULT_NAME = 'new project';
 
@@ -132,14 +136,6 @@
 	>
 		{#if editing}save changes to project{:else}create project{/if}
 	</button>
-	<button type="button" on:click={start_importing_data} bind:this={start_importing_el}>
-		{#if editing}import/export data{:else}import data{/if}
-	</button>
-	{#if parse_error_message}
-		<div class="message-wrapper">
-			<Message status="error"><pre>{parse_error_message}</pre></Message>
-		</div>
-	{/if}
 	{#if editing}
 		<button type="button" on:click={() => (removing = !removing)}> remove project </button>
 		{#if removing}
@@ -156,6 +152,15 @@
 				</button>
 			</div>
 		{/if}
+		<button type="button" on:click={() => dispatch('duplicate', id)}> duplicate </button>
+	{/if}
+	<button type="button" on:click={start_importing_data} bind:this={start_importing_el}>
+		{#if editing}import/export data{:else}import data{/if}
+	</button>
+	{#if parse_error_message}
+		<div class="message-wrapper">
+			<Message status="error"><pre>{parse_error_message}</pre></Message>
+		</div>
 	{/if}
 	<slot name="footer" {changed} />
 </form>

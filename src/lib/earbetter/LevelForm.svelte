@@ -26,7 +26,11 @@
 	} from '$lib/music/music';
 	import IntervalsInput from '$lib/music/IntervalsInput.svelte';
 
-	const dispatch = createEventDispatcher<{submit: LevelData; remove: LevelId}>();
+	const dispatch = createEventDispatcher<{
+		submit: LevelData;
+		remove: LevelId;
+		duplicate: LevelId;
+	}>();
 
 	export let level_data: LevelData | null = null;
 	export let id = create_level_id();
@@ -205,14 +209,6 @@
 		>
 			{#if editing}save changes to level{:else}create level{/if}
 		</button>
-		<button type="button" on:click={start_importing_data} bind:this={start_importing_el}>
-			{#if editing}import/export data{:else}import data{/if}
-		</button>
-		{#if parse_error_message}
-			<div class="message-wrapper">
-				<Message status="error"><pre>{parse_error_message}</pre></Message>
-			</div>
-		{/if}
 		{#if editing}
 			<button type="button" on:click={() => (removing = !removing)}> remove level </button>
 			{#if removing}
@@ -229,6 +225,15 @@
 					</button>
 				</div>
 			{/if}
+			<button type="button" on:click={() => dispatch('duplicate', id)}> duplicate </button>
+		{/if}
+		<button type="button" on:click={start_importing_data} bind:this={start_importing_el}>
+			{#if editing}import/export data{:else}import data{/if}
+		</button>
+		{#if parse_error_message}
+			<div class="message-wrapper">
+				<Message status="error"><pre>{parse_error_message}</pre></Message>
+			</div>
 		{/if}
 		<slot name="footer" {changed} {to_data} />
 	</div>
