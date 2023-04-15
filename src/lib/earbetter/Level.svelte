@@ -254,7 +254,7 @@
 					{#if last_feedback_status === 'failure'}
 						<!-- TODO grayscale? -->
 						{#key feedback_count}
-							<TextBurst count={7} items={['🦜', '⁉', '❔', '❌']} />
+							<TextBurst count={5} items={['🦜', '⁉', '❔', '❌']} />
 						{/key}
 					{/if}
 				</div>
