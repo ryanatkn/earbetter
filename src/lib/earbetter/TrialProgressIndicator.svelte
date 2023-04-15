@@ -1,6 +1,4 @@
 <script lang="ts">
-	import {fade} from 'svelte/transition';
-
 	import type {Level, Status} from '$lib/earbetter/level';
 
 	export let level: Level;
@@ -13,24 +11,37 @@
 			: $trial.presenting_index
 		: null;
 
-	// TODO colors
-	const get_bg_color = (s: Status, index: number): string =>
+	const to_bg_color = (s: Status, index: number): string =>
 		s === 'complete'
-			? 'rgba(255, 255, 255, 0.6)'
+			? 'var(--tint_light_5)'
 			: index === current_index
-			? 'rgba(255, 255, 255, 0.4)'
+			? 'var(--tint_light_4)'
 			: current_index !== null && index < current_index
-			? 'rgba(255, 255, 255, 0.2)'
+			? 'var(--tint_light_2)'
 			: 'transparent';
+
+	$: percent_complete =
+		$status === 'initial'
+			? 0
+			: $status === 'complete'
+			? 1
+			: $trial?.presenting_index != null
+			? ($trial.presenting_index + 0.5) / $trial.sequence.length
+			: $trial?.guessing_index != null
+			? ($trial.guessing_index + 0.5) / $trial.sequence.length
+			: 0;
+	$: console.log(`percent_complete`, percent_complete);
+	$: console.log(`$trial`, $trial);
 </script>
 
-{#if $trial}
-	<div class="trial-progress-indicator" transition:fade|local={{duration: 70}}>
+<div class="trial-progress-indicator" style:--progress_bar_percent={percent_complete}>
+	{#if $trial}
 		{#each {length: $trial.sequence.length} as _, index}
-			<div class="trial" style="background-color: {get_bg_color($status, index)}" />
+			<div class="trial" style="background-color: {to_bg_color($status, index)}" />
 		{/each}
-	</div>
-{/if}
+	{/if}
+	<div class="progress-bar" />
+</div>
 
 <style>
 	.trial-progress-indicator {
@@ -41,6 +52,12 @@
 	.trial {
 		flex: 1;
 		border: var(--border_width) var(--border_style) var(--border_color);
-		transition: background-color linear var(--duration_1);
+		background-color: transparent;
+		transition: background-color linear var(--duration_3);
+	}
+	.progress-bar {
+		--progress_bar_duration: var(--duration_2);
+		--progress_bar_height: var(--spacing_xs2);
+		--progress_bar_bg: var(--tint_light_3);
 	}
 </style>

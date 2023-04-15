@@ -215,8 +215,8 @@
 
 	<div class="feedback" class:success class:failure class:complete>
 		{#if complete}
-			<div class="completed-level-feedback pane" transition:scale|local>
-				<div class="panel centered padded-md">
+			<div class="completed-level-feedback">
+				<div class="pane centered padded-md" transition:scale|local>
 					<div class="centered-hz" in:scale|local={{duration: 3000}}>
 						<div class="icons" in:fly|local={{duration: 4000, x: -200}}>🎵</div>
 						<div class="icons" in:fly|local={{duration: 4000, x: 200}}>🎶</div>
@@ -265,6 +265,7 @@
 
 <style>
 	.level {
+		--level_progress_height: 50px;
 		position: absolute;
 		left: 0;
 		top: 0;
@@ -295,7 +296,7 @@
 		position: absolute;
 		right: 0;
 		bottom: 0;
-		height: 50px;
+		height: var(--level_progress_height);
 		width: 100%;
 	}
 	.trial-progress {
@@ -343,7 +344,9 @@
 	}
 
 	.completed-level-feedback {
-		margin-top: var(--spacing_lg);
+		padding-top: var(--level_progress_height);
+	}
+	.completed-level-feedback .pane {
 		overflow: hidden;
 	}
 </style>
