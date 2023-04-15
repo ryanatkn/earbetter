@@ -43,7 +43,7 @@ export const set_app = (store: App): App => setContext(APP_KEY, store);
 
 export class App {
 	// TODO wheres the source of truth?
-	// currently manually syncing the same changes to both `app_data` `project_datas` --
+	// currently manually syncing the same changes to both `app_data` `projects` --
 	// mixing serialization concerns with runtime representations
 	app_data: Signal<AppData>;
 
@@ -242,7 +242,7 @@ export class App {
 		const {projects} = this.app_data.peek();
 		const existing = projects.find((d) => d.id === id);
 		if (!existing) return;
-		// TODO syncing `app_data` with `project_datas` is awkward
+		// TODO syncing `app_data` with `projects` is awkward
 		batch(() => {
 			this.app_data.value = {
 				...this.app_data.peek(),
@@ -261,20 +261,20 @@ export class App {
 
 	create_project = (project_data: ProjectData): ProjectData => {
 		log.debug('create_project', project_data);
-		const project_datas = this.projects.peek();
+		const projects = this.projects.peek();
 		const {id} = project_data;
-		const existing = project_datas.find((d) => d.id === id);
+		const existing = projects.find((d) => d.id === id);
 		if (existing) {
 			log.debug('project already exists', project_data, existing);
 			return existing;
 		}
 		batch(() => {
-			// TODO syncing `app_data` with `project_datas` is awkward
+			// TODO syncing `app_data` with `projects` is awkward
 			this.app_data.value = {
 				...this.app_data.peek(),
 				projects: this.app_data.peek().projects.concat({id, name: project_data.name}),
 			};
-			this.projects.value = project_datas.concat(project_data);
+			this.projects.value = projects.concat(project_data);
 			this.selected_project_id.value = id;
 			this.editing_project.value = false;
 			if (this.project_draft_data.peek() === project_data) {
@@ -304,15 +304,15 @@ export class App {
 
 	update_project = (project_data: ProjectData): void => {
 		log.debug('update_project', project_data);
-		const project_datas = this.projects.peek();
+		const projects = this.projects.peek();
 		const {id} = project_data;
-		const index = project_datas.findIndex((p) => p.id === id);
+		const index = projects.findIndex((p) => p.id === id);
 		if (index === -1) {
-			console.error('cannot find project_data to update', id, project_datas);
+			console.error('cannot find project_data to update', id, projects);
 			return; // no active project
 		}
-		const existing = project_datas[index];
-		// TODO syncing `app_data` with `project_datas` is awkward
+		const existing = projects[index];
+		// TODO syncing `app_data` with `projects` is awkward
 		if (project_data.name !== existing.name) {
 			const app_data = this.app_data.peek();
 			this.app_data.value = {
@@ -322,7 +322,7 @@ export class App {
 				),
 			};
 		}
-		const updated = project_datas.slice();
+		const updated = projects.slice();
 		updated[index] = project_data;
 		this.projects.value = updated;
 		this.save_project(id);

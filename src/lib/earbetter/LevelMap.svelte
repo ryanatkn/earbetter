@@ -24,7 +24,7 @@
 	export let midi_access: Signal<MIDIAccess | null>;
 
 	$: ({
-		projects: project_datas,
+		projects,
 		editing_project,
 		editing_project_data,
 		selected_project_data,
@@ -67,7 +67,7 @@
 	}}
 />
 <div class="map">
-	{#if $project_datas.length}
+	{#if $projects.length}
 		<div class="column-sm">
 			{#if $selected_project_data}
 				<section class="card" transition:slide|local>
@@ -133,7 +133,7 @@
 			</section>
 		{/if}
 	</div>
-	{#if $project_datas.length}
+	{#if $projects.length}
 		<div class="column-sm">
 			{#if $levels}
 				<section class="card" transition:slide|local>
