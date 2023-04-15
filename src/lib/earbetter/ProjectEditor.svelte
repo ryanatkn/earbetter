@@ -9,6 +9,7 @@
 		editing_project,
 		editing_project_data,
 		remove_project,
+		duplicate_project,
 		update_project,
 		create_project,
 	} = app);
@@ -26,6 +27,7 @@
 			? (e) => (editing ? update_project : create_project)?.(e.detail)
 			: undefined}
 		on:remove={remove_project ? (e) => remove_project?.(e.detail) : undefined}
+		on:duplicate={duplicate_project ? (e) => duplicate_project?.(e.detail) : undefined}
 	>
 		<svelte:fragment slot="footer" let:changed>
 			{#if editing}

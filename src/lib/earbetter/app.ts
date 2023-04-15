@@ -65,15 +65,15 @@ export class App {
 	);
 	editing_project: Signal<boolean> = signal(false);
 	editing_project_draft: Signal<boolean> = signal(false);
-	project_draft_data: Signal<ProjectData | null> = signal(null);
+	draft_project_data: Signal<ProjectData | null> = signal(null);
 	editing_project_id: ReadonlySignal<ProjectId | null> = computed(() =>
 		this.editing_project_draft.value
-			? this.project_draft_data.value?.id || null
+			? this.draft_project_data.value?.id || null
 			: this.selected_project_data.value?.id || null,
 	); // this may be `selected_project_data`, or a new project def draft that hasn't been created yet
 	editing_project_data: ReadonlySignal<ProjectData | null> = computed(() =>
 		this.editing_project_draft.value
-			? this.project_draft_data.value
+			? this.draft_project_data.value
 			: this.selected_project_data.value,
 	);
 
@@ -101,7 +101,7 @@ export class App {
 	);
 	active_level_data: Signal<LevelData | null> = signal(null);
 	editing_level: Signal<boolean> = signal(false);
-	editing_level_data: Signal<LevelData | null> = signal(null);
+	draft_level_data: Signal<LevelData | null> = signal(null);
 
 	constructor(public readonly get_ac: () => AudioContext, public readonly storage_key = 'app') {
 		// TODO maybe `new App(App.load())` ?
@@ -221,7 +221,7 @@ export class App {
 		batch(() => {
 			if (!project_data) {
 				this.editing_project.value = false;
-				this.project_draft_data.value = null;
+				this.draft_project_data.value = null;
 				return;
 			}
 			this.editing_project.value = true;
@@ -233,7 +233,7 @@ export class App {
 				this.editing_project_draft.value = false;
 			} else {
 				// draft project
-				this.project_draft_data.value = project_data;
+				this.draft_project_data.value = project_data;
 				this.editing_project_draft.value = true;
 			}
 		});
@@ -279,8 +279,8 @@ export class App {
 			this.project_datas.value = projects.concat(project_data);
 			this.selected_project_id.value = id;
 			this.editing_project.value = false;
-			if (this.project_draft_data.peek() === project_data) {
-				this.project_draft_data.value = null;
+			if (this.draft_project_data.peek() === project_data) {
+				this.draft_project_data.value = null;
 			}
 			this.save_project(id);
 		});
@@ -302,8 +302,10 @@ export class App {
 				name: to_next_name(name, projects),
 			});
 			this.create_project(new_project_data);
-			this.project_draft_data.value = new_project_data; // TODO move to component?
+			this.draft_project_data.value = new_project_data; // TODO move to component?
 			this.selected_project_id.value = new_project_data.id;
+			this.editing_project_draft.value = true;
+			this.editing_project.value = true;
 		});
 	};
 
@@ -346,10 +348,10 @@ export class App {
 			this.editing_realm_draft.value = false;
 			// TODO derive instead of manually checking? might not be needed with a restructuring that saves the editing state in the tree
 			if (
-				this.editing_level_data.peek() &&
-				!realm_data.levels.includes(this.editing_level_data.peek()!)
+				this.draft_level_data.peek() &&
+				!realm_data.levels.includes(this.draft_level_data.peek()!)
 			) {
-				this.editing_level_data.value = null;
+				this.draft_level_data.value = null;
 			}
 		});
 	};
@@ -480,7 +482,7 @@ export class App {
 			return;
 		}
 		void this.get_ac().resume(); // TODO where's the best place for this? needs to be synchronous with a click or similar, so this breaks if `play_level` is called without a user action
-		this.editing_level_data.value = level_data; // for better UX, so when the user navigates back it's still being edited
+		this.draft_level_data.value = level_data; // for better UX, so when the user navigates back it's still being edited
 		await goto(to_play_level_url(level_data));
 	};
 
@@ -488,7 +490,7 @@ export class App {
 		log.debug('edit_level', level_data);
 		batch(() => {
 			this.editing_level.value = !!level_data;
-			this.editing_level_data.value = level_data;
+			this.draft_level_data.value = level_data;
 		});
 	};
 
@@ -506,8 +508,8 @@ export class App {
 			const level_data_index = levels.findIndex((d) => d.id === id);
 			if (level_data_index === -1) continue;
 			batch(() => {
-				if (id === this.editing_level_data.value?.id) {
-					this.editing_level_data.value = null;
+				if (id === this.draft_level_data.value?.id) {
+					this.draft_level_data.value = null;
 				}
 				const next_realms = realms.slice();
 				const next_levels = levels.slice();
@@ -556,7 +558,7 @@ export class App {
 		batch(() => {
 			this.update_project({...project_data, realms: next_realms});
 			this.editing_level.value = false;
-			this.editing_level_data.value = null;
+			this.draft_level_data.value = null;
 		});
 
 		return;
@@ -580,7 +582,7 @@ export class App {
 			const new_level_data = LevelData.parse({...rest, name: to_next_name(name, levels)});
 			this.create_level(new_level_data);
 			this.editing_level.value = true;
-			this.editing_level_data.value = new_level_data; // TODO move to component?
+			this.draft_level_data.value = new_level_data; // TODO move to component?
 		});
 	};
 
@@ -604,7 +606,7 @@ export class App {
 				const next_realms = realms.slice();
 				next_realms[i] = {...realm_data, levels: next_levels};
 				this.update_project({...project_data, realms: next_realms});
-				this.editing_level_data.value = level_data; // TODO maybe push to the component?
+				this.draft_level_data.value = level_data; // TODO maybe push to the component?
 			});
 			return;
 		}

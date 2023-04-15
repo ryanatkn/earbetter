@@ -33,7 +33,7 @@
 		editing_realm_data,
 		levels,
 		editing_level,
-		editing_level_data,
+		draft_level_data,
 		selected_realm_id,
 		show_game_help,
 		toggle_game_help,
@@ -146,7 +146,7 @@
 						<LevelForm
 							{editing}
 							bind:id
-							level_data={$editing_level_data}
+							level_data={$draft_level_data}
 							on:submit={(editing ? update_level : create_level)
 								? (e) => (editing ? update_level : create_level)(e.detail)
 								: undefined}

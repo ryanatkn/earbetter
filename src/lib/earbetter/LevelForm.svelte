@@ -210,12 +210,15 @@
 			{#if editing}save changes to level{:else}create level{/if}
 		</button>
 		{#if editing}
-			<button type="button" on:click={() => (removing = !removing)}> remove level </button>
+			<button type="button" style:margin-bottom={0} on:click={() => (removing = !removing)}>
+				remove level
+			</button>
 			{#if removing}
 				<div transition:slide|local>
 					<button
 						class="w-full"
 						type="button"
+						style:margin-bottom={0}
 						on:click={() => {
 							removing = false;
 							dispatch('remove', id);
@@ -225,7 +228,13 @@
 					</button>
 				</div>
 			{/if}
-			<button type="button" on:click={() => dispatch('duplicate', id)}> duplicate </button>
+			<button
+				type="button"
+				style:margin-top="var(--spacing_lg)"
+				on:click={() => dispatch('duplicate', id)}
+			>
+				duplicate
+			</button>
 		{/if}
 		<button type="button" on:click={start_importing_data} bind:this={start_importing_el}>
 			{#if editing}import/export data{:else}import data{/if}
