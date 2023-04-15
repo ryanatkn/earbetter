@@ -216,19 +216,23 @@
 	<div class="feedback" class:success class:failure class:complete>
 		{#if complete}
 			<div class="completed-level-feedback">
-				<div class="pane centered padded-md" transition:scale|local>
+				<div class="pane panel centered padded-md" transition:scale|local>
 					<div class="centered-hz" in:scale|local={{duration: 3000}}>
 						<div class="icons" in:fly|local={{duration: 4000, x: -200}}>🎵</div>
 						<div class="icons" in:fly|local={{duration: 4000, x: 200}}>🎶</div>
 					</div>
 					<div class="panel padded-md centered" in:scale|local={{delay: 250}}>
 						<div class="panel padded-md centered" style:margin-bottom="var(--spacing_md)">
-							<div style:font-size="var(--font_size_xl3)">
-								{$mistakes}
-							</div>
-							<div>
-								mistake{plural($mistakes)} this run
-							</div>
+							{#if $mistakes === 0}
+								<div style:font-size="var(--font_size_xl3)">flawless run!</div>
+							{:else}
+								<div style:font-size="var(--font_size_xl3)">
+									{$mistakes}
+								</div>
+								<div>
+									mistake{plural($mistakes)} this run
+								</div>
+							{/if}
 						</div>
 						<div class="panel padded-md">
 							<LevelStatsSummary {level_data} {level_stats} />
