@@ -211,34 +211,36 @@
 	<div class="feedback" class:success class:failure class:complete>
 		{#if complete}
 			<div class="completed-level-feedback">
-				<div class="pane panel centered padded-md" transition:scale|local>
-					<div class="centered-hz" in:scale|local={{duration: 3000}}>
-						<div class="icons" in:fly|local={{duration: 4000, x: -200}}>🎵</div>
-						<div class="icons" in:fly|local={{duration: 4000, x: 200}}>🎶</div>
-					</div>
-					<div class="panel padded-md centered" in:scale|local={{delay: 250}}>
-						<div class="panel padded-md centered" style:margin-bottom="var(--spacing_md)">
-							{#if $mistakes === 0}
-								<div style:font-size="var(--font_size_xl3)">flawless run!</div>
-							{:else}
-								<div style:font-size="var(--font_size_xl3)">
-									{$mistakes}
-								</div>
-								<div>
-									mistake{plural($mistakes)} this run
-								</div>
-							{/if}
+				<div class="pane" transition:scale|local>
+					<div class="panel centered padded-md">
+						<div class="centered-hz" in:scale|local={{duration: 3000}}>
+							<div class="icons" in:fly|local={{duration: 4000, x: -200}}>🎵</div>
+							<div class="icons" in:fly|local={{duration: 4000, x: 200}}>🎶</div>
 						</div>
-						<div class="panel padded-md">
-							<LevelStatsSummary {level_data} {level_stats} />
+						<div class="panel padded-md centered" in:scale|local={{delay: 250}}>
+							<div class="panel padded-md centered" style:margin-bottom="var(--spacing_md)">
+								{#if $mistakes === 0}
+									<div style:font-size="var(--font_size_xl3)">flawless run!</div>
+								{:else}
+									<div style:font-size="var(--font_size_xl3)">
+										{$mistakes}
+									</div>
+									<div>
+										mistake{plural($mistakes)} this run
+									</div>
+								{/if}
+							</div>
+							<div class="panel padded-md">
+								<LevelStatsSummary {level_data} {level_stats} />
+							</div>
 						</div>
+						<button class="big" on:click={() => exit_level_to_map()} in:scale|local={{delay: 500}}>
+							go back to the map &nbsp;<code>Space</code></button
+						>
+						<button class="big" on:click={() => level.reset()} in:scale|local={{delay: 750}}>
+							replay level &nbsp;<code>r</code>
+						</button>
 					</div>
-					<button class="big" on:click={() => exit_level_to_map()} in:scale|local={{delay: 500}}>
-						go back to the map &nbsp;<code>Space</code></button
-					>
-					<button class="big" on:click={() => level.reset()} in:scale|local={{delay: 750}}>
-						replay level &nbsp;<code>r</code>
-					</button>
 				</div>
 			</div>
 		{/if}
