@@ -12,7 +12,14 @@
 	import {get_instrument, get_volume, with_velocity} from '$lib/audio/helpers';
 	import InstrumentControl from '$lib/audio/InstrumentControl.svelte';
 	import MidiRangeControl from '$lib/audio/MidiRangeControl.svelte';
-	import {get_scale, get_key, get_enabled_notes, Midi} from '$lib/music/music';
+	import {
+		get_scale,
+		get_key,
+		get_enabled_notes,
+		Midi,
+		TimeSignature,
+		DEFAULT_TIME_SIGNATURE,
+	} from '$lib/music/music';
 	import SelectNotesControl from '$lib/music/SelectNotesControl.svelte';
 	import {load_from_storage, set_in_storage} from '$lib/util/storage';
 
@@ -20,6 +27,7 @@
 	const SequencerSettings = z.object({
 		note_min: Midi.default(36),
 		note_max: Midi.default(96),
+		time_signature: TimeSignature.default(DEFAULT_TIME_SIGNATURE),
 	});
 	type SequencerSettings = z.infer<typeof SequencerSettings>;
 	const SITE_DATA_STORAGE_KEY = 'sequencer';
@@ -31,10 +39,14 @@
 
 	const note_min = signal(initial_sequencer_settings.note_min);
 	const note_max = signal(initial_sequencer_settings.note_max);
+	const time_signature = signal(initial_sequencer_settings.time_signature);
+
+	$: console.log(`$time_signature`, $time_signature);
 
 	const to_sequencer_data = (): SequencerSettings => ({
 		note_min: note_min.value,
 		note_max: note_max.value,
+		time_signature: time_signature.value,
 	});
 	const save_sequencer_data = () => set_in_storage(SITE_DATA_STORAGE_KEY, to_sequencer_data());
 	effect(save_sequencer_data);

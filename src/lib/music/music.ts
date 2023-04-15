@@ -42,6 +42,7 @@ export type Intervals = z.infer<typeof Intervals>;
 // https://wikipedia.org/wiki/Time_signature
 export const TimeSignature = z.tuple([z.number().int(), z.number().int()]);
 export type TimeSignature = z.infer<typeof TimeSignature>;
+export const DEFAULT_TIME_SIGNATURE: TimeSignature = [4, 4];
 
 // TODO replace with zod? how?
 export const serialize_intervals = (intervals: Intervals): string => intervals.join(', ');

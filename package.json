@@ -60,7 +60,10 @@
     "ignorePatterns": [
       "svelte.config.js",
       "vite.config.js"
-    ]
+    ],
+    "rules": {
+      "no-console": 1
+    }
   },
   "prettier": {
     "useTabs": true,
