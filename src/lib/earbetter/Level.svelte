@@ -165,30 +165,12 @@
 	bind:this={el}
 	aria-hidden="true"
 >
-	<!-- <div class="debug">
-		<div>status: {status}</div>
-		<div>trials created: {$level.trials.length}</div>
-		{#if $level.trial}
-			<div>trial: {$level.trial.index + 1} of {$level.def.trial_count}</div>
-			<div>retry_count: {$level.trial.retry_count}</div>
-			{#if $level.trial.presenting_index !== null}
-				<div>
-					presenting_index: {$level.trial.sequence[$level.trial.presenting_index]}
-				</div>
-			{:else}...{/if}
-		{:else}no trial{/if}
-	</div> -->
-
-	<!-- {#if status === 'presenting_prompt'}
-	{:else if status === 'waiting_for_input'} -->
-
 	<div class="level-progress" title="level progress">
 		<LevelProgressIndicator {level} />
 	</div>
 	<div class="trial-progress" title="trial progress">
 		<TrialProgressIndicator {level} />
 	</div>
-
 	<div class="piano-wrapper" style:padding="{piano_padding}px" bind:this={piano_wrapper_el}>
 		{#if clientWidth}
 			<Piano
@@ -207,18 +189,24 @@
 			/>
 		{/if}
 	</div>
-
 	<div class="feedback" class:success class:failure class:complete>
 		{#if complete}
 			<div class="completed-level-feedback">
 				<div class="pane" transition:scale|local>
 					<div class="panel centered padded-md">
 						<div class="centered-hz" in:scale|local={{duration: 3000}}>
-							<div class="icons" in:fly|local={{duration: 4000, x: -200}}>🎵</div>
-							<div class="icons" in:fly|local={{duration: 4000, x: 200}}>🎶</div>
+							<div class="completed-header-icon" in:fly|local={{duration: 4000, x: -200}}>🎵</div>
+							<div class="completed-header-icon" in:fly|local={{duration: 4000, x: 200}}>🎶</div>
 						</div>
-						<div class="panel padded-md centered" in:scale|local={{delay: 250}}>
-							<div class="panel padded-md centered" style:margin-bottom="var(--spacing_md)">
+						<div
+							class="panel padded-md centered"
+							in:scale|local={{delay: 250}}
+							style:margin-bottom="var(--spacing_md)"
+						>
+							<div
+								class="panel padded-md centered centered-text"
+								style:margin-bottom="var(--spacing_md)"
+							>
 								{#if $mistakes === 0}
 									<div style:font-size="var(--font_size_xl3)">flawless run!</div>
 								{:else}
@@ -234,7 +222,12 @@
 								<LevelStatsSummary {level_data} {level_stats} />
 							</div>
 						</div>
-						<button class="big" on:click={() => exit_level_to_map()} in:scale|local={{delay: 500}}>
+						<button
+							class="big"
+							on:click={() => exit_level_to_map()}
+							in:scale|local={{delay: 500}}
+							style:margin-bottom="var(--spacing_md)"
+						>
 							go back to the map &nbsp;<code>Space</code></button
 						>
 						<button class="big" on:click={() => level.reset()} in:scale|local={{delay: 750}}>
@@ -313,14 +306,15 @@
 		width: 100%;
 	}
 
-	.icons {
+	.completed-header-icon {
 		font-size: var(--icon_size_xl);
 		word-break: break-all;
 		text-align: center;
 		word-wrap: break-word;
+		padding: var(--spacing_xs);
 	}
 	@media (max-width: 500px) {
-		.icons {
+		.completed-header-icon {
 			font-size: var(--icon_size_lg);
 		}
 	}
