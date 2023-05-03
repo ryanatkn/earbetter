@@ -59,6 +59,12 @@ and [issues](https://github.com/ryanatkn/earbetter/issues).
 
 ## develop
 
+This project uses [SvelteKit](https://kit.svelte.dev/) with the static adapter
+and [Vite](https://vitejs.dev/),
+so the normal commands like `vite dev` work as expected.
+I use [`gro`](https://github.com/feltjs/gro)
+for additional things like deploying - see below for more.
+
 > [Windows is not yet supported](https://github.com/feltjs/gro/issues/319)
 > (we recommend [WSL](https://docs.microsoft.com/en-us/windows/wsl/about))
 
