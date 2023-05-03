@@ -94,6 +94,7 @@ export interface Trial {
 const create_next_trial = (def: LevelData, current_trial: Trial | null): Trial => {
 	const {note_min, note_max} = def;
 
+	// TODO BLOCK the point of this code is to get to the tonic
 	const interval_max = def.intervals.reduce((max, v) => Math.max(max, v));
 	const interval_min = def.intervals.reduce((max, v) => Math.min(max, v));
 	const tonic_max = Math.min(note_max - interval_max, note_max);
