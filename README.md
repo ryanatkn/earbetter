@@ -21,7 +21,8 @@ and while interesting it wasn't a good training tool.
 The goal of Earbetter is to be a useful ear trainer.
 I also want it to be fun so it motivates more training, but it's not there yet.
 
-I'm not a musician so I can't possibly design all of the best ear training challenges.
+I'm not a musician and I'm one person so
+I can't possibly make all of the best ear training challenges.
 Knowing this, I designed the software so you can
 create and share custom challenges - the content is all configurable.
 
