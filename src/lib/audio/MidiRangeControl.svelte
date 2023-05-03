@@ -20,14 +20,6 @@
 	<div class="centered-hz">
 		<label>
 			<div class="title">lowest MIDI key</div>
-			<input
-				type="number"
-				value={$note_min}
-				on:input={input_note_min}
-				step={1}
-				min={MIDI_MIN}
-				max={MIDI_MAX}
-			/>
 			{midi_names[$note_min]}
 			<input
 				type="range"
@@ -37,20 +29,28 @@
 				min={MIDI_MIN}
 				max={MIDI_MAX}
 			/>
+			<input
+				type="number"
+				value={$note_min}
+				on:input={input_note_min}
+				step={1}
+				min={MIDI_MIN}
+				max={MIDI_MAX}
+			/>
 		</label>
 		<label>
 			<div class="title">highest MIDI key</div>
+			{midi_names[$note_max]}
 			<input
-				type="number"
+				type="range"
 				value={$note_max}
 				on:input={input_note_max}
 				step={1}
 				min={MIDI_MIN}
 				max={MIDI_MAX}
 			/>
-			{midi_names[$note_max]}
 			<input
-				type="range"
+				type="number"
 				value={$note_max}
 				on:input={input_note_max}
 				step={1}

@@ -34,7 +34,7 @@
 	</select>
 </label>
 <label>
-	<div class="key">
+	<div class="title">
 		<slot>key</slot>
 	</div>
 	<!-- TODO use `bind:value={$key}` when this PR is in: https://github.com/preactjs/signals/pull/325  -->
