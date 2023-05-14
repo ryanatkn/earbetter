@@ -195,12 +195,6 @@
 				<input type="range" bind:value={note_max} step={1} min={MIDI_MIN} max={MIDI_MAX} />
 			</label>
 		</fieldset>
-		<fieldset>
-			<label>
-				<div class="title">id</div>
-				<input disabled value={id} />
-			</label>
-		</fieldset>
 		<button
 			class="accent"
 			type="button"

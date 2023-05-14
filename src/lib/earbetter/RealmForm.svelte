@@ -129,12 +129,6 @@
 			/>
 		</label>
 	</fieldset>
-	<fieldset>
-		<label>
-			<div class="title">id</div>
-			<input disabled value={id} />
-		</label>
-	</fieldset>
 	<button
 		class="accent"
 		type="button"
