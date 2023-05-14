@@ -15,7 +15,7 @@
 	let removing = false;
 </script>
 
-<li class="project-item" transition:slide|local>
+<li class="project-item" transition:slide|local class:selected>
 	{#if select}
 		<button class="project-button" on:click={() => select?.(project.id)} class:selected>
 			{project.name}
@@ -49,7 +49,8 @@
 	.plain-button:not(.selected) {
 		visibility: hidden;
 	}
-	.project-item:hover .plain-button {
+	.project-item:hover .plain-button,
+	li.selected .plain-button {
 		visibility: visible;
 	}
 	.project-button {
