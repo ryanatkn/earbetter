@@ -6,23 +6,25 @@ import {
 	type Chroma,
 } from '$lib/music/music';
 
-const KEY_HEIGHT_MULT = 5; // width * mult = height // TODO - make dependent on container?
+const KEY_HEIGHT_MULT = 5; // width * mult = height // TODO - make dependent on container? is this the right layout tradeoff to make in terms of aspect ratio?
 const ACCIDENTAL_KEY_WIDTH_MULT = 7 / 12;
 const ACCIDENTAL_KEY_HEIGHT_MULT = 0.7;
 
-// TODO calculate layout more precisely? these are eyeballed
+// TODO calculate layout more precisely? these are eyeballed,
+// and the second commented-out values are closer to my real keyboard,
+// but I think it reads clearer as a piano to use the more moderate current values
 const pc_left_offset_pct: Record<Chroma, number> = {
 	1: 0,
-	2: -2 / 3,
+	2: -3 / 5, // -2 / 3,
 	3: 0,
-	4: -1 / 3,
+	4: -2 / 5, // -1 / 3,
 	5: 0,
 	6: 0,
-	7: -3 / 4,
+	7: -2 / 3, // -3 / 4,
 	8: 0,
-	9: -1 / 2,
+	9: -1 / 2, // -1 / 2,
 	10: 0,
-	11: -1 / 4,
+	11: -1 / 3, // -1 / 4,
 	12: 0,
 };
 
