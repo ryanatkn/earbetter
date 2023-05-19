@@ -10,10 +10,10 @@ const KEY_HEIGHT_MULT = 5; // width * mult = height // TODO - make dependent on 
 const ACCIDENTAL_KEY_WIDTH_MULT = 7 / 12;
 const ACCIDENTAL_KEY_HEIGHT_MULT = 0.7;
 
-// TODO calculate layout more precisely? these are eyeballed,
+// TODO what spacing for the keys? these are eyeballed,
 // and the second commented-out values are closer to my real keyboard,
 // but I think it reads clearer as a piano to use the more moderate current values
-const pc_left_offset_pct: Record<Chroma, number> = {
+const key_left_offset_pct: Record<Chroma, number> = {
 	1: 0,
 	2: -3 / 5, // -2 / 3,
 	3: 0,
@@ -44,8 +44,8 @@ export interface PianoKey {
 }
 
 export const compute_piano = (width: number, note_min: Midi, note_max: Midi): Piano => {
-	const note_min_offset = Math.abs(pc_left_offset_pct[midi_chromas[note_min]]);
-	let note_max_offset = Math.abs(pc_left_offset_pct[midi_chromas[note_max]]);
+	const note_min_offset = Math.abs(key_left_offset_pct[midi_chromas[note_min]]);
+	let note_max_offset = Math.abs(key_left_offset_pct[midi_chromas[note_max]]);
 	if (note_max_offset) note_max_offset = 1 - note_max_offset;
 
 	const note_count = note_max - note_min + 1;
@@ -73,7 +73,7 @@ export const compute_piano = (width: number, note_min: Midi, note_max: Midi): Pi
 			// this could be improved but it's kinda close
 			left_offset =
 				natural_index * natural_key_width +
-				pc_left_offset_pct[midi_chromas[midi]] * accidental_key_width +
+				key_left_offset_pct[midi_chromas[midi]] * accidental_key_width +
 				note_min_offset * accidental_key_width;
 		}
 
