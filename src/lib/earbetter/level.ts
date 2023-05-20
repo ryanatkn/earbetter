@@ -38,8 +38,9 @@ export const LevelData = z.object({
 	id: LevelId.default(create_level_id),
 	name: LevelName.default(DEFAULT_LEVEL_NAME),
 	intervals: Intervals.default(DEFAULT_INTERVALS),
-	trial_count: z.number().default(DEFAULT_TRIAL_COUNT),
 	// TODO BLOCK tonic data
+	tonics: z.array(Midi).nullable().default(null),
+	trial_count: z.number().default(DEFAULT_TRIAL_COUNT),
 	sequence_length: z.number().default(DEFAULT_SEQUENCE_LENGTH),
 	note_min: Midi.default(DEFAULT_NOTE_MIN),
 	note_max: Midi.default(DEFAULT_NOTE_MAX),
@@ -96,6 +97,7 @@ const create_next_trial = (def: LevelData, current_trial: Trial | null): Trial =
 	const {note_min, note_max} = def;
 
 	// TODO BLOCK the point of this code is to get to the tonic
+	// const tonic = to_random_tonic(def);
 	const tonic = to_random_tonic(def);
 	const sequence: Midi[] = [tonic];
 
@@ -132,6 +134,10 @@ const create_next_trial = (def: LevelData, current_trial: Trial | null): Trial =
 };
 
 const to_random_tonic = (def: LevelData): Midi => {
+	// TODO BLOCK handle the cases where it's empty/null
+	const {tonics} = def;
+	if (tonics) return randomItem(tonics);
+	// TODO BLOCK implement this correctly, from here forward is all copypaste from before
 	const {note_min, note_max} = def;
 	const interval_max = def.intervals.reduce((max, v) => Math.max(max, v));
 	const interval_min = def.intervals.reduce((max, v) => Math.min(max, v));
