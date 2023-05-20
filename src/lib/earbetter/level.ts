@@ -6,7 +6,7 @@ import {Logger} from '@feltjs/util/log.js';
 import {signal, batch, Signal, effect} from '@preact/signals-core';
 import {base} from '$app/paths';
 
-import {Midi, Intervals, Semitones} from '$lib/music/music';
+import {Midi, Intervals, Notes} from '$lib/music/music';
 import {play_note} from '$lib/audio/play_note';
 import type {Instrument, Milliseconds, Volume} from '$lib/audio/helpers';
 import {serialize_to_hash} from '$lib/util/url';
@@ -23,7 +23,8 @@ export const DEFAULT_FEEDBACK_DURATION: Milliseconds = 1000; // TODO configurabl
 export const DEFAULT_SEQUENCE_LENGTH = 2;
 export const DEFAULT_TRIAL_COUNT = 5;
 export const DEFAULT_LEVEL_NAME = 'new level';
-export const DEFAULT_INTERVALS: Semitones[] = [5, 7];
+export const DEFAULT_INTERVALS: Intervals = [5, 7];
+export const DEFAULT_TONICS: Notes | null = null;
 export const DEFAULT_NOTE_MIN: Midi = 48;
 export const DEFAULT_NOTE_MAX: Midi = 84;
 
@@ -38,8 +39,7 @@ export const LevelData = z.object({
 	id: LevelId.default(create_level_id),
 	name: LevelName.default(DEFAULT_LEVEL_NAME),
 	intervals: Intervals.default(DEFAULT_INTERVALS),
-	// TODO BLOCK tonic data
-	tonics: z.array(Midi).nullable().default(null),
+	tonics: Notes.nullable().default(null),
 	trial_count: z.number().default(DEFAULT_TRIAL_COUNT),
 	sequence_length: z.number().default(DEFAULT_SEQUENCE_LENGTH),
 	note_min: Midi.default(DEFAULT_NOTE_MIN),
