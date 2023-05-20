@@ -1,6 +1,8 @@
 <script lang="ts">
 	import {z} from 'zod';
 	import {effect, signal} from '@preact/signals-core';
+	import {plural, swallow} from '@feltjs/util';
+	import {createEventDispatcher} from 'svelte';
 
 	import Piano from '$lib/music/Piano.svelte';
 	import {get_ac} from '$lib/audio/ac';
@@ -12,10 +14,20 @@
 	import {get_instrument, get_volume, with_velocity} from '$lib/audio/helpers';
 	import InstrumentControl from '$lib/audio/InstrumentControl.svelte';
 	import MidiRangeControl from '$lib/audio/MidiRangeControl.svelte';
-	import {get_scale, get_key, get_enabled_notes, Midi, serialize_notes} from '$lib/music/music';
+	import {
+		get_scale,
+		get_key,
+		get_enabled_notes,
+		Midi,
+		serialize_notes,
+		Notes,
+	} from '$lib/music/music';
 	import SelectNotesControl from '$lib/music/SelectNotesControl.svelte';
 	import {load_from_storage, set_in_storage} from '$lib/util/storage';
-	import {plural} from '@feltjs/util';
+
+	const dispatch = createEventDispatcher<{
+		input: Notes | null;
+	}>();
 
 	// TODO extract? is pretty specific
 	const PianoSettings = z.object({
@@ -63,11 +75,6 @@
 	$: enabled_notes_array = $enabled_notes ? Array.from($enabled_notes) : null;
 
 	// TODO BLOCK scope by lowest/highest MIDI key
-
-	const select_tonics = () => {
-		console.log('TODO');
-		// TODO BLOCK
-	};
 </script>
 
 <svelte:window bind:innerWidth />
@@ -85,7 +92,12 @@
 			<blockquote class="panel">
 				{serialize_notes(enabled_notes_array)}
 			</blockquote>
-			<button on:click={select_tonics}
+			<button
+				type="button"
+				on:click={(e) => {
+					swallow(e);
+					dispatch('input', enabled_notes_array);
+				}}
 				>select these {enabled_notes_array ? enabled_notes_array.length + ' ' : ''}tonic{plural(
 					enabled_notes_array?.length,
 				)}</button
