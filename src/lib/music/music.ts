@@ -248,7 +248,7 @@ export const midi_naturals: Set<Midi> = new Set(
 export const Notes = z.array(Midi);
 export type Notes = z.infer<typeof Notes>;
 // TODO replace with zod
-export const serialize_notes = (tonics: Notes | null): string => (tonics ? tonics.join(', ') : '');
+export const serialize_notes = (notes: Notes | null): string => (notes ? notes.join(', ') : '');
 export const parse_notes = (value: string): Notes =>
 	value
 		.split(',')
