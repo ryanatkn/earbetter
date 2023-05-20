@@ -63,6 +63,11 @@
 	$: enabled_notes_array = $enabled_notes ? Array.from($enabled_notes) : null;
 
 	// TODO BLOCK scope by lowest/highest MIDI key
+
+	const select_tonics = () => {
+		console.log('TODO');
+		// TODO BLOCK
+	};
 </script>
 
 <svelte:window bind:innerWidth />
@@ -75,15 +80,18 @@
 
 <div class="notes_input">
 	{#if enabled_notes_array}
-		<div class="notes column-sm">
-			{serialize_notes(enabled_notes_array)}
+		<div class="notes column-sm markup">
+			<!-- TODO copy button -->
+			<blockquote class="panel">
+				{serialize_notes(enabled_notes_array)}
+			</blockquote>
+			<button on:click={select_tonics}
+				>select these {enabled_notes_array ? enabled_notes_array.length + ' ' : ''}tonic{plural(
+					enabled_notes_array?.length,
+				)}</button
+			>
 		</div>
 	{/if}
-	<button
-		>select these {enabled_notes_array ? enabled_notes_array.length + ' ' : ''}tonic{plural(
-			enabled_notes_array?.length,
-		)}</button
-	>
 	<div class="piano_wrapper" style:padding="{piano_padding}px">
 		{#if innerWidth}
 			<Piano
