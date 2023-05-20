@@ -39,6 +39,7 @@ export const LevelData = z.object({
 	name: LevelName.default(DEFAULT_LEVEL_NAME),
 	intervals: Intervals.default(DEFAULT_INTERVALS),
 	trial_count: z.number().default(DEFAULT_TRIAL_COUNT),
+	// TODO BLOCK tonic data
 	sequence_length: z.number().default(DEFAULT_SEQUENCE_LENGTH),
 	note_min: Midi.default(DEFAULT_NOTE_MIN),
 	note_max: Midi.default(DEFAULT_NOTE_MAX),
