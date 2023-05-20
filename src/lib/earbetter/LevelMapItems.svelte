@@ -26,7 +26,8 @@
 <div class="panel padded-md">
 	<div class="markup">
 		<header>
-			<h2>{$selected_realm_data?.name}</h2>
+			<h2>levels</h2>
+			<h3>{$selected_realm_data?.name}</h3>
 		</header>
 	</div>
 	<menu class="levels">

@@ -95,13 +95,7 @@ const create_next_trial = (def: LevelData, current_trial: Trial | null): Trial =
 	const {note_min, note_max} = def;
 
 	// TODO BLOCK the point of this code is to get to the tonic
-	const interval_max = def.intervals.reduce((max, v) => Math.max(max, v));
-	const interval_min = def.intervals.reduce((max, v) => Math.min(max, v));
-	const tonic_max = Math.min(note_max - interval_max, note_max);
-	const tonic_min = Math.max(note_min - interval_min, note_min);
-	const tonic = (
-		tonic_min < tonic_max ? randomInt(tonic_min, tonic_max) : to_fallback_tonic(note_min, note_max)
-	) as Midi;
+	const tonic = to_random_tonic(def);
 	const sequence: Midi[] = [tonic];
 
 	// compute the valid notes
@@ -134,6 +128,22 @@ const create_next_trial = (def: LevelData, current_trial: Trial | null): Trial =
 		guessing_index: null,
 		retry_count: 0,
 	};
+};
+
+const to_random_tonic = (def: LevelData): Midi => {
+	const {note_min, note_max} = def;
+	const interval_max = def.intervals.reduce((max, v) => Math.max(max, v));
+	const interval_min = def.intervals.reduce((max, v) => Math.min(max, v));
+	const tonic_max = Math.min(note_max - interval_max, note_max);
+	const tonic_min = Math.max(note_min - interval_min, note_min);
+	return (
+		tonic_min < tonic_max ? randomInt(tonic_min, tonic_max) : to_fallback_tonic(note_min, note_max)
+	) as Midi;
+};
+
+const to_fallback_tonic = (note_min: Midi, note_max: Midi): Midi => {
+	const offset = ((note_max - note_min) / 4) | 0;
+	return randomInt(note_min + offset, note_max - offset) as Midi;
 };
 
 const DEFAULT_STATUS: Status = 'initial';
@@ -336,13 +346,6 @@ export const create_level = (
 const get_correct_guess = (trial: Trial | null): Midi | null => {
 	if (!trial || trial.guessing_index === null) return null;
 	return trial.sequence[trial.guessing_index];
-};
-
-// If there's possible tonic range that fits with all of the intervals within the bounds,
-// fall back to a reasonable default.
-const to_fallback_tonic = (note_min: Midi, note_max: Midi): Midi => {
-	const offset = ((note_max - note_min) / 4) | 0;
-	return randomInt(note_min + offset, note_max - offset) as Midi;
 };
 
 export const to_play_level_url = (level_data: LevelData): string => {

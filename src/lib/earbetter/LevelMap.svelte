@@ -102,9 +102,9 @@
 							Earbetter is an <a href="https://wikipedia.org/wiki/Ear_training">ear training</a> tool/game:
 						</p>
 						<ul>
-							<li>each level is a standalone challenge</li>
+							<li>each level is a standalone challenge that's a series of trials</li>
 							<li>
-								your score is the sum of mistakes in your best {MISTAKE_HISTORY_LENGTH}
+								your level score is the sum of mistakes in your best {MISTAKE_HISTORY_LENGTH}
 								runs, win a ★ at 0
 							</li>
 							<li>realms group levels into bigger challenges</li>
