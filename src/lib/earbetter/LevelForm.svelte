@@ -329,9 +329,13 @@
 			tonics_el.focus();
 		}}
 	>
-		<div class="markup padded-xl column centered">
-			<h2>pick tonics</h2>
+		<div class="padded-xl column centered">
+			<div class="markup">
+				<h2>pick tonics</h2>
+			</div>
+			<!-- TODO this `new Set` is a hack, probably change the data structure to a set, need serialization for storage -->
 			<NotesInput
+				notes={new Set(tonics)}
 				on:input={(e) => {
 					tonics = e.detail;
 					close();
