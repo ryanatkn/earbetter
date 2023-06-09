@@ -166,7 +166,7 @@
 					level, aka the number of piano keys (<a href="https://wikipedia.org/wiki/Semitone"
 						>semitones</a
 					>) separating each note from the
-					<a href="https://wikipedia.org/wiki/Tonic_(music)">tonic</a> (the base note)
+					<a href="https://wikipedia.org/wiki/Tonic_(music)">tonic</a> (see below)
 				</p>
 				<p>
 					for example, to practice distinguishing between the <a
@@ -194,7 +194,7 @@
 				<p>
 					the <a href="https://wikipedia.org/wiki/Tonic_(music)">tonic</a> is like the "base" or "home"
 					note, and for our purposes it's always the first note played in a trial, and other notes in
-					the trial are derived from it
+					the trial are calculated from the tonic and intervals (see above)
 				</p>
 			</details>
 		</fieldset>

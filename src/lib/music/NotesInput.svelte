@@ -13,21 +13,14 @@
 	import VolumeControl from '$lib/audio/VolumeControl.svelte';
 	import {get_instrument, get_volume, with_velocity} from '$lib/audio/helpers';
 	import InstrumentControl from '$lib/audio/InstrumentControl.svelte';
-	import MidiRangeControl from '$lib/audio/MidiRangeControl.svelte';
-	import {
-		get_scale,
-		get_key,
-		get_enabled_notes,
-		Midi,
-		serialize_notes,
-		Notes,
-	} from '$lib/music/music';
-	import SelectNotesControl from '$lib/music/SelectNotesControl.svelte';
+	import {get_enabled_notes, Midi, serialize_notes, Notes} from '$lib/music/music';
 	import {load_from_storage, set_in_storage} from '$lib/util/storage';
 
 	const dispatch = createEventDispatcher<{
 		input: Notes | null;
 	}>();
+
+	// TODO lots of copypasta below
 
 	// TODO extract? is pretty specific
 	const PianoSettings = z.object({
@@ -55,8 +48,6 @@
 	const ac = get_ac();
 	const volume = get_volume();
 	const instrument = get_instrument();
-	const scale = get_scale();
-	const key = get_key();
 	const enabled_notes = get_enabled_notes();
 
 	$: pressed_keys = $playing_notes;
@@ -94,6 +85,7 @@
 			</blockquote>
 			<button
 				type="button"
+				class="accent"
 				on:click={(e) => {
 					swallow(e);
 					dispatch('input', enabled_notes_array);
@@ -119,14 +111,6 @@
 	</div>
 	<form class="column-sm markup panel padded-md">
 		<fieldset>
-			<div class="row">
-				<MidiRangeControl {note_min} {note_max} />
-			</div>
-			<div class="row">
-				<SelectNotesControl {scale} {key} />
-			</div>
-		</fieldset>
-		<fieldset>
 			<InstrumentControl {instrument} />
 			<VolumeControl {volume} />
 		</fieldset>
@@ -142,7 +126,6 @@
 		display: flex;
 		align-items: center;
 		flex-direction: column;
-		/* max-width: 100%; */
 	}
 	.notes {
 		display: flex;
