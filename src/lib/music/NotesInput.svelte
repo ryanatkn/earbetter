@@ -13,7 +13,7 @@
 	import VolumeControl from '$lib/audio/VolumeControl.svelte';
 	import {get_instrument, get_volume, with_velocity} from '$lib/audio/helpers';
 	import InstrumentControl from '$lib/audio/InstrumentControl.svelte';
-	import {Midi, serialize_notes, Notes, scales, Scale} from '$lib/music/music';
+	import {Midi, serialize_notes, Notes, scales, Scale, parse_notes} from '$lib/music/music';
 	import {load_from_storage, set_in_storage} from '$lib/util/storage';
 
 	const dispatch = createEventDispatcher<{
@@ -27,6 +27,16 @@
 	$: notes_set = notes;
 	let notes_array: Notes | null = notes_set ? Array.from(notes_set).sort((a, b) => a - b) : null;
 	$: notes_array = notes_set ? Array.from(notes_set).sort((a, b) => a - b) : null;
+
+	$: notes_str = serialize_notes(notes_array);
+	const update_notes_str = (s: string): void => {
+		// TODO BLOCK the way we're doing this doesn't allow the user to type
+		notes_set = new Set(parse_notes(s));
+	};
+
+	$: notes_count = notes_array ? notes_array.length : 0;
+
+	$: console.log(`notes_set`, notes_set);
 
 	// TODO lots of copypasta below
 
@@ -104,25 +114,24 @@
 />
 
 <div class="notes_input">
-	{#if notes_array}
-		<div class="notes column-sm markup">
-			<!-- TODO copy button -->
-			<blockquote class="panel">
-				{serialize_notes(notes_array)}
-			</blockquote>
-			<button
-				type="button"
-				class="accent"
-				on:click={(e) => {
-					swallow(e);
-					dispatch('input', notes_array);
-				}}
-				>select these {notes_array ? notes_array.length + ' ' : ''}tonic{plural(
-					notes_array?.length,
-				)}</button
-			>
-		</div>
-	{/if}
+	<div class="notes column-sm markup">
+		<!-- TODO copy button -->
+		<blockquote class="panel">
+			<textarea bind:value={notes_str} on:input={(e) => update_notes_str(e.currentTarget.value)} />
+		</blockquote>
+		<button
+			type="button"
+			class="accent"
+			disabled={!notes_array}
+			on:click={(e) => {
+				swallow(e);
+				dispatch('input', notes_array);
+			}}
+			>select {#if notes_count}these {notes_count} {:else}all {/if}tonic{plural(
+				notes_count,
+			)}</button
+		>
+	</div>
 	<div class="piano_wrapper" style:padding="{piano_padding}px">
 		{#if innerWidth}
 			<Piano

@@ -253,4 +253,5 @@ export const parse_notes = (value: string): Notes =>
 	value
 		.split(',')
 		.map((v) => Number(v.trim()) | 0)
-		.filter(Boolean); // exclude 0 intentionally
+		.filter((v) => !!v && Midi.safeParse(v).success) // exclude 0 intentionally because it's not a MIDI value
+		.sort((a, b) => a - b);
