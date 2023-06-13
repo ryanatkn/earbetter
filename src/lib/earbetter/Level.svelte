@@ -11,15 +11,15 @@
 		type Level,
 		type LevelData,
 	} from '$lib/earbetter/level';
-	import Piano from '$lib/music/Piano.svelte';
+	import Piano from '$lib/Piano.svelte';
 	import LevelProgressIndicator from '$lib/earbetter/LevelProgressIndicator.svelte';
 	import TrialProgressIndicator from '$lib/earbetter/TrialProgressIndicator.svelte';
-	import {get_ac} from '$lib/audio/ac';
-	import MidiInput from '$lib/audio/MidiInput.svelte';
-	import type {Midi} from '$lib/music/music';
-	import {playing_notes, start_playing, stop_playing} from '$lib/audio/play_note';
-	import {get_instrument, get_volume, with_velocity} from '$lib/audio/helpers';
-	import {midi_access} from '$lib/audio/midi_access';
+	import {get_ac} from '$lib/ac';
+	import MidiInput from '$lib/MidiInput.svelte';
+	import type {Midi} from '$lib/music';
+	import {playing_notes, start_playing, stop_playing} from '$lib/play_note';
+	import {get_instrument, get_volume, with_velocity} from '$lib/helpers';
+	import {midi_access} from '$lib/midi_access';
 	import LevelStatsSummary from '$lib/earbetter/LevelStatsSummary.svelte';
 	import TextBurst from '$lib/TextBurst.svelte';
 

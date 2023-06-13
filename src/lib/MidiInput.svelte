@@ -2,9 +2,9 @@
 	import {createEventDispatcher, onDestroy} from 'svelte';
 	import type {Signal} from '@preact/signals-core';
 
-	import {type MIDIMessageEvent, MIDICommand, type MIDIAccess} from '$lib/audio/WebMIDI';
-	import {parse_midi_message} from '$lib/audio/midi_helpers';
-	import type {Midi} from '$lib/music/music';
+	import {type MIDIMessageEvent, MIDICommand, type MIDIAccess} from '$lib/WebMIDI';
+	import {parse_midi_message} from '$lib/midi_helpers';
+	import type {Midi} from '$lib/music';
 
 	const log = console.log.bind(console);
 

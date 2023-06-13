@@ -10,17 +10,17 @@
 	import {computed, effect, signal} from '@preact/signals-core';
 	import {afterNavigate} from '$app/navigation';
 
-	import {set_ac} from '$lib/audio/ac';
-	import {adjust_volume, set_instrument, set_volume} from '$lib/audio/helpers';
-	import {request_access} from '$lib/audio/midi_access';
+	import {set_ac} from '$lib/ac';
+	import {adjust_volume, set_instrument, set_volume} from '$lib/helpers';
+	import {request_access} from '$lib/midi_access';
 	import {App, set_app} from '$lib/earbetter/app';
-	import {set_enabled_notes, set_key, set_scale, to_notes} from '$lib/music/music';
-	import {load_from_storage, set_in_storage} from '$lib/util/storage';
+	import {set_enabled_notes, set_key, set_scale, to_notes} from '$lib/music';
+	import {load_from_storage, set_in_storage} from '$lib/storage';
 	import SiteMap from '$routes/SiteMap.svelte';
 	import {SiteData} from '$routes/site_data';
-	import VolumeControl from '$lib/audio/VolumeControl.svelte';
-	import InstrumentControl from '$lib/audio/InstrumentControl.svelte';
-	import InitMidiButton from '$lib/audio/InitMidiButton.svelte';
+	import VolumeControl from '$lib/VolumeControl.svelte';
+	import InstrumentControl from '$lib/InstrumentControl.svelte';
+	import InitMidiButton from '$lib/InitMidiButton.svelte';
 	import Footer from '$routes/Footer.svelte';
 	import SiteBreadcrumbs from '$routes/SiteBreadcrumbs.svelte';
 

@@ -4,8 +4,8 @@
 	import LevelMap from '$lib/earbetter/LevelMap.svelte';
 	import Level from '$lib/earbetter/Level.svelte';
 	import type {Level as LevelType} from '$lib/earbetter/level';
-	import {get_ac} from '$lib/audio/ac';
-	import {midi_access} from '$lib/audio/midi_access';
+	import {get_ac} from '$lib/ac';
+	import {midi_access} from '$lib/midi_access';
 	import type {App} from '$lib/earbetter/app';
 
 	export let app: App;

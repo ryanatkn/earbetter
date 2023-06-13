@@ -7,7 +7,7 @@
 	import Header from '$routes/Header.svelte';
 	import Footer from '$routes/Footer.svelte';
 	import {LevelHashData} from '$lib/earbetter/level';
-	import {parse_from_hash} from '$lib/util/url';
+	import {parse_from_hash} from '$lib/url';
 	import {get_app} from '$lib/earbetter/app';
 
 	const go_back = () => goto(`${base}/game`);

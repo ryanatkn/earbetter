@@ -7,7 +7,10 @@
   (first pass at functionality, more to come)
 - also has [a playable piano](https://earbetter.ryanatkn.com/piano)
 - supports MIDI devices like piano keyboards
-- TODO publish to npm as `@ryanatkn/earbetter` with audio/music utils/types and Svelte components
+- published to npm as
+  [`@ryanatkn/earbetter`](https://www.npmjs.com/package/@ryanatkn/earbetter)
+  with utilities, types, and Svelte components for audio and music
+  (see [`$lib/exports.ts`](/src/lib/exports.ts))
 
 to help see [contributing.md](contributing.md)
 
