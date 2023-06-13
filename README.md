@@ -19,9 +19,10 @@ play at [earbetter.ryanatkn.com](https://earbetter.ryanatkn.com/)
 ## intro
 
 In 2016 I made a simple ear training game named
-[Ear Sharpener](https://github.com/ryanatkn/ear-sharpener) to scratch an itch,
-and while interesting it wasn't a good training tool.
-The goal of Earbetter is to be a useful ear trainer.
+[Ear Sharpener](https://github.com/ryanatkn/ear-sharpener)
+because I thought ear training was interesting,
+but it wasn't a good training tool.
+The goal of Earbetter is to be a useful and customizable ear trainer.
 I also want it to be fun so it motivates more training, but it's not there yet.
 
 I'm not a musician and I'm one person so
