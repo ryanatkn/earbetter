@@ -1,10 +1,4 @@
-import {
-	midi_chromas,
-	midi_naturals,
-	type Midi,
-	compute_naturals,
-	type Chroma,
-} from '$lib/music/music';
+import {midi_chromas, midi_naturals, type Midi, compute_naturals, type Chroma} from '$lib/music';
 
 const KEY_HEIGHT_MULT = 5; // width * mult = height // TODO - make dependent on container?
 const ACCIDENTAL_KEY_WIDTH_MULT = 7 / 12;

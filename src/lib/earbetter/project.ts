@@ -3,9 +3,9 @@ import {randomItem, type Flavored} from '@feltjs/util';
 import {identity} from '@feltjs/util/function.js';
 
 import {DEFAULT_LEVEL_STATS, LevelStats} from '$lib/earbetter/level';
-import {emojis} from '$lib/util/emoji';
+import {emojis} from '$lib/emoji';
 import {RealmData} from '$lib/earbetter/realm';
-import {to_random_id} from '$lib/util/id';
+import {to_random_id} from '$lib/id';
 
 export type ProjectId = Flavored<string, 'ProjectId'>;
 export const ProjectId = z.string().transform<ProjectId>(identity); // TODO better way to do this?

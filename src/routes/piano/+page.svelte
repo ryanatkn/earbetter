@@ -2,21 +2,21 @@
 	import {z} from 'zod';
 	import {effect, signal} from '@preact/signals-core';
 
-	import Piano from '$lib/music/Piano.svelte';
-	import {get_ac} from '$lib/audio/ac';
-	import {midi_access} from '$lib/audio/midi_access';
-	import MidiInput from '$lib/audio/MidiInput.svelte';
-	import {playing_notes, start_playing, stop_playing} from '$lib/audio/play_note';
-	import InitMidiButton from '$lib/audio/InitMidiButton.svelte';
-	import VolumeControl from '$lib/audio/VolumeControl.svelte';
+	import Piano from '$lib/Piano.svelte';
+	import {get_ac} from '$lib/ac';
+	import {midi_access} from '$lib/midi_access';
+	import MidiInput from '$lib/MidiInput.svelte';
+	import {playing_notes, start_playing, stop_playing} from '$lib/play_note';
+	import InitMidiButton from '$lib/InitMidiButton.svelte';
+	import VolumeControl from '$lib/VolumeControl.svelte';
 	import Header from '$routes/Header.svelte';
 	import Footer from '$routes/Footer.svelte';
-	import {get_instrument, get_volume, with_velocity} from '$lib/audio/helpers';
-	import InstrumentControl from '$lib/audio/InstrumentControl.svelte';
-	import MidiRangeControl from '$lib/audio/MidiRangeControl.svelte';
-	import {get_scale, get_key, get_enabled_notes, Midi} from '$lib/music/music';
-	import SelectNotesControl from '$lib/music/SelectNotesControl.svelte';
-	import {load_from_storage, set_in_storage} from '$lib/util/storage';
+	import {get_instrument, get_volume, with_velocity} from '$lib/helpers';
+	import InstrumentControl from '$lib/InstrumentControl.svelte';
+	import MidiRangeControl from '$lib/MidiRangeControl.svelte';
+	import {get_scale, get_key, get_enabled_notes, Midi} from '$lib/music';
+	import SelectNotesControl from '$lib/SelectNotesControl.svelte';
+	import {load_from_storage, set_in_storage} from '$lib/storage';
 
 	// TODO extract? is pretty specific
 	const PianoSettings = z.object({

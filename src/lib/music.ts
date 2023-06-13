@@ -4,8 +4,8 @@ import {identity} from '@feltjs/util/function.js';
 import {signal, type Signal} from '@preact/signals-core';
 import {getContext, setContext} from 'svelte';
 
-import {type Hsl, hsl_to_string, type Hue} from '$lib/util/colors';
-import type {Frequency} from '$lib/audio/helpers';
+import {type Hsl, hsl_to_string, type Hue} from '$lib/colors';
+import type {Frequency} from '$lib/helpers';
 
 export const DEFAULT_TUNING = 440; // https://wikipedia.org/wiki/A440_(pitch_standard)
 

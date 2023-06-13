@@ -23,8 +23,8 @@
 		type Midi,
 		midi_names,
 		Scale,
-	} from '$lib/music/music';
-	import IntervalsInput from '$lib/music/IntervalsInput.svelte';
+	} from '$lib/music';
+	import IntervalsInput from '$lib/IntervalsInput.svelte';
 
 	const dispatch = createEventDispatcher<{
 		submit: LevelData;

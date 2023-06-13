@@ -3,7 +3,7 @@ import type {Flavored} from '@feltjs/util';
 import {identity} from '@feltjs/util/function.js';
 
 import {LevelData} from '$lib/earbetter/level';
-import {to_random_id} from '$lib/util/id';
+import {to_random_id} from '$lib/id';
 
 export type RealmId = Flavored<string, 'RealmId'>;
 export const RealmId = z.string().transform<RealmId>(identity);
