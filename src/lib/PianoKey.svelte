@@ -12,6 +12,7 @@
 	export let clickable = true;
 	export let enabled = true;
 	export let pressed = false;
+	export let pressing = false; // piano-wide state to enable dragging with the pointer
 	export let highlighted = false;
 	export let emphasized = false;
 	export let show_middle_c = true;
@@ -86,6 +87,7 @@
 		? (e) => {
 				swallow(e);
 				dispatch('press', midi);
+				pressing = true;
 				e.currentTarget.focus();
 		  }
 		: undefined}
@@ -93,6 +95,14 @@
 		? (e) => {
 				swallow(e);
 				dispatch('release', midi);
+				pressing = false;
+		  }
+		: undefined}
+	on:mouseenter={enabled && pressing
+		? (e) => {
+				swallow(e);
+				dispatch('press', midi);
+				e.currentTarget.focus();
 		  }
 		: undefined}
 	on:mouseleave={enabled

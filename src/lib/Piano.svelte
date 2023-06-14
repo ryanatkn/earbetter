@@ -11,8 +11,6 @@
 	export let highlighted_keys: Set<Midi> | null = null;
 	export let emphasized_keys: Set<Midi> | null = null;
 
-	// TODO BLOCK support dragging across the piano, on the items or one event here?
-
 	$: ({
 		piano_keys,
 		natural_key_width,
@@ -20,6 +18,8 @@
 		accidental_key_width,
 		accidental_key_height,
 	} = compute_piano(width, note_min, note_max));
+
+	let pressing = false; // piano-wide state to enable dragging with the pointer
 </script>
 
 <div
@@ -37,6 +37,7 @@
 				on:release
 				{midi}
 				{left_offset}
+				bind:pressing
 				enabled={!enabled_notes || enabled_notes.has(midi)}
 				pressed={pressed_keys?.has(midi)}
 				highlighted={highlighted_keys?.has(midi)}
