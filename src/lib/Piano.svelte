@@ -11,6 +11,8 @@
 	export let highlighted_keys: Set<Midi> | null = null;
 	export let emphasized_keys: Set<Midi> | null = null;
 
+	// TODO BLOCK support dragging across the piano, on the items or one event here?
+
 	$: ({
 		piano_keys,
 		natural_key_width,
