@@ -4,6 +4,7 @@ export const exports = [
 	// deep imports - these do not include $lib/earbetter or $lib/projects
 	'lib/ac.ts',
 	'lib/colors.ts',
+	'lib/dom.ts',
 	'lib/emoji.ts',
 	'lib/entity.ts',
 	'lib/exports.ts',

@@ -3,6 +3,7 @@
 	import {swallow} from '@feltjs/util/dom.js';
 
 	import {type Midi, midi_naturals} from '$lib/music';
+	import {find_next_sibling, find_previous_sibling} from '$lib/dom';
 
 	const dispatch = createEventDispatcher<{press: Midi; release: Midi}>();
 
@@ -19,38 +20,12 @@
 	$: accidental = !natural;
 	$: middle_c = midi === 60;
 
-	export const query_previous_sibling = <T extends ChildNode>(
-		node: ChildNode,
-		matches: (n: ChildNode) => boolean,
-	): T | null => {
-		let s: ChildNode | null | undefined = node.previousSibling;
-		while (s) {
-			if (matches(s)) return s as T;
-			s = s.previousSibling;
-		}
-		return null;
-	};
-	export const query_next_sibling = <T extends ChildNode>(
-		node: ChildNode,
-		matches: (n: ChildNode) => boolean,
-	): T | null => {
-		let s: ChildNode | null | undefined = node.nextSibling;
-		while (s) {
-			if (matches(s)) return s as T;
-			s = s.nextSibling;
-		}
-		return null;
-	};
-
 	const focus_previous_button = (node: ChildNode): void => {
-		const s = query_previous_sibling<HTMLButtonElement>(
-			node,
-			(n) => n instanceof HTMLButtonElement,
-		);
+		const s = find_previous_sibling<HTMLButtonElement>(node, (n) => n instanceof HTMLButtonElement);
 		s?.focus();
 	};
 	const focus_next_button = (node: ChildNode): void => {
-		const s = query_next_sibling<HTMLButtonElement>(node, (n) => n instanceof HTMLButtonElement);
+		const s = find_next_sibling<HTMLButtonElement>(node, (n) => n instanceof HTMLButtonElement);
 		s?.focus();
 	};
 
