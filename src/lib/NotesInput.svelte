@@ -28,8 +28,8 @@
 	}>();
 
 	export let notes: Set<Midi> | null;
-	export let note_min: Midi;
-	export let note_max: Midi;
+	export let min_note: Midi;
+	export let max_note: Midi;
 
 	// TODO this is hacky, does a double conversion with the parent component, see the comment at the usage site
 	let notes_array: Notes | null = notes ? Array.from(notes).sort((a, b) => a - b) : null;
@@ -75,7 +75,7 @@
 	};
 
 	const toggle_scale = (scale: Scale): void => {
-		const scale_notes = to_notes_in_scale(scale, key, note_min, note_max);
+		const scale_notes = to_notes_in_scale(scale, key, min_note, max_note);
 		// TODO this is a hacky and slow but it approximates the desired UX, is not ideal,
 		// I think the best UX would be to detect if each scale is currently fully active
 		if (!notes || !notes_array) {
@@ -132,8 +132,8 @@
 		{#if innerWidth}
 			<Piano
 				width={innerWidth - piano_padding * 2}
-				{note_min}
-				{note_max}
+				{min_note}
+				{max_note}
 				{pressed_keys}
 				highlighted_keys={notes}
 				on:press={(e) => {

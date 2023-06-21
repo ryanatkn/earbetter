@@ -175,8 +175,8 @@
 		{#if clientWidth}
 			<Piano
 				width={clientWidth - piano_padding * 2}
-				note_min={$def.note_min}
-				note_max={$def.note_max}
+				min_note={$def.min_note}
+				max_note={$def.max_note}
 				enabled_notes={$trial?.valid_notes}
 				{pressed_keys}
 				{highlighted_keys}

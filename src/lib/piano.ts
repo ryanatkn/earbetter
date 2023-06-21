@@ -37,29 +37,34 @@ export interface PianoKey {
 	height: number;
 }
 
-export const compute_piano = (width: number, note_min: Midi, note_max: Midi): Piano => {
-	const note_min_offset = Math.abs(key_left_offset_pct[midi_chromas[note_min]]);
-	let note_max_offset = Math.abs(key_left_offset_pct[midi_chromas[note_max]]);
-	if (note_max_offset) note_max_offset = 1 - note_max_offset;
+export const compute_piano = (
+	width: number,
+	min_note: Midi,
+	max_note: Midi,
+	max_height = 600,
+): Piano => {
+	const min_note_offset = Math.abs(key_left_offset_pct[midi_chromas[min_note]]);
+	let max_note_offset = Math.abs(key_left_offset_pct[midi_chromas[max_note]]);
+	if (max_note_offset) max_note_offset = 1 - max_note_offset;
 
-	const note_count = note_max - note_min + 1;
-	const naturals = compute_naturals(note_min, note_max);
-	const natural_key_width = (width / (naturals.length + (note_min_offset + note_max_offset))) | 0;
+	const note_count = max_note - min_note + 1;
+	const naturals = compute_naturals(min_note, max_note);
+	const natural_key_width = (width / (naturals.length + (min_note_offset + max_note_offset))) | 0;
 	const accidental_key_width = (natural_key_width * ACCIDENTAL_KEY_WIDTH_MULT) | 0;
-	const natural_key_height = Math.min(600, accidental_key_width * KEY_HEIGHT_MULT) | 0;
+	const natural_key_height = Math.min(max_height, accidental_key_width * KEY_HEIGHT_MULT) | 0;
 	const accidental_key_height = (natural_key_height * ACCIDENTAL_KEY_HEIGHT_MULT) | 0;
 
 	let natural_index = 0;
 	const piano_keys: PianoKey[] = [];
 	for (let i = 0; i < note_count; i++) {
-		const midi = (i + note_min) as Midi;
+		const midi = (i + min_note) as Midi;
 		let key_width: number;
 		let key_height: number;
 		let left_offset: number;
 		if (midi_naturals.has(midi)) {
 			key_width = natural_key_width;
 			key_height = natural_key_height;
-			left_offset = natural_index * natural_key_width + note_min_offset * accidental_key_width;
+			left_offset = natural_index * natural_key_width + min_note_offset * accidental_key_width;
 			natural_index++;
 		} else {
 			key_width = accidental_key_width;
@@ -68,7 +73,7 @@ export const compute_piano = (width: number, note_min: Midi, note_max: Midi): Pi
 			left_offset =
 				natural_index * natural_key_width +
 				key_left_offset_pct[midi_chromas[midi]] * accidental_key_width +
-				note_min_offset * accidental_key_width;
+				min_note_offset * accidental_key_width;
 		}
 
 		piano_keys.push({

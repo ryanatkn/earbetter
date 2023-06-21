@@ -69,6 +69,8 @@
 			}
 		}
 	};
+
+	$: clickable_and_enabled = clickable && enabled;
 </script>
 
 <button
@@ -77,13 +79,14 @@
 	class:natural
 	class:accidental
 	class:disabled={!enabled}
-	class:clickable={clickable && enabled}
+	class:clickable={clickable_and_enabled}
 	class:active={pressed}
 	class:highlighted
 	class:emphasized
-	on:keydown={enabled ? keydown : undefined}
-	on:keyup={enabled ? keyup : undefined}
-	on:mousedown={enabled
+	tabindex={clickable_and_enabled ? undefined : -1}
+	on:keydown={clickable_and_enabled ? keydown : undefined}
+	on:keyup={clickable_and_enabled ? keyup : undefined}
+	on:mousedown={clickable_and_enabled
 		? (e) => {
 				swallow(e);
 				dispatch('press', midi);
@@ -91,21 +94,21 @@
 				e.currentTarget.focus();
 		  }
 		: undefined}
-	on:mouseup={enabled
+	on:mouseup={clickable_and_enabled
 		? (e) => {
 				swallow(e);
 				dispatch('release', midi);
 				pressing = false;
 		  }
 		: undefined}
-	on:mouseenter={enabled && pressing
+	on:mouseenter={clickable_and_enabled && pressing
 		? (e) => {
 				swallow(e);
 				dispatch('press', midi);
 				e.currentTarget.focus();
 		  }
 		: undefined}
-	on:mouseleave={enabled
+	on:mouseleave={clickable_and_enabled
 		? (e) => {
 				swallow(e);
 				dispatch('release', midi);
@@ -138,6 +141,7 @@
 		padding: 0;
 		min-height: 0;
 		z-index: var(--z_index_offset);
+		cursor: default;
 	}
 
 	.piano-key:focus {
@@ -154,6 +158,7 @@
 
 	.clickable {
 		transform-origin: top center;
+		cursor: pointer;
 	}
 	.clickable:hover {
 		background-color: var(--primary_color, #00bb00);

@@ -8,8 +8,8 @@
 		create_level_id,
 		DEFAULT_LEVEL_NAME,
 		DEFAULT_INTERVALS,
-		DEFAULT_NOTE_MAX,
-		DEFAULT_NOTE_MIN,
+		DEFAULT_MAX_NOTE,
+		DEFAULT_MIN_NOTE,
 		DEFAULT_SEQUENCE_LENGTH,
 		DEFAULT_TRIAL_COUNT,
 		LevelData,
@@ -45,8 +45,8 @@
 	export let tonics: Midi[] | null = DEFAULT_TONICS;
 	export let trial_count: number = DEFAULT_TRIAL_COUNT;
 	export let sequence_length: number = DEFAULT_SEQUENCE_LENGTH;
-	export let note_min: Midi = DEFAULT_NOTE_MIN;
-	export let note_max: Midi = DEFAULT_NOTE_MAX;
+	export let min_note: Midi = DEFAULT_MIN_NOTE;
+	export let max_note: Midi = DEFAULT_MAX_NOTE;
 	export let editing = false;
 
 	$: tonics_set = tonics && new Set(tonics);
@@ -57,11 +57,11 @@
 		id,
 		name,
 		intervals, // TODO filter out the invalid intervals
-		tonics: tonics ? tonics.filter((t) => t >= note_min && t <= note_max) : tonics, // select only the valid tonics
+		tonics: tonics ? tonics.filter((t) => t >= min_note && t <= max_note) : tonics, // select only the valid tonics
 		trial_count,
 		sequence_length,
-		note_min,
-		note_max,
+		min_note,
+		max_note,
 	});
 
 	$: set_level_data(level_data);
@@ -73,8 +73,8 @@
 			tonics = level_data.tonics;
 			trial_count = level_data.trial_count;
 			sequence_length = level_data.sequence_length;
-			note_min = level_data.note_min;
-			note_max = level_data.note_max;
+			min_note = level_data.min_note;
+			max_note = level_data.max_note;
 		} else {
 			id = create_level_id();
 			name = DEFAULT_LEVEL_NAME;
@@ -82,8 +82,8 @@
 			tonics = DEFAULT_TONICS;
 			trial_count = DEFAULT_TRIAL_COUNT;
 			sequence_length = DEFAULT_SEQUENCE_LENGTH;
-			note_min = DEFAULT_NOTE_MIN;
-			note_max = DEFAULT_NOTE_MAX;
+			min_note = DEFAULT_MIN_NOTE;
+			max_note = DEFAULT_MAX_NOTE;
 		}
 	};
 
@@ -93,8 +93,8 @@
 		name !== level_data.name ||
 		trial_count !== level_data.trial_count ||
 		sequence_length !== level_data.sequence_length ||
-		note_min !== level_data.note_min ||
-		note_max !== level_data.note_max ||
+		min_note !== level_data.min_note ||
+		max_note !== level_data.max_note ||
 		intervals.toString() !== level_data.intervals.toString() ||
 		tonics?.toString() !== level_data.tonics?.toString(); // TODO speed these comparisons up
 
@@ -139,8 +139,6 @@
 
 	// TODO helper component for measuring? with `let:width` - first look at Svelte's new box bindings
 	let piano_width: number | undefined;
-
-	// TODO BLOCK set piano max height (change calculation api?)
 </script>
 
 <form class="level-def-form">
@@ -204,18 +202,26 @@
 		<fieldset class="row">
 			<label>
 				<div class="title">MIDI min</div>
-				<div>{midi_names[note_min]}</div>
-				<input type="number" bind:value={note_min} step={1} min={MIDI_MIN} max={MIDI_MAX} />
-				<input type="range" bind:value={note_min} step={1} min={MIDI_MIN} max={MIDI_MAX} />
+				<div>{midi_names[min_note]}</div>
+				<input type="number" bind:value={min_note} step={1} min={MIDI_MIN} max={MIDI_MAX} />
+				<input type="range" bind:value={min_note} step={1} min={MIDI_MIN} max={MIDI_MAX} />
 			</label>
 			<label>
 				<div class="title">MIDI max</div>
-				<div>{midi_names[note_max]}</div>
-				<input type="number" bind:value={note_max} step={1} min={MIDI_MIN} max={MIDI_MAX} />
-				<input type="range" bind:value={note_max} step={1} min={MIDI_MIN} max={MIDI_MAX} />
+				<div>{midi_names[max_note]}</div>
+				<input type="number" bind:value={max_note} step={1} min={MIDI_MIN} max={MIDI_MAX} />
+				<input type="range" bind:value={max_note} step={1} min={MIDI_MIN} max={MIDI_MAX} />
 			</label>
 		</fieldset>
-		<Piano width={piano_width || 0} {note_min} {note_max} highlighted_keys={tonics_set} />
+		<Piano
+			width={piano_width || 0}
+			max_height={43}
+			{min_note}
+			{max_note}
+			highlighted_keys={tonics_set}
+			clickable={false}
+		/>
+		<br />
 		<fieldset bind:clientWidth={piano_width}>
 			<label style:margin-bottom={0}>
 				<div class="title">tonics</div>
@@ -346,8 +352,8 @@
 			<!-- TODO this `new Set` is a hack, probably change the data structure to a set, need serialization for storage -->
 			<NotesInput
 				notes={new Set(tonics)}
-				{note_min}
-				{note_max}
+				{min_note}
+				{max_note}
 				on:input={(e) => {
 					tonics = e.detail;
 					close();
