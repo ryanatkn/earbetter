@@ -138,6 +138,8 @@
 
 	// TODO helper component for measuring? with `let:width` - first look at Svelte's new box bindings
 	let piano_width: number | undefined;
+
+	$: lowest_note_error = min_note >= max_note;
 </script>
 
 <form class="level-def-form">
@@ -186,41 +188,45 @@
 		</fieldset>
 		<fieldset>
 			<label>
-				<div class="title">trial_count</div>
+				<div class="title">trial count</div>
 				<input type="number" bind:value={trial_count} min={1} />
 				<input type="range" bind:value={trial_count} min={1} max={20} />
 			</label>
 		</fieldset>
 		<fieldset>
 			<label>
-				<div class="title">sequence_length</div>
+				<div class="title">sequence length</div>
 				<input bind:value={sequence_length} min={2} />
 				<input type="range" bind:value={sequence_length} min={2} max={16} />
 			</label>
 		</fieldset>
 		<fieldset class="row">
 			<label>
-				<div class="title">MIDI min</div>
+				<div class="title">lowest note</div>
 				<div>{midi_names[min_note]}</div>
 				<input type="number" bind:value={min_note} step={1} min={MIDI_MIN} max={MIDI_MAX} />
 				<input type="range" bind:value={min_note} step={1} min={MIDI_MIN} max={MIDI_MAX} />
 			</label>
 			<label>
-				<div class="title">MIDI max</div>
+				<div class="title">highest note</div>
 				<div>{midi_names[max_note]}</div>
 				<input type="number" bind:value={max_note} step={1} min={MIDI_MIN} max={MIDI_MAX} />
 				<input type="range" bind:value={max_note} step={1} min={MIDI_MIN} max={MIDI_MAX} />
 			</label>
 		</fieldset>
-		<Piano
-			width={piano_width || 0}
-			max_height={43}
-			{min_note}
-			{max_note}
-			highlighted_keys={tonics_set}
-			clickable={false}
-		/>
-		<br />
+		{#if lowest_note_error}
+			<Message status="error">the lowest note must be lower than the highest</Message>
+		{:else}
+			<Piano
+				width={piano_width || 0}
+				max_height={50}
+				{min_note}
+				{max_note}
+				highlighted_keys={tonics_set}
+				clickable={false}
+			/>
+			<br />
+		{/if}
 		<fieldset bind:clientWidth={piano_width}>
 			<label style:margin-bottom={0}>
 				<div class="title">tonics</div>
@@ -245,7 +251,7 @@
 			class="accent"
 			type="button"
 			on:click={() => dispatch('submit', to_data())}
-			disabled={editing && !changed}
+			disabled={(editing && !changed) || lowest_note_error}
 		>
 			{#if editing}save changes to level{:else}create level{/if}
 		</button>
