@@ -49,8 +49,6 @@
 	export let max_note: Midi = DEFAULT_MAX_NOTE;
 	export let editing = false;
 
-	$: tonics_set = tonics && new Set(tonics);
-
 	let removing = false;
 
 	const to_data = (): LevelData => ({
@@ -111,6 +109,7 @@
 	let start_importing_el: HTMLButtonElement;
 	let intervals_el: HTMLInputElement;
 	let tonics_el: HTMLInputElement;
+	$: tonics_set = tonics && new Set(tonics);
 
 	const import_data = async (): Promise<void> => {
 		parse_error_message = '';
