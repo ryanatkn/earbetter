@@ -1,7 +1,7 @@
 <script lang="ts">
 	import type {Signal} from '@preact/signals-core';
 
-	import {instruments, type Instrument} from '$lib/audio/helpers';
+	import {instruments, type Instrument} from '$lib/helpers';
 
 	export let instrument: Signal<Instrument>;
 

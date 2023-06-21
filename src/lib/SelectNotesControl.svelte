@@ -8,7 +8,7 @@
 		pitch_class_aliases,
 		type PitchClass,
 		lookup_scale,
-	} from '$lib/music/music';
+	} from '$lib/music';
 
 	// TODO naming convention between `IntervalsInput` and `SelectNotesControl`?
 

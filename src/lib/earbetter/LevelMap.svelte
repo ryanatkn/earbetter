@@ -2,18 +2,18 @@
 	import type {Signal} from '@preact/signals-core';
 	import {slide} from 'svelte/transition';
 
-	import type {MIDIAccess} from '$lib/audio/WebMIDI';
-	import {get_ac} from '$lib/audio/ac';
-	import InitMidiButton from '$lib/audio/InitMidiButton.svelte';
+	import type {MIDIAccess} from '$lib/WebMIDI';
+	import {get_ac} from '$lib/ac';
+	import InitMidiButton from '$lib/InitMidiButton.svelte';
 	import LevelForm from '$lib/earbetter/LevelForm.svelte';
 	import Projects from '$lib/earbetter/Projects.svelte';
-	import VolumeControl from '$lib/audio/VolumeControl.svelte';
-	import {get_instrument, get_volume, with_velocity} from '$lib/audio/helpers';
-	import InstrumentControl from '$lib/audio/InstrumentControl.svelte';
+	import VolumeControl from '$lib/VolumeControl.svelte';
+	import {get_instrument, get_volume, with_velocity} from '$lib/helpers';
+	import InstrumentControl from '$lib/InstrumentControl.svelte';
 	import type {App} from '$lib/earbetter/app';
 	import ControlsInstructions from '$lib/earbetter/ControlsInstructions.svelte';
-	import MidiInput from '$lib/audio/MidiInput.svelte';
-	import {start_playing, stop_playing} from '$lib/audio/play_note';
+	import MidiInput from '$lib/MidiInput.svelte';
+	import {start_playing, stop_playing} from '$lib/play_note';
 	import Realms from '$lib/earbetter/Realms.svelte';
 	import {MISTAKE_HISTORY_LENGTH} from '$lib/earbetter/level';
 	import RealmEditor from '$lib/earbetter/RealmEditor.svelte';

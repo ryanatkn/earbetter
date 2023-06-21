@@ -1,7 +1,7 @@
 <script lang="ts">
 	import {createEventDispatcher} from 'svelte';
 
-	import {Intervals, Scale, scales, to_scale_notes} from '$lib/music/music';
+	import {Intervals, Scale, scales, to_scale_notes} from '$lib/music';
 
 	// TODO naming convention between `IntervalsInput` and `SelectNotesControl`?
 

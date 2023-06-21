@@ -1,4 +1,4 @@
-import {interval_names, lookup_scale, to_scale_notes, type ScaleName} from '$lib/music/music';
+import {interval_names, lookup_scale, to_scale_notes, type ScaleName} from '$lib/music';
 import {RealmData, RealmName} from '$lib/earbetter/realm';
 import type {LevelData} from '$lib/earbetter/level';
 

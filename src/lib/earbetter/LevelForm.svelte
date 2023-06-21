@@ -27,9 +27,9 @@
 		Intervals,
 		serialize_notes,
 		parse_notes,
-	} from '$lib/music/music';
-	import IntervalsInput from '$lib/music/IntervalsInput.svelte';
-	import NotesInput from '$lib/music/NotesInput.svelte';
+	} from '$lib/music';
+	import IntervalsInput from '$lib/IntervalsInput.svelte';
+	import NotesInput from '$lib/NotesInput.svelte';
 
 	const dispatch = createEventDispatcher<{
 		submit: LevelData;

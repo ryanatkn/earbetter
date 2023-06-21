@@ -7,18 +7,34 @@
   (first pass at functionality, more to come)
 - also has [a playable piano](https://earbetter.ryanatkn.com/piano)
 - supports MIDI devices like piano keyboards
-- TODO publish to npm as `@ryanatkn/earbetter` with audio/music utils/types and Svelte components
+- published to npm as
+  [`@ryanatkn/earbetter`](https://www.npmjs.com/package/@ryanatkn/earbetter)
+  with utilities, types, and Svelte components for audio and music
+  (see [`$lib/exports.ts`](/src/lib/exports.ts))
 
 to help see [contributing.md](contributing.md)
 
 play at [earbetter.ryanatkn.com](https://earbetter.ryanatkn.com/)
 
+## usage
+
+```bash
+npm i -D @ryanatkn/earbetter
+```
+
+```ts
+import Piano from '@ryanatkn/earbetter/Piano.svelte';
+```
+
+No docs yet, for now see the modules referenced in [`$lib/exports.ts`](/src/lib/exports.ts).
+
 ## intro
 
 In 2016 I made a simple ear training game named
-[Ear Sharpener](https://github.com/ryanatkn/ear-sharpener) to scratch an itch,
-and while interesting it wasn't a good training tool.
-The goal of Earbetter is to be a useful ear trainer.
+[Ear Sharpener](https://github.com/ryanatkn/ear-sharpener)
+because I thought ear training was interesting,
+but it wasn't a good training tool.
+The goal of Earbetter is to be a useful and customizable ear trainer.
 I also want it to be fun so it motivates more training, but it's not there yet.
 
 I'm not a musician and I'm one person so

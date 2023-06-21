@@ -4,17 +4,17 @@
 	import {plural, swallow} from '@feltjs/util';
 	import {createEventDispatcher} from 'svelte';
 
-	import Piano from '$lib/music/Piano.svelte';
-	import {get_ac} from '$lib/audio/ac';
-	import {midi_access} from '$lib/audio/midi_access';
-	import MidiInput from '$lib/audio/MidiInput.svelte';
-	import {playing_notes, start_playing, stop_playing} from '$lib/audio/play_note';
-	import InitMidiButton from '$lib/audio/InitMidiButton.svelte';
-	import VolumeControl from '$lib/audio/VolumeControl.svelte';
-	import {get_instrument, get_volume, with_velocity} from '$lib/audio/helpers';
-	import InstrumentControl from '$lib/audio/InstrumentControl.svelte';
-	import {Midi, serialize_notes, Notes, scales, Scale, parse_notes} from '$lib/music/music';
-	import {load_from_storage, set_in_storage} from '$lib/util/storage';
+	import Piano from '$lib/Piano.svelte';
+	import {get_ac} from '$lib/ac';
+	import {midi_access} from '$lib/midi_access';
+	import MidiInput from '$lib/MidiInput.svelte';
+	import {playing_notes, start_playing, stop_playing} from '$lib/play_note';
+	import InitMidiButton from '$lib/InitMidiButton.svelte';
+	import VolumeControl from '$lib/VolumeControl.svelte';
+	import {get_instrument, get_volume, with_velocity} from '$lib/helpers';
+	import InstrumentControl from '$lib/InstrumentControl.svelte';
+	import {Midi, serialize_notes, Notes, scales, Scale, parse_notes} from '$lib/music';
+	import {load_from_storage, set_in_storage} from '$lib/storage';
 
 	const dispatch = createEventDispatcher<{
 		input: Notes | null;

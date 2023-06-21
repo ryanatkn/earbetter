@@ -3,11 +3,11 @@
 	import {fade} from 'svelte/transition';
 	import type {Signal} from '@preact/signals-core';
 
-	import type {MIDIAccess} from '$lib/audio/WebMIDI';
+	import type {MIDIAccess} from '$lib/WebMIDI';
 	import {
 		midi_access as default_midi_access,
 		request_access as default_request_access,
-	} from '$lib/audio/midi_access';
+	} from '$lib/midi_access';
 
 	export let midi_access: Signal<MIDIAccess | null> = default_midi_access;
 	export const request_access: () => Promise<MIDIAccess | null> = default_request_access;

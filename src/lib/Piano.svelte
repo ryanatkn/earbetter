@@ -1,7 +1,7 @@
 <script lang="ts">
-	import PianoKey from '$lib/music/PianoKey.svelte';
-	import {MIDI_MIN, MIDI_MAX, type Midi} from '$lib/music/music';
-	import {compute_piano} from '$lib/music/piano';
+	import PianoKey from '$lib/PianoKey.svelte';
+	import {MIDI_MIN, MIDI_MAX, type Midi} from '$lib/music';
+	import {compute_piano} from '$lib/piano';
 
 	export let width: number;
 	export let note_min: Midi = MIDI_MIN;
@@ -18,6 +18,8 @@
 		accidental_key_width,
 		accidental_key_height,
 	} = compute_piano(width, note_min, note_max));
+
+	let pressing = false; // piano-wide state to enable dragging with the pointer
 </script>
 
 <div
@@ -35,6 +37,7 @@
 				on:release
 				{midi}
 				{left_offset}
+				bind:pressing
 				enabled={!enabled_notes || enabled_notes.has(midi)}
 				pressed={pressed_keys?.has(midi)}
 				highlighted={highlighted_keys?.has(midi)}

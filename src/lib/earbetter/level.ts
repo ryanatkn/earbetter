@@ -6,11 +6,11 @@ import {Logger} from '@feltjs/util/log.js';
 import {signal, batch, Signal, effect} from '@preact/signals-core';
 import {base} from '$app/paths';
 
-import {Midi, Intervals, Notes} from '$lib/music/music';
-import {play_note} from '$lib/audio/play_note';
-import type {Instrument, Milliseconds, Volume} from '$lib/audio/helpers';
-import {serialize_to_hash} from '$lib/util/url';
-import {to_random_id} from '$lib/util/id';
+import {Midi, Intervals, Notes} from '$lib/music';
+import {play_note} from '$lib/play_note';
+import type {Instrument, Milliseconds, Volume} from '$lib/helpers';
+import {serialize_to_hash} from '$lib/url';
+import {to_random_id} from '$lib/id';
 
 // TODO this isn't idiomatic signals code yet, uses `peek` too much
 
