@@ -81,13 +81,13 @@
 		const scale_notes = to_notes(scale, key, note_min, note_max);
 		// TODO this is a hacky and slow but it approximates the desired UX, is not ideal,
 		// I think the best UX would be to detect if each scale is currently fully active
-		if (!notes_array) {
-			notes_array = Array.from(scale_notes);
+		if (!notes || !notes_array) {
+			notes = scale_notes;
 			return;
 		}
 		let fully_included = true;
 		for (const n of scale_notes) {
-			if (!notes_array.includes(n)) {
+			if (!notes.has(n)) {
 				fully_included = false;
 				break;
 			}
