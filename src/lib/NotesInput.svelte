@@ -14,7 +14,6 @@
 	import {get_instrument, get_volume, with_velocity} from '$lib/helpers';
 	import InstrumentControl from '$lib/InstrumentControl.svelte';
 	import {Midi, serialize_notes, Notes, scales, Scale, parse_notes} from '$lib/music';
-	import {load_from_storage, set_in_storage} from '$lib/storage';
 
 	const dispatch = createEventDispatcher<{
 		input: Notes | null;
@@ -48,28 +47,8 @@
 
 	// TODO lots of copypasta below
 
-	// TODO extract? is pretty specific
-	const PianoSettings = z.object({
-		note_min: Midi.default(36),
-		note_max: Midi.default(96),
-	});
-	type PianoSettings = z.infer<typeof PianoSettings>;
-	const SITE_DATA_STORAGE_KEY = 'piano';
-	const initial_piano_settings = load_from_storage(
-		SITE_DATA_STORAGE_KEY,
-		() => PianoSettings.parse({}),
-		PianoSettings.parse,
-	);
-
 	const note_min = signal(initial_piano_settings.note_min);
 	const note_max = signal(initial_piano_settings.note_max);
-
-	const to_piano_data = (): PianoSettings => ({
-		note_min: note_min.value,
-		note_max: note_max.value,
-	});
-	const save_piano_data = () => set_in_storage(SITE_DATA_STORAGE_KEY, to_piano_data());
-	effect(save_piano_data);
 
 	const ac = get_ac();
 	const volume = get_volume();
