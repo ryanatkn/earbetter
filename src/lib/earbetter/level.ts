@@ -96,8 +96,6 @@ export interface Trial {
 const create_next_trial = (def: LevelData, current_trial: Trial | null): Trial => {
 	const {note_min, note_max} = def;
 
-	// TODO BLOCK the point of this code is to get to the tonic
-	// const tonic = to_random_tonic(def);
 	const tonic = to_random_tonic(def);
 	const sequence: Midi[] = [tonic];
 
