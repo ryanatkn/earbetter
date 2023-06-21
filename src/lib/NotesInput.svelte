@@ -20,6 +20,7 @@
 		parse_notes,
 		DEFAULT_PITCH_CLASS,
 		pitch_classes,
+		to_notes,
 	} from '$lib/music';
 
 	const dispatch = createEventDispatcher<{
@@ -58,9 +59,6 @@
 
 	let key = DEFAULT_PITCH_CLASS;
 
-	// TODO BLOCK
-	// $: notes = to_notes(scale, key, min_note, max_note);
-
 	const ac = get_ac();
 	const volume = get_volume();
 	const instrument = get_instrument();
@@ -80,11 +78,11 @@
 	// TODO BLOCK calculate the notes for the scale across the lowest/highest MIDI
 
 	const toggle_scale = (scale: Scale): void => {
-		const scale_notes = scale.notes;
+		const scale_notes = to_notes(scale, key, note_min, note_max);
 		// TODO this is a hacky and slow but it approximates the desired UX, is not ideal,
 		// I think the best UX would be to detect if each scale is currently fully active
 		if (!notes_array) {
-			notes_array = scale_notes.slice();
+			notes_array = Array.from(scale_notes);
 			return;
 		}
 		let fully_included = true;
@@ -95,8 +93,8 @@
 			}
 		}
 		const next_notes = fully_included
-			? notes_array.filter((n) => !scale_notes.includes(n))
-			: notes_array.concat(scale_notes);
+			? notes_array.filter((n) => !scale_notes.has(n))
+			: notes_array.concat(Array.from(scale_notes));
 		notes = new Set(next_notes);
 	};
 </script>
