@@ -138,7 +138,7 @@
 <form class="level-def-form">
 	<header>
 		<h2>
-			{#if editing}editing level{:else}create a custom level{/if}
+			{#if editing}editing level{:else}create a new level{/if}
 		</h2>
 	</header>
 	<div class="fields">
