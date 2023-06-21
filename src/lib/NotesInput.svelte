@@ -134,6 +134,7 @@
 				width={innerWidth - piano_padding * 2}
 				{min_note}
 				{max_note}
+				max_height={300}
 				{pressed_keys}
 				highlighted_keys={notes}
 				on:press={(e) => {
