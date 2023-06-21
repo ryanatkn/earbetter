@@ -16,6 +16,14 @@ to help see [contributing.md](contributing.md)
 
 play at [earbetter.ryanatkn.com](https://earbetter.ryanatkn.com/)
 
+## usage
+
+```bash
+npm i -D @ryanatkn/earbetter
+```
+
+No docs yet, for now see the modules referenced in [`$lib/exports.ts`](/src/lib/exports.ts).
+
 ## intro
 
 In 2016 I made a simple ear training game named
