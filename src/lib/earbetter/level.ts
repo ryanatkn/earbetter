@@ -1,12 +1,11 @@
 import {randomItem, randomInt} from '@feltjs/util/random.js';
 import {z} from 'zod';
 import type {Flavored} from '@feltjs/util';
-import {identity} from '@feltjs/util/function.js';
 import {Logger} from '@feltjs/util/log.js';
 import {signal, batch, Signal, effect} from '@preact/signals-core';
 import {base} from '$app/paths';
 
-import {Midi, Intervals, Semitones} from '$lib/music';
+import {Midi, Intervals, Notes} from '$lib/music';
 import {play_note} from '$lib/play_note';
 import type {Instrument, Milliseconds, Volume} from '$lib/helpers';
 import {serialize_to_hash} from '$lib/url';
@@ -23,21 +22,23 @@ export const DEFAULT_FEEDBACK_DURATION: Milliseconds = 1000; // TODO configurabl
 export const DEFAULT_SEQUENCE_LENGTH = 2;
 export const DEFAULT_TRIAL_COUNT = 5;
 export const DEFAULT_LEVEL_NAME = 'new level';
-export const DEFAULT_INTERVALS: Semitones[] = [5, 7];
+export const DEFAULT_INTERVALS: Intervals = [5, 7];
+export const DEFAULT_TONICS: Notes | null = null;
 export const DEFAULT_NOTE_MIN: Midi = 48;
 export const DEFAULT_NOTE_MAX: Midi = 84;
 
-export type LevelId = Flavored<string, 'LevelId'>;
-export const LevelId = z.string().transform<LevelId>(identity);
+export const LevelId = z.string();
+export type LevelId = Flavored<z.infer<typeof LevelId>, 'LevelId'>;
 export const create_level_id = (): LevelId => to_random_id();
 
-export type LevelName = Flavored<string, 'LevelName'>;
-export const LevelName = z.string().min(1).max(1000).transform<LevelName>(identity); // TODO better way to do this?
+export const LevelName = z.string().min(1).max(1000);
+export type LevelName = Flavored<z.infer<typeof LevelName>, 'LevelName'>;
 
 export const LevelData = z.object({
 	id: LevelId.default(create_level_id),
 	name: LevelName.default(DEFAULT_LEVEL_NAME),
 	intervals: Intervals.default(DEFAULT_INTERVALS),
+	tonics: Notes.nullable().default(null),
 	trial_count: z.number().default(DEFAULT_TRIAL_COUNT),
 	sequence_length: z.number().default(DEFAULT_SEQUENCE_LENGTH),
 	note_min: Midi.default(DEFAULT_NOTE_MIN),
@@ -94,13 +95,7 @@ export interface Trial {
 const create_next_trial = (def: LevelData, current_trial: Trial | null): Trial => {
 	const {note_min, note_max} = def;
 
-	const interval_max = def.intervals.reduce((max, v) => Math.max(max, v));
-	const interval_min = def.intervals.reduce((max, v) => Math.min(max, v));
-	const tonic_max = Math.min(note_max - interval_max, note_max);
-	const tonic_min = Math.max(note_min - interval_min, note_min);
-	const tonic = (
-		tonic_min < tonic_max ? randomInt(tonic_min, tonic_max) : to_fallback_tonic(note_min, note_max)
-	) as Midi;
+	const tonic = to_random_tonic(def);
 	const sequence: Midi[] = [tonic];
 
 	// compute the valid notes
@@ -133,6 +128,24 @@ const create_next_trial = (def: LevelData, current_trial: Trial | null): Trial =
 		guessing_index: null,
 		retry_count: 0,
 	};
+};
+
+const to_random_tonic = (def: LevelData): Midi => {
+	const {tonics} = def;
+	if (tonics?.length) return randomItem(tonics);
+	const {note_min, note_max} = def;
+	const interval_max = def.intervals.reduce((max, v) => Math.max(max, v));
+	const interval_min = def.intervals.reduce((max, v) => Math.min(max, v));
+	const tonic_max = Math.min(note_max - interval_max, note_max);
+	const tonic_min = Math.max(note_min - interval_min, note_min);
+	return (
+		tonic_min < tonic_max ? randomInt(tonic_min, tonic_max) : to_fallback_tonic(note_min, note_max)
+	) as Midi;
+};
+
+const to_fallback_tonic = (note_min: Midi, note_max: Midi): Midi => {
+	const offset = ((note_max - note_min) / 4) | 0;
+	return randomInt(note_min + offset, note_max - offset) as Midi;
 };
 
 const DEFAULT_STATUS: Status = 'initial';
@@ -335,13 +348,6 @@ export const create_level = (
 const get_correct_guess = (trial: Trial | null): Midi | null => {
 	if (!trial || trial.guessing_index === null) return null;
 	return trial.sequence[trial.guessing_index];
-};
-
-// If there's possible tonic range that fits with all of the intervals within the bounds,
-// fall back to a reasonable default.
-const to_fallback_tonic = (note_min: Midi, note_max: Midi): Midi => {
-	const offset = ((note_max - note_min) / 4) | 0;
-	return randomInt(note_min + offset, note_max - offset) as Midi;
 };
 
 export const to_play_level_url = (level_data: LevelData): string => {

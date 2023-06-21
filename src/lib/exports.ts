@@ -17,6 +17,7 @@ export const exports = [
 	'lib/MidiInput.svelte',
 	'lib/MidiRangeControl.svelte',
 	'lib/music.ts',
+	'lib/NotesInput.svelte',
 	'lib/Piano.svelte',
 	'lib/piano.ts',
 	'lib/PianoKey.svelte',

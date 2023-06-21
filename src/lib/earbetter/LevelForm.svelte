@@ -14,6 +14,7 @@
 		DEFAULT_TRIAL_COUNT,
 		LevelData,
 		type LevelId,
+		DEFAULT_TONICS,
 	} from '$lib/earbetter/level';
 	import {
 		parse_intervals,
@@ -23,8 +24,12 @@
 		type Midi,
 		midi_names,
 		Scale,
+		Intervals,
+		serialize_notes,
+		parse_notes,
 	} from '$lib/music';
 	import IntervalsInput from '$lib/IntervalsInput.svelte';
+	import NotesInput from '$lib/NotesInput.svelte';
 
 	const dispatch = createEventDispatcher<{
 		submit: LevelData;
@@ -33,9 +38,10 @@
 	}>();
 
 	export let level_data: LevelData | null = null;
-	export let id = create_level_id();
+	export let id: LevelId = create_level_id();
 	export let name = DEFAULT_LEVEL_NAME;
-	export let intervals = DEFAULT_INTERVALS;
+	export let intervals: Intervals = DEFAULT_INTERVALS;
+	export let tonics: Midi[] | null = DEFAULT_TONICS;
 	export let trial_count: number = DEFAULT_TRIAL_COUNT;
 	export let sequence_length: number = DEFAULT_SEQUENCE_LENGTH;
 	export let note_min: Midi = DEFAULT_NOTE_MIN;
@@ -48,6 +54,7 @@
 		id,
 		name,
 		intervals,
+		tonics,
 		trial_count,
 		sequence_length,
 		note_min,
@@ -60,6 +67,7 @@
 			id = level_data.id;
 			name = level_data.name;
 			intervals = level_data.intervals;
+			tonics = level_data.tonics;
 			trial_count = level_data.trial_count;
 			sequence_length = level_data.sequence_length;
 			note_min = level_data.note_min;
@@ -68,6 +76,7 @@
 			id = create_level_id();
 			name = DEFAULT_LEVEL_NAME;
 			intervals = DEFAULT_INTERVALS;
+			tonics = DEFAULT_TONICS;
 			trial_count = DEFAULT_TRIAL_COUNT;
 			sequence_length = DEFAULT_SEQUENCE_LENGTH;
 			note_min = DEFAULT_NOTE_MIN;
@@ -83,11 +92,13 @@
 		sequence_length !== level_data.sequence_length ||
 		note_min !== level_data.note_min ||
 		note_max !== level_data.note_max ||
-		intervals.toString() !== level_data.intervals.toString();
+		intervals.toString() !== level_data.intervals.toString() ||
+		tonics?.toString() !== level_data.tonics?.toString(); // TODO speed these comparisons up
 
 	// TODO lots of similarity with `ProjectForm`
 	let importing = false;
 	let picking_intervals = false;
+	let picking_tonics = false;
 	let serialized = '';
 	let updated = '';
 	$: changed_serialized = serialized !== updated;
@@ -96,6 +107,7 @@
 	let level_data_el: HTMLTextAreaElement;
 	let start_importing_el: HTMLButtonElement;
 	let intervals_el: HTMLInputElement;
+	let tonics_el: HTMLInputElement;
 
 	const import_data = async (): Promise<void> => {
 		parse_error_message = '';
@@ -126,7 +138,7 @@
 <form class="level-def-form">
 	<header>
 		<h2>
-			{#if editing}editing level{:else}create a custom level{/if}
+			{#if editing}editing level{:else}create a new level{/if}
 		</h2>
 	</header>
 	<div class="fields">
@@ -147,14 +159,14 @@
 			</label>
 			<button type="button" on:click={() => (picking_intervals = true)}> pick intervals </button>
 			<details>
-				<summary>more info</summary>
+				<summary>more about <code>intervals</code></summary>
 				<p>
 					<code>intervals</code> is a comma-separated list of numbers representing the
 					<a href="https://wikipedia.org/wiki/Interval_(music)">musical intervals</a> used in the
 					level, aka the number of piano keys (<a href="https://wikipedia.org/wiki/Semitone"
 						>semitones</a
 					>) separating each note from the
-					<a href="https://wikipedia.org/wiki/Tonic_(music)">tonic</a> (the base note)
+					<a href="https://wikipedia.org/wiki/Tonic_(music)">tonic</a> (see below)
 				</p>
 				<p>
 					for example, to practice distinguishing between the <a
@@ -194,6 +206,26 @@
 				<input type="number" bind:value={note_max} step={1} min={MIDI_MIN} max={MIDI_MAX} />
 				<input type="range" bind:value={note_max} step={1} min={MIDI_MIN} max={MIDI_MAX} />
 			</label>
+		</fieldset>
+		<fieldset>
+			<label style:margin-bottom={0}>
+				<div class="title">tonics</div>
+				<input
+					bind:this={tonics_el}
+					value={serialize_notes(tonics)}
+					on:input={(e) => (tonics = parse_notes(e.currentTarget.value))}
+					placeholder="all"
+				/>
+			</label>
+			<button type="button" on:click={() => (picking_tonics = true)}> pick tonics </button>
+			<details>
+				<summary>more about <code>tonics</code></summary>
+				<p>
+					the <a href="https://wikipedia.org/wiki/Tonic_(music)">tonic</a> is like the "base" or "home"
+					note, and for our purposes it's always the first note played in a trial, and other notes in
+					the trial are calculated from the tonic and intervals (see above)
+				</p>
+			</details>
 		</fieldset>
 		<button
 			class="accent"
@@ -284,6 +316,31 @@
 				bind:octaves={intervals_input_octaves}
 				on:input={(e) => {
 					intervals = e.detail;
+					close();
+				}}
+			/>
+		</div>
+	</Dialog>
+{/if}
+{#if picking_tonics}
+	<Dialog
+		let:close
+		on:close={() => {
+			picking_tonics = false;
+			tonics_el.focus();
+		}}
+	>
+		<div class="padded-xl column centered">
+			<div class="markup">
+				<h2>pick tonics</h2>
+			</div>
+			<!-- TODO this `new Set` is a hack, probably change the data structure to a set, need serialization for storage -->
+			<NotesInput
+				notes={new Set(tonics)}
+				{note_min}
+				{note_max}
+				on:input={(e) => {
+					tonics = e.detail;
 					close();
 				}}
 			/>

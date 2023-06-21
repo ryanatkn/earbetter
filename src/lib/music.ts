@@ -1,6 +1,5 @@
 import {z} from 'zod';
 import type {Flavored} from '@feltjs/util';
-import {identity} from '@feltjs/util/function.js';
 import {signal, type Signal} from '@preact/signals-core';
 import {getContext, setContext} from 'svelte';
 
@@ -29,13 +28,12 @@ export type Chroma = (typeof chromas)[number]; // corresponds to indices of `pit
 
 export type Octave = -1 | 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9;
 
-export type Semitones = Flavored<number, 'Semitones'>;
-export const Semitones = z.number().int().transform<Semitones>(identity);
+export const Semitones = z.number().int();
+export type Semitones = Flavored<z.infer<typeof Semitones>, 'Semitones'>;
 
 export const Intervals = z.array(Semitones);
 export type Intervals = z.infer<typeof Intervals>;
-
-// TODO replace with zod? how?
+// TODO replace with zod
 export const serialize_intervals = (intervals: Intervals): string => intervals.join(', ');
 export const parse_intervals = (value: string): Intervals =>
 	value
@@ -99,8 +97,8 @@ export const set_enabled_notes = (
 	store: Signal<Set<Midi> | null> = signal(null),
 ): Signal<Set<Midi> | null> => setContext(ENABLED_NOTES_KEY, store);
 
-export type ScaleName = Flavored<string, 'ScaleName'>;
-export const ScaleName = z.string().transform<ScaleName>(identity);
+export const ScaleName = z.string();
+export type ScaleName = Flavored<z.infer<typeof ScaleName>, 'ScaleName'>;
 
 export const Scale = z.object({
 	name: ScaleName,
@@ -131,7 +129,7 @@ export const lookup_scale = (name: ScaleName): Scale => {
 	return found;
 };
 
-export const to_scale_notes = (scale: Scale, octaves: number): Semitones[] => {
+export const to_scale_notes = (scale: Scale, octaves: number): Intervals => {
 	const notes: number[] = [];
 	for (let i = 0; i < octaves; i++) {
 		const up = i % 2 === 0;
@@ -245,3 +243,14 @@ export const midi_names: NoteName[] & Record<Midi, NoteName> = Object.freeze(
 export const midi_naturals: Set<Midi> = new Set(
 	midis.filter((m) => midi_pitch_classes[m][1] !== NOTE_SHARP_SYMBOL),
 );
+
+export const Notes = z.array(Midi);
+export type Notes = z.infer<typeof Notes>;
+// TODO replace with zod
+export const serialize_notes = (notes: Notes | null): string => (notes ? notes.join(', ') : '');
+export const parse_notes = (value: string): Notes =>
+	value
+		.split(',')
+		.map((v) => Number(v.trim()) | 0)
+		.filter((v) => !!v && Midi.safeParse(v).success) // exclude 0 intentionally because it's not a MIDI value
+		.sort((a, b) => a - b);

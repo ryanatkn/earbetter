@@ -1,5 +1,10 @@
 # changelog
 
+## 0.2.1
+
+- publish `$lib/NotesInput.svelte`
+  ([#24](https://github.com/ryanatkn/earbetter/pull/24))
+
 ## 0.2.0
 
 - **break**: unpublish `$lib/exports.ts`
