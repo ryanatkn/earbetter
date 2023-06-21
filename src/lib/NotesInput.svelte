@@ -23,20 +23,28 @@
 	export let notes: Set<Midi> | null;
 
 	// TODO this is hacky, does a double conversion with the parent component, see the comment at the usage site
-	let notes_set: Set<Midi> | null = notes;
-	$: notes_set = notes;
-	let notes_array: Notes | null = notes_set ? Array.from(notes_set).sort((a, b) => a - b) : null;
-	$: notes_array = notes_set ? Array.from(notes_set).sort((a, b) => a - b) : null;
+	let notes_array: Notes | null = notes ? Array.from(notes).sort((a, b) => a - b) : null;
+	$: notes_array = notes ? Array.from(notes).sort((a, b) => a - b) : null;
 
 	$: notes_str = serialize_notes(notes_array);
 	const update_notes_str = (s: string): void => {
 		// TODO BLOCK the way we're doing this doesn't allow the user to type
-		notes_set = new Set(parse_notes(s));
+		notes = new Set(parse_notes(s));
 	};
 
 	$: notes_count = notes_array ? notes_array.length : 0;
 
-	$: console.log(`notes_set`, notes_set);
+	const toggle_note = (note: Midi): void => {
+		if (notes?.has(note)) {
+			notes = new Set(notes);
+			notes.delete(note);
+		} else {
+			notes = notes ? new Set(notes) : new Set();
+			notes.add(note);
+		}
+	};
+
+	$: console.log(`notes`, notes);
 
 	// TODO lots of copypasta below
 
@@ -75,9 +83,7 @@
 	const piano_padding = 20;
 
 	const play = (note: Midi, velocity: number | null = null): void => {
-		if (!notes_set || notes_set.has(note)) {
-			start_playing(ac, note, with_velocity($volume, velocity), $instrument);
-		}
+		start_playing(ac, note, with_velocity($volume, velocity), $instrument);
 	};
 
 	// TODO BLOCK scope by lowest/highest MIDI key
@@ -101,7 +107,7 @@
 		const next_notes = fully_included
 			? notes_array.filter((n) => !scale_notes.includes(n))
 			: notes_array.concat(scale_notes);
-		notes_set = new Set(next_notes);
+		notes = new Set(next_notes);
 	};
 </script>
 
@@ -121,15 +127,19 @@
 		</blockquote>
 		<button
 			type="button"
+			on:click={(e) => {
+				swallow(e);
+				dispatch('input', null);
+			}}>select all tonics</button
+		>
+		<button
+			type="button"
 			class="accent"
-			disabled={!notes_array}
+			disabled={!notes_count || !notes_array}
 			on:click={(e) => {
 				swallow(e);
 				dispatch('input', notes_array);
-			}}
-			>select {#if notes_count}these {notes_count} {:else}all {/if}tonic{plural(
-				notes_count,
-			)}</button
+			}}>select {notes_count} tonic{plural(notes_count)}</button
 		>
 	</div>
 	<div class="piano_wrapper" style:padding="{piano_padding}px">
@@ -139,9 +149,14 @@
 				note_min={$note_min}
 				note_max={$note_max}
 				{pressed_keys}
-				enabled_notes={notes_set}
-				on:press={(e) => play(e.detail)}
-				on:release={(e) => stop_playing(e.detail)}
+				highlighted_keys={notes}
+				on:press={(e) => {
+					toggle_note(e.detail);
+					play(e.detail);
+				}}
+				on:release={(e) => {
+					stop_playing(e.detail);
+				}}
 			/>
 		{/if}
 	</div>

@@ -180,25 +180,6 @@
 			</details>
 		</fieldset>
 		<fieldset>
-			<label style:margin-bottom={0}>
-				<div class="title">tonics</div>
-				<input
-					bind:this={tonics_el}
-					value={serialize_notes(tonics)}
-					on:input={(e) => (tonics = parse_notes(e.currentTarget.value))}
-				/>
-			</label>
-			<button type="button" on:click={() => (picking_tonics = true)}> pick tonics </button>
-			<details>
-				<summary>more about <code>tonics</code></summary>
-				<p>
-					the <a href="https://wikipedia.org/wiki/Tonic_(music)">tonic</a> is like the "base" or "home"
-					note, and for our purposes it's always the first note played in a trial, and other notes in
-					the trial are calculated from the tonic and intervals (see above)
-				</p>
-			</details>
-		</fieldset>
-		<fieldset>
 			<label>
 				<div class="title">trial_count</div>
 				<input type="number" bind:value={trial_count} min={1} />
@@ -225,6 +206,26 @@
 				<input type="number" bind:value={note_max} step={1} min={MIDI_MIN} max={MIDI_MAX} />
 				<input type="range" bind:value={note_max} step={1} min={MIDI_MIN} max={MIDI_MAX} />
 			</label>
+		</fieldset>
+		<fieldset>
+			<label style:margin-bottom={0}>
+				<div class="title">tonics</div>
+				<input
+					bind:this={tonics_el}
+					value={serialize_notes(tonics)}
+					on:input={(e) => (tonics = parse_notes(e.currentTarget.value))}
+					placeholder="all"
+				/>
+			</label>
+			<button type="button" on:click={() => (picking_tonics = true)}> pick tonics </button>
+			<details>
+				<summary>more about <code>tonics</code></summary>
+				<p>
+					the <a href="https://wikipedia.org/wiki/Tonic_(music)">tonic</a> is like the "base" or "home"
+					note, and for our purposes it's always the first note played in a trial, and other notes in
+					the trial are calculated from the tonic and intervals (see above)
+				</p>
+			</details>
 		</fieldset>
 		<button
 			class="accent"
