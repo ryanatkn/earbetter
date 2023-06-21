@@ -37,7 +37,7 @@
 
 	$: notes_str = serialize_notes(notes_array);
 	const update_notes_str = (s: string): void => {
-		// TODO BLOCK the way we're doing this doesn't allow the user to type
+		// TODO the way we're doing this doesn't allow the user to type
 		notes = new Set(parse_notes(s));
 	};
 
@@ -73,9 +73,6 @@
 	const play = (note: Midi, velocity: number | null = null): void => {
 		start_playing(ac, note, with_velocity($volume, velocity), $instrument);
 	};
-
-	// TODO BLOCK scope by lowest/highest MIDI key
-	// TODO BLOCK calculate the notes for the scale across the lowest/highest MIDI
 
 	const toggle_scale = (scale: Scale): void => {
 		const scale_notes = to_notes(scale, key, note_min, note_max);
