@@ -12,7 +12,6 @@ export const exports = [
 	'lib/InitMidiButton.svelte',
 	'lib/InstrumentControl.svelte',
 	'lib/IntervalsInput.svelte',
-	'lib/index.ts',
 	'lib/midi_access.ts',
 	'lib/midi_helpers.ts',
 	'lib/MidiInput.svelte',
