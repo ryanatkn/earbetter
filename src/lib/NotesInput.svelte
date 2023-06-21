@@ -167,6 +167,8 @@
 		display: flex;
 		align-items: center;
 		flex-direction: column;
+		/* TODO hacky but better than not, need to fix the dialog container */
+		background-color: var(--bg);
 	}
 	.notes {
 		display: flex;
