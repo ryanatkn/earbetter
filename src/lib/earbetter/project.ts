@@ -1,18 +1,17 @@
 import {z} from 'zod';
 import {randomItem, type Flavored} from '@feltjs/util';
-import {identity} from '@feltjs/util/function.js';
 
 import {DEFAULT_LEVEL_STATS, LevelStats} from '$lib/earbetter/level';
 import {emojis} from '$lib/emoji';
 import {RealmData} from '$lib/earbetter/realm';
 import {to_random_id} from '$lib/id';
 
-export type ProjectId = Flavored<string, 'ProjectId'>;
-export const ProjectId = z.string().transform<ProjectId>(identity); // TODO better way to do this?
+export const ProjectId = z.string();
+export type ProjectId = Flavored<z.infer<typeof ProjectId>, 'ProjectId'>;
 export const create_project_id = (): ProjectId => to_random_id();
 
-export type ProjectName = Flavored<string, 'ProjectName'>;
-export const ProjectName = z.string().min(1).max(1000).transform<ProjectName>(identity); // TODO better way to do this?
+export const ProjectName = z.string().min(1).max(1000);
+export type ProjectName = Flavored<z.infer<typeof ProjectName>, 'ProjectName'>;
 const random_project_name = (): ProjectName => randomItem(emojis).icon + randomItem(emojis).icon;
 
 // Like `ProjectData` but just the stuff needed for display.

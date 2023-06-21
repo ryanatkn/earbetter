@@ -6,12 +6,12 @@ import {round} from '@feltjs/util/maths.js';
 
 export type Frequency = Flavored<number, 'Frequency'>;
 export type Milliseconds = Flavored<number, 'Milliseconds'>;
-export type Volume = Flavored<number, 'Volume'>;
 export const Volume = z
 	.number()
 	.min(0)
 	.max(1)
-	.transform<Volume>((v) => round(v, 2));
+	.transform((v) => round(v, 2));
+export type Volume = Flavored<z.infer<typeof Volume>, 'Volume'>;
 
 export const DEFAULT_VOLUME: Volume = 0.59;
 export const DEFAULT_VOLUME_INCREMENT: Volume = 0.01;

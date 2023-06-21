@@ -1,7 +1,6 @@
 import {randomItem, randomInt} from '@feltjs/util/random.js';
 import {z} from 'zod';
 import type {Flavored} from '@feltjs/util';
-import {identity} from '@feltjs/util/function.js';
 import {Logger} from '@feltjs/util/log.js';
 import {signal, batch, Signal, effect} from '@preact/signals-core';
 import {base} from '$app/paths';
@@ -28,12 +27,12 @@ export const DEFAULT_TONICS: Notes | null = null;
 export const DEFAULT_NOTE_MIN: Midi = 48;
 export const DEFAULT_NOTE_MAX: Midi = 84;
 
-export type LevelId = Flavored<string, 'LevelId'>;
-export const LevelId = z.string().transform<LevelId>(identity);
+export const LevelId = z.string();
+export type LevelId = Flavored<z.infer<typeof LevelId>, 'LevelId'>;
 export const create_level_id = (): LevelId => to_random_id();
 
-export type LevelName = Flavored<string, 'LevelName'>;
-export const LevelName = z.string().min(1).max(1000).transform<LevelName>(identity); // TODO better way to do this?
+export const LevelName = z.string().min(1).max(1000);
+export type LevelName = Flavored<z.infer<typeof LevelName>, 'LevelName'>;
 
 export const LevelData = z.object({
 	id: LevelId.default(create_level_id),

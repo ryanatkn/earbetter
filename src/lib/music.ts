@@ -1,6 +1,5 @@
 import {z} from 'zod';
 import type {Flavored} from '@feltjs/util';
-import {identity} from '@feltjs/util/function.js';
 import {signal, type Signal} from '@preact/signals-core';
 import {getContext, setContext} from 'svelte';
 
@@ -29,8 +28,8 @@ export type Chroma = (typeof chromas)[number]; // corresponds to indices of `pit
 
 export type Octave = -1 | 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9;
 
-export type Semitones = Flavored<number, 'Semitones'>;
-export const Semitones = z.number().int().transform<Semitones>(identity);
+export const Semitones = z.number().int();
+export type Semitones = Flavored<z.infer<typeof Semitones>, 'Semitones'>;
 
 export const Intervals = z.array(Semitones);
 export type Intervals = z.infer<typeof Intervals>;
@@ -98,8 +97,8 @@ export const set_enabled_notes = (
 	store: Signal<Set<Midi> | null> = signal(null),
 ): Signal<Set<Midi> | null> => setContext(ENABLED_NOTES_KEY, store);
 
-export type ScaleName = Flavored<string, 'ScaleName'>;
-export const ScaleName = z.string().transform<ScaleName>(identity);
+export const ScaleName = z.string();
+export type ScaleName = Flavored<z.infer<typeof ScaleName>, 'ScaleName'>;
 
 export const Scale = z.object({
 	name: ScaleName,
