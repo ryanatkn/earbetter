@@ -22,6 +22,10 @@ play at [earbetter.ryanatkn.com](https://earbetter.ryanatkn.com/)
 npm i -D @ryanatkn/earbetter
 ```
 
+```ts
+import Piano from '@ryanatkn/earbetter/Piano.svelte';
+```
+
 No docs yet, for now see the modules referenced in [`$lib/exports.ts`](/src/lib/exports.ts).
 
 ## intro

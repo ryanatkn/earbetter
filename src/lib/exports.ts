@@ -1,13 +1,12 @@
 export const exports = [
 	'lib/index.ts',
 
-	// deep imports - these do not include $lib/earbetter or $lib/projects
+	// include all of $lib except $lib/earbetter and $lib/projects
 	'lib/ac.ts',
 	'lib/colors.ts',
 	'lib/dom.ts',
 	'lib/emoji.ts',
 	'lib/entity.ts',
-	'lib/exports.ts',
 	'lib/helpers.ts',
 	'lib/id.ts',
 	'lib/InitMidiButton.svelte',
