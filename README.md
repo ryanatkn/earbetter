@@ -4,7 +4,6 @@
 > [earbetter.ryanatkn.com](https://earbetter.ryanatkn.com/)
 
 - features [a configurable ear trainer](https://earbetter.ryanatkn.com/game)
-  (first pass at functionality, more to come)
 - also has [a playable piano](https://earbetter.ryanatkn.com/piano)
 - supports MIDI devices like piano keyboards
 - published to npm as
