@@ -1,6 +1,4 @@
 <script lang="ts">
-	import {z} from 'zod';
-	import {effect, signal} from '@preact/signals-core';
 	import {plural, swallow} from '@feltjs/util';
 	import {createEventDispatcher} from 'svelte';
 
@@ -13,13 +11,24 @@
 	import VolumeControl from '$lib/VolumeControl.svelte';
 	import {get_instrument, get_volume, with_velocity} from '$lib/helpers';
 	import InstrumentControl from '$lib/InstrumentControl.svelte';
-	import {Midi, serialize_notes, Notes, scales, Scale, parse_notes, to_notes} from '$lib/music';
+	import {
+		Midi,
+		serialize_notes,
+		Notes,
+		scales,
+		Scale,
+		parse_notes,
+		DEFAULT_PITCH_CLASS,
+		pitch_classes,
+	} from '$lib/music';
 
 	const dispatch = createEventDispatcher<{
 		input: Notes | null;
 	}>();
 
 	export let notes: Set<Midi> | null;
+	export let note_min: Midi;
+	export let note_max: Midi;
 
 	// TODO this is hacky, does a double conversion with the parent component, see the comment at the usage site
 	let notes_array: Notes | null = notes ? Array.from(notes).sort((a, b) => a - b) : null;
@@ -47,9 +56,10 @@
 
 	// TODO lots of copypasta below
 
-	const note_min = signal(initial_piano_settings.note_min);
-	const note_max = signal(initial_piano_settings.note_max);
-	$: notes = to_notes(scale, key, min_note, max_note);
+	let key = DEFAULT_PITCH_CLASS;
+
+	// TODO BLOCK
+	// $: notes = to_notes(scale, key, min_note, max_note);
 
 	const ac = get_ac();
 	const volume = get_volume();
@@ -100,34 +110,35 @@
 />
 
 <div class="notes_input">
-	<div class="notes column-sm markup">
+	<div class="notes column-sm">
 		<!-- TODO copy button -->
-		<blockquote class="panel">
+		<blockquote class="panel" style:margin="var(--spacing_lg) 0">
 			<textarea bind:value={notes_str} on:input={(e) => update_notes_str(e.currentTarget.value)} />
 		</blockquote>
 		<button
 			type="button"
 			on:click={(e) => {
 				swallow(e);
-				dispatch('input', null);
-			}}>select all tonics</button
+				notes = null;
+			}}
+			disabled={!notes?.size}>clear selection</button
 		>
 		<button
 			type="button"
 			class="accent"
-			disabled={!notes_count || !notes_array}
 			on:click={(e) => {
 				swallow(e);
 				dispatch('input', notes_array);
-			}}>select {notes_count} tonic{plural(notes_count)}</button
+			}}
+			>select {#if notes_count === 0}all{:else}{notes_count}{/if} tonic{plural(notes_count)}</button
 		>
 	</div>
 	<div class="piano_wrapper" style:padding="{piano_padding}px">
 		{#if innerWidth}
 			<Piano
 				width={innerWidth - piano_padding * 2}
-				note_min={$note_min}
-				note_max={$note_max}
+				{note_min}
+				{note_max}
 				{pressed_keys}
 				highlighted_keys={notes}
 				on:press={(e) => {
@@ -140,10 +151,19 @@
 			/>
 		{/if}
 	</div>
-	<section class="scales">
-		{#each scales as scale (scale.name)}
-			<button on:click={() => toggle_scale(scale)}>{scale.name}</button>
-		{/each}
+	<section class="centered">
+		<label style:margin-bottom="var(--spacing_lg)"
+			>key <select bind:value={key}>
+				{#each pitch_classes as pc (pc)}
+					<option value={pc}>{pc}</option>
+				{/each}
+			</select></label
+		>
+		<div class="scales">
+			{#each scales as scale (scale.name)}
+				<button on:click={() => toggle_scale(scale)}>{scale.name}</button>
+			{/each}
+		</div>
 	</section>
 	<form class="column-sm markup panel padded-md">
 		<fieldset>

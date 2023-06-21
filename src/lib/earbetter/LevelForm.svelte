@@ -337,6 +337,8 @@
 			<!-- TODO this `new Set` is a hack, probably change the data structure to a set, need serialization for storage -->
 			<NotesInput
 				notes={new Set(tonics)}
+				{note_min}
+				{note_max}
 				on:input={(e) => {
 					tonics = e.detail;
 					close();
