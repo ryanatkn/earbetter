@@ -134,7 +134,7 @@ const create_next_trial = (def: LevelData, current_trial: Trial | null): Trial =
 const to_random_tonic = (def: LevelData): Midi => {
 	// TODO BLOCK handle the cases where it's empty/null
 	const {tonics} = def;
-	if (tonics) return randomItem(tonics);
+	if (tonics?.length) return randomItem(tonics);
 	// TODO BLOCK implement this correctly, from here forward is all copypaste from before
 	const {note_min, note_max} = def;
 	const interval_max = def.intervals.reduce((max, v) => Math.max(max, v));
