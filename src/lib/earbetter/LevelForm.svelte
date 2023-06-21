@@ -30,6 +30,7 @@
 	} from '$lib/music';
 	import IntervalsInput from '$lib/IntervalsInput.svelte';
 	import NotesInput from '$lib/NotesInput.svelte';
+	import Piano from '$lib/Piano.svelte';
 
 	const dispatch = createEventDispatcher<{
 		submit: LevelData;
@@ -48,13 +49,15 @@
 	export let note_max: Midi = DEFAULT_NOTE_MAX;
 	export let editing = false;
 
+	$: tonics_set = tonics && new Set(tonics);
+
 	let removing = false;
 
 	const to_data = (): LevelData => ({
 		id,
 		name,
-		intervals,
-		tonics,
+		intervals, // TODO filter out the invalid intervals
+		tonics: tonics ? tonics.filter((t) => t >= note_min && t <= note_max) : tonics, // select only the valid tonics
 		trial_count,
 		sequence_length,
 		note_min,
@@ -133,6 +136,11 @@
 	// would use SvelteKit snapshots for that - https://kit.svelte.dev/docs/snapshots
 	let intervals_input_selected_scale: Scale;
 	let intervals_input_octaves: number;
+
+	// TODO helper component for measuring? with `let:width` - first look at Svelte's new box bindings
+	let piano_width: number | undefined;
+
+	// TODO BLOCK set piano max height (change calculation api?)
 </script>
 
 <form class="level-def-form">
@@ -207,7 +215,8 @@
 				<input type="range" bind:value={note_max} step={1} min={MIDI_MIN} max={MIDI_MAX} />
 			</label>
 		</fieldset>
-		<fieldset>
+		<Piano width={piano_width || 0} {note_min} {note_max} highlighted_keys={tonics_set} />
+		<fieldset bind:clientWidth={piano_width}>
 			<label style:margin-bottom={0}>
 				<div class="title">tonics</div>
 				<input

@@ -20,7 +20,7 @@
 		parse_notes,
 		DEFAULT_PITCH_CLASS,
 		pitch_classes,
-		to_notes,
+		to_notes_in_scale,
 	} from '$lib/music';
 
 	const dispatch = createEventDispatcher<{
@@ -75,7 +75,7 @@
 	};
 
 	const toggle_scale = (scale: Scale): void => {
-		const scale_notes = to_notes(scale, key, note_min, note_max);
+		const scale_notes = to_notes_in_scale(scale, key, note_min, note_max);
 		// TODO this is a hacky and slow but it approximates the desired UX, is not ideal,
 		// I think the best UX would be to detect if each scale is currently fully active
 		if (!notes || !notes_array) {

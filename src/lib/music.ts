@@ -166,21 +166,23 @@ export const get_key = (): Signal<PitchClass> => getContext(KEY_KEY);
 export const set_key = (store: Signal<PitchClass> = signal(pitch_classes[0])): Signal<PitchClass> =>
 	setContext(KEY_KEY, store);
 
-export const to_notes = (
+export const to_notes_in_scale = (
 	scale: Scale,
 	key: PitchClass = 'C',
-	min_note: Midi = MIDI_MIN,
-	max_note: Midi = MIDI_MAX,
+	note_min: Midi = MIDI_MIN,
+	note_max: Midi = MIDI_MAX,
 ): Set<Midi> => {
-	const midis: Midi[] = [];
+	const notes: Midi[] = [];
 	const pitch_class_offset = pitch_classes.indexOf(key);
-	const min_note_offset = pitch_classes.indexOf(midi_pitch_classes[min_note]);
-	const initial_offset = pitch_class_offset - min_note_offset;
-	for (let i = min_note; i <= max_note; i++) {
+	const note_offset_min = pitch_classes.indexOf(midi_pitch_classes[note_min]);
+	const initial_offset = pitch_class_offset - note_offset_min;
+	for (let i = note_min; i <= note_max; i++) {
 		const offset = (i - initial_offset) % 12;
-		if (offset === 0 || scale.notes.includes(offset)) midis.push(i);
+		if (offset === 0 || scale.notes.includes(offset)) {
+			notes.push(i);
+		}
 	}
-	return new Set(midis);
+	return new Set(notes);
 };
 
 /**
