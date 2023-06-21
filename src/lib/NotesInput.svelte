@@ -13,7 +13,7 @@
 	import VolumeControl from '$lib/VolumeControl.svelte';
 	import {get_instrument, get_volume, with_velocity} from '$lib/helpers';
 	import InstrumentControl from '$lib/InstrumentControl.svelte';
-	import {Midi, serialize_notes, Notes, scales, Scale, parse_notes} from '$lib/music';
+	import {Midi, serialize_notes, Notes, scales, Scale, parse_notes, to_notes} from '$lib/music';
 
 	const dispatch = createEventDispatcher<{
 		input: Notes | null;
@@ -49,6 +49,7 @@
 
 	const note_min = signal(initial_piano_settings.note_min);
 	const note_max = signal(initial_piano_settings.note_max);
+	$: notes = to_notes(scale, key, min_note, max_note);
 
 	const ac = get_ac();
 	const volume = get_volume();
