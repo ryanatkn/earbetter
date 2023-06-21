@@ -20,8 +20,8 @@
 
 	// TODO extract? is pretty specific
 	const PianoSettings = z.object({
-		note_min: Midi.default(36),
-		note_max: Midi.default(96),
+		min_note: Midi.default(36),
+		max_note: Midi.default(96),
 	});
 	type PianoSettings = z.infer<typeof PianoSettings>;
 	const SITE_DATA_STORAGE_KEY = 'piano';
@@ -31,12 +31,12 @@
 		PianoSettings.parse,
 	);
 
-	const note_min = signal(initial_piano_settings.note_min);
-	const note_max = signal(initial_piano_settings.note_max);
+	const min_note = signal(initial_piano_settings.min_note);
+	const max_note = signal(initial_piano_settings.max_note);
 
 	const to_piano_data = (): PianoSettings => ({
-		note_min: note_min.value,
-		note_max: note_max.value,
+		min_note: min_note.value,
+		max_note: max_note.value,
 	});
 	const save_piano_data = () => set_in_storage(SITE_DATA_STORAGE_KEY, to_piano_data());
 	effect(save_piano_data);
@@ -76,8 +76,8 @@
 		{#if clientWidth}
 			<Piano
 				width={clientWidth - piano_padding * 2}
-				note_min={$note_min}
-				note_max={$note_max}
+				min_note={$min_note}
+				max_note={$max_note}
 				{pressed_keys}
 				enabled_notes={$enabled_notes}
 				on:press={(e) => play(e.detail)}
@@ -97,7 +97,7 @@
 			<InitMidiButton />
 		</fieldset>
 		<fieldset class="row">
-			<MidiRangeControl {note_min} {note_max} />
+			<MidiRangeControl {min_note} {max_note} />
 		</fieldset>
 	</form>
 	<Footer />

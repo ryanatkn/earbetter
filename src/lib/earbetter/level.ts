@@ -24,8 +24,8 @@ export const DEFAULT_TRIAL_COUNT = 5;
 export const DEFAULT_LEVEL_NAME = 'new level';
 export const DEFAULT_INTERVALS: Intervals = [5, 7];
 export const DEFAULT_TONICS: Notes | null = null;
-export const DEFAULT_NOTE_MIN: Midi = 48;
-export const DEFAULT_NOTE_MAX: Midi = 84;
+export const DEFAULT_MIN_NOTE: Midi = 48;
+export const DEFAULT_MAX_NOTE: Midi = 84;
 
 export const LevelId = z.string();
 export type LevelId = Flavored<z.infer<typeof LevelId>, 'LevelId'>;
@@ -41,8 +41,8 @@ export const LevelData = z.object({
 	tonics: Notes.nullable().default(null),
 	trial_count: z.number().default(DEFAULT_TRIAL_COUNT),
 	sequence_length: z.number().default(DEFAULT_SEQUENCE_LENGTH),
-	note_min: Midi.default(DEFAULT_NOTE_MIN),
-	note_max: Midi.default(DEFAULT_NOTE_MAX),
+	min_note: Midi.default(DEFAULT_MIN_NOTE),
+	max_note: Midi.default(DEFAULT_MAX_NOTE),
 });
 export type LevelData = z.infer<typeof LevelData>;
 
@@ -93,7 +93,7 @@ export interface Trial {
 }
 
 const create_next_trial = (def: LevelData, current_trial: Trial | null): Trial => {
-	const {note_min, note_max} = def;
+	const {min_note, max_note} = def;
 
 	const tonic = to_random_tonic(def);
 	const sequence: Midi[] = [tonic];
@@ -101,7 +101,7 @@ const create_next_trial = (def: LevelData, current_trial: Trial | null): Trial =
 	// compute the valid notes
 	const intervals = new Set([0, ...def.intervals]); // allow tonic to repeat
 	const valid_notes: Midi[] = [];
-	for (let i = note_min; i <= note_max; i++) {
+	for (let i = min_note; i <= max_note; i++) {
 		const interval = i - tonic;
 		if (intervals.has(interval)) {
 			valid_notes.push(i);
@@ -133,19 +133,19 @@ const create_next_trial = (def: LevelData, current_trial: Trial | null): Trial =
 const to_random_tonic = (def: LevelData): Midi => {
 	const {tonics} = def;
 	if (tonics?.length) return randomItem(tonics);
-	const {note_min, note_max} = def;
+	const {min_note, max_note} = def;
 	const interval_max = def.intervals.reduce((max, v) => Math.max(max, v));
 	const interval_min = def.intervals.reduce((max, v) => Math.min(max, v));
-	const tonic_max = Math.min(note_max - interval_max, note_max);
-	const tonic_min = Math.max(note_min - interval_min, note_min);
+	const tonic_max = Math.min(max_note - interval_max, max_note);
+	const tonic_min = Math.max(min_note - interval_min, min_note);
 	return (
-		tonic_min < tonic_max ? randomInt(tonic_min, tonic_max) : to_fallback_tonic(note_min, note_max)
+		tonic_min < tonic_max ? randomInt(tonic_min, tonic_max) : to_fallback_tonic(min_note, max_note)
 	) as Midi;
 };
 
-const to_fallback_tonic = (note_min: Midi, note_max: Midi): Midi => {
-	const offset = ((note_max - note_min) / 4) | 0;
-	return randomInt(note_min + offset, note_max - offset) as Midi;
+const to_fallback_tonic = (min_note: Midi, max_note: Midi): Midi => {
+	const offset = ((max_note - min_note) / 4) | 0;
+	return randomInt(min_note + offset, max_note - offset) as Midi;
 };
 
 const DEFAULT_STATUS: Status = 'initial';

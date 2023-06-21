@@ -14,7 +14,7 @@
 	import {adjust_volume, set_instrument, set_volume} from '$lib/helpers';
 	import {request_access} from '$lib/midi_access';
 	import {App, set_app} from '$lib/earbetter/app';
-	import {set_enabled_notes, set_key, set_scale, to_notes} from '$lib/music';
+	import {set_enabled_notes, set_key, set_scale, to_notes_in_scale} from '$lib/music';
 	import {load_from_storage, set_in_storage} from '$lib/storage';
 	import SiteMap from '$routes/SiteMap.svelte';
 	import {SiteData} from '$routes/site_data';
@@ -38,7 +38,9 @@
 	const scale = set_scale(signal(initial_site_data.scale));
 	const key = set_key(signal(initial_site_data.key));
 	set_enabled_notes(
-		computed(() => (scale.value.name === 'chromatic' ? null : to_notes(scale.value, key.value))),
+		computed(() =>
+			scale.value.name === 'chromatic' ? null : to_notes_in_scale(scale.value, key.value),
+		),
 	);
 
 	// save site data

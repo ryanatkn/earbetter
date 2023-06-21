@@ -1,4 +1,4 @@
-import {DEFAULT_NOTE_MIN} from '$lib/earbetter/level';
+import {DEFAULT_MIN_NOTE} from '$lib/earbetter/level';
 import {ProjectData} from '$lib/earbetter/project';
 import {to_default_scale_realm} from '$lib/earbetter/realm_helpers';
 
@@ -41,7 +41,7 @@ const data = (): ProjectData =>
 						name: 'four octaves',
 						sequence_length: 2,
 						intervals: [4, 5, -8, -7, 16, 17, -20, -19],
-						note_min: DEFAULT_NOTE_MIN - 12,
+						min_note: DEFAULT_MIN_NOTE - 12,
 					},
 					{
 						name: 'two octaves (4 notes)',

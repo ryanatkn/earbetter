@@ -8,8 +8,8 @@
 		create_level_id,
 		DEFAULT_LEVEL_NAME,
 		DEFAULT_INTERVALS,
-		DEFAULT_NOTE_MAX,
-		DEFAULT_NOTE_MIN,
+		DEFAULT_MAX_NOTE,
+		DEFAULT_MIN_NOTE,
 		DEFAULT_SEQUENCE_LENGTH,
 		DEFAULT_TRIAL_COUNT,
 		LevelData,
@@ -30,6 +30,7 @@
 	} from '$lib/music';
 	import IntervalsInput from '$lib/IntervalsInput.svelte';
 	import NotesInput from '$lib/NotesInput.svelte';
+	import Piano from '$lib/Piano.svelte';
 
 	const dispatch = createEventDispatcher<{
 		submit: LevelData;
@@ -44,8 +45,8 @@
 	export let tonics: Midi[] | null = DEFAULT_TONICS;
 	export let trial_count: number = DEFAULT_TRIAL_COUNT;
 	export let sequence_length: number = DEFAULT_SEQUENCE_LENGTH;
-	export let note_min: Midi = DEFAULT_NOTE_MIN;
-	export let note_max: Midi = DEFAULT_NOTE_MAX;
+	export let min_note: Midi = DEFAULT_MIN_NOTE;
+	export let max_note: Midi = DEFAULT_MAX_NOTE;
 	export let editing = false;
 
 	let removing = false;
@@ -53,12 +54,12 @@
 	const to_data = (): LevelData => ({
 		id,
 		name,
-		intervals,
-		tonics,
+		intervals, // TODO filter out the invalid intervals
+		tonics: tonics ? tonics.filter((t) => t >= min_note && t <= max_note) : tonics, // select only the valid tonics
 		trial_count,
 		sequence_length,
-		note_min,
-		note_max,
+		min_note,
+		max_note,
 	});
 
 	$: set_level_data(level_data);
@@ -70,8 +71,8 @@
 			tonics = level_data.tonics;
 			trial_count = level_data.trial_count;
 			sequence_length = level_data.sequence_length;
-			note_min = level_data.note_min;
-			note_max = level_data.note_max;
+			min_note = level_data.min_note;
+			max_note = level_data.max_note;
 		} else {
 			id = create_level_id();
 			name = DEFAULT_LEVEL_NAME;
@@ -79,8 +80,8 @@
 			tonics = DEFAULT_TONICS;
 			trial_count = DEFAULT_TRIAL_COUNT;
 			sequence_length = DEFAULT_SEQUENCE_LENGTH;
-			note_min = DEFAULT_NOTE_MIN;
-			note_max = DEFAULT_NOTE_MAX;
+			min_note = DEFAULT_MIN_NOTE;
+			max_note = DEFAULT_MAX_NOTE;
 		}
 	};
 
@@ -90,8 +91,8 @@
 		name !== level_data.name ||
 		trial_count !== level_data.trial_count ||
 		sequence_length !== level_data.sequence_length ||
-		note_min !== level_data.note_min ||
-		note_max !== level_data.note_max ||
+		min_note !== level_data.min_note ||
+		max_note !== level_data.max_note ||
 		intervals.toString() !== level_data.intervals.toString() ||
 		tonics?.toString() !== level_data.tonics?.toString(); // TODO speed these comparisons up
 
@@ -108,6 +109,7 @@
 	let start_importing_el: HTMLButtonElement;
 	let intervals_el: HTMLInputElement;
 	let tonics_el: HTMLInputElement;
+	$: tonics_set = tonics && new Set(tonics);
 
 	const import_data = async (): Promise<void> => {
 		parse_error_message = '';
@@ -133,6 +135,11 @@
 	// would use SvelteKit snapshots for that - https://kit.svelte.dev/docs/snapshots
 	let intervals_input_selected_scale: Scale;
 	let intervals_input_octaves: number;
+
+	// TODO helper component for measuring? with `let:width` - first look at Svelte's new box bindings
+	let piano_width: number | undefined;
+
+	$: lowest_note_error = min_note >= max_note;
 </script>
 
 <form class="level-def-form">
@@ -181,33 +188,46 @@
 		</fieldset>
 		<fieldset>
 			<label>
-				<div class="title">trial_count</div>
+				<div class="title">trial count</div>
 				<input type="number" bind:value={trial_count} min={1} />
 				<input type="range" bind:value={trial_count} min={1} max={20} />
 			</label>
 		</fieldset>
 		<fieldset>
 			<label>
-				<div class="title">sequence_length</div>
+				<div class="title">sequence length</div>
 				<input bind:value={sequence_length} min={2} />
 				<input type="range" bind:value={sequence_length} min={2} max={16} />
 			</label>
 		</fieldset>
 		<fieldset class="row">
 			<label>
-				<div class="title">MIDI min</div>
-				<div>{midi_names[note_min]}</div>
-				<input type="number" bind:value={note_min} step={1} min={MIDI_MIN} max={MIDI_MAX} />
-				<input type="range" bind:value={note_min} step={1} min={MIDI_MIN} max={MIDI_MAX} />
+				<div class="title">lowest note</div>
+				<div>{midi_names[min_note]}</div>
+				<input type="number" bind:value={min_note} step={1} min={MIDI_MIN} max={MIDI_MAX} />
+				<input type="range" bind:value={min_note} step={1} min={MIDI_MIN} max={MIDI_MAX} />
 			</label>
 			<label>
-				<div class="title">MIDI max</div>
-				<div>{midi_names[note_max]}</div>
-				<input type="number" bind:value={note_max} step={1} min={MIDI_MIN} max={MIDI_MAX} />
-				<input type="range" bind:value={note_max} step={1} min={MIDI_MIN} max={MIDI_MAX} />
+				<div class="title">highest note</div>
+				<div>{midi_names[max_note]}</div>
+				<input type="number" bind:value={max_note} step={1} min={MIDI_MIN} max={MIDI_MAX} />
+				<input type="range" bind:value={max_note} step={1} min={MIDI_MIN} max={MIDI_MAX} />
 			</label>
 		</fieldset>
-		<fieldset>
+		{#if lowest_note_error}
+			<Message status="error">the lowest note must be lower than the highest</Message>
+		{:else}
+			<Piano
+				width={piano_width || 0}
+				max_height={50}
+				{min_note}
+				{max_note}
+				highlighted_keys={tonics_set}
+				clickable={false}
+			/>
+			<br />
+		{/if}
+		<fieldset bind:clientWidth={piano_width}>
 			<label style:margin-bottom={0}>
 				<div class="title">tonics</div>
 				<input
@@ -231,7 +251,7 @@
 			class="accent"
 			type="button"
 			on:click={() => dispatch('submit', to_data())}
-			disabled={editing && !changed}
+			disabled={(editing && !changed) || lowest_note_error}
 		>
 			{#if editing}save changes to level{:else}create level{/if}
 		</button>
@@ -337,8 +357,8 @@
 			<!-- TODO this `new Set` is a hack, probably change the data structure to a set, need serialization for storage -->
 			<NotesInput
 				notes={new Set(tonics)}
-				{note_min}
-				{note_max}
+				{min_note}
+				{max_note}
 				on:input={(e) => {
 					tonics = e.detail;
 					close();
