@@ -1,4 +1,4 @@
-# Earbetter
+# earbetter
 
 > ear training game and tools for playing and programming music and audio 🎶🦜
 > [earbetter.ryanatkn.com](https://earbetter.ryanatkn.com/)
