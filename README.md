@@ -25,6 +25,13 @@ npm i -D @ryanatkn/earbetter
 import Piano from '@ryanatkn/earbetter/Piano.svelte';
 ```
 
+Earbetter is made with [Signals](https://github.com/preactjs/signals)
+from [@preactjs](https://github.com/preactjs).
+It works well but I have mixed feelings.
+I haven't used the library again, and I'm not sure if I will.
+[This issue](https://github.com/preactjs/signals/issues/299) is a blocker.
+It does make code concise.
+
 No docs yet, for now see the modules referenced in [`$lib/exports.ts`](/src/lib/exports.ts).
 
 ## intro
