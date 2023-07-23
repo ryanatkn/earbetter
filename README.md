@@ -26,7 +26,7 @@ import Piano from '@ryanatkn/earbetter/Piano.svelte';
 ```
 
 Earbetter is made with [Signals](https://github.com/preactjs/signals)
-from [@preactjs](https://github.com/preactjs).
+from [@preactjs](https://github.com/preactjs) as the main store library.
 It works well but I have mixed feelings.
 I haven't used the library again, and I'm not sure if I will.
 [This issue](https://github.com/preactjs/signals/issues/299) is a blocker.
