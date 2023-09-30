@@ -8,7 +8,7 @@
 - supports MIDI devices like piano keyboards
 - published to npm as
   [`@ryanatkn/earbetter`](https://www.npmjs.com/package/@ryanatkn/earbetter)
-  with utilities, types, and Svelte components for audio+music
+  with utilities, types, and Svelte components for audio and music
   (see [`$lib/exports.ts`](/src/lib/exports.ts))
 
 to help see [contributing.md](contributing.md)
