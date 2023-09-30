@@ -36,7 +36,7 @@ No docs yet, for now see the modules referenced in [`$lib/exports.ts`](/src/lib/
 
 ## intro
 
-In 2016 I made a simple ear training game named
+In 2016 I made a simple ear trainer named
 [Ear Sharpener](https://github.com/ryanatkn/ear-sharpener)
 because I thought ear training was interesting,
 but it wasn't a good training tool.

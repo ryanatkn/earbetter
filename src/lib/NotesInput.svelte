@@ -106,7 +106,7 @@
 />
 
 <div class="notes_input">
-	<div class="notes column-sm">
+	<div class="notes width_sm">
 		<!-- TODO copy button -->
 		<blockquote class="panel" style:margin="var(--spacing_lg) 0">
 			<textarea bind:value={notes_str} on:input={(e) => update_notes_str(e.currentTarget.value)} />
@@ -162,7 +162,7 @@
 			{/each}
 		</div>
 	</section>
-	<form class="column-sm prose panel padded_md">
+	<form class="width_sm prose panel padded_md">
 		<fieldset>
 			<InstrumentControl {instrument} />
 			<VolumeControl {volume} />
@@ -193,7 +193,7 @@
 	.scales {
 		display: flex;
 		flex-wrap: wrap;
-		max-width: var(--column_width);
+		max-width: var(--width_md);
 		justify-content: center;
 	}
 </style>

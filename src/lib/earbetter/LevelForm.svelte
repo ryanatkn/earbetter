@@ -300,7 +300,7 @@
 			start_importing_el.focus();
 		}}
 	>
-		<div class="importing prose padded_xl column box">
+		<div class="importing prose padded_xl width_md box">
 			<h2>import level data</h2>
 			<button
 				on:click={() => {
@@ -329,7 +329,7 @@
 			intervals_el.focus();
 		}}
 	>
-		<div class="prose padded_xl column box">
+		<div class="prose padded_xl width_md box">
 			<h2>pick intervals</h2>
 			<IntervalsInput
 				bind:selected_scale={intervals_input_selected_scale}
@@ -350,7 +350,7 @@
 			tonics_el.focus();
 		}}
 	>
-		<div class="padded_xl column box">
+		<div class="padded_xl width_md box">
 			<div class="prose">
 				<h2>pick tonics</h2>
 			</div>

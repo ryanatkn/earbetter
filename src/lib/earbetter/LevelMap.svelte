@@ -68,7 +68,7 @@
 />
 <div class="map">
 	{#if $projects.length}
-		<div class="column-sm">
+		<div class="width_sm">
 			{#if $selected_project_data}
 				<section class="card" transition:slide|local>
 					<Projects {app} />
@@ -93,13 +93,13 @@
 			</section>
 		</div>
 	{/if}
-	<div class="column-sm">
+	<div class="width_sm">
 		{#if $show_game_help}
 			<section class="card" transition:slide|local>
 				<div class="panel padded_md">
 					<div class="prose">
 						<p>
-							Earbetter is an <a href="https://wikipedia.org/wiki/Ear_training">ear training</a> tool/game:
+							Earbetter is an <a href="https://wikipedia.org/wiki/Ear_training">ear training</a> tool:
 						</p>
 						<ul>
 							<li>each level is a standalone challenge that's a series of trials</li>
@@ -134,7 +134,7 @@
 		{/if}
 	</div>
 	{#if $projects.length}
-		<div class="column-sm">
+		<div class="width_sm">
 			{#if $levels}
 				<section class="card" transition:slide|local>
 					<LevelMapItems {app} levels={$levels} />
@@ -189,7 +189,7 @@
 		flex-direction: column;
 		align-items: center;
 	}
-	.column-sm {
+	.width_sm {
 		margin: 0 var(--spacing_xl);
 	}
 	@media (max-width: 1111px) {
@@ -197,7 +197,7 @@
 			flex-direction: column;
 			align-items: center;
 		}
-		.column-sm {
+		.width_sm {
 			margin-left: 0;
 			margin-right: 0;
 		}

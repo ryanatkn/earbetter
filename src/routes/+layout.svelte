@@ -137,7 +137,7 @@
 					earbetter <div class="breadcrumbs-wrapper"><SiteBreadcrumb /></div>
 				</h1>
 				<h2 class="section-title">settings</h2>
-				<form class="column-sm box padded_md-x">
+				<form class="width_sm box padded_md-x">
 					<VolumeControl {volume} />
 					<InstrumentControl {instrument} />
 					<aside>Earbetter supports MIDI devices like piano keyboards, connect and click:</aside>
@@ -147,7 +147,7 @@
 			<section>
 				<SiteMap />
 			</section>
-			<section class="box column-sm">
+			<section class="box width_sm">
 				<div class="prose">
 					<h2 class="section-title">data</h2>
 					<div class="padded_md-x">
@@ -172,7 +172,7 @@
 					</div>
 				{/if}
 			</section>
-			<section class="box prose column-sm">
+			<section class="box prose width_sm">
 				<h2 class="section-title">privacy</h2>
 				<p class="padded_md">
 					this website collects no data - the only server it talks to is <a

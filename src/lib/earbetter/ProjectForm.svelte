@@ -81,7 +81,7 @@
 			start_importing_el.focus();
 		}}
 	>
-		<div class="importing prose padded_xl column box">
+		<div class="importing prose padded_xl width_md box">
 			<h2>import project data</h2>
 			<button
 				on:click={() => {
