@@ -98,8 +98,8 @@ gro dev # npm i -g @feltjs/gro
 See [SvelteKit](https://github.com/sveltejs/kit),
 [Vite](https://github.com/vitejs/vite),
 [Svelte](https://github.com/sveltejs/svelte),
-[Gro](https://github.com/feltjs/gro),
-and [felt-ui](https://github.com/feltjs/felt-ui) for more.
+[Fuz](https://github.com/fuz-dev/fuz),
+and [Gro](https://github.com/feltjs/gro) for more.
 
 ## build
 
