@@ -34,7 +34,7 @@
 	--accent_border_color_darker: hsla(var(--accent_hue), 100%, 28%, 0.5);
 	--light_border_color: hsla(var(--accent_hue), 50%, 50%, 0.4);
 	--spacing_lg: 20px;
-	--font_size_lg: 20px;
+	--size_lg: 20px;
 
 	--primary_color: hsl(var(--primary_hue), 80%, 52%);
 	--primary_color_dark: hsl(var(--primary_hue), 80%, 36%);
@@ -94,7 +94,7 @@ a:active {
 }
 
 button.big {
-	font-size: var(--font_size_xl);
+	font-size: var(--size_xl);
 	padding: var(--spacing_md) var(--spacing_xl3);
 }
 
@@ -131,7 +131,7 @@ td {
 }
 
 header {
-	font-size: var(--font_size_xl);
+	font-size: var(--size_xl);
 	text-align: center;
 	margin-bottom: var(--spacing_md);
 }

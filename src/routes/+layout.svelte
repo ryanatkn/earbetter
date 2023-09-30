@@ -179,6 +179,6 @@
 
 <style>
 	.breadcrumbs-wrapper {
-		font-size: var(--font_size_md);
+		font-size: var(--size_md);
 	}
 </style>

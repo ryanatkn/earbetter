@@ -24,6 +24,6 @@
 		align-items: center;
 	}
 	.icons {
-		font-size: var(--font_size_xl5);
+		font-size: var(--size_xl5);
 	}
 </style>

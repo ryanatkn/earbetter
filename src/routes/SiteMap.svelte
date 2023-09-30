@@ -30,7 +30,7 @@
 		margin-bottom: var(--spacing_md);
 	}
 	menu a {
-		font-size: var(--font_size_xl);
+		font-size: var(--size_xl);
 		padding: var(--spacing_xl);
 	}
 </style>

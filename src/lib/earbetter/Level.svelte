@@ -208,9 +208,9 @@
 								style:margin-bottom="var(--spacing_md)"
 							>
 								{#if $mistakes === 0}
-									<div style:font-size="var(--font_size_xl3)">flawless run!</div>
+									<div style:font-size="var(--size_xl3)">flawless run!</div>
 								{:else}
-									<div style:font-size="var(--font_size_xl3)">
+									<div style:font-size="var(--size_xl3)">
 										{$mistakes}
 									</div>
 									<div>
@@ -275,7 +275,7 @@
 		--highlighted_animation: highlighting;
 	}
 	/* .debug {
-		font-size: var(--font_size_xl);
+		font-size: var(--size_xl);
 		height: 100%;
 		width: 100%;
 		position: absolute;
@@ -331,7 +331,7 @@
 		pointer-events: none;
 	}
 	.feedback-text-bursts {
-		font-size: var(--font_size_xl3);
+		font-size: var(--size_xl3);
 		position: fixed;
 		inset: 0;
 		z-index: 115;

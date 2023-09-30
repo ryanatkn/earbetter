@@ -36,6 +36,6 @@
 		align-items: center;
 	}
 	.breadcrumbs-wrapper {
-		font-size: var(--font_size_xl2);
+		font-size: var(--size_xl2);
 	}
 </style>

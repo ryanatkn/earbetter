@@ -35,7 +35,7 @@
 		margin-bottom: var(--spacing_xl3);
 	}
 	menu a {
-		font-size: var(--font_size_xl3);
+		font-size: var(--size_xl3);
 		padding: var(--spacing_xl);
 	}
 	.tagline {
