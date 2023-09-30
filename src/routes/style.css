@@ -1,6 +1,5 @@
 /* TODO copypasted from dealt, most of this can be deleted when felt-ui supports dark mode */
 :root {
-	color-scheme: dark;
 
 	/* TODO force dark mode and remove these when Felt supports it */
 	--bg: hsl(var(--primary_hue), 63%, 11%);
