@@ -275,6 +275,9 @@
       "default": "./dist/storage.js",
       "types": "./dist/storage.d.ts"
     },
+    "./style.css": {
+      "default": "./dist/style.css"
+    },
     "./TextBurst.svelte": {
       "svelte": "./dist/TextBurst.svelte",
       "types": "./dist/TextBurst.svelte.d.ts"
