@@ -1,7 +1,7 @@
 <script lang="ts">
 	import {base} from '$app/paths';
 	import {page} from '$app/stores';
-	import {stripStart} from '@feltjs/util/string.js';
+	import {stripStart} from '@grogarden/util/string.js';
 
 	import {pages} from '$routes/nav';
 

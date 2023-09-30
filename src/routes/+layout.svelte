@@ -3,7 +3,7 @@
 	import '$routes/style.css';
 
 	import {base} from '$app/paths';
-	import {isEditable, swallow} from '@feltjs/util/dom.js';
+	import {isEditable, swallow} from '@grogarden/util/dom.js';
 	import Dialog from '@feltjs/felt-ui/Dialog.svelte';
 	import {slide} from 'svelte/transition';
 	import {browser} from '$app/environment';

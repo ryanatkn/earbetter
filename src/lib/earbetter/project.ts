@@ -1,5 +1,5 @@
 import {z} from 'zod';
-import {randomItem, type Flavored} from '@feltjs/util';
+import {random_item, type Flavored} from '@grogarden/util';
 
 import {DEFAULT_LEVEL_STATS, LevelStats} from '$lib/earbetter/level';
 import {emojis} from '$lib/emoji';
@@ -12,7 +12,7 @@ export const create_project_id = (): ProjectId => to_random_id();
 
 export const ProjectName = z.string().min(1).max(1000);
 export type ProjectName = Flavored<z.infer<typeof ProjectName>, 'ProjectName'>;
-const random_project_name = (): ProjectName => randomItem(emojis).icon + randomItem(emojis).icon;
+const random_project_name = (): ProjectName => random_item(emojis).icon + random_item(emojis).icon;
 
 // Like `ProjectData` but just the stuff needed for display.
 // Used to avoid loading every project into memory at startup.

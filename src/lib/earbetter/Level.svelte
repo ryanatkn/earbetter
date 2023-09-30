@@ -1,8 +1,8 @@
 <script lang="ts">
 	import {onDestroy, onMount} from 'svelte';
-	import {isEditable, swallow} from '@feltjs/util/dom.js';
+	import {isEditable, swallow} from '@grogarden/util/dom.js';
 	import {scale, fly} from 'svelte/transition';
-	import {plural} from '@feltjs/util/string.js';
+	import {plural} from '@grogarden/util/string.js';
 
 	import {
 		create_level,

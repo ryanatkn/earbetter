@@ -1,7 +1,7 @@
 <script lang="ts">
 	import type {LevelData} from '$lib/earbetter/level';
 	import {MISTAKE_HISTORY_LENGTH, type LevelStats} from '$lib/earbetter/level';
-	import {plural} from '@feltjs/util';
+	import {plural} from '@grogarden/util';
 
 	export let level_data: LevelData;
 	export let level_stats: LevelStats;

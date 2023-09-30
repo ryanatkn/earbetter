@@ -1,5 +1,5 @@
 <script lang="ts">
-	import {plural, swallow} from '@feltjs/util';
+	import {plural, swallow} from '@grogarden/util';
 	import {createEventDispatcher} from 'svelte';
 
 	import Piano from '$lib/Piano.svelte';

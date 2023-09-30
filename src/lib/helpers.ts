@@ -1,8 +1,8 @@
 import {getContext, setContext} from 'svelte';
 import {signal, type Signal} from '@preact/signals-core';
 import {z} from 'zod';
-import type {Flavored} from '@feltjs/util';
-import {round} from '@feltjs/util/maths.js';
+import type {Flavored} from '@grogarden/util/types.js';
+import {round} from '@grogarden/util/maths.js';
 
 export type Frequency = Flavored<number, 'Frequency'>;
 export type Milliseconds = Flavored<number, 'Milliseconds'>;

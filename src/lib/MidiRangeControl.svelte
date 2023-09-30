@@ -1,5 +1,5 @@
 <script lang="ts">
-	import Message from '@feltjs/felt-ui/Message.svelte';
+	import Alert from '@fuz.dev/fuz_library/Alert.svelte';
 	import {slide} from 'svelte/transition';
 	import type {Signal} from '@preact/signals-core';
 
@@ -61,7 +61,7 @@
 	</div>
 	{#if error_message}
 		<div transition:slide|local>
-			<Message status="error">{error_message}</Message>
+			<Alert status="error">{error_message}</Alert>
 		</div>
 	{/if}
 </div>

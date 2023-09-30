@@ -1,8 +1,8 @@
 <script lang="ts">
 	import {createEventDispatcher} from 'svelte';
 	import {slide} from 'svelte/transition';
-	import Dialog from '@feltjs/felt-ui/Dialog.svelte';
-	import Message from '@feltjs/felt-ui/Message.svelte';
+	import Dialog from '@fuz.dev/fuz_dialog/Dialog.svelte';
+	import Alert from '@fuz.dev/fuz_library/Alert.svelte';
 
 	import {
 		create_level_id,
@@ -215,7 +215,7 @@
 			</label>
 		</fieldset>
 		{#if lowest_note_error}
-			<Message status="error">the lowest note must be lower than the highest</Message>
+			<Alert status="error">the lowest note must be lower than the highest</Alert>
 		{:else}
 			<Piano
 				width={piano_width || 0}
@@ -287,7 +287,7 @@
 		</button>
 		{#if parse_error_message}
 			<div class="message-wrapper">
-				<Message status="error"><pre>{parse_error_message}</pre></Message>
+				<Alert status="error"><pre>{parse_error_message}</pre></Alert>
 			</div>
 		{/if}
 		<slot name="footer" {changed} {to_data} />

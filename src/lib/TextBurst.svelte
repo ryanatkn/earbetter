@@ -1,6 +1,6 @@
 <script lang="ts">
-	import {randomInt, randomItem, randomFloat} from '@feltjs/util/random.js';
-	import {GR2} from '@feltjs/util/maths.js';
+	import {random_int, random_item, randomFloat} from '@grogarden/util/random.js';
+	import {GR2} from '@grogarden/util/maths.js';
 	import {onMount} from 'svelte';
 
 	export let count: number;
@@ -30,14 +30,14 @@
 	<div class="burst" style:--animation_timer="{duration}ms">
 		{#each {length: count} as _}<div
 				class="burst-item"
-				style:--target_x="{randomInt(-x_radius, x_radius)}px"
-				style:--target_y="{randomInt(-y_radius, y_radius)}px"
+				style:--target_x="{random_int(-x_radius, x_radius)}px"
+				style:--target_y="{random_int(-y_radius, y_radius)}px"
 				style:--scale={randomFloat(scale_min, scale_max)}
-				style:--start_rotation="{randomInt(start_rotation_min, start_rotation_max)}deg"
-				style:--end_rotation="{randomInt(end_rotation_min, end_rotation_max)}deg"
-				style:--hue_rotation="{randomInt(hue_rotation_min, hue_rotation_max)}deg"
+				style:--start_rotation="{random_int(start_rotation_min, start_rotation_max)}deg"
+				style:--end_rotation="{random_int(end_rotation_min, end_rotation_max)}deg"
+				style:--hue_rotation="{random_int(hue_rotation_min, hue_rotation_max)}deg"
 			>
-				{randomItem(items)}
+				{random_item(items)}
 			</div>{/each}
 	</div>
 {/if}
