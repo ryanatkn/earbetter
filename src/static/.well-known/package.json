@@ -16,10 +16,11 @@
   "bugs": "https://github.com/ryanatkn/earbetter/issues",
   "keywords": [
     "ear training",
-    "ear training game",
-    "game",
+    "ear trainer",
     "music",
-    "audio"
+    "music tools",
+    "audio",
+    "audio tools"
   ],
   "type": "module",
   "engines": {
