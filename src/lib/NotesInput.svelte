@@ -148,7 +148,7 @@
 			/>
 		{/if}
 	</div>
-	<section class="centered">
+	<section class="box">
 		<label style:margin-bottom="var(--spacing_lg)"
 			>key <select bind:value={key}>
 				{#each pitch_classes as pc (pc)}
@@ -162,7 +162,7 @@
 			{/each}
 		</div>
 	</section>
-	<form class="column-sm prose panel padded-md">
+	<form class="column-sm prose panel padded_md">
 		<fieldset>
 			<InstrumentControl {instrument} />
 			<VolumeControl {volume} />

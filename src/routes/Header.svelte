@@ -3,7 +3,7 @@
 </script>
 
 <header>
-	<div class="centered panel padded-md">
+	<div class="box panel padded_md">
 		<h1>earbetter</h1>
 		<div class="icons">🎶🦜</div>
 	</div>

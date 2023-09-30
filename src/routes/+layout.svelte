@@ -11,6 +11,11 @@
 	import {browser} from '$app/environment';
 	import {computed, effect, signal} from '@preact/signals-core';
 	import {afterNavigate} from '$app/navigation';
+	import {sync_color_scheme} from '@fuz.dev/fuz/theme.js';
+	import {writable} from 'svelte/store';
+
+	const selected_color_scheme = writable('dark' as const);
+	sync_color_scheme($selected_color_scheme); // TODO probably shouldn't be needed
 
 	import {set_ac} from '$lib/ac';
 	import {adjust_volume, set_instrument, set_volume} from '$lib/helpers';
@@ -122,17 +127,17 @@
 
 <svelte:window on:keydown={keydown} />
 
-<Themed>
+<Themed {selected_color_scheme} color_scheme_fallback={$selected_color_scheme}>
 	<slot />
 
 	{#if show_main_menu}
 		<Dialog on:close={() => (show_main_menu = false)}>
 			<section class="prose">
-				<h1 class="section-title centered">
+				<h1 class="section-title box">
 					earbetter <div class="breadcrumbs-wrapper"><SiteBreadcrumb /></div>
 				</h1>
 				<h2 class="section-title">settings</h2>
-				<form class="column-sm centered padded-md-x">
+				<form class="column-sm box padded_md-x">
 					<VolumeControl {volume} />
 					<InstrumentControl {instrument} />
 					<aside>Earbetter supports MIDI devices like piano keyboards, connect and click:</aside>
@@ -142,10 +147,10 @@
 			<section>
 				<SiteMap />
 			</section>
-			<section class="centered column-sm">
+			<section class="box column-sm">
 				<div class="prose">
 					<h2 class="section-title">data</h2>
-					<div class="padded-md-x">
+					<div class="padded_md-x">
 						<aside>
 							<a href="https://developer.mozilla.org/en-US/docs/Web/API/Window/localStorage"
 								><code>localStorage</code></a
@@ -167,9 +172,9 @@
 					</div>
 				{/if}
 			</section>
-			<section class="centered prose column-sm">
+			<section class="box prose column-sm">
 				<h2 class="section-title">privacy</h2>
-				<p class="padded-md">
+				<p class="padded_md">
 					this website collects no data - the only server it talks to is <a
 						href="https://pages.github.com/">GitHub Pages</a
 					>

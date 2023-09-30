@@ -17,7 +17,7 @@
 </script>
 
 <div class="midi-range-control" class:error={!!error_message}>
-	<div class="centered-hz">
+	<div class="box row">
 		<label>
 			<div class="title">lowest MIDI key</div>
 			{midi_names[$min_note]}
