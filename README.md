@@ -1,6 +1,6 @@
 # earbetter
 
-> ear training game and tools for playing and programming music and audio 🎶🦜
+> ear training tools and JS/Svelte library for audio and music 🎶🦜
 > [earbetter.ryanatkn.com](https://earbetter.ryanatkn.com/)
 
 - features [a configurable ear trainer](https://earbetter.ryanatkn.com/game)
@@ -8,7 +8,7 @@
 - supports MIDI devices like piano keyboards
 - published to npm as
   [`@ryanatkn/earbetter`](https://www.npmjs.com/package/@ryanatkn/earbetter)
-  with utilities, types, and Svelte components for audio and music
+  with utilities, types, and Svelte components for audio+music
   (see [`$lib/exports.ts`](/src/lib/exports.ts))
 
 to help see [contributing.md](contributing.md)

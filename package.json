@@ -1,6 +1,6 @@
 {
   "name": "@ryanatkn/earbetter",
-  "description": "ear training game and tools for playing and programming music and audio 🎶🦜",
+  "description": "ear training tools and JS/Svelte library for audio and music 🎶🦜",
   "homepage": "https://earbetter.ryanatkn.com/",
   "license": "Unlicense",
   "version": "0.2.0",

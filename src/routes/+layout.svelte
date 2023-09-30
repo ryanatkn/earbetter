@@ -1,7 +1,9 @@
 <script lang="ts">
-	import '@feltjs/felt-ui/style.css';
+	import '@fuz.dev/fuz/style.css';
+	import '@fuz.dev/fuz/theme.css';
 	import '$routes/style.css';
 
+	import Themed from '@fuz.dev/fuz/Themed.svelte';
 	import {base} from '$app/paths';
 	import {is_editable, swallow} from '@grogarden/util/dom.js';
 	import Dialog from '@fuz.dev/fuz_dialog/Dialog.svelte';
@@ -119,63 +121,66 @@
 </svelte:head>
 
 <svelte:window on:keydown={keydown} />
-<slot />
 
-{#if show_main_menu}
-	<Dialog on:close={() => (show_main_menu = false)}>
-		<section class="prose">
-			<h1 class="section-title centered">
-				earbetter <div class="breadcrumbs-wrapper"><SiteBreadcrumb /></div>
-			</h1>
-			<h2 class="section-title">settings</h2>
-			<form class="column-sm centered padded-md-x">
-				<VolumeControl {volume} />
-				<InstrumentControl {instrument} />
-				<aside>Earbetter supports MIDI devices like piano keyboards, connect and click:</aside>
-				<InitMidiButton />
-			</form>
-		</section>
-		<section>
-			<SiteMap />
-		</section>
-		<section class="centered column-sm">
-			<div class="prose">
-				<h2 class="section-title">data</h2>
-				<div class="padded-md-x">
-					<aside>
-						<a href="https://developer.mozilla.org/en-US/docs/Web/API/Window/localStorage"
-							><code>localStorage</code></a
-						> is used to save your data locally on your computer
-					</aside>
+<Themed>
+	<slot />
+
+	{#if show_main_menu}
+		<Dialog on:close={() => (show_main_menu = false)}>
+			<section class="prose">
+				<h1 class="section-title centered">
+					earbetter <div class="breadcrumbs-wrapper"><SiteBreadcrumb /></div>
+				</h1>
+				<h2 class="section-title">settings</h2>
+				<form class="column-sm centered padded-md-x">
+					<VolumeControl {volume} />
+					<InstrumentControl {instrument} />
+					<aside>Earbetter supports MIDI devices like piano keyboards, connect and click:</aside>
+					<InitMidiButton />
+				</form>
+			</section>
+			<section>
+				<SiteMap />
+			</section>
+			<section class="centered column-sm">
+				<div class="prose">
+					<h2 class="section-title">data</h2>
+					<div class="padded-md-x">
+						<aside>
+							<a href="https://developer.mozilla.org/en-US/docs/Web/API/Window/localStorage"
+								><code>localStorage</code></a
+							> is used to save your data locally on your computer
+						</aside>
+					</div>
 				</div>
-			</div>
-			<button on:click={() => (deleting = !deleting)}> clear saved data </button>
-			{#if deleting}
-				<div transition:slide|local>
-					<button
-						on:click={() => {
-							localStorage.clear();
-							location.reload();
-						}}
+				<button on:click={() => (deleting = !deleting)}> clear saved data </button>
+				{#if deleting}
+					<div transition:slide|local>
+						<button
+							on:click={() => {
+								localStorage.clear();
+								location.reload();
+							}}
+						>
+							✕ permanently delete all locally saved data
+						</button>
+					</div>
+				{/if}
+			</section>
+			<section class="centered prose column-sm">
+				<h2 class="section-title">privacy</h2>
+				<p class="padded-md">
+					this website collects no data - the only server it talks to is <a
+						href="https://pages.github.com/">GitHub Pages</a
 					>
-						✕ permanently delete all locally saved data
-					</button>
-				</div>
-			{/if}
-		</section>
-		<section class="centered prose column-sm">
-			<h2 class="section-title">privacy</h2>
-			<p class="padded-md">
-				this website collects no data - the only server it talks to is <a
-					href="https://pages.github.com/">GitHub Pages</a
-				>
-				to serve static files, see
-				<a href="https://github.com/ryanatkn/earbetter">the source code</a> for more
-			</p>
-		</section>
-		<Footer flush={true} />
-	</Dialog>
-{/if}
+					to serve static files, see
+					<a href="https://github.com/ryanatkn/earbetter">the source code</a> for more
+				</p>
+			</section>
+			<Footer flush={true} />
+		</Dialog>
+	{/if}
+</Themed>
 
 <style>
 	.breadcrumbs-wrapper {

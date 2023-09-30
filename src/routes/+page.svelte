@@ -8,7 +8,7 @@
 <main>
 	<Header />
 	<section class="tagline panel">
-		<p>ear training game and tools for playing and programming music and audio</p>
+		<p>ear training tools and JS/Svelte library for audio and music</p>
 	</section>
 	<section>
 		<menu>
