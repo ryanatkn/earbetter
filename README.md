@@ -132,17 +132,16 @@ customize or delete [src/static/CNAME](/src/static/CNAME).
 
 ## credits 🐢<sub>🐢</sub><sub><sub>🐢</sub></sub>
 
+[TypeScript](https://github.com/microsoft/TypeScript) ∙
 [Svelte](https://github.com/sveltejs/svelte) ∙
 [SvelteKit](https://github.com/sveltejs/kit) ∙
 [Vite](https://github.com/vitejs/vite) ∙
 [esbuild](https://github.com/evanw/esbuild) ∙
+[Fuz](https://github.com/feltjs/felt-ui) ∙
+[Gro](https://github.com/feltjs/gro) ∙
 [uvu](https://github.com/lukeed/uvu) ∙
-[TypeScript](https://github.com/microsoft/TypeScript) ∙
 [ESLint](https://github.com/eslint/eslint) ∙
-[Prettier](https://github.com/prettier/prettier) ∙
-[felt-ui](https://github.com/feltjs/felt-ui) ∙
-[@grogarden/util](https://github.com/grogarden/util) ∙
-[Gro](https://github.com/feltjs/gro)
+[Prettier](https://github.com/prettier/prettier)
 & [more](package.json)
 
 ## license [🐦](https://wikipedia.org/wiki/Free_and_open-source_software)
