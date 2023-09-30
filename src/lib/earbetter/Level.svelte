@@ -1,6 +1,6 @@
 <script lang="ts">
 	import {onDestroy, onMount} from 'svelte';
-	import {isEditable, swallow} from '@grogarden/util/dom.js';
+	import {is_editable, swallow} from '@grogarden/util/dom.js';
 	import {scale, fly} from 'svelte/transition';
 	import {plural} from '@grogarden/util/string.js';
 
@@ -105,7 +105,7 @@
 		}
 	};
 	const keydown = (e: KeyboardEvent) => {
-		if (isEditable(e.target)) return;
+		if (is_editable(e.target)) return;
 		switch (e.key) {
 			case 'r': {
 				swallow(e);

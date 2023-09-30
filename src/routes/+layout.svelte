@@ -3,8 +3,8 @@
 	import '$routes/style.css';
 
 	import {base} from '$app/paths';
-	import {isEditable, swallow} from '@grogarden/util/dom.js';
-	import Dialog from '@feltjs/felt-ui/Dialog.svelte';
+	import {is_editable, swallow} from '@grogarden/util/dom.js';
+	import Dialog from '@fuz.dev/fuz_dialog/Dialog.svelte';
 	import {slide} from 'svelte/transition';
 	import {browser} from '$app/environment';
 	import {computed, effect, signal} from '@preact/signals-core';
@@ -22,7 +22,7 @@
 	import InstrumentControl from '$lib/InstrumentControl.svelte';
 	import InitMidiButton from '$lib/InitMidiButton.svelte';
 	import Footer from '$routes/Footer.svelte';
-	import SiteBreadcrumbs from '$routes/SiteBreadcrumbs.svelte';
+	import SiteBreadcrumb from '$routes/SiteBreadcrumb.svelte';
 
 	// load site data
 	const SITE_DATA_STORAGE_KEY = 'site';
@@ -63,7 +63,7 @@
 
 	// TODO refactor
 	const keydown = (e: KeyboardEvent) => {
-		if (isEditable(e.target)) return;
+		if (is_editable(e.target)) return;
 		switch (e.key) {
 			case 'c': {
 				swallow(e);
@@ -125,7 +125,7 @@
 	<Dialog on:close={() => (show_main_menu = false)}>
 		<section class="markup">
 			<h1 class="section-title centered">
-				earbetter <div class="breadcrumbs-wrapper"><SiteBreadcrumbs /></div>
+				earbetter <div class="breadcrumbs-wrapper"><SiteBreadcrumb /></div>
 			</h1>
 			<h2 class="section-title">settings</h2>
 			<form class="column-sm centered padded-md-x">

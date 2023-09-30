@@ -1,5 +1,5 @@
 <script lang="ts">
-	import SiteBreadcrumbs from '$routes/SiteBreadcrumbs.svelte';
+	import SiteBreadcrumb from '$routes/SiteBreadcrumb.svelte';
 
 	export let flush = false;
 </script>
@@ -9,7 +9,7 @@
 		<a href="https://github.com/ryanatkn/earbetter">source code</a>
 		<div>public domain</div>
 		<div class="breadcrumbs-wrapper">
-			<SiteBreadcrumbs />
+			<SiteBreadcrumb />
 		</div>
 	</div>
 </footer>

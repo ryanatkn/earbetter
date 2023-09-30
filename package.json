@@ -23,7 +23,7 @@
   ],
   "type": "module",
   "engines": {
-    "node": ">=18.6"
+    "node": ">=20.7"
   },
   "scripts": {
     "start": "gro dev",
@@ -37,23 +37,23 @@
     "@fuz.dev/fuz": "^0.70.0",
     "@fuz.dev/fuz_dialog": "^0.1.0",
     "@fuz.dev/fuz_library": "^0.5.6",
-    "@grogarden/gro": "^0.92.4",
+    "@grogarden/gro": "^0.92.5",
     "@grogarden/util": "^0.15.0",
-    "@preact/signals-core": "^1.3.0",
+    "@preact/signals-core": "1.3",
     "@sveltejs/adapter-static": "^2.0.3",
     "@sveltejs/kit": "^1.25.1",
     "@typescript-eslint/eslint-plugin": "^6.7.3",
     "@typescript-eslint/parser": "^6.7.3",
     "eslint": "^8.50.0",
     "eslint-plugin-svelte": "^2.33.2",
-    "prettier": "^2.8.8",
+    "prettier": "^3.0.3",
     "svelte": "^4.2.1",
     "svelte-check": "^3.5.2",
     "svelte-preprocess-esbuild": "^3.0.1",
-    "tslib": "^2.5.0",
+    "tslib": "^2.6.2",
     "typescript": "^5.2.2",
     "uvu": "^0.5.6",
-    "zod": "^3.21.4"
+    "zod": "^3.22.2"
   },
   "eslintConfig": {
     "root": true,
@@ -75,5 +75,219 @@
         }
       }
     ]
+  },
+  "exports": {
+    "./ac.js": {
+      "default": "./dist/ac.js",
+      "types": "./dist/ac.d.ts"
+    },
+    "./colors.js": {
+      "default": "./dist/colors.js",
+      "types": "./dist/colors.d.ts"
+    },
+    "./dom.js": {
+      "default": "./dist/dom.js",
+      "types": "./dist/dom.d.ts"
+    },
+    "./earbetter/app.js": {
+      "default": "./dist/earbetter/app.js",
+      "types": "./dist/earbetter/app.d.ts"
+    },
+    "./earbetter/ControlsInstructions.svelte": {
+      "svelte": "./dist/earbetter/ControlsInstructions.svelte",
+      "types": "./dist/earbetter/ControlsInstructions.svelte.d.ts"
+    },
+    "./earbetter/Earbetter.svelte": {
+      "svelte": "./dist/earbetter/Earbetter.svelte",
+      "types": "./dist/earbetter/Earbetter.svelte.d.ts"
+    },
+    "./earbetter/Level.svelte": {
+      "svelte": "./dist/earbetter/Level.svelte",
+      "types": "./dist/earbetter/Level.svelte.d.ts"
+    },
+    "./earbetter/level.js": {
+      "default": "./dist/earbetter/level.js",
+      "types": "./dist/earbetter/level.d.ts"
+    },
+    "./earbetter/LevelForm.svelte": {
+      "svelte": "./dist/earbetter/LevelForm.svelte",
+      "types": "./dist/earbetter/LevelForm.svelte.d.ts"
+    },
+    "./earbetter/LevelMap.svelte": {
+      "svelte": "./dist/earbetter/LevelMap.svelte",
+      "types": "./dist/earbetter/LevelMap.svelte.d.ts"
+    },
+    "./earbetter/LevelMapItem.svelte": {
+      "svelte": "./dist/earbetter/LevelMapItem.svelte",
+      "types": "./dist/earbetter/LevelMapItem.svelte.d.ts"
+    },
+    "./earbetter/LevelMapItems.svelte": {
+      "svelte": "./dist/earbetter/LevelMapItems.svelte",
+      "types": "./dist/earbetter/LevelMapItems.svelte.d.ts"
+    },
+    "./earbetter/LevelProgressIndicator.svelte": {
+      "svelte": "./dist/earbetter/LevelProgressIndicator.svelte",
+      "types": "./dist/earbetter/LevelProgressIndicator.svelte.d.ts"
+    },
+    "./earbetter/LevelStatsSummary.svelte": {
+      "svelte": "./dist/earbetter/LevelStatsSummary.svelte",
+      "types": "./dist/earbetter/LevelStatsSummary.svelte.d.ts"
+    },
+    "./earbetter/project.js": {
+      "default": "./dist/earbetter/project.js",
+      "types": "./dist/earbetter/project.d.ts"
+    },
+    "./earbetter/ProjectEditor.svelte": {
+      "svelte": "./dist/earbetter/ProjectEditor.svelte",
+      "types": "./dist/earbetter/ProjectEditor.svelte.d.ts"
+    },
+    "./earbetter/ProjectForm.svelte": {
+      "svelte": "./dist/earbetter/ProjectForm.svelte",
+      "types": "./dist/earbetter/ProjectForm.svelte.d.ts"
+    },
+    "./earbetter/ProjectItem.svelte": {
+      "svelte": "./dist/earbetter/ProjectItem.svelte",
+      "types": "./dist/earbetter/ProjectItem.svelte.d.ts"
+    },
+    "./earbetter/ProjectItems.svelte": {
+      "svelte": "./dist/earbetter/ProjectItems.svelte",
+      "types": "./dist/earbetter/ProjectItems.svelte.d.ts"
+    },
+    "./earbetter/Projects.svelte": {
+      "svelte": "./dist/earbetter/Projects.svelte",
+      "types": "./dist/earbetter/Projects.svelte.d.ts"
+    },
+    "./earbetter/realm_helpers.js": {
+      "default": "./dist/earbetter/realm_helpers.js",
+      "types": "./dist/earbetter/realm_helpers.d.ts"
+    },
+    "./earbetter/realm.js": {
+      "default": "./dist/earbetter/realm.js",
+      "types": "./dist/earbetter/realm.d.ts"
+    },
+    "./earbetter/RealmEditor.svelte": {
+      "svelte": "./dist/earbetter/RealmEditor.svelte",
+      "types": "./dist/earbetter/RealmEditor.svelte.d.ts"
+    },
+    "./earbetter/RealmForm.svelte": {
+      "svelte": "./dist/earbetter/RealmForm.svelte",
+      "types": "./dist/earbetter/RealmForm.svelte.d.ts"
+    },
+    "./earbetter/RealmItem.svelte": {
+      "svelte": "./dist/earbetter/RealmItem.svelte",
+      "types": "./dist/earbetter/RealmItem.svelte.d.ts"
+    },
+    "./earbetter/RealmItems.svelte": {
+      "svelte": "./dist/earbetter/RealmItems.svelte",
+      "types": "./dist/earbetter/RealmItems.svelte.d.ts"
+    },
+    "./earbetter/Realms.svelte": {
+      "svelte": "./dist/earbetter/Realms.svelte",
+      "types": "./dist/earbetter/Realms.svelte.d.ts"
+    },
+    "./earbetter/RealmStatsSummary.svelte": {
+      "svelte": "./dist/earbetter/RealmStatsSummary.svelte",
+      "types": "./dist/earbetter/RealmStatsSummary.svelte.d.ts"
+    },
+    "./earbetter/TrialProgressIndicator.svelte": {
+      "svelte": "./dist/earbetter/TrialProgressIndicator.svelte",
+      "types": "./dist/earbetter/TrialProgressIndicator.svelte.d.ts"
+    },
+    "./emoji.js": {
+      "default": "./dist/emoji.js",
+      "types": "./dist/emoji.d.ts"
+    },
+    "./entity.js": {
+      "default": "./dist/entity.js",
+      "types": "./dist/entity.d.ts"
+    },
+    "./helpers.js": {
+      "default": "./dist/helpers.js",
+      "types": "./dist/helpers.d.ts"
+    },
+    "./id.js": {
+      "default": "./dist/id.js",
+      "types": "./dist/id.d.ts"
+    },
+    "./InitMidiButton.svelte": {
+      "svelte": "./dist/InitMidiButton.svelte",
+      "types": "./dist/InitMidiButton.svelte.d.ts"
+    },
+    "./InstrumentControl.svelte": {
+      "svelte": "./dist/InstrumentControl.svelte",
+      "types": "./dist/InstrumentControl.svelte.d.ts"
+    },
+    "./IntervalsInput.svelte": {
+      "svelte": "./dist/IntervalsInput.svelte",
+      "types": "./dist/IntervalsInput.svelte.d.ts"
+    },
+    "./midi_access.js": {
+      "default": "./dist/midi_access.js",
+      "types": "./dist/midi_access.d.ts"
+    },
+    "./midi_helpers.js": {
+      "default": "./dist/midi_helpers.js",
+      "types": "./dist/midi_helpers.d.ts"
+    },
+    "./MidiInput.svelte": {
+      "svelte": "./dist/MidiInput.svelte",
+      "types": "./dist/MidiInput.svelte.d.ts"
+    },
+    "./MidiRangeControl.svelte": {
+      "svelte": "./dist/MidiRangeControl.svelte",
+      "types": "./dist/MidiRangeControl.svelte.d.ts"
+    },
+    "./music.js": {
+      "default": "./dist/music.js",
+      "types": "./dist/music.d.ts"
+    },
+    "./NotesInput.svelte": {
+      "svelte": "./dist/NotesInput.svelte",
+      "types": "./dist/NotesInput.svelte.d.ts"
+    },
+    "./Piano.svelte": {
+      "svelte": "./dist/Piano.svelte",
+      "types": "./dist/Piano.svelte.d.ts"
+    },
+    "./piano.js": {
+      "default": "./dist/piano.js",
+      "types": "./dist/piano.d.ts"
+    },
+    "./PianoKey.svelte": {
+      "svelte": "./dist/PianoKey.svelte",
+      "types": "./dist/PianoKey.svelte.d.ts"
+    },
+    "./play_note.js": {
+      "default": "./dist/play_note.js",
+      "types": "./dist/play_note.d.ts"
+    },
+    "./projects/default_project.js": {
+      "default": "./dist/projects/default_project.js",
+      "types": "./dist/projects/default_project.d.ts"
+    },
+    "./SelectNotesControl.svelte": {
+      "svelte": "./dist/SelectNotesControl.svelte",
+      "types": "./dist/SelectNotesControl.svelte.d.ts"
+    },
+    "./storage.js": {
+      "default": "./dist/storage.js",
+      "types": "./dist/storage.d.ts"
+    },
+    "./TextBurst.svelte": {
+      "svelte": "./dist/TextBurst.svelte",
+      "types": "./dist/TextBurst.svelte.d.ts"
+    },
+    "./url.js": {
+      "default": "./dist/url.js",
+      "types": "./dist/url.d.ts"
+    },
+    "./VolumeControl.svelte": {
+      "svelte": "./dist/VolumeControl.svelte",
+      "types": "./dist/VolumeControl.svelte.d.ts"
+    },
+    "./WebMIDI.js": {
+      "default": "./dist/WebMIDI.js",
+      "types": "./dist/WebMIDI.d.ts"
+    }
   }
 }

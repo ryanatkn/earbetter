@@ -2,8 +2,8 @@
 	import {createEventDispatcher} from 'svelte';
 	import {slide} from 'svelte/transition';
 	import {swallow} from '@grogarden/util/dom.js';
-	import Dialog from '@feltjs/felt-ui/Dialog.svelte';
-	import Message from '@feltjs/felt-ui/Message.svelte';
+	import Dialog from '@fuz.dev/fuz_dialog/Dialog.svelte';
+	import Alert from '@fuz.dev/fuz_library/Alert.svelte';
 
 	import {create_realm_id, RealmData, type RealmId} from '$lib/earbetter/realm';
 	import default_project_data from '$lib/projects/default_project';
@@ -194,7 +194,7 @@
 	{/if}
 	{#if parse_error_message}
 		<div class="message-wrapper">
-			<Message status="error"><pre>{parse_error_message}</pre></Message>
+			<Alert status="error"><pre>{parse_error_message}</pre></Alert>
 		</div>
 	{/if}
 	<slot name="footer" {changed} />
