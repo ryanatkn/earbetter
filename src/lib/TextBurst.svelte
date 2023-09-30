@@ -1,5 +1,5 @@
 <script lang="ts">
-	import {random_int, random_item, randomFloat} from '@grogarden/util/random.js';
+	import {random_int, random_item, random_float} from '@grogarden/util/random.js';
 	import {GR2} from '@grogarden/util/maths.js';
 	import {onMount} from 'svelte';
 
@@ -32,7 +32,7 @@
 				class="burst-item"
 				style:--target_x="{random_int(-x_radius, x_radius)}px"
 				style:--target_y="{random_int(-y_radius, y_radius)}px"
-				style:--scale={randomFloat(scale_min, scale_max)}
+				style:--scale={random_float(scale_min, scale_max)}
 				style:--start_rotation="{random_int(start_rotation_min, start_rotation_max)}deg"
 				style:--end_rotation="{random_int(end_rotation_min, end_rotation_max)}deg"
 				style:--hue_rotation="{random_int(hue_rotation_min, hue_rotation_max)}deg"

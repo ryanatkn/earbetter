@@ -346,6 +346,8 @@ export const create_level = (
 };
 
 const get_correct_guess = (trial: Trial | null): Midi | null => {
+	// eslint bug
+	// eslint-disable-next-line @typescript-eslint/prefer-optional-chain
 	if (!trial || trial.guessing_index === null) return null;
 	return trial.sequence[trial.guessing_index];
 };

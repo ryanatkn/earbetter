@@ -33,7 +33,7 @@ export const rgb_to_hex = (r: number, g: number, b: number): number => (r << 16)
 export const hex_to_rgb = (hex: number): Rgb => [(hex >> 16) & 255, (hex >> 8) & 255, hex & 255];
 
 export const hex_string_to_rgb = (hex: string): Rgb => {
-	const h = hex[0] === '#' ? hex.substring(1) : hex; // eslint-disable-line @typescript-eslint/prefer-string-starts-ends-with
+	const h = hex[0] === '#' ? hex.substring(1) : hex;
 	return [parseInt(h[0] + h[1], 16), parseInt(h[2] + h[3], 16), parseInt(h[4] + h[5], 16)];
 };
 

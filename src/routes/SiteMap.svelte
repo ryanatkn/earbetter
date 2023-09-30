@@ -1,11 +1,11 @@
 <script lang="ts">
 	import {base} from '$app/paths';
 	import {page} from '$app/stores';
-	import {stripStart} from '@grogarden/util/string.js';
+	import {strip_start} from '@grogarden/util/string.js';
 
 	import {pages} from '$routes/nav';
 
-	$: selected_slug = stripStart($page.url.pathname, base);
+	$: selected_slug = strip_start($page.url.pathname, base);
 </script>
 
 <header class="section-title"><h2>site map</h2></header>

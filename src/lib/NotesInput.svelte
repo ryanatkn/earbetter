@@ -1,5 +1,6 @@
 <script lang="ts">
-	import {plural, swallow} from '@grogarden/util';
+	import {plural} from '@grogarden/util/string.js';
+	import {swallow} from '@grogarden/util/dom.js';
 	import {createEventDispatcher} from 'svelte';
 
 	import Piano from '$lib/Piano.svelte';

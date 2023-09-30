@@ -16,6 +16,8 @@
 
 	const click_create_new = () => {
 		if (no_levels) {
+			// eslint bug
+			// eslint-disable-next-line @typescript-eslint/no-unnecessary-type-assertion
 			(document.querySelector('.level-def-form input') as HTMLInputElement | null)?.focus?.();
 		} else {
 			edit_level(editing_draft ? null : LevelData.parse({}));

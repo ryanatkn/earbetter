@@ -1,5 +1,6 @@
 import {z} from 'zod';
-import {random_item, type Flavored} from '@grogarden/util';
+import {random_item} from '@grogarden/util/random.js';
+import type {Flavored} from '@grogarden/util/types.js';
 
 import {DEFAULT_LEVEL_STATS, LevelStats} from '$lib/earbetter/level';
 import {emojis} from '$lib/emoji';

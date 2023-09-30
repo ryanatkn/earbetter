@@ -26,6 +26,8 @@
 
 	const click_create_new = () => {
 		if (no_realms) {
+			// eslint bug
+			// eslint-disable-next-line @typescript-eslint/no-unnecessary-type-assertion
 			(document.querySelector('.realm-def-form input') as HTMLInputElement | null)?.focus?.();
 		} else if (creating) {
 			editing_realm.value = false;

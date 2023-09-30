@@ -157,9 +157,9 @@
 								{#if editing}
 									<button
 										type="button"
-										on:click={() => {
+										on:click={async () => {
 											if (changed) update_level(to_data());
-											play_level(id);
+											await play_level(id);
 										}}
 									>
 										play!
