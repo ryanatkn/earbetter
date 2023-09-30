@@ -86,7 +86,7 @@
 			start_importing_el.focus();
 		}}
 	>
-		<div class="importing markup padded-xl column centered">
+		<div class="importing prose padded-xl column centered">
 			<h2>import realm data</h2>
 			<button
 				type="button"

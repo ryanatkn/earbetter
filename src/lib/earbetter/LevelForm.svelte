@@ -300,7 +300,7 @@
 			start_importing_el.focus();
 		}}
 	>
-		<div class="importing markup padded-xl column centered">
+		<div class="importing prose padded-xl column centered">
 			<h2>import level data</h2>
 			<button
 				on:click={() => {
@@ -329,7 +329,7 @@
 			intervals_el.focus();
 		}}
 	>
-		<div class="markup padded-xl column centered">
+		<div class="prose padded-xl column centered">
 			<h2>pick intervals</h2>
 			<IntervalsInput
 				bind:selected_scale={intervals_input_selected_scale}
@@ -351,7 +351,7 @@
 		}}
 	>
 		<div class="padded-xl column centered">
-			<div class="markup">
+			<div class="prose">
 				<h2>pick tonics</h2>
 			</div>
 			<!-- TODO this `new Set` is a hack, probably change the data structure to a set, need serialization for storage -->

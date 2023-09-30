@@ -112,7 +112,7 @@ code {
 .row label {
 	margin-bottom: 0 !important;
 }
-.markup .row:not(:last-child) {
+.prose .row:not(:last-child) {
 	margin-bottom: var(--spacing_lg);
 }
 

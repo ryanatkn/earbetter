@@ -26,7 +26,7 @@
 </script>
 
 <div class="panel padded-md">
-	<div class="markup">
+	<div class="prose">
 		<header>
 			<h2>levels</h2>
 			<h3>{$selected_realm_data?.name}</h3>

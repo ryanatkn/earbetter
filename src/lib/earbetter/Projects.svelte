@@ -24,7 +24,7 @@
 </script>
 
 <div class="panel padded-md">
-	<div class="markup">
+	<div class="prose">
 		<header>
 			<h2>projects</h2>
 		</header>

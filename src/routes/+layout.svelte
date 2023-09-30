@@ -123,7 +123,7 @@
 
 {#if show_main_menu}
 	<Dialog on:close={() => (show_main_menu = false)}>
-		<section class="markup">
+		<section class="prose">
 			<h1 class="section-title centered">
 				earbetter <div class="breadcrumbs-wrapper"><SiteBreadcrumb /></div>
 			</h1>
@@ -139,7 +139,7 @@
 			<SiteMap />
 		</section>
 		<section class="centered column-sm">
-			<div class="markup">
+			<div class="prose">
 				<h2 class="section-title">data</h2>
 				<div class="padded-md-x">
 					<aside>
@@ -163,7 +163,7 @@
 				</div>
 			{/if}
 		</section>
-		<section class="centered markup column-sm">
+		<section class="centered prose column-sm">
 			<h2 class="section-title">privacy</h2>
 			<p class="padded-md">
 				this website collects no data - the only server it talks to is <a

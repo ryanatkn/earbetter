@@ -80,7 +80,7 @@
 				</section>
 			{/if}
 			<section class="card" transition:slide|local>
-				<div class="panel padded-md markup">
+				<div class="panel padded-md prose">
 					<header>
 						<h2>controls</h2>
 					</header>
@@ -97,7 +97,7 @@
 		{#if $show_game_help}
 			<section class="card" transition:slide|local>
 				<div class="panel padded-md">
-					<div class="markup">
+					<div class="prose">
 						<p>
 							Earbetter is an <a href="https://wikipedia.org/wiki/Ear_training">ear training</a> tool/game:
 						</p>
@@ -142,7 +142,7 @@
 			{/if}
 			{#if $selected_realm_id && (($editing_level && $levels) || $levels?.length === 0)}
 				<section class="card" transition:slide|local>
-					<div class="panel padded-md markup">
+					<div class="panel padded-md prose">
 						<LevelForm
 							{editing}
 							bind:id

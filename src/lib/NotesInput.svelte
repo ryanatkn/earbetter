@@ -162,7 +162,7 @@
 			{/each}
 		</div>
 	</section>
-	<form class="column-sm markup panel padded-md">
+	<form class="column-sm prose panel padded-md">
 		<fieldset>
 			<InstrumentControl {instrument} />
 			<VolumeControl {volume} />

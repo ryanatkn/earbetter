@@ -81,7 +81,7 @@
 			start_importing_el.focus();
 		}}
 	>
-		<div class="importing markup padded-xl column centered">
+		<div class="importing prose padded-xl column centered">
 			<h2>import project data</h2>
 			<button
 				on:click={() => {
