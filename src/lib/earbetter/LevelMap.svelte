@@ -190,7 +190,7 @@
 		align-items: center;
 	}
 	.width_sm {
-		margin: 0 var(--spacing_xl);
+		margin: 0 var(--spacing_1);
 	}
 	@media (max-width: 1111px) {
 		.map {

@@ -86,7 +86,7 @@
 			start_importing_el.focus();
 		}}
 	>
-		<div class="importing prose padded_xl width_md box">
+		<div class="importing prose padded_1 width_md box">
 			<h2>import realm data</h2>
 			<button
 				type="button"

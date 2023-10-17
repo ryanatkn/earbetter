@@ -16,12 +16,12 @@
 
 <style>
 	footer {
-		margin: var(--spacing_xl3) auto;
+		margin: var(--spacing_3) auto;
 		text-align: center;
 		display: flex;
 		flex-direction: column;
 		align-items: center;
-		padding-bottom: var(--spacing_xl3);
+		padding-bottom: var(--spacing_3);
 	}
 	.flush {
 		padding-bottom: 0;
@@ -36,6 +36,6 @@
 		align-items: center;
 	}
 	.breadcrumbs-wrapper {
-		font-size: var(--size_xl2);
+		font-size: var(--size_2);
 	}
 </style>

@@ -205,9 +205,9 @@
 						>
 							<div class="panel padded_md box box-text" style:margin-bottom="var(--spacing_md)">
 								{#if $mistakes === 0}
-									<div style:font-size="var(--size_xl3)">flawless run!</div>
+									<div style:font-size="var(--size_3)">flawless run!</div>
 								{:else}
-									<div style:font-size="var(--size_xl3)">
+									<div style:font-size="var(--size_3)">
 										{$mistakes}
 									</div>
 									<div>
@@ -272,7 +272,7 @@
 		--highlighted_animation: highlighting;
 	}
 	/* .debug {
-		font-size: var(--size_xl);
+		font-size: var(--size_1);
 		height: 100%;
 		width: 100%;
 		position: absolute;
@@ -304,7 +304,7 @@
 	}
 
 	.completed-header-icon {
-		font-size: var(--icon_size_xl);
+		font-size: var(--icon_size_1);
 		word-break: break-all;
 		text-align: center;
 		word-wrap: break-word;
@@ -328,7 +328,7 @@
 		pointer-events: none;
 	}
 	.feedback-text-bursts {
-		font-size: var(--size_xl3);
+		font-size: var(--size_3);
 		position: fixed;
 		inset: 0;
 		z-index: 115;

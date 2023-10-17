@@ -1,6 +1,5 @@
 /* TODO copypasted from dealt, most of this can be deleted when felt-ui supports dark mode */
 :root {
-
 	/* TODO force dark mode and remove these when Felt supports it */
 	--bg: hsl(var(--primary_hue), 63%, 11%);
 	--text_color: hsl(var(--primary_hue), 8%, 85%);
@@ -93,8 +92,8 @@ a:active {
 }
 
 button.big {
-	font-size: var(--size_xl);
-	padding: var(--spacing_md) var(--spacing_xl3);
+	font-size: var(--size_1);
+	padding: var(--spacing_md) var(--spacing_3);
 }
 
 /* TODO fix this class upstream so this is controlled by a variable */
@@ -130,7 +129,7 @@ td {
 }
 
 header {
-	font-size: var(--size_xl);
+	font-size: var(--size_1);
 	text-align: center;
 	margin-bottom: var(--spacing_md);
 }
@@ -147,7 +146,7 @@ button {
 
 /* cards include padding for layout so they can be seamlessly animated in/out (is janky with margin) */
 .card {
-	padding: var(--spacing_xl3) 0;
+	padding: var(--spacing_3) 0;
 	margin: 0;
 }
 

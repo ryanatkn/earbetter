@@ -23,7 +23,7 @@
 		margin: 0 auto;
 	}
 	.width_sm {
-		margin-top: var(--spacing_xl3);
+		margin-top: var(--spacing_3);
 	}
 	/* TODO hacky */
 	.width_sm :global(.section-title) {
