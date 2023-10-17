@@ -1,11 +1,11 @@
 <script lang="ts">
 	import {base} from '$app/paths';
 	import {page} from '$app/stores';
-	import {stripStart} from '@feltjs/util/string.js';
+	import {strip_start} from '@grogarden/util/string.js';
 
 	import {pages} from '$routes/nav';
 
-	$: selected_slug = stripStart($page.url.pathname, base);
+	$: selected_slug = strip_start($page.url.pathname, base);
 </script>
 
 <header class="section-title"><h2>site map</h2></header>
@@ -30,7 +30,7 @@
 		margin-bottom: var(--spacing_md);
 	}
 	menu a {
-		font-size: var(--font_size_xl);
-		padding: var(--spacing_xl);
+		font-size: var(--size_1);
+		padding: var(--spacing_1);
 	}
 </style>

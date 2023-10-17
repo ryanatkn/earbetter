@@ -85,7 +85,7 @@
 			/>
 		{/if}
 	</div>
-	<form class="column-sm markup panel padded-md">
+	<form class="width_sm prose panel padded_md">
 		<fieldset>
 			<InstrumentControl {instrument} />
 			<div class="row">

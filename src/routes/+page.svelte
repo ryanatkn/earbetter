@@ -8,7 +8,7 @@
 <main>
 	<Header />
 	<section class="tagline panel">
-		<p>ear training game and tools for playing and programming music and audio</p>
+		<p>ear training tools and JS/Svelte library for audio and music</p>
 	</section>
 	<section>
 		<menu>
@@ -32,14 +32,14 @@
 		align-items: center;
 	}
 	menu li:not(:last-child) {
-		margin-bottom: var(--spacing_xl3);
+		margin-bottom: var(--spacing_3);
 	}
 	menu a {
-		font-size: var(--font_size_xl3);
-		padding: var(--spacing_xl);
+		font-size: var(--size_3);
+		padding: var(--spacing_1);
 	}
 	.tagline {
-		margin-top: var(--spacing_xl3);
+		margin-top: var(--spacing_3);
 		padding: var(--spacing_md);
 	}
 </style>

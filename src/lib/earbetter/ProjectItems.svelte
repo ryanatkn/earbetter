@@ -12,7 +12,7 @@
 	export let remove_project: (id: ProjectId) => void;
 </script>
 
-<menu class="projects column-sm">
+<menu class="projects width_sm">
 	{#each projects as project (project.id)}
 		<ProjectItem
 			{project}

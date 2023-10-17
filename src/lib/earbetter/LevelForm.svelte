@@ -1,8 +1,8 @@
 <script lang="ts">
 	import {createEventDispatcher} from 'svelte';
 	import {slide} from 'svelte/transition';
-	import Dialog from '@feltjs/felt-ui/Dialog.svelte';
-	import Message from '@feltjs/felt-ui/Message.svelte';
+	import Dialog from '@fuz.dev/fuz_dialog/Dialog.svelte';
+	import Alert from '@fuz.dev/fuz_library/Alert.svelte';
 
 	import {
 		create_level_id,
@@ -215,7 +215,7 @@
 			</label>
 		</fieldset>
 		{#if lowest_note_error}
-			<Message status="error">the lowest note must be lower than the highest</Message>
+			<Alert status="error">the lowest note must be lower than the highest</Alert>
 		{:else}
 			<Piano
 				width={piano_width || 0}
@@ -262,7 +262,7 @@
 			{#if removing}
 				<div transition:slide|local>
 					<button
-						class="w-full"
+						class="width_full"
 						type="button"
 						style:margin-bottom={0}
 						on:click={() => {
@@ -287,7 +287,7 @@
 		</button>
 		{#if parse_error_message}
 			<div class="message-wrapper">
-				<Message status="error"><pre>{parse_error_message}</pre></Message>
+				<Alert status="error"><pre>{parse_error_message}</pre></Alert>
 			</div>
 		{/if}
 		<slot name="footer" {changed} {to_data} />
@@ -300,7 +300,7 @@
 			start_importing_el.focus();
 		}}
 	>
-		<div class="importing markup padded-xl column centered">
+		<div class="importing prose padded_1 width_md box">
 			<h2>import level data</h2>
 			<button
 				on:click={() => {
@@ -329,7 +329,7 @@
 			intervals_el.focus();
 		}}
 	>
-		<div class="markup padded-xl column centered">
+		<div class="prose padded_1 width_md box">
 			<h2>pick intervals</h2>
 			<IntervalsInput
 				bind:selected_scale={intervals_input_selected_scale}
@@ -350,8 +350,8 @@
 			tonics_el.focus();
 		}}
 	>
-		<div class="padded-xl column centered">
-			<div class="markup">
+		<div class="padded_1 width_md box">
+			<div class="prose">
 				<h2>pick tonics</h2>
 			</div>
 			<!-- TODO this `new Set` is a hack, probably change the data structure to a set, need serialization for storage -->

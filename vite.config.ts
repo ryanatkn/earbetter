@@ -1,9 +1,8 @@
+import type {UserConfig} from 'vite';
 import {sveltekit} from '@sveltejs/kit/vite';
 
-/** @type {import('vite').UserConfig} */
-const config = {
+const config: UserConfig = {
 	plugins: [sveltekit()],
-	ssr: {noExternal: ['@feltjs/felt-ui']},
 };
 
 export default config;

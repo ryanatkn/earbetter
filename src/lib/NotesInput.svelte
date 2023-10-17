@@ -1,5 +1,6 @@
 <script lang="ts">
-	import {plural, swallow} from '@feltjs/util';
+	import {plural} from '@grogarden/util/string.js';
+	import {swallow} from '@grogarden/util/dom.js';
 	import {createEventDispatcher} from 'svelte';
 
 	import Piano from '$lib/Piano.svelte';
@@ -105,7 +106,7 @@
 />
 
 <div class="notes_input">
-	<div class="notes column-sm">
+	<div class="notes width_sm">
 		<!-- TODO copy button -->
 		<blockquote class="panel" style:margin="var(--spacing_lg) 0">
 			<textarea bind:value={notes_str} on:input={(e) => update_notes_str(e.currentTarget.value)} />
@@ -147,7 +148,7 @@
 			/>
 		{/if}
 	</div>
-	<section class="centered">
+	<section class="box">
 		<label style:margin-bottom="var(--spacing_lg)"
 			>key <select bind:value={key}>
 				{#each pitch_classes as pc (pc)}
@@ -161,7 +162,7 @@
 			{/each}
 		</div>
 	</section>
-	<form class="column-sm markup panel padded-md">
+	<form class="width_sm prose panel padded_md">
 		<fieldset>
 			<InstrumentControl {instrument} />
 			<VolumeControl {volume} />
@@ -192,7 +193,7 @@
 	.scales {
 		display: flex;
 		flex-wrap: wrap;
-		max-width: var(--column_width);
+		max-width: var(--width_md);
 		justify-content: center;
 	}
 </style>

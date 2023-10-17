@@ -1,9 +1,9 @@
 <script lang="ts">
 	import {createEventDispatcher} from 'svelte';
 	import {slide} from 'svelte/transition';
-	import {swallow} from '@feltjs/util/dom.js';
-	import Dialog from '@feltjs/felt-ui/Dialog.svelte';
-	import Message from '@feltjs/felt-ui/Message.svelte';
+	import {swallow} from '@grogarden/util/dom.js';
+	import Dialog from '@fuz.dev/fuz_dialog/Dialog.svelte';
+	import Alert from '@fuz.dev/fuz_library/Alert.svelte';
 
 	import {create_project_id, ProjectData, type ProjectId} from '$lib/earbetter/project';
 
@@ -81,7 +81,7 @@
 			start_importing_el.focus();
 		}}
 	>
-		<div class="importing markup padded-xl column centered">
+		<div class="importing prose padded_1 width_md box">
 			<h2>import project data</h2>
 			<button
 				on:click={() => {
@@ -137,7 +137,7 @@
 		{#if removing}
 			<div transition:slide|local>
 				<button
-					class="w-full"
+					class="width_full"
 					type="button"
 					style:margin-bottom={0}
 					on:click={() => {
@@ -162,7 +162,7 @@
 	</button>
 	{#if parse_error_message}
 		<div class="message-wrapper">
-			<Message status="error"><pre>{parse_error_message}</pre></Message>
+			<Alert status="error"><pre>{parse_error_message}</pre></Alert>
 		</div>
 	{/if}
 	<slot name="footer" {changed} />

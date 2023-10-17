@@ -63,6 +63,7 @@
 		flex: 1;
 	}
 	.icon-button {
-		font-size: var(--font_size_xl);
+		font-size: var(--size_1);
+		width: var(--icon_button_width, 60px);
 	}
 </style>

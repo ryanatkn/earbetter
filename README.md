@@ -1,6 +1,6 @@
 # earbetter
 
-> ear training game and tools for playing and programming music and audio 🎶🦜
+> ear training tools and JS/Svelte library for audio and music 🎶🦜
 > [earbetter.ryanatkn.com](https://earbetter.ryanatkn.com/)
 
 - features [a configurable ear trainer](https://earbetter.ryanatkn.com/game)
@@ -36,7 +36,7 @@ No docs yet, for now see the modules referenced in [`$lib/exports.ts`](/src/lib/
 
 ## intro
 
-In 2016 I made a simple ear training game named
+In 2016 I made a simple ear trainer named
 [Ear Sharpener](https://github.com/ryanatkn/ear-sharpener)
 because I thought ear training was interesting,
 but it wasn't a good training tool.
@@ -98,8 +98,8 @@ gro dev # npm i -g @feltjs/gro
 See [SvelteKit](https://github.com/sveltejs/kit),
 [Vite](https://github.com/vitejs/vite),
 [Svelte](https://github.com/sveltejs/svelte),
-[Gro](https://github.com/feltjs/gro),
-and [felt-ui](https://github.com/feltjs/felt-ui) for more.
+[Fuz](https://github.com/fuz-dev/fuz),
+and [Gro](https://github.com/feltjs/gro) for more.
 
 ## build
 
@@ -132,17 +132,16 @@ customize or delete [src/static/CNAME](/src/static/CNAME).
 
 ## credits 🐢<sub>🐢</sub><sub><sub>🐢</sub></sub>
 
+[TypeScript](https://github.com/microsoft/TypeScript) ∙
 [Svelte](https://github.com/sveltejs/svelte) ∙
 [SvelteKit](https://github.com/sveltejs/kit) ∙
 [Vite](https://github.com/vitejs/vite) ∙
 [esbuild](https://github.com/evanw/esbuild) ∙
+[Fuz](https://github.com/feltjs/felt-ui) ∙
+[Gro](https://github.com/feltjs/gro) ∙
 [uvu](https://github.com/lukeed/uvu) ∙
-[TypeScript](https://github.com/microsoft/TypeScript) ∙
 [ESLint](https://github.com/eslint/eslint) ∙
-[Prettier](https://github.com/prettier/prettier) ∙
-[felt-ui](https://github.com/feltjs/felt-ui) ∙
-[@feltjs/util](https://github.com/feltjs/util) ∙
-[Gro](https://github.com/feltjs/gro)
+[Prettier](https://github.com/prettier/prettier)
 & [more](package.json)
 
 ## license [🐦](https://wikipedia.org/wiki/Free_and_open-source_software)

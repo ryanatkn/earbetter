@@ -1,7 +1,7 @@
-import {randomItem, randomInt} from '@feltjs/util/random.js';
+import {random_item, random_int} from '@grogarden/util/random.js';
 import {z} from 'zod';
-import type {Flavored} from '@feltjs/util';
-import {Logger} from '@feltjs/util/log.js';
+import type {Flavored} from '@grogarden/util/types.js';
+import {Logger} from '@grogarden/util/log.js';
 import {signal, batch, Signal, effect} from '@preact/signals-core';
 import {base} from '$app/paths';
 
@@ -115,7 +115,7 @@ const create_next_trial = (def: LevelData, current_trial: Trial | null): Trial =
 	for (let i = 0; i < def.sequence_length - 1; i++) {
 		let next_note: Midi;
 		do {
-			next_note = randomItem(valid_notes);
+			next_note = random_item(valid_notes);
 		} while (next_note === sequence.at(-1)); // disallow sequential repeats
 		sequence.push(next_note);
 	}
@@ -132,20 +132,20 @@ const create_next_trial = (def: LevelData, current_trial: Trial | null): Trial =
 
 const to_random_tonic = (def: LevelData): Midi => {
 	const {tonics} = def;
-	if (tonics?.length) return randomItem(tonics);
+	if (tonics?.length) return random_item(tonics);
 	const {min_note, max_note} = def;
 	const interval_max = def.intervals.reduce((max, v) => Math.max(max, v));
 	const interval_min = def.intervals.reduce((max, v) => Math.min(max, v));
 	const tonic_max = Math.min(max_note - interval_max, max_note);
 	const tonic_min = Math.max(min_note - interval_min, min_note);
 	return (
-		tonic_min < tonic_max ? randomInt(tonic_min, tonic_max) : to_fallback_tonic(min_note, max_note)
+		tonic_min < tonic_max ? random_int(tonic_min, tonic_max) : to_fallback_tonic(min_note, max_note)
 	) as Midi;
 };
 
 const to_fallback_tonic = (min_note: Midi, max_note: Midi): Midi => {
 	const offset = ((max_note - min_note) / 4) | 0;
-	return randomInt(min_note + offset, max_note - offset) as Midi;
+	return random_int(min_note + offset, max_note - offset) as Midi;
 };
 
 const DEFAULT_STATUS: Status = 'initial';
@@ -346,6 +346,8 @@ export const create_level = (
 };
 
 const get_correct_guess = (trial: Trial | null): Midi | null => {
+	// eslint bug
+	// eslint-disable-next-line @typescript-eslint/prefer-optional-chain
 	if (!trial || trial.guessing_index === null) return null;
 	return trial.sequence[trial.guessing_index];
 };

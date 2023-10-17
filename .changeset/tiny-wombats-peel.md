@@ -1,0 +1,5 @@
+---
+'@ryanatkn/earbetter': minor
+---
+
+upgrades

@@ -68,7 +68,7 @@
 />
 <div class="map">
 	{#if $projects.length}
-		<div class="column-sm">
+		<div class="width_sm">
 			{#if $selected_project_data}
 				<section class="card" transition:slide|local>
 					<Projects {app} />
@@ -80,7 +80,7 @@
 				</section>
 			{/if}
 			<section class="card" transition:slide|local>
-				<div class="panel padded-md markup">
+				<div class="panel padded_md prose">
 					<header>
 						<h2>controls</h2>
 					</header>
@@ -93,13 +93,13 @@
 			</section>
 		</div>
 	{/if}
-	<div class="column-sm">
+	<div class="width_sm">
 		{#if $show_game_help}
 			<section class="card" transition:slide|local>
-				<div class="panel padded-md">
-					<div class="markup">
+				<div class="panel padded_md">
+					<div class="prose">
 						<p>
-							Earbetter is an <a href="https://wikipedia.org/wiki/Ear_training">ear training</a> tool/game:
+							Earbetter is an <a href="https://wikipedia.org/wiki/Ear_training">ear training</a> tool:
 						</p>
 						<ul>
 							<li>each level is a standalone challenge that's a series of trials</li>
@@ -117,7 +117,7 @@
 								>the GitHub discussions and issues</a
 							>
 						</aside>
-						<div class="centered-hz">
+						<div class="box row">
 							<button style:margin="0" on:click={() => toggle_game_help()}>ok, hide this</button>
 						</div>
 					</div>
@@ -134,7 +134,7 @@
 		{/if}
 	</div>
 	{#if $projects.length}
-		<div class="column-sm">
+		<div class="width_sm">
 			{#if $levels}
 				<section class="card" transition:slide|local>
 					<LevelMapItems {app} levels={$levels} />
@@ -142,7 +142,7 @@
 			{/if}
 			{#if $selected_realm_id && (($editing_level && $levels) || $levels?.length === 0)}
 				<section class="card" transition:slide|local>
-					<div class="panel padded-md markup">
+					<div class="panel padded_md prose">
 						<LevelForm
 							{editing}
 							bind:id
@@ -157,9 +157,9 @@
 								{#if editing}
 									<button
 										type="button"
-										on:click={() => {
+										on:click={async () => {
 											if (changed) update_level(to_data());
-											play_level(id);
+											await play_level(id);
 										}}
 									>
 										play!
@@ -179,6 +179,7 @@
 
 <style>
 	.map {
+		--icon_button_width: 60px;
 		display: flex;
 		flex-direction: row;
 		justify-content: center;
@@ -189,15 +190,15 @@
 		flex-direction: column;
 		align-items: center;
 	}
-	.column-sm {
-		margin: 0 var(--spacing_xl);
+	.width_sm {
+		margin: 0 var(--spacing_1);
 	}
 	@media (max-width: 1111px) {
 		.map {
 			flex-direction: column;
 			align-items: center;
 		}
-		.column-sm {
+		.width_sm {
 			margin-left: 0;
 			margin-right: 0;
 		}

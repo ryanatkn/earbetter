@@ -17,11 +17,11 @@
 		s === 'showing_failure_feedback'
 			? 'transparent'
 			: s === 'complete' || s === 'showing_success_feedback'
-			? 'var(--tint_light_4)'
+			? 'var(--lighten_4)'
 			: index === current_index
-			? 'var(--tint_light_3)'
+			? 'var(--lighten_3)'
 			: current_index !== null && index < current_index
-			? 'var(--tint_light_2)'
+			? 'var(--lighten_2)'
 			: 'transparent';
 
 	$: percent_complete =
@@ -64,6 +64,6 @@
 	.progress-bar {
 		--progress_bar_duration: var(--duration_2);
 		--progress_bar_height: var(--spacing_xs2);
-		--progress_bar_bg: var(--tint_light_3);
+		--progress_bar_bg: var(--lighten_3);
 	}
 </style>

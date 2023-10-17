@@ -3,7 +3,7 @@
 </script>
 
 <header>
-	<div class="centered panel padded-md">
+	<div class="box panel padded_md">
 		<h1>earbetter</h1>
 		<div class="icons">🎶🦜</div>
 	</div>
@@ -11,12 +11,12 @@
 
 <style>
 	header {
-		margin: var(--spacing_xl3) auto 0;
+		margin: var(--spacing_3) auto 0;
 		text-align: center;
 		display: flex;
 		flex-direction: column;
 		align-items: center;
-		padding-top: var(--spacing_xl3);
+		padding-top: var(--spacing_3);
 	}
 	.panel {
 		display: flex;
@@ -24,6 +24,6 @@
 		align-items: center;
 	}
 	.icons {
-		font-size: var(--font_size_xl5);
+		font-size: var(--size_5);
 	}
 </style>

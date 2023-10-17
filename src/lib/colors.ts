@@ -1,6 +1,6 @@
-import type {Flavored} from '@feltjs/util';
+import type {Flavored} from '@grogarden/util/types.js';
 
-// TODO copypasted from `@feltcoop/dealt`, maybe upstream to `@feltjs/util`? or a new repo?
+// TODO copypasted from `@feltcoop/dealt`, maybe upstream to `@grogarden/util`? or a new repo?
 
 // https://stackoverflow.com/questions/2353211/hsl-to-rgb-color-conversion
 
@@ -33,7 +33,7 @@ export const rgb_to_hex = (r: number, g: number, b: number): number => (r << 16)
 export const hex_to_rgb = (hex: number): Rgb => [(hex >> 16) & 255, (hex >> 8) & 255, hex & 255];
 
 export const hex_string_to_rgb = (hex: string): Rgb => {
-	const h = hex[0] === '#' ? hex.substring(1) : hex; // eslint-disable-line @typescript-eslint/prefer-string-starts-ends-with
+	const h = hex[0] === '#' ? hex.substring(1) : hex;
 	return [parseInt(h[0] + h[1], 16), parseInt(h[2] + h[3], 16), parseInt(h[4] + h[5], 16)];
 };
 

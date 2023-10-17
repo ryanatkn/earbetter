@@ -1,5 +1,5 @@
 <script lang="ts">
-	import type {AsyncStatus} from '@feltjs/util';
+	import type {AsyncStatus} from '@grogarden/util/async.js';
 	import {fade} from 'svelte/transition';
 	import type {Signal} from '@preact/signals-core';
 

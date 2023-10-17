@@ -1,5 +1,5 @@
 import {z} from 'zod';
-import type {Flavored} from '@feltjs/util';
+import type {Flavored} from '@grogarden/util/types.js';
 
 import {LevelData} from '$lib/earbetter/level';
 import {to_random_id} from '$lib/id';

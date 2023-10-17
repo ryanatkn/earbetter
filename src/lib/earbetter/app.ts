@@ -9,7 +9,7 @@ import {
 	batch,
 } from '@preact/signals-core';
 import {getContext, setContext} from 'svelte';
-import {Logger} from '@feltjs/util/log.js';
+import {Logger} from '@grogarden/util/log.js';
 
 import {
 	add_mistakes_to_level_stats,
@@ -103,7 +103,10 @@ export class App {
 	editing_level: Signal<boolean> = signal(false);
 	draft_level_data: Signal<LevelData | null> = signal(null);
 
-	constructor(public readonly get_ac: () => AudioContext, public readonly storage_key = 'app') {
+	constructor(
+		public readonly get_ac: () => AudioContext,
+		public readonly storage_key = 'app',
+	) {
 		// TODO maybe `new App(App.load())` ?
 		this.app_data = signal(this.load());
 		const app_data = this.app_data.peek();
