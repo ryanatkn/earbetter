@@ -45,5 +45,7 @@
 		font-size: var(--size_3);
 		border-top-right-radius: 0;
 		border-bottom-right-radius: 0;
+		/* TODO same as var(--level_progress_height); */
+		height: 50px;
 	}
 </style>

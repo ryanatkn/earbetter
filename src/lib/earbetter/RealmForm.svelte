@@ -144,7 +144,7 @@
 		{#if removing}
 			<div transition:slide|local>
 				<button
-					class="w-full"
+					class="width_full"
 					type="button"
 					style:margin-bottom={0}
 					on:click={() => {
@@ -179,7 +179,7 @@
 			<div transition:slide|local>
 				<button
 					type="button"
-					class="w-full"
+					class="width_full"
 					on:click={() => {
 						toggle_create_default_realms = false;
 						for (const realm_data of default_project_data().realms) {

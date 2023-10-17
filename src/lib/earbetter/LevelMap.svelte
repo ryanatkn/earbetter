@@ -179,6 +179,7 @@
 
 <style>
 	.map {
+		--icon_button_width: 60px;
 		display: flex;
 		flex-direction: row;
 		justify-content: center;

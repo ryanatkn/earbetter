@@ -137,7 +137,7 @@
 		{#if removing}
 			<div transition:slide|local>
 				<button
-					class="w-full"
+					class="width_full"
 					type="button"
 					style:margin-bottom={0}
 					on:click={() => {

@@ -294,7 +294,7 @@
 		position: absolute;
 		right: 0;
 		top: 0;
-		height: 50px;
+		height: var(--level_progress_height);
 		width: 100%;
 	}
 	.piano-wrapper {
