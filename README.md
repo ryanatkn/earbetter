@@ -9,7 +9,7 @@
 - published to npm as
   [`@ryanatkn/earbetter`](https://www.npmjs.com/package/@ryanatkn/earbetter)
   with utilities, types, and Svelte components for audio and music
-  (see [`$lib/exports.ts`](/src/lib/exports.ts))
+  (see [`package.json`](/package.json))
 
 to help see [contributing.md](contributing.md)
 
@@ -32,7 +32,7 @@ I haven't used the library again, and I'm not sure if I will.
 [This issue](https://github.com/preactjs/signals/issues/299) is a blocker.
 It does make code concise.
 
-No docs yet, for now see the modules referenced in [`$lib/exports.ts`](/src/lib/exports.ts).
+No docs yet, for now see the modules referenced in [`package.json`](/package.json).
 
 ## intro
 
