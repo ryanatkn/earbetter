@@ -1,6 +1,6 @@
 <script lang="ts">
 	import {random_int, random_item, random_float} from '@grogarden/util/random.js';
-	import {GR2} from '@grogarden/util/maths.js';
+	import {GR_2} from '@grogarden/util/maths.js';
 	import {onMount} from 'svelte';
 
 	export let count: number;
@@ -9,7 +9,7 @@
 	export let x_radius = 250;
 	export let y_radius = 250;
 	export let scale_min = 1;
-	export let scale_max = GR2;
+	export let scale_max = GR_2;
 	export let hue_rotation_min = 0;
 	export let hue_rotation_max = 0; // set to 360 to get a random range of colors
 	export let start_rotation_min = 0;

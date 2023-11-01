@@ -1,5 +1,5 @@
 <script lang="ts">
-	import type {AsyncStatus} from '@grogarden/util/async.js';
+	import type {Async_Status} from '@grogarden/util/async.js';
 	import {fade} from 'svelte/transition';
 	import type {Signal} from '@preact/signals-core';
 
@@ -14,7 +14,7 @@
 
 	// TODO move MIDI initialization to some other action, like the button to start a level
 
-	let request_status: AsyncStatus = 'initial';
+	let request_status: Async_Status = 'initial';
 
 	$: disabled = !!$midi_access || request_status === 'pending';
 

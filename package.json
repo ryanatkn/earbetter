@@ -1,9 +1,10 @@
 {
   "name": "@ryanatkn/earbetter",
   "description": "ear training tools and JS/Svelte library for audio and music 🎶🦜",
+  "version": "0.2.0",
+  "public": true,
   "homepage": "https://earbetter.ryanatkn.com/",
   "license": "Unlicense",
-  "version": "0.2.0",
   "author": {
     "name": "Ryan Atkinson",
     "email": "mail@ryanatkn.com",
@@ -35,21 +36,21 @@
   },
   "devDependencies": {
     "@changesets/changelog-git": "^0.1.14",
-    "@feltjs/eslint-config": "^0.4.0",
-    "@fuz.dev/fuz": "^0.73.0",
-    "@fuz.dev/fuz_dialog": "^0.3.1",
-    "@fuz.dev/fuz_library": "^0.11.0",
-    "@grogarden/gro": "^0.95.4",
-    "@grogarden/util": "^0.15.1",
+    "@feltjs/eslint-config": "^0.4.1",
+    "@fuz.dev/fuz": "^0.79.1",
+    "@fuz.dev/fuz_dialog": "^0.5.0",
+    "@fuz.dev/fuz_library": "^0.19.1",
+    "@grogarden/gro": "^0.100.1",
+    "@grogarden/util": "^0.16.0",
     "@preact/signals-core": "^1.5.0",
     "@sveltejs/adapter-static": "^2.0.3",
-    "@sveltejs/kit": "^1.25.2",
-    "@typescript-eslint/eslint-plugin": "^6.8.0",
-    "@typescript-eslint/parser": "^6.8.0",
-    "eslint": "^8.51.0",
+    "@sveltejs/kit": "^1.27.2",
+    "@typescript-eslint/eslint-plugin": "^6.9.1",
+    "@typescript-eslint/parser": "^6.9.1",
+    "eslint": "^8.52.0",
     "eslint-plugin-svelte": "^2.34.0",
     "prettier": "^3.0.3",
-    "svelte": "^4.2.1",
+    "svelte": "^4.2.2",
     "svelte-check": "^3.5.2",
     "tslib": "^2.6.2",
     "typescript": "^5.2.2",
@@ -96,14 +97,17 @@
     },
     "./earbetter/ControlsInstructions.svelte": {
       "svelte": "./dist/earbetter/ControlsInstructions.svelte",
+      "default": "./dist/earbetter/ControlsInstructions.svelte",
       "types": "./dist/earbetter/ControlsInstructions.svelte.d.ts"
     },
     "./earbetter/Earbetter.svelte": {
       "svelte": "./dist/earbetter/Earbetter.svelte",
+      "default": "./dist/earbetter/Earbetter.svelte",
       "types": "./dist/earbetter/Earbetter.svelte.d.ts"
     },
     "./earbetter/Level.svelte": {
       "svelte": "./dist/earbetter/Level.svelte",
+      "default": "./dist/earbetter/Level.svelte",
       "types": "./dist/earbetter/Level.svelte.d.ts"
     },
     "./earbetter/level.js": {
@@ -112,26 +116,32 @@
     },
     "./earbetter/LevelForm.svelte": {
       "svelte": "./dist/earbetter/LevelForm.svelte",
+      "default": "./dist/earbetter/LevelForm.svelte",
       "types": "./dist/earbetter/LevelForm.svelte.d.ts"
     },
     "./earbetter/LevelMap.svelte": {
       "svelte": "./dist/earbetter/LevelMap.svelte",
+      "default": "./dist/earbetter/LevelMap.svelte",
       "types": "./dist/earbetter/LevelMap.svelte.d.ts"
     },
     "./earbetter/LevelMapItem.svelte": {
       "svelte": "./dist/earbetter/LevelMapItem.svelte",
+      "default": "./dist/earbetter/LevelMapItem.svelte",
       "types": "./dist/earbetter/LevelMapItem.svelte.d.ts"
     },
     "./earbetter/LevelMapItems.svelte": {
       "svelte": "./dist/earbetter/LevelMapItems.svelte",
+      "default": "./dist/earbetter/LevelMapItems.svelte",
       "types": "./dist/earbetter/LevelMapItems.svelte.d.ts"
     },
     "./earbetter/LevelProgressIndicator.svelte": {
       "svelte": "./dist/earbetter/LevelProgressIndicator.svelte",
+      "default": "./dist/earbetter/LevelProgressIndicator.svelte",
       "types": "./dist/earbetter/LevelProgressIndicator.svelte.d.ts"
     },
     "./earbetter/LevelStatsSummary.svelte": {
       "svelte": "./dist/earbetter/LevelStatsSummary.svelte",
+      "default": "./dist/earbetter/LevelStatsSummary.svelte",
       "types": "./dist/earbetter/LevelStatsSummary.svelte.d.ts"
     },
     "./earbetter/project.js": {
@@ -140,22 +150,27 @@
     },
     "./earbetter/ProjectEditor.svelte": {
       "svelte": "./dist/earbetter/ProjectEditor.svelte",
+      "default": "./dist/earbetter/ProjectEditor.svelte",
       "types": "./dist/earbetter/ProjectEditor.svelte.d.ts"
     },
     "./earbetter/ProjectForm.svelte": {
       "svelte": "./dist/earbetter/ProjectForm.svelte",
+      "default": "./dist/earbetter/ProjectForm.svelte",
       "types": "./dist/earbetter/ProjectForm.svelte.d.ts"
     },
     "./earbetter/ProjectItem.svelte": {
       "svelte": "./dist/earbetter/ProjectItem.svelte",
+      "default": "./dist/earbetter/ProjectItem.svelte",
       "types": "./dist/earbetter/ProjectItem.svelte.d.ts"
     },
     "./earbetter/ProjectItems.svelte": {
       "svelte": "./dist/earbetter/ProjectItems.svelte",
+      "default": "./dist/earbetter/ProjectItems.svelte",
       "types": "./dist/earbetter/ProjectItems.svelte.d.ts"
     },
     "./earbetter/Projects.svelte": {
       "svelte": "./dist/earbetter/Projects.svelte",
+      "default": "./dist/earbetter/Projects.svelte",
       "types": "./dist/earbetter/Projects.svelte.d.ts"
     },
     "./earbetter/realm_helpers.js": {
@@ -168,30 +183,37 @@
     },
     "./earbetter/RealmEditor.svelte": {
       "svelte": "./dist/earbetter/RealmEditor.svelte",
+      "default": "./dist/earbetter/RealmEditor.svelte",
       "types": "./dist/earbetter/RealmEditor.svelte.d.ts"
     },
     "./earbetter/RealmForm.svelte": {
       "svelte": "./dist/earbetter/RealmForm.svelte",
+      "default": "./dist/earbetter/RealmForm.svelte",
       "types": "./dist/earbetter/RealmForm.svelte.d.ts"
     },
     "./earbetter/RealmItem.svelte": {
       "svelte": "./dist/earbetter/RealmItem.svelte",
+      "default": "./dist/earbetter/RealmItem.svelte",
       "types": "./dist/earbetter/RealmItem.svelte.d.ts"
     },
     "./earbetter/RealmItems.svelte": {
       "svelte": "./dist/earbetter/RealmItems.svelte",
+      "default": "./dist/earbetter/RealmItems.svelte",
       "types": "./dist/earbetter/RealmItems.svelte.d.ts"
     },
     "./earbetter/Realms.svelte": {
       "svelte": "./dist/earbetter/Realms.svelte",
+      "default": "./dist/earbetter/Realms.svelte",
       "types": "./dist/earbetter/Realms.svelte.d.ts"
     },
     "./earbetter/RealmStatsSummary.svelte": {
       "svelte": "./dist/earbetter/RealmStatsSummary.svelte",
+      "default": "./dist/earbetter/RealmStatsSummary.svelte",
       "types": "./dist/earbetter/RealmStatsSummary.svelte.d.ts"
     },
     "./earbetter/TrialProgressIndicator.svelte": {
       "svelte": "./dist/earbetter/TrialProgressIndicator.svelte",
+      "default": "./dist/earbetter/TrialProgressIndicator.svelte",
       "types": "./dist/earbetter/TrialProgressIndicator.svelte.d.ts"
     },
     "./emoji.js": {
@@ -212,14 +234,17 @@
     },
     "./InitMidiButton.svelte": {
       "svelte": "./dist/InitMidiButton.svelte",
+      "default": "./dist/InitMidiButton.svelte",
       "types": "./dist/InitMidiButton.svelte.d.ts"
     },
     "./InstrumentControl.svelte": {
       "svelte": "./dist/InstrumentControl.svelte",
+      "default": "./dist/InstrumentControl.svelte",
       "types": "./dist/InstrumentControl.svelte.d.ts"
     },
     "./IntervalsInput.svelte": {
       "svelte": "./dist/IntervalsInput.svelte",
+      "default": "./dist/IntervalsInput.svelte",
       "types": "./dist/IntervalsInput.svelte.d.ts"
     },
     "./midi_access.js": {
@@ -232,10 +257,12 @@
     },
     "./MidiInput.svelte": {
       "svelte": "./dist/MidiInput.svelte",
+      "default": "./dist/MidiInput.svelte",
       "types": "./dist/MidiInput.svelte.d.ts"
     },
     "./MidiRangeControl.svelte": {
       "svelte": "./dist/MidiRangeControl.svelte",
+      "default": "./dist/MidiRangeControl.svelte",
       "types": "./dist/MidiRangeControl.svelte.d.ts"
     },
     "./music.js": {
@@ -244,10 +271,12 @@
     },
     "./NotesInput.svelte": {
       "svelte": "./dist/NotesInput.svelte",
+      "default": "./dist/NotesInput.svelte",
       "types": "./dist/NotesInput.svelte.d.ts"
     },
     "./Piano.svelte": {
       "svelte": "./dist/Piano.svelte",
+      "default": "./dist/Piano.svelte",
       "types": "./dist/Piano.svelte.d.ts"
     },
     "./piano.js": {
@@ -256,6 +285,7 @@
     },
     "./PianoKey.svelte": {
       "svelte": "./dist/PianoKey.svelte",
+      "default": "./dist/PianoKey.svelte",
       "types": "./dist/PianoKey.svelte.d.ts"
     },
     "./play_note.js": {
@@ -268,6 +298,7 @@
     },
     "./SelectNotesControl.svelte": {
       "svelte": "./dist/SelectNotesControl.svelte",
+      "default": "./dist/SelectNotesControl.svelte",
       "types": "./dist/SelectNotesControl.svelte.d.ts"
     },
     "./storage.js": {
@@ -279,6 +310,7 @@
     },
     "./TextBurst.svelte": {
       "svelte": "./dist/TextBurst.svelte",
+      "default": "./dist/TextBurst.svelte",
       "types": "./dist/TextBurst.svelte.d.ts"
     },
     "./url.js": {
@@ -287,6 +319,7 @@
     },
     "./VolumeControl.svelte": {
       "svelte": "./dist/VolumeControl.svelte",
+      "default": "./dist/VolumeControl.svelte",
       "types": "./dist/VolumeControl.svelte.d.ts"
     },
     "./WebMIDI.js": {
