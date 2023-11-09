@@ -1,7 +1,8 @@
 {
   "name": "@ryanatkn/earbetter",
-  "description": "ear training tools and JS/Svelte library for audio and music 🎶🦜",
   "version": "0.2.0",
+  "description": "ear training tools and JS/Svelte library for audio and music",
+  "icon": "🦜",
   "public": true,
   "homepage": "https://earbetter.ryanatkn.com/",
   "license": "Unlicense",
@@ -37,18 +38,18 @@
   "devDependencies": {
     "@changesets/changelog-git": "^0.1.14",
     "@feltjs/eslint-config": "^0.4.1",
-    "@fuz.dev/fuz": "^0.79.1",
+    "@fuz.dev/fuz": "^0.79.3",
     "@fuz.dev/fuz_dialog": "^0.5.0",
-    "@fuz.dev/fuz_library": "^0.19.1",
-    "@grogarden/gro": "^0.100.1",
+    "@fuz.dev/fuz_library": "^0.20.0",
+    "@grogarden/gro": "^0.101.0",
     "@grogarden/util": "^0.16.0",
     "@preact/signals-core": "^1.5.0",
     "@sveltejs/adapter-static": "^2.0.3",
-    "@sveltejs/kit": "^1.27.2",
-    "@typescript-eslint/eslint-plugin": "^6.9.1",
-    "@typescript-eslint/parser": "^6.9.1",
-    "eslint": "^8.52.0",
-    "eslint-plugin-svelte": "^2.34.0",
+    "@sveltejs/kit": "^1.27.3",
+    "@typescript-eslint/eslint-plugin": "^6.10.0",
+    "@typescript-eslint/parser": "^6.10.0",
+    "eslint": "^8.53.0",
+    "eslint-plugin-svelte": "^2.35.0",
     "prettier": "^3.0.3",
     "svelte": "^4.2.2",
     "svelte-check": "^3.5.2",
@@ -333,15 +334,15 @@
       "declarations": [
         {
           "name": "get_ac",
-          "kind": "VariableDeclaration"
+          "kind": "function"
         },
         {
           "name": "set_ac",
-          "kind": "VariableDeclaration"
+          "kind": "function"
         },
         {
           "name": "create_ac",
-          "kind": "VariableDeclaration"
+          "kind": "function"
         }
       ]
     },
@@ -350,83 +351,83 @@
       "declarations": [
         {
           "name": "Hsl",
-          "kind": "TypeAliasDeclaration"
+          "kind": "type"
         },
         {
           "name": "Hue",
-          "kind": "TypeAliasDeclaration"
+          "kind": "type"
         },
         {
           "name": "Saturation",
-          "kind": "TypeAliasDeclaration"
+          "kind": "type"
         },
         {
           "name": "Lightness",
-          "kind": "TypeAliasDeclaration"
+          "kind": "type"
         },
         {
           "name": "Rgb",
-          "kind": "TypeAliasDeclaration"
+          "kind": "type"
         },
         {
           "name": "Red",
-          "kind": "TypeAliasDeclaration"
+          "kind": "type"
         },
         {
           "name": "Green",
-          "kind": "TypeAliasDeclaration"
+          "kind": "type"
         },
         {
           "name": "Blue",
-          "kind": "TypeAliasDeclaration"
+          "kind": "type"
         },
         {
           "name": "hue_to_rgb",
-          "kind": "VariableDeclaration"
+          "kind": "function"
         },
         {
           "name": "rgb_to_hex",
-          "kind": "VariableDeclaration"
+          "kind": "function"
         },
         {
           "name": "hex_to_rgb",
-          "kind": "VariableDeclaration"
+          "kind": "function"
         },
         {
           "name": "hex_string_to_rgb",
-          "kind": "VariableDeclaration"
+          "kind": "function"
         },
         {
           "name": "rgb_to_hex_string",
-          "kind": "VariableDeclaration"
+          "kind": "function"
         },
         {
           "name": "to_hex",
-          "kind": "VariableDeclaration"
+          "kind": "function"
         },
         {
           "name": "rgb_to_hsl",
-          "kind": "VariableDeclaration"
+          "kind": "function"
         },
         {
           "name": "hsl_to_rgb",
-          "kind": "VariableDeclaration"
+          "kind": "function"
         },
         {
           "name": "hsl_to_hex",
-          "kind": "VariableDeclaration"
+          "kind": "function"
         },
         {
           "name": "hsl_to_hex_string",
-          "kind": "VariableDeclaration"
+          "kind": "function"
         },
         {
           "name": "hsl_to_string",
-          "kind": "VariableDeclaration"
+          "kind": "function"
         },
         {
           "name": "hex_string_to_hsl",
-          "kind": "VariableDeclaration"
+          "kind": "function"
         }
       ]
     },
@@ -435,11 +436,11 @@
       "declarations": [
         {
           "name": "find_previous_sibling",
-          "kind": "VariableDeclaration"
+          "kind": "function"
         },
         {
           "name": "find_next_sibling",
-          "kind": "VariableDeclaration"
+          "kind": "function"
         }
       ]
     },
@@ -448,19 +449,19 @@
       "declarations": [
         {
           "name": "AppData",
-          "kind": "VariableDeclaration"
+          "kind": "variable"
         },
         {
           "name": "get_app",
-          "kind": "VariableDeclaration"
+          "kind": "function"
         },
         {
           "name": "set_app",
-          "kind": "VariableDeclaration"
+          "kind": "function"
         },
         {
           "name": "App",
-          "kind": "ClassDeclaration"
+          "kind": "class"
         }
       ]
     },
@@ -481,107 +482,107 @@
       "declarations": [
         {
           "name": "DEFAULT_NOTE_DURATION",
-          "kind": "VariableDeclaration"
+          "kind": "variable"
         },
         {
           "name": "DEFAULT_NOTE_DURATION_2",
-          "kind": "VariableDeclaration"
+          "kind": "variable"
         },
         {
           "name": "DEFAULT_NOTE_DURATION_FAILED",
-          "kind": "VariableDeclaration"
+          "kind": "variable"
         },
         {
           "name": "DEFAULT_FEEDBACK_DURATION",
-          "kind": "VariableDeclaration"
+          "kind": "variable"
         },
         {
           "name": "DEFAULT_SEQUENCE_LENGTH",
-          "kind": "VariableDeclaration"
+          "kind": "variable"
         },
         {
           "name": "DEFAULT_TRIAL_COUNT",
-          "kind": "VariableDeclaration"
+          "kind": "variable"
         },
         {
           "name": "DEFAULT_LEVEL_NAME",
-          "kind": "VariableDeclaration"
+          "kind": "variable"
         },
         {
           "name": "DEFAULT_INTERVALS",
-          "kind": "VariableDeclaration"
+          "kind": "variable"
         },
         {
           "name": "DEFAULT_TONICS",
-          "kind": "VariableDeclaration"
+          "kind": "variable"
         },
         {
           "name": "DEFAULT_MIN_NOTE",
-          "kind": "VariableDeclaration"
+          "kind": "variable"
         },
         {
           "name": "DEFAULT_MAX_NOTE",
-          "kind": "VariableDeclaration"
+          "kind": "variable"
         },
         {
           "name": "LevelId",
-          "kind": "VariableDeclaration"
+          "kind": "variable"
         },
         {
           "name": "create_level_id",
-          "kind": "VariableDeclaration"
+          "kind": "function"
         },
         {
           "name": "LevelName",
-          "kind": "VariableDeclaration"
+          "kind": "variable"
         },
         {
           "name": "LevelData",
-          "kind": "VariableDeclaration"
+          "kind": "variable"
         },
         {
           "name": "LevelHashData",
-          "kind": "VariableDeclaration"
+          "kind": "variable"
         },
         {
           "name": "Status",
-          "kind": "TypeAliasDeclaration"
+          "kind": "type"
         },
         {
           "name": "Level",
-          "kind": "InterfaceDeclaration"
+          "kind": "type"
         },
         {
           "name": "Trial",
-          "kind": "InterfaceDeclaration"
+          "kind": "type"
         },
         {
           "name": "create_level",
-          "kind": "VariableDeclaration"
+          "kind": "function"
         },
         {
           "name": "to_play_level_url",
-          "kind": "VariableDeclaration"
+          "kind": "function"
         },
         {
           "name": "MistakesLevelStats",
-          "kind": "VariableDeclaration"
+          "kind": "variable"
         },
         {
           "name": "LevelStats",
-          "kind": "VariableDeclaration"
+          "kind": "variable"
         },
         {
           "name": "DEFAULT_LEVEL_STATS",
-          "kind": "VariableDeclaration"
+          "kind": "variable"
         },
         {
           "name": "add_mistakes_to_level_stats",
-          "kind": "VariableDeclaration"
+          "kind": "function"
         },
         {
           "name": "MISTAKE_HISTORY_LENGTH",
-          "kind": "VariableDeclaration"
+          "kind": "variable"
         }
       ]
     },
@@ -614,23 +615,23 @@
       "declarations": [
         {
           "name": "ProjectId",
-          "kind": "VariableDeclaration"
+          "kind": "variable"
         },
         {
           "name": "create_project_id",
-          "kind": "VariableDeclaration"
+          "kind": "function"
         },
         {
           "name": "ProjectName",
-          "kind": "VariableDeclaration"
+          "kind": "variable"
         },
         {
           "name": "ProjectMetadata",
-          "kind": "VariableDeclaration"
+          "kind": "variable"
         },
         {
           "name": "ProjectData",
-          "kind": "VariableDeclaration"
+          "kind": "variable"
         }
       ]
     },
@@ -659,7 +660,7 @@
       "declarations": [
         {
           "name": "to_default_scale_realm",
-          "kind": "VariableDeclaration"
+          "kind": "function"
         }
       ]
     },
@@ -668,19 +669,19 @@
       "declarations": [
         {
           "name": "RealmId",
-          "kind": "VariableDeclaration"
+          "kind": "variable"
         },
         {
           "name": "create_realm_id",
-          "kind": "VariableDeclaration"
+          "kind": "function"
         },
         {
           "name": "RealmName",
-          "kind": "VariableDeclaration"
+          "kind": "variable"
         },
         {
           "name": "RealmData",
-          "kind": "VariableDeclaration"
+          "kind": "variable"
         }
       ]
     },
@@ -717,11 +718,11 @@
       "declarations": [
         {
           "name": "Emoji",
-          "kind": "VariableDeclaration"
+          "kind": "variable"
         },
         {
           "name": "emojis",
-          "kind": "VariableDeclaration"
+          "kind": "variable"
         }
       ]
     },
@@ -730,7 +731,7 @@
       "declarations": [
         {
           "name": "to_next_name",
-          "kind": "VariableDeclaration"
+          "kind": "function"
         }
       ]
     },
@@ -739,75 +740,75 @@
       "declarations": [
         {
           "name": "Frequency",
-          "kind": "TypeAliasDeclaration"
+          "kind": "type"
         },
         {
           "name": "Milliseconds",
-          "kind": "TypeAliasDeclaration"
+          "kind": "type"
         },
         {
           "name": "Volume",
-          "kind": "VariableDeclaration"
+          "kind": "variable"
         },
         {
           "name": "DEFAULT_VOLUME",
-          "kind": "VariableDeclaration"
+          "kind": "variable"
         },
         {
           "name": "DEFAULT_VOLUME_INCREMENT",
-          "kind": "VariableDeclaration"
+          "kind": "variable"
         },
         {
           "name": "DEFAULT_VELOCITY",
-          "kind": "VariableDeclaration"
+          "kind": "variable"
         },
         {
           "name": "with_velocity",
-          "kind": "VariableDeclaration"
+          "kind": "function"
         },
         {
           "name": "get_volume",
-          "kind": "VariableDeclaration"
+          "kind": "function"
         },
         {
           "name": "set_volume",
-          "kind": "VariableDeclaration"
+          "kind": "function"
         },
         {
           "name": "adjust_volume",
-          "kind": "VariableDeclaration"
+          "kind": "function"
         },
         {
           "name": "VOLUME_TO_GAIN_EXPONENT",
-          "kind": "VariableDeclaration"
+          "kind": "variable"
         },
         {
           "name": "volume_to_gain",
-          "kind": "VariableDeclaration"
+          "kind": "function"
         },
         {
           "name": "SMOOTH_GAIN_TIME_CONSTANT",
-          "kind": "VariableDeclaration"
+          "kind": "variable"
         },
         {
           "name": "Instrument",
-          "kind": "VariableDeclaration"
+          "kind": "variable"
         },
         {
           "name": "instruments",
-          "kind": "VariableDeclaration"
+          "kind": "variable"
         },
         {
           "name": "DEFAULT_INSTRUMENT",
-          "kind": "VariableDeclaration"
+          "kind": "variable"
         },
         {
           "name": "get_instrument",
-          "kind": "VariableDeclaration"
+          "kind": "function"
         },
         {
           "name": "set_instrument",
-          "kind": "VariableDeclaration"
+          "kind": "function"
         }
       ]
     },
@@ -816,7 +817,7 @@
       "declarations": [
         {
           "name": "to_random_id",
-          "kind": "VariableDeclaration"
+          "kind": "function"
         }
       ]
     },
@@ -837,11 +838,11 @@
       "declarations": [
         {
           "name": "midi_access",
-          "kind": "VariableDeclaration"
+          "kind": "variable"
         },
         {
           "name": "request_access",
-          "kind": "VariableDeclaration"
+          "kind": "function"
         }
       ]
     },
@@ -850,15 +851,15 @@
       "declarations": [
         {
           "name": "MidiMessage",
-          "kind": "TypeAliasDeclaration"
+          "kind": "type"
         },
         {
           "name": "parse_midi_message",
-          "kind": "VariableDeclaration"
+          "kind": "function"
         },
         {
           "name": "request_midi_access",
-          "kind": "VariableDeclaration"
+          "kind": "function"
         }
       ]
     },
@@ -875,219 +876,219 @@
       "declarations": [
         {
           "name": "DEFAULT_TUNING",
-          "kind": "VariableDeclaration"
+          "kind": "variable"
         },
         {
           "name": "NOTE_FLAT_SYMBOL",
-          "kind": "VariableDeclaration"
+          "kind": "variable"
         },
         {
           "name": "NOTE_SHARP_SYMBOL",
-          "kind": "VariableDeclaration"
+          "kind": "variable"
         },
         {
           "name": "NoteName",
-          "kind": "TypeAliasDeclaration"
+          "kind": "type"
         },
         {
           "name": "chromas",
-          "kind": "VariableDeclaration"
+          "kind": "variable"
         },
         {
           "name": "Chroma",
-          "kind": "TypeAliasDeclaration"
+          "kind": "type"
         },
         {
           "name": "Octave",
-          "kind": "TypeAliasDeclaration"
+          "kind": "type"
         },
         {
           "name": "Semitones",
-          "kind": "VariableDeclaration"
+          "kind": "variable"
         },
         {
           "name": "Intervals",
-          "kind": "VariableDeclaration"
+          "kind": "variable"
         },
         {
           "name": "serialize_intervals",
-          "kind": "VariableDeclaration"
+          "kind": "function"
         },
         {
           "name": "parse_intervals",
-          "kind": "VariableDeclaration"
+          "kind": "function"
         },
         {
           "name": "compute_naturals",
-          "kind": "VariableDeclaration"
+          "kind": "function"
         },
         {
           "name": "transpose",
-          "kind": "VariableDeclaration"
+          "kind": "function"
         },
         {
           "name": "chroma_to_hue",
-          "kind": "VariableDeclaration"
+          "kind": "variable"
         },
         {
           "name": "chroma_to_hsl",
-          "kind": "VariableDeclaration"
+          "kind": "variable"
         },
         {
           "name": "chroma_to_hsl_string",
-          "kind": "VariableDeclaration"
+          "kind": "variable"
         },
         {
           "name": "interval_short_names",
-          "kind": "VariableDeclaration"
+          "kind": "variable"
         },
         {
           "name": "IntervalShortNames",
-          "kind": "TypeAliasDeclaration"
+          "kind": "type"
         },
         {
           "name": "interval_names",
-          "kind": "VariableDeclaration"
+          "kind": "variable"
         },
         {
           "name": "IntervalNames",
-          "kind": "TypeAliasDeclaration"
+          "kind": "type"
         },
         {
           "name": "get_enabled_notes",
-          "kind": "VariableDeclaration"
+          "kind": "function"
         },
         {
           "name": "set_enabled_notes",
-          "kind": "VariableDeclaration"
+          "kind": "function"
         },
         {
           "name": "ScaleName",
-          "kind": "VariableDeclaration"
+          "kind": "variable"
         },
         {
           "name": "Scale",
-          "kind": "VariableDeclaration"
+          "kind": "variable"
         },
         {
           "name": "scales",
-          "kind": "VariableDeclaration"
+          "kind": "variable"
         },
         {
           "name": "DEFAULT_SCALE",
-          "kind": "VariableDeclaration"
+          "kind": "variable"
         },
         {
           "name": "scale_by_name",
-          "kind": "VariableDeclaration"
+          "kind": "variable"
         },
         {
           "name": "lookup_scale",
-          "kind": "VariableDeclaration"
+          "kind": "function"
         },
         {
           "name": "to_scale_notes",
-          "kind": "VariableDeclaration"
+          "kind": "function"
         },
         {
           "name": "get_scale",
-          "kind": "VariableDeclaration"
+          "kind": "function"
         },
         {
           "name": "set_scale",
-          "kind": "VariableDeclaration"
+          "kind": "function"
         },
         {
           "name": "PitchClass",
-          "kind": "VariableDeclaration"
+          "kind": "variable"
         },
         {
           "name": "pitch_classes",
-          "kind": "VariableDeclaration"
+          "kind": "variable"
         },
         {
           "name": "DEFAULT_PITCH_CLASS",
-          "kind": "VariableDeclaration"
+          "kind": "variable"
         },
         {
           "name": "pitch_class_aliases",
-          "kind": "VariableDeclaration"
+          "kind": "variable"
         },
         {
           "name": "get_key",
-          "kind": "VariableDeclaration"
+          "kind": "function"
         },
         {
           "name": "set_key",
-          "kind": "VariableDeclaration"
+          "kind": "function"
         },
         {
           "name": "to_notes_in_scale",
-          "kind": "VariableDeclaration"
+          "kind": "function"
         },
         {
           "name": "Midi",
-          "kind": "VariableDeclaration"
+          "kind": "variable"
         },
         {
           "name": "MIDI_MIN",
-          "kind": "VariableDeclaration"
+          "kind": "variable"
         },
         {
           "name": "MIDI_MAX",
-          "kind": "VariableDeclaration"
+          "kind": "variable"
         },
         {
           "name": "midis",
-          "kind": "VariableDeclaration"
+          "kind": "variable"
         },
         {
           "name": "is_midi",
-          "kind": "VariableDeclaration"
+          "kind": "function"
         },
         {
           "name": "midi_to_freq",
-          "kind": "VariableDeclaration"
+          "kind": "function"
         },
         {
           "name": "freq_to_midi",
-          "kind": "VariableDeclaration"
+          "kind": "function"
         },
         {
           "name": "freq_to_midi_safe",
-          "kind": "VariableDeclaration"
+          "kind": "function"
         },
         {
           "name": "midi_chromas",
-          "kind": "VariableDeclaration"
+          "kind": "variable"
         },
         {
           "name": "midi_pitch_classes",
-          "kind": "VariableDeclaration"
+          "kind": "variable"
         },
         {
           "name": "midi_octaves",
-          "kind": "VariableDeclaration"
+          "kind": "variable"
         },
         {
           "name": "midi_names",
-          "kind": "VariableDeclaration"
+          "kind": "variable"
         },
         {
           "name": "midi_naturals",
-          "kind": "VariableDeclaration"
+          "kind": "variable"
         },
         {
           "name": "Notes",
-          "kind": "VariableDeclaration"
+          "kind": "variable"
         },
         {
           "name": "serialize_notes",
-          "kind": "VariableDeclaration"
+          "kind": "function"
         },
         {
           "name": "parse_notes",
-          "kind": "VariableDeclaration"
+          "kind": "function"
         }
       ]
     },
@@ -1104,15 +1105,15 @@
       "declarations": [
         {
           "name": "Piano",
-          "kind": "InterfaceDeclaration"
+          "kind": "type"
         },
         {
           "name": "PianoKey",
-          "kind": "InterfaceDeclaration"
+          "kind": "type"
         },
         {
           "name": "compute_piano",
-          "kind": "VariableDeclaration"
+          "kind": "function"
         }
       ]
     },
@@ -1125,27 +1126,27 @@
       "declarations": [
         {
           "name": "play_note",
-          "kind": "VariableDeclaration"
+          "kind": "function"
         },
         {
           "name": "StopPlaying",
-          "kind": "InterfaceDeclaration"
+          "kind": "type"
         },
         {
           "name": "playing_notes",
-          "kind": "VariableDeclaration"
+          "kind": "variable"
         },
         {
           "name": "start_playing_note",
-          "kind": "VariableDeclaration"
+          "kind": "function"
         },
         {
           "name": "start_playing",
-          "kind": "VariableDeclaration"
+          "kind": "function"
         },
         {
           "name": "stop_playing",
-          "kind": "VariableDeclaration"
+          "kind": "function"
         }
       ]
     },
@@ -1154,7 +1155,7 @@
       "declarations": [
         {
           "name": "default",
-          "kind": "VariableDeclaration"
+          "kind": "function"
         }
       ]
     },
@@ -1167,11 +1168,11 @@
       "declarations": [
         {
           "name": "load_from_storage",
-          "kind": "VariableDeclaration"
+          "kind": "function"
         },
         {
           "name": "set_in_storage",
-          "kind": "VariableDeclaration"
+          "kind": "function"
         }
       ]
     },
@@ -1188,11 +1189,11 @@
       "declarations": [
         {
           "name": "parse_from_hash",
-          "kind": "VariableDeclaration"
+          "kind": "function"
         },
         {
           "name": "serialize_to_hash",
-          "kind": "VariableDeclaration"
+          "kind": "function"
         }
       ]
     },
@@ -1205,79 +1206,79 @@
       "declarations": [
         {
           "name": "requestMIDIAccess",
-          "kind": "InterfaceDeclaration"
+          "kind": "type"
         },
         {
           "name": "MIDIOptions",
-          "kind": "InterfaceDeclaration"
+          "kind": "type"
         },
         {
           "name": "MIDIAccess",
-          "kind": "InterfaceDeclaration"
+          "kind": "type"
         },
         {
           "name": "MIDIInputMap",
-          "kind": "TypeAliasDeclaration"
+          "kind": "type"
         },
         {
           "name": "MIDIInput",
-          "kind": "InterfaceDeclaration"
+          "kind": "type"
         },
         {
           "name": "MIDIOutputMap",
-          "kind": "TypeAliasDeclaration"
+          "kind": "type"
         },
         {
           "name": "MIDIOutput",
-          "kind": "InterfaceDeclaration"
+          "kind": "type"
         },
         {
           "name": "MIDIPort",
-          "kind": "InterfaceDeclaration"
+          "kind": "type"
         },
         {
           "name": "MIDIPortID",
-          "kind": "TypeAliasDeclaration"
+          "kind": "type"
         },
         {
           "name": "MIDIPortType",
-          "kind": "TypeAliasDeclaration"
+          "kind": "type"
         },
         {
           "name": "MIDIPortDeviceState",
-          "kind": "TypeAliasDeclaration"
+          "kind": "type"
         },
         {
           "name": "MIDIPortConnectionState",
-          "kind": "TypeAliasDeclaration"
+          "kind": "type"
         },
         {
           "name": "MIDIMessageEvent",
-          "kind": "InterfaceDeclaration"
+          "kind": "type"
         },
         {
           "name": "MIDIMessageEventInit",
-          "kind": "InterfaceDeclaration"
+          "kind": "type"
         },
         {
           "name": "MIDIMessageData",
-          "kind": "TypeAliasDeclaration"
+          "kind": "type"
         },
         {
           "name": "MIDIConnectionEvent",
-          "kind": "InterfaceDeclaration"
+          "kind": "type"
         },
         {
           "name": "MIDIConnectionEventInit",
-          "kind": "InterfaceDeclaration"
+          "kind": "type"
         },
         {
           "name": "MIDICommand",
-          "kind": "EnumDeclaration"
+          "kind": null
         },
         {
           "name": "MIDIChannel",
-          "kind": "TypeAliasDeclaration"
+          "kind": "type"
         }
       ]
     }
