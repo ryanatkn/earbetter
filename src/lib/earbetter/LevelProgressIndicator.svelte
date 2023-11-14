@@ -9,10 +9,10 @@
 		return s === 'complete'
 			? 'var(--lighten_5)'
 			: ts[index] // trials are created when needed, not ahead of time
-			? t && index === t.index
-				? 'var(--lighten_4)'
-				: 'var(--lighten_2)'
-			: 'transparent';
+			  ? t && index === t.index
+					? 'var(--lighten_4)'
+					: 'var(--lighten_2)'
+			  : 'transparent';
 	};
 
 	$: percent_complete =
