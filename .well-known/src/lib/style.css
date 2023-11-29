@@ -1,5 +1,5 @@
-/* TODO copypasted from dealt, most of this can be deleted when felt-ui supports dark mode */
-:root.dark {
+/* TODO a lot of this can be deleted or cleaned up */
+:root:root:root.dark {
 	/* TODO force dark mode and remove these when Felt supports it */
 	--bg: hsl(var(--primary_hue), 63%, 11%);
 	--text_color: hsl(var(--primary_hue), 8%, 85%);
