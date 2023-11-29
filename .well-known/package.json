@@ -40,7 +40,7 @@
     "@feltjs/eslint-config": "^0.4.1",
     "@fuz.dev/fuz": "^0.81.0",
     "@fuz.dev/fuz_dialog": "^0.5.0",
-    "@fuz.dev/fuz_library": "^0.22.1",
+    "@fuz.dev/fuz_library": "^0.23.0",
     "@grogarden/gro": "^0.103.0",
     "@grogarden/util": "^0.17.0",
     "@preact/signals-core": "^1.5.0",
