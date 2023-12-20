@@ -12,7 +12,7 @@ export const request_access = (): Promise<MIDIAccess | null> =>
 	midi_access.peek()
 		? Promise.resolve(midi_access.peek())
 		: requesting ||
-		  (requesting = request_midi_access().then(
+			(requesting = request_midi_access().then(
 				(value) => {
 					console.log('request_access midi_access', value);
 					midi_access.value = value;
@@ -22,4 +22,4 @@ export const request_access = (): Promise<MIDIAccess | null> =>
 					console.error('request_access failed', err);
 					return null;
 				},
-		  ));
+			));

@@ -92,27 +92,27 @@
 				dispatch('press', midi);
 				pressing = true;
 				e.currentTarget.focus();
-		  }
+			}
 		: undefined}
 	on:mouseup={clickable_and_enabled
 		? (e) => {
 				swallow(e);
 				dispatch('release', midi);
 				pressing = false;
-		  }
+			}
 		: undefined}
 	on:mouseenter={clickable_and_enabled && pressing
 		? (e) => {
 				swallow(e);
 				dispatch('press', midi);
 				e.currentTarget.focus();
-		  }
+			}
 		: undefined}
 	on:mouseleave={clickable_and_enabled
 		? (e) => {
 				swallow(e);
 				dispatch('release', midi);
-		  }
+			}
 		: undefined}
 	aria-label="piano key for midi {midi}"
 	data-note={midi}

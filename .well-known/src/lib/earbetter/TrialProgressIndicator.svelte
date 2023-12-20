@@ -17,23 +17,23 @@
 		s === 'showing_failure_feedback'
 			? 'transparent'
 			: s === 'complete' || s === 'showing_success_feedback'
-			  ? 'var(--lighten_4)'
-			  : index === current_index
-			    ? 'var(--lighten_3)'
-			    : current_index !== null && index < current_index
-			      ? 'var(--lighten_2)'
-			      : 'transparent';
+				? 'var(--lighten_4)'
+				: index === current_index
+					? 'var(--lighten_3)'
+					: current_index !== null && index < current_index
+						? 'var(--lighten_2)'
+						: 'transparent';
 
 	$: percent_complete =
 		$status === 'initial' || $status === 'showing_failure_feedback'
 			? 0
 			: $status === 'complete' || $status === 'showing_success_feedback'
-			  ? 1
-			  : $trial?.presenting_index != null
-			    ? ($trial.presenting_index + 0.5) / $trial.sequence.length
-			    : $trial?.guessing_index != null
-			      ? ($trial.guessing_index + 0.5) / $trial.sequence.length
-			      : 0;
+				? 1
+				: $trial?.presenting_index != null
+					? ($trial.presenting_index + 0.5) / $trial.sequence.length
+					: $trial?.guessing_index != null
+						? ($trial.guessing_index + 0.5) / $trial.sequence.length
+						: 0;
 </script>
 
 {#if $trial}
