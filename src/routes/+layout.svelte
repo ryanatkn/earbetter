@@ -1,17 +1,17 @@
 <script lang="ts">
-	import '@fuz.dev/fuz/style.css';
-	import '@fuz.dev/fuz/theme.css';
+	import '@ryanatkn/fuz/style.css';
+	import '@ryanatkn/fuz/theme.css';
 	import '$lib/style.css';
 
-	import Themed from '@fuz.dev/fuz/Themed.svelte';
+	import Themed from '@ryanatkn/fuz/Themed.svelte';
 	import {base} from '$app/paths';
-	import {is_editable, swallow} from '@grogarden/util/dom.js';
-	import Dialog from '@fuz.dev/fuz_dialog/Dialog.svelte';
+	import {is_editable, swallow} from '@ryanatkn/belt/dom.js';
+	import Dialog from '@ryanatkn/fuz/Dialog.svelte';
 	import {slide} from 'svelte/transition';
 	import {browser} from '$app/environment';
 	import {computed, effect, signal} from '@preact/signals-core';
 	import {afterNavigate} from '$app/navigation';
-	import {sync_color_scheme} from '@fuz.dev/fuz/theme.js';
+	import {sync_color_scheme} from '@ryanatkn/fuz/theme.js';
 	import {writable} from 'svelte/store';
 
 	const selected_color_scheme = writable('dark' as const);

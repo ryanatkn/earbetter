@@ -1,6 +1,6 @@
 <script lang="ts">
-	import {random_int, random_item, random_float} from '@grogarden/util/random.js';
-	import {GR_2} from '@grogarden/util/maths.js';
+	import {random_int, random_item, random_float} from '@ryanatkn/belt/random.js';
+	import {GR_2} from '@ryanatkn/belt/maths.js';
 	import {onMount} from 'svelte';
 
 	export let count: number;
