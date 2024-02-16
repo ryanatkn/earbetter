@@ -1,8 +1,8 @@
 <script lang="ts">
 	import {createEventDispatcher} from 'svelte';
 	import {slide} from 'svelte/transition';
-	import Dialog from '@fuz.dev/fuz_dialog/Dialog.svelte';
-	import Alert from '@fuz.dev/fuz_library/Alert.svelte';
+	import Dialog from '@ryanatkn/fuz/Dialog.svelte';
+	import Alert from '@ryanatkn/fuz/Alert.svelte';
 
 	import {
 		create_level_id,

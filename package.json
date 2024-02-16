@@ -37,13 +37,11 @@
   },
   "devDependencies": {
     "@changesets/changelog-git": "^0.2.0",
-    "@feltjs/eslint-config": "^0.4.1",
-    "@fuz.dev/fuz": "^0.81.0",
-    "@fuz.dev/fuz_dialog": "^0.6.0",
-    "@fuz.dev/fuz_library": "^0.23.0",
-    "@grogarden/gro": "^0.107.1",
-    "@grogarden/util": "^0.18.1",
     "@preact/signals-core": "^1.5.1",
+    "@ryanatkn/belt": "^0.20.3",
+    "@ryanatkn/eslint-config": "^0.1.0",
+    "@ryanatkn/fuz": "^0.83.0",
+    "@ryanatkn/gro": "^0.112.0",
     "@sveltejs/adapter-static": "^3.0.1",
     "@sveltejs/kit": "^2.0.4",
     "@sveltejs/vite-plugin-svelte": "^3.0.1",
@@ -61,7 +59,7 @@
   },
   "eslintConfig": {
     "root": true,
-    "extends": "@feltjs"
+    "extends": "@ryanatkn"
   },
   "prettier": {
     "plugins": [

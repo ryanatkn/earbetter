@@ -1,9 +1,9 @@
 <script lang="ts">
 	import {createEventDispatcher} from 'svelte';
 	import {slide} from 'svelte/transition';
-	import {swallow} from '@grogarden/util/dom.js';
-	import Dialog from '@fuz.dev/fuz_dialog/Dialog.svelte';
-	import Alert from '@fuz.dev/fuz_library/Alert.svelte';
+	import {swallow} from '@ryanatkn/belt/dom.js';
+	import Dialog from '@ryanatkn/fuz/Dialog.svelte';
+	import Alert from '@ryanatkn/fuz/Alert.svelte';
 
 	import {create_realm_id, RealmData, type RealmId} from '$lib/earbetter/realm';
 	import default_project_data from '$lib/projects/default_project';
