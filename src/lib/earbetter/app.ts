@@ -9,7 +9,7 @@ import {
 	batch,
 } from '@preact/signals-core';
 import {getContext, setContext} from 'svelte';
-import {Logger} from '@feltjs/util/log.js';
+import {Logger} from '@ryanatkn/belt/log.js';
 
 import {
 	add_mistakes_to_level_stats,
@@ -19,10 +19,10 @@ import {
 	type LevelId,
 } from '$lib/earbetter/level';
 import {ProjectData, ProjectId, ProjectName} from '$lib/earbetter/project';
-import {load_from_storage, set_in_storage} from '$lib/util/storage';
+import {load_from_storage, set_in_storage} from '$lib/storage';
 import {RealmId, RealmData} from '$lib/earbetter/realm';
 import default_project_data from '$lib/projects/default_project';
-import {to_next_name} from '$lib/util/entity';
+import {to_next_name} from '$lib/entity';
 
 const log = new Logger('[app]');
 
@@ -103,7 +103,10 @@ export class App {
 	editing_level: Signal<boolean> = signal(false);
 	draft_level_data: Signal<LevelData | null> = signal(null);
 
-	constructor(public readonly get_ac: () => AudioContext, public readonly storage_key = 'app') {
+	constructor(
+		public readonly get_ac: () => AudioContext,
+		public readonly storage_key = 'app',
+	) {
 		// TODO maybe `new App(App.load())` ?
 		this.app_data = signal(this.load());
 		const app_data = this.app_data.peek();

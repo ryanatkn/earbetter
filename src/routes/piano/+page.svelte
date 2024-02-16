@@ -2,26 +2,26 @@
 	import {z} from 'zod';
 	import {effect, signal} from '@preact/signals-core';
 
-	import Piano from '$lib/music/Piano.svelte';
-	import {get_ac} from '$lib/audio/ac';
-	import {midi_access} from '$lib/audio/midi_access';
-	import MidiInput from '$lib/audio/MidiInput.svelte';
-	import {playing_notes, start_playing, stop_playing} from '$lib/audio/play_note';
-	import InitMidiButton from '$lib/audio/InitMidiButton.svelte';
-	import VolumeControl from '$lib/audio/VolumeControl.svelte';
+	import Piano from '$lib/Piano.svelte';
+	import {get_ac} from '$lib/ac';
+	import {midi_access} from '$lib/midi_access';
+	import MidiInput from '$lib/MidiInput.svelte';
+	import {playing_notes, start_playing, stop_playing} from '$lib/play_note';
+	import InitMidiButton from '$lib/InitMidiButton.svelte';
+	import VolumeControl from '$lib/VolumeControl.svelte';
 	import Header from '$routes/Header.svelte';
 	import Footer from '$routes/Footer.svelte';
-	import {get_instrument, get_volume, with_velocity} from '$lib/audio/helpers';
-	import InstrumentControl from '$lib/audio/InstrumentControl.svelte';
-	import MidiRangeControl from '$lib/audio/MidiRangeControl.svelte';
-	import {get_scale, get_key, get_enabled_notes, Midi} from '$lib/music/music';
-	import SelectNotesControl from '$lib/music/SelectNotesControl.svelte';
-	import {load_from_storage, set_in_storage} from '$lib/util/storage';
+	import {get_instrument, get_volume, with_velocity} from '$lib/helpers';
+	import InstrumentControl from '$lib/InstrumentControl.svelte';
+	import MidiRangeControl from '$lib/MidiRangeControl.svelte';
+	import {get_scale, get_key, get_enabled_notes, Midi} from '$lib/music';
+	import SelectNotesControl from '$lib/SelectNotesControl.svelte';
+	import {load_from_storage, set_in_storage} from '$lib/storage';
 
 	// TODO extract? is pretty specific
 	const PianoSettings = z.object({
-		note_min: Midi.default(36),
-		note_max: Midi.default(96),
+		min_note: Midi.default(36),
+		max_note: Midi.default(96),
 	});
 	type PianoSettings = z.infer<typeof PianoSettings>;
 	const SITE_DATA_STORAGE_KEY = 'piano';
@@ -31,12 +31,12 @@
 		PianoSettings.parse,
 	);
 
-	const note_min = signal(initial_piano_settings.note_min);
-	const note_max = signal(initial_piano_settings.note_max);
+	const min_note = signal(initial_piano_settings.min_note);
+	const max_note = signal(initial_piano_settings.max_note);
 
 	const to_piano_data = (): PianoSettings => ({
-		note_min: note_min.value,
-		note_max: note_max.value,
+		min_note: min_note.value,
+		max_note: max_note.value,
 	});
 	const save_piano_data = () => set_in_storage(SITE_DATA_STORAGE_KEY, to_piano_data());
 	effect(save_piano_data);
@@ -76,8 +76,8 @@
 		{#if clientWidth}
 			<Piano
 				width={clientWidth - piano_padding * 2}
-				note_min={$note_min}
-				note_max={$note_max}
+				min_note={$min_note}
+				max_note={$max_note}
 				{pressed_keys}
 				enabled_notes={$enabled_notes}
 				on:press={(e) => play(e.detail)}
@@ -85,7 +85,7 @@
 			/>
 		{/if}
 	</div>
-	<form class="column-sm markup panel padded-md">
+	<form class="width_sm prose panel padded_md">
 		<fieldset>
 			<InstrumentControl {instrument} />
 			<div class="row">
@@ -97,7 +97,7 @@
 			<InitMidiButton />
 		</fieldset>
 		<fieldset class="row">
-			<MidiRangeControl {note_min} {note_max} />
+			<MidiRangeControl {min_note} {max_note} />
 		</fieldset>
 	</form>
 	<Footer />

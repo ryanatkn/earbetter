@@ -1,20 +1,20 @@
 <script lang="ts">
-	import type {AsyncStatus} from '@feltjs/util';
+	import type {Async_Status} from '@ryanatkn/belt/async.js';
 	import {fade} from 'svelte/transition';
 	import type {Signal} from '@preact/signals-core';
 
-	import type {MIDIAccess} from '$lib/audio/WebMIDI';
+	import type {MIDIAccess} from '$lib/WebMIDI';
 	import {
 		midi_access as default_midi_access,
 		request_access as default_request_access,
-	} from '$lib/audio/midi_access';
+	} from '$lib/midi_access';
 
 	export let midi_access: Signal<MIDIAccess | null> = default_midi_access;
 	export const request_access: () => Promise<MIDIAccess | null> = default_request_access;
 
 	// TODO move MIDI initialization to some other action, like the button to start a level
 
-	let request_status: AsyncStatus = 'initial';
+	let request_status: Async_Status = 'initial';
 
 	$: disabled = !!$midi_access || request_status === 'pending';
 

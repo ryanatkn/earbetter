@@ -13,7 +13,7 @@
 		? mistakes.reduce((sum, v) => sum + v.reduce((sum2, v2) => sum2 + v2, 0), 0)
 		: undefined;
 	$: perfect = sum === 0;
-	$: console.log(`mistakes, length, target, sum, perfect`, mistakes, length, target, sum, perfect);
+	// $: console.log(`mistakes, length, target, sum, perfect`, mistakes, length, target, sum, perfect);
 </script>
 
 {#if perfect}

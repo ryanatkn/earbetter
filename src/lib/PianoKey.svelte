@@ -1,8 +1,9 @@
 <script lang="ts">
 	import {createEventDispatcher} from 'svelte';
-	import {swallow} from '@feltjs/util/dom.js';
+	import {swallow} from '@ryanatkn/belt/dom.js';
 
-	import {type Midi, midi_naturals} from '$lib/music/music';
+	import {type Midi, midi_naturals} from '$lib/music';
+	import {find_next_sibling, find_previous_sibling} from '$lib/dom';
 
 	const dispatch = createEventDispatcher<{press: Midi; release: Midi}>();
 
@@ -11,6 +12,7 @@
 	export let clickable = true;
 	export let enabled = true;
 	export let pressed = false;
+	export let pressing = false; // piano-wide state to enable dragging with the pointer
 	export let highlighted = false;
 	export let emphasized = false;
 	export let show_middle_c = true;
@@ -19,38 +21,12 @@
 	$: accidental = !natural;
 	$: middle_c = midi === 60;
 
-	export const query_previous_sibling = <T extends ChildNode>(
-		node: ChildNode,
-		matches: (n: ChildNode) => boolean,
-	): T | null => {
-		let s: ChildNode | null | undefined = node.previousSibling;
-		while (s) {
-			if (matches(s)) return s as T;
-			s = s.previousSibling;
-		}
-		return null;
-	};
-	export const query_next_sibling = <T extends ChildNode>(
-		node: ChildNode,
-		matches: (n: ChildNode) => boolean,
-	): T | null => {
-		let s: ChildNode | null | undefined = node.nextSibling;
-		while (s) {
-			if (matches(s)) return s as T;
-			s = s.nextSibling;
-		}
-		return null;
-	};
-
 	const focus_previous_button = (node: ChildNode): void => {
-		const s = query_previous_sibling<HTMLButtonElement>(
-			node,
-			(n) => n instanceof HTMLButtonElement,
-		);
+		const s = find_previous_sibling<HTMLButtonElement>(node, (n) => n instanceof HTMLButtonElement);
 		s?.focus();
 	};
 	const focus_next_button = (node: ChildNode): void => {
-		const s = query_next_sibling<HTMLButtonElement>(node, (n) => n instanceof HTMLButtonElement);
+		const s = find_next_sibling<HTMLButtonElement>(node, (n) => n instanceof HTMLButtonElement);
 		s?.focus();
 	};
 
@@ -93,6 +69,8 @@
 			}
 		}
 	};
+
+	$: clickable_and_enabled = clickable && enabled;
 </script>
 
 <button
@@ -101,30 +79,40 @@
 	class:natural
 	class:accidental
 	class:disabled={!enabled}
-	class:clickable={clickable && enabled}
+	class:clickable={clickable_and_enabled}
 	class:active={pressed}
 	class:highlighted
 	class:emphasized
-	on:keydown={enabled ? keydown : undefined}
-	on:keyup={enabled ? keyup : undefined}
-	on:mousedown={enabled
+	tabindex={clickable_and_enabled ? undefined : -1}
+	on:keydown={clickable_and_enabled ? keydown : undefined}
+	on:keyup={clickable_and_enabled ? keyup : undefined}
+	on:mousedown={clickable_and_enabled
+		? (e) => {
+				swallow(e);
+				dispatch('press', midi);
+				pressing = true;
+				e.currentTarget.focus();
+			}
+		: undefined}
+	on:mouseup={clickable_and_enabled
+		? (e) => {
+				swallow(e);
+				dispatch('release', midi);
+				pressing = false;
+			}
+		: undefined}
+	on:mouseenter={clickable_and_enabled && pressing
 		? (e) => {
 				swallow(e);
 				dispatch('press', midi);
 				e.currentTarget.focus();
-		  }
+			}
 		: undefined}
-	on:mouseup={enabled
+	on:mouseleave={clickable_and_enabled
 		? (e) => {
 				swallow(e);
 				dispatch('release', midi);
-		  }
-		: undefined}
-	on:mouseleave={enabled
-		? (e) => {
-				swallow(e);
-				dispatch('release', midi);
-		  }
+			}
 		: undefined}
 	aria-label="piano key for midi {midi}"
 	data-note={midi}
@@ -153,6 +141,7 @@
 		padding: 0;
 		min-height: 0;
 		z-index: var(--z_index_offset);
+		cursor: default;
 	}
 
 	.piano-key:focus {
@@ -169,6 +158,7 @@
 
 	.clickable {
 		transform-origin: top center;
+		cursor: pointer;
 	}
 	.clickable:hover {
 		background-color: var(--primary_color, #00bb00);

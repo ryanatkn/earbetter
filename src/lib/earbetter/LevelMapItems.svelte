@@ -16,6 +16,8 @@
 
 	const click_create_new = () => {
 		if (no_levels) {
+			// eslint bug
+			// eslint-disable-next-line @typescript-eslint/no-unnecessary-type-assertion
 			(document.querySelector('.level-def-form input') as HTMLInputElement | null)?.focus?.();
 		} else {
 			edit_level(editing_draft ? null : LevelData.parse({}));
@@ -23,10 +25,11 @@
 	};
 </script>
 
-<div class="panel padded-md">
-	<div class="markup">
+<div class="panel padded_md">
+	<div class="prose">
 		<header>
-			<h2>{$selected_realm_data?.name}</h2>
+			<h2>levels</h2>
+			<h3>{$selected_realm_data?.name}</h3>
 		</header>
 	</div>
 	<menu class="levels">

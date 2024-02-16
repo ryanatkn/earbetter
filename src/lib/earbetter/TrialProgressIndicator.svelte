@@ -17,23 +17,23 @@
 		s === 'showing_failure_feedback'
 			? 'transparent'
 			: s === 'complete' || s === 'showing_success_feedback'
-			? 'var(--tint_light_4)'
-			: index === current_index
-			? 'var(--tint_light_3)'
-			: current_index !== null && index < current_index
-			? 'var(--tint_light_2)'
-			: 'transparent';
+				? 'var(--lighten_4)'
+				: index === current_index
+					? 'var(--lighten_3)'
+					: current_index !== null && index < current_index
+						? 'var(--lighten_2)'
+						: 'transparent';
 
 	$: percent_complete =
 		$status === 'initial' || $status === 'showing_failure_feedback'
 			? 0
 			: $status === 'complete' || $status === 'showing_success_feedback'
-			? 1
-			: $trial?.presenting_index != null
-			? ($trial.presenting_index + 0.5) / $trial.sequence.length
-			: $trial?.guessing_index != null
-			? ($trial.guessing_index + 0.5) / $trial.sequence.length
-			: 0;
+				? 1
+				: $trial?.presenting_index != null
+					? ($trial.presenting_index + 0.5) / $trial.sequence.length
+					: $trial?.guessing_index != null
+						? ($trial.guessing_index + 0.5) / $trial.sequence.length
+						: 0;
 </script>
 
 {#if $trial}
@@ -64,6 +64,6 @@
 	.progress-bar {
 		--progress_bar_duration: var(--duration_2);
 		--progress_bar_height: var(--spacing_xs2);
-		--progress_bar_bg: var(--tint_light_3);
+		--progress_bar_bg: var(--lighten_3);
 	}
 </style>

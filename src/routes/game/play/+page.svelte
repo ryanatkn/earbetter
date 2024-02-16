@@ -7,7 +7,7 @@
 	import Header from '$routes/Header.svelte';
 	import Footer from '$routes/Footer.svelte';
 	import {LevelHashData} from '$lib/earbetter/level';
-	import {parse_from_hash} from '$lib/util/url';
+	import {parse_from_hash} from '$lib/url';
 	import {get_app} from '$lib/earbetter/app';
 
 	const go_back = () => goto(`${base}/game`);
@@ -42,8 +42,10 @@
 		top: 0;
 		right: 0;
 		z-index: 10;
-		font-size: var(--font_size_xl3);
+		font-size: var(--size_3);
 		border-top-right-radius: 0;
 		border-bottom-right-radius: 0;
+		/* TODO same as var(--level_progress_height); */
+		height: 50px;
 	}
 </style>

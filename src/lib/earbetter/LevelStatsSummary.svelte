@@ -1,7 +1,7 @@
 <script lang="ts">
 	import type {LevelData} from '$lib/earbetter/level';
 	import {MISTAKE_HISTORY_LENGTH, type LevelStats} from '$lib/earbetter/level';
-	import {plural} from '@feltjs/util';
+	import {plural} from '@ryanatkn/belt/string.js';
 
 	export let level_data: LevelData;
 	export let level_stats: LevelStats;
@@ -19,10 +19,12 @@
 	title={perfect
 		? `you performed flawlessly in your best ${MISTAKE_HISTORY_LENGTH} runs!`
 		: full_history
-		? `you made a total of ${sum} mistake${plural(sum)} in your best ${MISTAKE_HISTORY_LENGTH} runs`
-		: `you've completed ${length || 'no'} run${plural(length)} of this level, do ${
-				MISTAKE_HISTORY_LENGTH - length
-		  }${length ? ' more' : ''} to get scored`}
+			? `you made a total of ${sum} mistake${plural(
+					sum,
+				)} in your best ${MISTAKE_HISTORY_LENGTH} runs`
+			: `you've completed ${length || 'no'} run${plural(length)} of this level, do ${
+					MISTAKE_HISTORY_LENGTH - length
+				}${length ? ' more' : ''} to get scored`}
 >
 	{#if full_history}
 		{#if perfect}

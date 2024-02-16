@@ -4,7 +4,6 @@
 	import {RealmData} from '$lib/earbetter/realm';
 	import RealmItems from '$lib/earbetter/RealmItems.svelte';
 	import type {App} from '$lib/earbetter/app';
-	import default_project_data from '$lib/projects/default_project';
 
 	export let app: App; // TODO maybe change to be more granular objects?
 
@@ -16,7 +15,6 @@
 		editing_realm_id,
 		editing_realm_data,
 		select_realm,
-		create_realm,
 		edit_realm,
 		remove_realm,
 	} = app);
@@ -28,6 +26,8 @@
 
 	const click_create_new = () => {
 		if (no_realms) {
+			// eslint bug
+			// eslint-disable-next-line @typescript-eslint/no-unnecessary-type-assertion
 			(document.querySelector('.realm-def-form input') as HTMLInputElement | null)?.focus?.();
 		} else if (creating) {
 			editing_realm.value = false;
@@ -37,8 +37,8 @@
 	};
 </script>
 
-<div class="panel padded-md">
-	<div class="markup">
+<div class="panel padded_md">
+	<div class="prose">
 		<header>
 			<h2>realms</h2>
 		</header>
@@ -63,28 +63,11 @@
 	>
 		create a new realm
 	</button>
-	{#if no_realms}
-		<div class="create-default-realms-wrapper" transition:slide|local>
-			<button
-				on:click={() => {
-					for (const realm_data of default_project_data().realms) {
-						create_realm(realm_data);
-					}
-				}}
-			>
-				create default realms
-			</button>
-		</div>
-	{/if}
 </div>
 
 <style>
 	button {
 		width: 100%;
-	}
-	.create-default-realms-wrapper {
-		/* need a wrapper with padding because of the transition */
-		padding-top: var(--spacing_md);
 	}
 	.realm-items-wrapper {
 		padding-bottom: var(--spacing_md);

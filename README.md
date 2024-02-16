@@ -1,31 +1,54 @@
-# Earbetter
+# earbetter
 
-> ear training game and tools for playing and programming music and audio 🎶🦜
+> ear training tools and JS/Svelte library for audio and music 🎶🦜
 > [earbetter.ryanatkn.com](https://earbetter.ryanatkn.com/)
 
 - features [a configurable ear trainer](https://earbetter.ryanatkn.com/game)
-  (first pass at functionality, more to come)
 - also has [a playable piano](https://earbetter.ryanatkn.com/piano)
 - supports MIDI devices like piano keyboards
-- TODO publish to npm as `@ryanatkn/earbetter` with audio/music utils/types and Svelte components
+- published to npm as
+  [`@ryanatkn/earbetter`](https://www.npmjs.com/package/@ryanatkn/earbetter)
+  with utilities, types, and Svelte components for audio and music
+  (see [`package.json`](/package.json))
 
 to help see [contributing.md](contributing.md)
 
 play at [earbetter.ryanatkn.com](https://earbetter.ryanatkn.com/)
 
+## usage
+
+```bash
+npm i -D @ryanatkn/earbetter
+```
+
+```ts
+import Piano from '@ryanatkn/earbetter/Piano.svelte';
+```
+
+Earbetter is made with [Signals](https://github.com/preactjs/signals)
+from [@preactjs](https://github.com/preactjs) as the main store library.
+It works well but I have mixed feelings.
+I haven't used the library again, and I'm not sure if I will.
+[This issue](https://github.com/preactjs/signals/issues/299) is a blocker.
+It does make code concise.
+
+No docs yet, for now see the modules referenced in [`package.json`](/package.json).
+
 ## intro
 
-In 2016 I made a simple ear training game named
-[Ear Sharpener](https://github.com/ryanatkn/ear-sharpener) to scratch an itch,
-and while interesting it wasn't a good training tool.
-The goal of Earbetter is to be a useful ear trainer.
+In 2016 I made a simple ear trainer named
+[Ear Sharpener](https://github.com/ryanatkn/ear-sharpener)
+because I thought ear training was interesting,
+but it wasn't a good training tool.
+The goal of Earbetter is to be a useful and customizable ear trainer.
 I also want it to be fun so it motivates more training, but it's not there yet.
 
-I'm not a musician so I can't possibly design all of the best ear training challenges.
+I'm not a musician and I'm one person so
+I can't possibly make all of the best ear training challenges.
 Knowing this, I designed the software so you can
 create and share custom challenges - the content is all configurable.
 
-Earbetter's core gameplay has "levels" broken up into "trials".
+Earbetter's gameplay has "levels" broken up into "trials".
 Each trial is a sequence of notes that you hear and then play back.
 Your score for the level is the sum of mistakes made in each trial,
 and you'll get a ★ when you reach 0 across four runs of the level.
@@ -75,8 +98,8 @@ gro dev # npm i -g @feltjs/gro
 See [SvelteKit](https://github.com/sveltejs/kit),
 [Vite](https://github.com/vitejs/vite),
 [Svelte](https://github.com/sveltejs/svelte),
-[Gro](https://github.com/feltjs/gro),
-and [felt-ui](https://github.com/feltjs/felt-ui) for more.
+[Fuz](https://github.com/fuz-dev/fuz),
+and [Gro](https://github.com/feltjs/gro) for more.
 
 ## build
 
@@ -109,17 +132,16 @@ customize or delete [src/static/CNAME](/src/static/CNAME).
 
 ## credits 🐢<sub>🐢</sub><sub><sub>🐢</sub></sub>
 
+[TypeScript](https://github.com/microsoft/TypeScript) ∙
 [Svelte](https://github.com/sveltejs/svelte) ∙
 [SvelteKit](https://github.com/sveltejs/kit) ∙
 [Vite](https://github.com/vitejs/vite) ∙
 [esbuild](https://github.com/evanw/esbuild) ∙
+[Fuz](https://github.com/feltjs/felt-ui) ∙
+[Gro](https://github.com/feltjs/gro) ∙
 [uvu](https://github.com/lukeed/uvu) ∙
-[TypeScript](https://github.com/microsoft/TypeScript) ∙
 [ESLint](https://github.com/eslint/eslint) ∙
-[Prettier](https://github.com/prettier/prettier) ∙
-[felt-ui](https://github.com/feltjs/felt-ui) ∙
-[@feltjs/util](https://github.com/feltjs/util) ∙
-[Gro](https://github.com/feltjs/gro)
+[Prettier](https://github.com/prettier/prettier)
 & [more](package.json)
 
 ## license [🐦](https://wikipedia.org/wiki/Free_and_open-source_software)

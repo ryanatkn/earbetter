@@ -18,7 +18,7 @@
 	$: editing = $projects.some((d) => d.id === id);
 </script>
 
-<div class="panel padded-md markup">
+<div class="panel padded_md prose">
 	<ProjectForm
 		{editing}
 		bind:id

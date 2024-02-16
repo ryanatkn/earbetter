@@ -1,16 +1,15 @@
 import {z} from 'zod';
-import type {Flavored} from '@feltjs/util';
-import {identity} from '@feltjs/util/function.js';
+import type {Flavored} from '@ryanatkn/belt/types.js';
 
 import {LevelData} from '$lib/earbetter/level';
-import {to_random_id} from '$lib/util/id';
+import {to_random_id} from '$lib/id';
 
-export type RealmId = Flavored<string, 'RealmId'>;
-export const RealmId = z.string().transform<RealmId>(identity);
+export const RealmId = z.string();
+export type RealmId = Flavored<z.infer<typeof RealmId>, 'RealmId'>;
 export const create_realm_id = (): RealmId => to_random_id();
 
-export type RealmName = Flavored<string, 'RealmName'>;
-export const RealmName = z.string().min(1).max(1000).transform<RealmName>(identity); // TODO better way to do this?
+export const RealmName = z.string().min(1).max(1000);
+export type RealmName = Flavored<z.infer<typeof RealmName>, 'RealmName'>;
 const DEFAULT_REALM_NAME = 'new realm';
 
 export const RealmData = z.object({

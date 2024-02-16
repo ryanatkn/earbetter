@@ -1,8 +1,8 @@
 <script lang="ts">
 	import {onDestroy, onMount} from 'svelte';
-	import {isEditable, swallow} from '@feltjs/util/dom.js';
+	import {is_editable, swallow} from '@ryanatkn/belt/dom.js';
 	import {scale, fly} from 'svelte/transition';
-	import {plural} from '@feltjs/util/string.js';
+	import {plural} from '@ryanatkn/belt/string.js';
 
 	import {
 		create_level,
@@ -11,15 +11,15 @@
 		type Level,
 		type LevelData,
 	} from '$lib/earbetter/level';
-	import Piano from '$lib/music/Piano.svelte';
+	import Piano from '$lib/Piano.svelte';
 	import LevelProgressIndicator from '$lib/earbetter/LevelProgressIndicator.svelte';
 	import TrialProgressIndicator from '$lib/earbetter/TrialProgressIndicator.svelte';
-	import {get_ac} from '$lib/audio/ac';
-	import MidiInput from '$lib/audio/MidiInput.svelte';
-	import type {Midi} from '$lib/music/music';
-	import {playing_notes, start_playing, stop_playing} from '$lib/audio/play_note';
-	import {get_instrument, get_volume, with_velocity} from '$lib/audio/helpers';
-	import {midi_access} from '$lib/audio/midi_access';
+	import {get_ac} from '$lib/ac';
+	import MidiInput from '$lib/MidiInput.svelte';
+	import type {Midi} from '$lib/music';
+	import {playing_notes, start_playing, stop_playing} from '$lib/play_note';
+	import {get_instrument, get_volume, with_velocity} from '$lib/helpers';
+	import {midi_access} from '$lib/midi_access';
 	import LevelStatsSummary from '$lib/earbetter/LevelStatsSummary.svelte';
 	import TextBurst from '$lib/TextBurst.svelte';
 
@@ -105,7 +105,7 @@
 		}
 	};
 	const keydown = (e: KeyboardEvent) => {
-		if (isEditable(e.target)) return;
+		if (is_editable(e.target)) return;
 		switch (e.key) {
 			case 'r': {
 				swallow(e);
@@ -175,16 +175,16 @@
 		{#if clientWidth}
 			<Piano
 				width={clientWidth - piano_padding * 2}
-				note_min={$def.note_min}
-				note_max={$def.note_max}
+				min_note={$def.min_note}
+				max_note={$def.max_note}
 				enabled_notes={$trial?.valid_notes}
 				{pressed_keys}
 				{highlighted_keys}
 				on:press={$status === 'waiting_for_input'
 					? (e) => on_press_key(e.detail)
 					: $status === 'complete'
-					? (e) => start_playing(ac, e.detail, with_velocity($volume, null), $instrument)
-					: undefined}
+						? (e) => start_playing(ac, e.detail, with_velocity($volume, null), $instrument)
+						: undefined}
 				on:release={$status === 'complete' ? (e) => stop_playing(e.detail) : undefined}
 			/>
 		{/if}
@@ -193,24 +193,21 @@
 		{#if complete}
 			<div class="completed-level-feedback">
 				<div class="pane" transition:scale|local>
-					<div class="panel centered padded-md">
-						<div class="centered-hz" in:scale|local={{duration: 3000}}>
+					<div class="panel box padded_md">
+						<div class="box row" in:scale|local={{duration: 3000}}>
 							<div class="completed-header-icon" in:fly|local={{duration: 4000, x: -200}}>🎵</div>
 							<div class="completed-header-icon" in:fly|local={{duration: 4000, x: 200}}>🎶</div>
 						</div>
 						<div
-							class="panel padded-md centered"
+							class="panel padded_md box"
 							in:scale|local={{delay: 250}}
 							style:margin-bottom="var(--spacing_md)"
 						>
-							<div
-								class="panel padded-md centered centered-text"
-								style:margin-bottom="var(--spacing_md)"
-							>
+							<div class="panel padded_md box box-text" style:margin-bottom="var(--spacing_md)">
 								{#if $mistakes === 0}
-									<div style:font-size="var(--font_size_xl3)">flawless run!</div>
+									<div style:font-size="var(--size_3)">flawless run!</div>
 								{:else}
-									<div style:font-size="var(--font_size_xl3)">
+									<div style:font-size="var(--size_3)">
 										{$mistakes}
 									</div>
 									<div>
@@ -218,7 +215,7 @@
 									</div>
 								{/if}
 							</div>
-							<div class="panel padded-md">
+							<div class="panel padded_md">
 								<LevelStatsSummary {level_data} {level_stats} />
 							</div>
 						</div>
@@ -275,7 +272,7 @@
 		--highlighted_animation: highlighting;
 	}
 	/* .debug {
-		font-size: var(--font_size_xl);
+		font-size: var(--size_1);
 		height: 100%;
 		width: 100%;
 		position: absolute;
@@ -297,7 +294,7 @@
 		position: absolute;
 		right: 0;
 		top: 0;
-		height: 50px;
+		height: var(--level_progress_height);
 		width: 100%;
 	}
 	.piano-wrapper {
@@ -307,7 +304,7 @@
 	}
 
 	.completed-header-icon {
-		font-size: var(--icon_size_xl);
+		font-size: var(--icon_size_1);
 		word-break: break-all;
 		text-align: center;
 		word-wrap: break-word;
@@ -331,7 +328,7 @@
 		pointer-events: none;
 	}
 	.feedback-text-bursts {
-		font-size: var(--font_size_xl3);
+		font-size: var(--size_3);
 		position: fixed;
 		inset: 0;
 		z-index: 115;

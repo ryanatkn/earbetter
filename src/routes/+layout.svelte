@@ -1,28 +1,35 @@
 <script lang="ts">
-	import '@feltjs/felt-ui/style.css';
-	import '$routes/style.css';
+	import '@ryanatkn/fuz/style.css';
+	import '@ryanatkn/fuz/theme.css';
+	import '$lib/style.css';
 
+	import Themed from '@ryanatkn/fuz/Themed.svelte';
 	import {base} from '$app/paths';
-	import {isEditable, swallow} from '@feltjs/util/dom.js';
-	import Dialog from '@feltjs/felt-ui/Dialog.svelte';
+	import {is_editable, swallow} from '@ryanatkn/belt/dom.js';
+	import Dialog from '@ryanatkn/fuz/Dialog.svelte';
 	import {slide} from 'svelte/transition';
 	import {browser} from '$app/environment';
 	import {computed, effect, signal} from '@preact/signals-core';
 	import {afterNavigate} from '$app/navigation';
+	import {sync_color_scheme} from '@ryanatkn/fuz/theme.js';
+	import {writable} from 'svelte/store';
 
-	import {set_ac} from '$lib/audio/ac';
-	import {adjust_volume, set_instrument, set_volume} from '$lib/audio/helpers';
-	import {request_access} from '$lib/audio/midi_access';
+	const selected_color_scheme = writable('dark' as const);
+	sync_color_scheme($selected_color_scheme); // TODO probably shouldn't be needed
+
+	import {set_ac} from '$lib/ac';
+	import {adjust_volume, set_instrument, set_volume} from '$lib/helpers';
+	import {request_access} from '$lib/midi_access';
 	import {App, set_app} from '$lib/earbetter/app';
-	import {set_enabled_notes, set_key, set_scale, to_notes} from '$lib/music/music';
-	import {load_from_storage, set_in_storage} from '$lib/util/storage';
+	import {set_enabled_notes, set_key, set_scale, to_notes_in_scale} from '$lib/music';
+	import {load_from_storage, set_in_storage} from '$lib/storage';
 	import SiteMap from '$routes/SiteMap.svelte';
 	import {SiteData} from '$routes/site_data';
-	import VolumeControl from '$lib/audio/VolumeControl.svelte';
-	import InstrumentControl from '$lib/audio/InstrumentControl.svelte';
-	import InitMidiButton from '$lib/audio/InitMidiButton.svelte';
+	import VolumeControl from '$lib/VolumeControl.svelte';
+	import InstrumentControl from '$lib/InstrumentControl.svelte';
+	import InitMidiButton from '$lib/InitMidiButton.svelte';
 	import Footer from '$routes/Footer.svelte';
-	import SiteBreadcrumbs from '$routes/SiteBreadcrumbs.svelte';
+	import SiteBreadcrumb from '$routes/SiteBreadcrumb.svelte';
 
 	// load site data
 	const SITE_DATA_STORAGE_KEY = 'site';
@@ -38,7 +45,9 @@
 	const scale = set_scale(signal(initial_site_data.scale));
 	const key = set_key(signal(initial_site_data.key));
 	set_enabled_notes(
-		computed(() => (scale.value.name === 'chromatic' ? null : to_notes(scale.value, key.value))),
+		computed(() =>
+			scale.value.name === 'chromatic' ? null : to_notes_in_scale(scale.value, key.value),
+		),
 	);
 
 	// save site data
@@ -61,7 +70,7 @@
 
 	// TODO refactor
 	const keydown = (e: KeyboardEvent) => {
-		if (isEditable(e.target)) return;
+		if (is_editable(e.target)) return;
 		switch (e.key) {
 			case 'c': {
 				swallow(e);
@@ -117,66 +126,69 @@
 </svelte:head>
 
 <svelte:window on:keydown={keydown} />
-<slot />
 
-{#if show_main_menu}
-	<Dialog on:close={() => (show_main_menu = false)}>
-		<section class="markup">
-			<h1 class="section-title centered">
-				earbetter <div class="breadcrumbs-wrapper"><SiteBreadcrumbs /></div>
-			</h1>
-			<h2 class="section-title">settings</h2>
-			<form class="column-sm centered padded-md-x">
-				<VolumeControl {volume} />
-				<InstrumentControl {instrument} />
-				<aside>Earbetter supports MIDI devices like piano keyboards, connect and click:</aside>
-				<InitMidiButton />
-			</form>
-		</section>
-		<section>
-			<SiteMap />
-		</section>
-		<section class="centered column-sm">
-			<div class="markup">
-				<h2 class="section-title">data</h2>
-				<div class="padded-md-x">
-					<aside>
-						<a href="https://developer.mozilla.org/en-US/docs/Web/API/Window/localStorage"
-							><code>localStorage</code></a
-						> is used to save your data locally on your computer
-					</aside>
+<Themed {selected_color_scheme} color_scheme_fallback={$selected_color_scheme}>
+	<slot />
+
+	{#if show_main_menu}
+		<Dialog on:close={() => (show_main_menu = false)}>
+			<section class="prose">
+				<h1 class="section-title box">
+					earbetter <div class="breadcrumbs-wrapper"><SiteBreadcrumb /></div>
+				</h1>
+				<h2 class="section-title">settings</h2>
+				<form class="width_sm box padded_md-x">
+					<VolumeControl {volume} />
+					<InstrumentControl {instrument} />
+					<aside>Earbetter supports MIDI devices like piano keyboards, connect and click:</aside>
+					<InitMidiButton />
+				</form>
+			</section>
+			<section>
+				<SiteMap />
+			</section>
+			<section class="box width_sm">
+				<div class="prose">
+					<h2 class="section-title">data</h2>
+					<div class="padded_md-x">
+						<aside>
+							<a href="https://developer.mozilla.org/en-US/docs/Web/API/Window/localStorage"
+								><code>localStorage</code></a
+							> is used to save your data locally on your computer
+						</aside>
+					</div>
 				</div>
-			</div>
-			<button on:click={() => (deleting = !deleting)}> clear saved data </button>
-			{#if deleting}
-				<div transition:slide|local>
-					<button
-						on:click={() => {
-							localStorage.clear();
-							location.reload();
-						}}
+				<button on:click={() => (deleting = !deleting)}> clear saved data </button>
+				{#if deleting}
+					<div transition:slide|local>
+						<button
+							on:click={() => {
+								localStorage.clear();
+								location.reload();
+							}}
+						>
+							✕ permanently delete all locally saved data
+						</button>
+					</div>
+				{/if}
+			</section>
+			<section class="box prose width_sm">
+				<h2 class="section-title">privacy</h2>
+				<p class="padded_md">
+					this website collects no data - the only server it talks to is <a
+						href="https://pages.github.com/">GitHub Pages</a
 					>
-						✕ permanently delete all locally saved data
-					</button>
-				</div>
-			{/if}
-		</section>
-		<section class="centered markup column-sm">
-			<h2 class="section-title">privacy</h2>
-			<p class="padded-md">
-				this website collects no data - the only server it talks to is <a
-					href="https://pages.github.com/">GitHub Pages</a
-				>
-				to serve static files, see
-				<a href="https://github.com/ryanatkn/earbetter">the source code</a> for more
-			</p>
-		</section>
-		<Footer flush={true} />
-	</Dialog>
-{/if}
+					to serve static files, see
+					<a href="https://github.com/ryanatkn/earbetter">the source code</a> for more
+				</p>
+			</section>
+			<Footer flush={true} />
+		</Dialog>
+	{/if}
+</Themed>
 
 <style>
 	.breadcrumbs-wrapper {
-		font-size: var(--font_size_md);
+		font-size: var(--size_md);
 	}
 </style>

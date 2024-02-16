@@ -1,11 +1,10 @@
 import {z} from 'zod';
-import type {Flavored} from '@feltjs/util';
-import {identity} from '@feltjs/util/function.js';
+import type {Flavored} from '@ryanatkn/belt/types.js';
 import {signal, type Signal} from '@preact/signals-core';
 import {getContext, setContext} from 'svelte';
 
-import {type Hsl, hsl_to_string, type Hue} from '$lib/util/colors';
-import type {Frequency} from '$lib/audio/helpers';
+import {type Hsl, hsl_to_string, type Hue} from '$lib/colors';
+import type {Frequency} from '$lib/helpers';
 
 // https://wikipedia.org/wiki/Musical_tuning
 // https://wikipedia.org/wiki/A440_(pitch_standard)
@@ -32,8 +31,8 @@ export type NoteName =
 export type Octave = -1 | 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9;
 
 // https://wikipedia.org/wiki/Semitone
-export type Semitones = Flavored<number, 'Semitones'>;
-export const Semitones = z.number().int().transform<Semitones>(identity);
+export const Semitones = z.number().int();
+export type Semitones = Flavored<z.infer<typeof Semitones>, 'Semitones'>;
 
 // https://wikipedia.org/wiki/Interval_(music)
 export const Intervals = z.array(Semitones);
@@ -44,7 +43,7 @@ export const TimeSignature = z.tuple([z.number().int(), z.number().int()]);
 export type TimeSignature = z.infer<typeof TimeSignature>;
 export const DEFAULT_TIME_SIGNATURE: TimeSignature = [4, 4];
 
-// TODO replace with zod? how?
+// TODO replace with zod?
 export const serialize_intervals = (intervals: Intervals): string => intervals.join(', ');
 export const parse_intervals = (value: string): Intervals =>
 	value
@@ -80,8 +79,8 @@ export const set_enabled_notes = (
 	store: Signal<Set<Midi> | null> = signal(null),
 ): Signal<Set<Midi> | null> => setContext(ENABLED_NOTES_KEY, store);
 
-export type ScaleName = Flavored<string, 'ScaleName'>;
-export const ScaleName = z.string().transform<ScaleName>(identity);
+export const ScaleName = z.string();
+export type ScaleName = Flavored<z.infer<typeof ScaleName>, 'ScaleName'>;
 
 export const Scale = z.object({
 	name: ScaleName,
@@ -112,7 +111,7 @@ export const lookup_scale = (name: ScaleName): Scale => {
 	return found;
 };
 
-export const to_scale_notes = (scale: Scale, octaves: number): Semitones[] => {
+export const to_scale_notes = (scale: Scale, octaves: number): Intervals => {
 	const notes: number[] = [];
 	for (let i = 0; i < octaves; i++) {
 		const up = i % 2 === 0;
@@ -244,19 +243,32 @@ export const transpose = (midi: Midi, semitones: Semitones): Midi => {
 	return transposed;
 };
 
-export const to_notes = (
+export const Notes = z.array(Midi);
+export type Notes = z.infer<typeof Notes>;
+// TODO replace with zod
+export const serialize_notes = (notes: Notes | null): string => (notes ? notes.join(', ') : '');
+export const parse_notes = (value: string): Notes =>
+	value
+		.split(',')
+		.map((v) => Number(v.trim()) | 0)
+		.filter((v) => !!v && Midi.safeParse(v).success) // exclude 0 intentionally because it's not a MIDI value
+		.sort((a, b) => a - b);
+
+export const to_notes_in_scale = (
 	scale: Scale,
 	key: PitchClass = 'C',
 	min_note: Midi = MIDI_MIN,
 	max_note: Midi = MIDI_MAX,
 ): Set<Midi> => {
-	const midis: Midi[] = [];
+	const notes: Midi[] = [];
 	const pitch_class_offset = pitch_classes.indexOf(key);
-	const min_note_offset = pitch_classes.indexOf(midi_pitch_classes[min_note]);
-	const initial_offset = pitch_class_offset - min_note_offset;
+	const note_offset_min = pitch_classes.indexOf(midi_pitch_classes[min_note]);
+	const initial_offset = pitch_class_offset - note_offset_min;
 	for (let i = min_note; i <= max_note; i++) {
 		const offset = (i - initial_offset) % 12;
-		if (offset === 0 || scale.notes.includes(offset)) midis.push(i);
+		if (offset === 0 || scale.notes.includes(offset)) {
+			notes.push(i);
+		}
 	}
-	return new Set(midis);
+	return new Set(notes);
 };

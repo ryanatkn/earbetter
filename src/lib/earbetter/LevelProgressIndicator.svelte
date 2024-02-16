@@ -7,12 +7,12 @@
 
 	const to_bg_color = (s: Status, t: Trial | null, ts: Trial[], index: number) => {
 		return s === 'complete'
-			? 'var(--tint_light_5)'
+			? 'var(--lighten_5)'
 			: ts[index] // trials are created when needed, not ahead of time
-			? t && index === t.index
-				? 'var(--tint_light_4)'
-				: 'var(--tint_light_2)'
-			: 'transparent';
+				? t && index === t.index
+					? 'var(--lighten_4)'
+					: 'var(--lighten_2)'
+				: 'transparent';
 	};
 
 	$: percent_complete =

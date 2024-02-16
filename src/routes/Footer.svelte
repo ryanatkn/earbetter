@@ -1,27 +1,27 @@
 <script lang="ts">
-	import SiteBreadcrumbs from '$routes/SiteBreadcrumbs.svelte';
+	import SiteBreadcrumb from '$routes/SiteBreadcrumb.svelte';
 
 	export let flush = false;
 </script>
 
 <footer class:flush>
-	<div class="panel padded-md column-sm">
+	<div class="panel padded_md width_sm">
 		<a href="https://github.com/ryanatkn/earbetter">source code</a>
 		<div>public domain</div>
 		<div class="breadcrumbs-wrapper">
-			<SiteBreadcrumbs />
+			<SiteBreadcrumb />
 		</div>
 	</div>
 </footer>
 
 <style>
 	footer {
-		margin: var(--spacing_xl3) auto;
+		margin: var(--spacing_3) auto;
 		text-align: center;
 		display: flex;
 		flex-direction: column;
 		align-items: center;
-		padding-bottom: var(--spacing_xl3);
+		padding-bottom: var(--spacing_3);
 	}
 	.flush {
 		padding-bottom: 0;
@@ -36,6 +36,6 @@
 		align-items: center;
 	}
 	.breadcrumbs-wrapper {
-		font-size: var(--font_size_xl2);
+		font-size: var(--size_2);
 	}
 </style>

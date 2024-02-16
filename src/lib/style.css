@@ -1,7 +1,5 @@
-/* TODO copypasted from dealt, most of this can be deleted when felt-ui supports dark mode */
-:root {
-	color-scheme: dark;
-
+/* TODO a lot of this can be deleted or cleaned up */
+:root:root:root.dark {
 	/* TODO force dark mode and remove these when Felt supports it */
 	--bg: hsl(var(--primary_hue), 63%, 11%);
 	--text_color: hsl(var(--primary_hue), 8%, 85%);
@@ -10,10 +8,10 @@
 	--text_color_lighter: hsl(var(--primary_hue), 8%, 45%);
 	--text_color_dark: hsl(var(--primary_hue), 8%, 91%);
 	--link_color: var(--primary_text_color);
-	--button_color: var(--tint_light_1);
-	--button_color_dark: var(--tint_light_0);
-	--button_color_hover: var(--tint_dark_1);
-	--button_color_active: var(--tint_dark_3);
+	--button_color: var(--lighten_2);
+	--button_color_dark: var(--lighten_1);
+	--button_color_hover: var(--darken_2);
+	--button_color_active: var(--darken_3);
 	--button_color_disabled: transparent;
 	--input_bg_color: var(--button_color);
 
@@ -34,7 +32,7 @@
 	--accent_border_color_darker: hsla(var(--accent_hue), 100%, 28%, 0.5);
 	--light_border_color: hsla(var(--accent_hue), 50%, 50%, 0.4);
 	--spacing_lg: 20px;
-	--font_size_lg: 20px;
+	--size_lg: 20px;
 
 	--primary_color: hsl(var(--primary_hue), 80%, 52%);
 	--primary_color_dark: hsl(var(--primary_hue), 80%, 36%);
@@ -49,7 +47,7 @@
 }
 
 .panel {
-	background-color: var(--tint_light_0);
+	background-color: var(--lighten_1);
 }
 
 h1,
@@ -67,7 +65,7 @@ section {
 }
 
 aside {
-	background-color: var(--tint_light_0);
+	background-color: var(--lighten_1);
 }
 
 a:hover {
@@ -94,25 +92,25 @@ a:active {
 }
 
 button.big {
-	font-size: var(--font_size_xl);
-	padding: var(--spacing_md) var(--spacing_xl3);
+	font-size: var(--size_1);
+	padding: var(--spacing_md) var(--spacing_3);
 }
 
 /* TODO fix this class upstream so this is controlled by a variable */
 .plain-button {
-	--button_color_hover: var(--tint_dark_3);
-	--button_color_active: var(--tint_dark_5);
+	--button_color_hover: var(--darken_3);
+	--button_color_active: var(--darken_5);
 }
 
 code {
-	background-color: var(--tint_light_1);
+	background-color: var(--lighten_2);
 }
 
 /* TODO this hack shouldn't be needed */
 .row label {
 	margin-bottom: 0 !important;
 }
-.markup .row:not(:last-child) {
+.prose .row:not(:last-child) {
 	margin-bottom: var(--spacing_lg);
 }
 
@@ -123,15 +121,15 @@ td {
 
 @keyframes highlighting {
 	from {
-		filter: drop-shadow(1px 1px 15px var(--tint_light_5));
+		filter: drop-shadow(1px 1px 15px var(--lighten_5));
 	}
 	to {
-		filter: drop-shadow(1px 1px 25px var(--tint_light_7));
+		filter: drop-shadow(1px 1px 25px var(--lighten_7));
 	}
 }
 
 header {
-	font-size: var(--font_size_xl);
+	font-size: var(--size_1);
 	text-align: center;
 	margin-bottom: var(--spacing_md);
 }
@@ -148,7 +146,7 @@ button {
 
 /* cards include padding for layout so they can be seamlessly animated in/out (is janky with margin) */
 .card {
-	padding: var(--spacing_xl3) 0;
+	padding: var(--spacing_3) 0;
 	margin: 0;
 }
 
@@ -162,7 +160,7 @@ button {
 	display: flex;
 	align-items: center;
 	justify-content: center;
-	background: var(--tint_light_0);
+	background: var(--lighten_1);
 	width: 100%;
 	margin-bottom: var(--spacing_md);
 }
@@ -182,7 +180,7 @@ button {
 }
 
 /* TODO hacky, just being lazy */
-.padded-md-x {
+.padded_md-x {
 	padding: 0 var(--spacing_md);
 }
 
@@ -192,7 +190,7 @@ button {
 	top: var(--progress_bar_top, calc(50% - var(--progress_bar_height, var(--spacing_md)) / 2));
 	width: calc(var(--progress_bar_percent, 0) * 100%);
 	height: var(--progress_bar_height, var(--spacing_md));
-	background-color: var(--progress_bar_bg, var(--tint_light_4));
+	background-color: var(--progress_bar_bg, var(--lighten_4));
 	border-radius: var(--border_radius);
 	transition: var(
 		--progress_bar_transition,

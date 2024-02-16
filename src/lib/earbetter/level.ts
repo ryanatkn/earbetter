@@ -1,16 +1,15 @@
-import {randomItem, randomInt} from '@feltjs/util/random.js';
+import {random_item, random_int} from '@ryanatkn/belt/random.js';
 import {z} from 'zod';
-import type {Flavored} from '@feltjs/util';
-import {identity} from '@feltjs/util/function.js';
-import {Logger} from '@feltjs/util/log.js';
+import type {Flavored} from '@ryanatkn/belt/types.js';
+import {Logger} from '@ryanatkn/belt/log.js';
 import {signal, batch, Signal, effect} from '@preact/signals-core';
 import {base} from '$app/paths';
 
-import {Midi, Intervals, Semitones} from '$lib/music/music';
-import {play_note} from '$lib/audio/play_note';
-import type {Instrument, Milliseconds, Volume} from '$lib/audio/helpers';
-import {serialize_to_hash} from '$lib/util/url';
-import {to_random_id} from '$lib/util/id';
+import {Midi, Intervals, Notes} from '$lib/music';
+import {play_note} from '$lib/play_note';
+import type {Instrument, Milliseconds, Volume} from '$lib/helpers';
+import {serialize_to_hash} from '$lib/url';
+import {to_random_id} from '$lib/id';
 
 // TODO this isn't idiomatic signals code yet, uses `peek` too much
 
@@ -23,25 +22,27 @@ export const DEFAULT_FEEDBACK_DURATION: Milliseconds = 1000; // TODO configurabl
 export const DEFAULT_SEQUENCE_LENGTH = 2;
 export const DEFAULT_TRIAL_COUNT = 5;
 export const DEFAULT_LEVEL_NAME = 'new level';
-export const DEFAULT_INTERVALS: Semitones[] = [5, 7];
-export const DEFAULT_NOTE_MIN: Midi = 48;
-export const DEFAULT_NOTE_MAX: Midi = 84;
+export const DEFAULT_INTERVALS: Intervals = [5, 7];
+export const DEFAULT_TONICS: Notes | null = null;
+export const DEFAULT_MIN_NOTE: Midi = 48;
+export const DEFAULT_MAX_NOTE: Midi = 84;
 
-export type LevelId = Flavored<string, 'LevelId'>;
-export const LevelId = z.string().transform<LevelId>(identity);
+export const LevelId = z.string();
+export type LevelId = Flavored<z.infer<typeof LevelId>, 'LevelId'>;
 export const create_level_id = (): LevelId => to_random_id();
 
-export type LevelName = Flavored<string, 'LevelName'>;
-export const LevelName = z.string().min(1).max(1000).transform<LevelName>(identity); // TODO better way to do this?
+export const LevelName = z.string().min(1).max(1000);
+export type LevelName = Flavored<z.infer<typeof LevelName>, 'LevelName'>;
 
 export const LevelData = z.object({
 	id: LevelId.default(create_level_id),
 	name: LevelName.default(DEFAULT_LEVEL_NAME),
 	intervals: Intervals.default(DEFAULT_INTERVALS),
+	tonics: Notes.nullable().default(null),
 	trial_count: z.number().default(DEFAULT_TRIAL_COUNT),
 	sequence_length: z.number().default(DEFAULT_SEQUENCE_LENGTH),
-	note_min: Midi.default(DEFAULT_NOTE_MIN),
-	note_max: Midi.default(DEFAULT_NOTE_MAX),
+	min_note: Midi.default(DEFAULT_MIN_NOTE),
+	max_note: Midi.default(DEFAULT_MAX_NOTE),
 });
 export type LevelData = z.infer<typeof LevelData>;
 
@@ -92,21 +93,15 @@ export interface Trial {
 }
 
 const create_next_trial = (def: LevelData, current_trial: Trial | null): Trial => {
-	const {note_min, note_max} = def;
+	const {min_note, max_note} = def;
 
-	const interval_max = def.intervals.reduce((max, v) => Math.max(max, v));
-	const interval_min = def.intervals.reduce((max, v) => Math.min(max, v));
-	const tonic_max = Math.min(note_max - interval_max, note_max);
-	const tonic_min = Math.max(note_min - interval_min, note_min);
-	const tonic = (
-		tonic_min < tonic_max ? randomInt(tonic_min, tonic_max) : to_fallback_tonic(note_min, note_max)
-	) as Midi;
+	const tonic = to_random_tonic(def);
 	const sequence: Midi[] = [tonic];
 
 	// compute the valid notes
 	const intervals = new Set([0, ...def.intervals]); // allow tonic to repeat
 	const valid_notes: Midi[] = [];
-	for (let i = note_min; i <= note_max; i++) {
+	for (let i = min_note; i <= max_note; i++) {
 		const interval = i - tonic;
 		if (intervals.has(interval)) {
 			valid_notes.push(i);
@@ -120,7 +115,7 @@ const create_next_trial = (def: LevelData, current_trial: Trial | null): Trial =
 	for (let i = 0; i < def.sequence_length - 1; i++) {
 		let next_note: Midi;
 		do {
-			next_note = randomItem(valid_notes);
+			next_note = random_item(valid_notes);
 		} while (next_note === sequence.at(-1)); // disallow sequential repeats
 		sequence.push(next_note);
 	}
@@ -133,6 +128,24 @@ const create_next_trial = (def: LevelData, current_trial: Trial | null): Trial =
 		guessing_index: null,
 		retry_count: 0,
 	};
+};
+
+const to_random_tonic = (def: LevelData): Midi => {
+	const {tonics} = def;
+	if (tonics?.length) return random_item(tonics);
+	const {min_note, max_note} = def;
+	const interval_max = def.intervals.reduce((max, v) => Math.max(max, v));
+	const interval_min = def.intervals.reduce((max, v) => Math.min(max, v));
+	const tonic_max = Math.min(max_note - interval_max, max_note);
+	const tonic_min = Math.max(min_note - interval_min, min_note);
+	return (
+		tonic_min < tonic_max ? random_int(tonic_min, tonic_max) : to_fallback_tonic(min_note, max_note)
+	) as Midi;
+};
+
+const to_fallback_tonic = (min_note: Midi, max_note: Midi): Midi => {
+	const offset = ((max_note - min_note) / 4) | 0;
+	return random_int(min_note + offset, max_note - offset) as Midi;
 };
 
 const DEFAULT_STATUS: Status = 'initial';
@@ -333,15 +346,10 @@ export const create_level = (
 };
 
 const get_correct_guess = (trial: Trial | null): Midi | null => {
+	// eslint bug
+	// eslint-disable-next-line @typescript-eslint/prefer-optional-chain
 	if (!trial || trial.guessing_index === null) return null;
 	return trial.sequence[trial.guessing_index];
-};
-
-// If there's possible tonic range that fits with all of the intervals within the bounds,
-// fall back to a reasonable default.
-const to_fallback_tonic = (note_min: Midi, note_max: Midi): Midi => {
-	const offset = ((note_max - note_min) / 4) | 0;
-	return randomInt(note_min + offset, note_max - offset) as Midi;
 };
 
 export const to_play_level_url = (level_data: LevelData): string => {

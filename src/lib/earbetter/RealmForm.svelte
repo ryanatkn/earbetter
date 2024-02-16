@@ -1,11 +1,12 @@
 <script lang="ts">
 	import {createEventDispatcher} from 'svelte';
 	import {slide} from 'svelte/transition';
-	import {swallow} from '@feltjs/util/dom.js';
-	import Dialog from '@feltjs/felt-ui/Dialog.svelte';
-	import Message from '@feltjs/felt-ui/Message.svelte';
+	import {swallow} from '@ryanatkn/belt/dom.js';
+	import Dialog from '@ryanatkn/fuz/Dialog.svelte';
+	import Alert from '@ryanatkn/fuz/Alert.svelte';
 
 	import {create_realm_id, RealmData, type RealmId} from '$lib/earbetter/realm';
+	import default_project_data from '$lib/projects/default_project';
 
 	const dispatch = createEventDispatcher<{
 		submit: RealmData;
@@ -72,6 +73,10 @@
 		serialized = updated = JSON.stringify(to_data());
 		importing = true;
 	};
+
+	const default_realms = default_project_data().realms;
+
+	let toggle_create_default_realms = false;
 </script>
 
 {#if importing}
@@ -81,9 +86,10 @@
 			start_importing_el.focus();
 		}}
 	>
-		<div class="importing markup padded-xl column centered">
+		<div class="importing prose padded_1 width_md box">
 			<h2>import realm data</h2>
 			<button
+				type="button"
 				on:click={() => {
 					void navigator.clipboard.writeText(updated);
 					realm_data_el.select();
@@ -95,6 +101,7 @@
 			<button
 				on:click={import_data}
 				disabled={!changed_serialized}
+				type="button"
 				title={changed_serialized ? undefined : 'data has not changed'}
 			>
 				import realm data
@@ -122,12 +129,6 @@
 			/>
 		</label>
 	</fieldset>
-	<fieldset>
-		<label>
-			<div class="title">id</div>
-			<input disabled value={id} />
-		</label>
-	</fieldset>
 	<button
 		class="accent"
 		type="button"
@@ -143,7 +144,7 @@
 		{#if removing}
 			<div transition:slide|local>
 				<button
-					class="w-full"
+					class="width_full"
 					type="button"
 					style:margin-bottom={0}
 					on:click={() => {
@@ -166,9 +167,34 @@
 	<button type="button" on:click={start_importing_data} bind:this={start_importing_el}>
 		{#if editing}import/export data{:else}import data{/if}
 	</button>
+	{#if !editing}
+		<button
+			type="button"
+			on:click={() => (toggle_create_default_realms = !toggle_create_default_realms)}
+			style:margin-bottom={0}
+		>
+			create default realms
+		</button>
+		{#if toggle_create_default_realms}
+			<div transition:slide|local>
+				<button
+					type="button"
+					class="width_full"
+					on:click={() => {
+						toggle_create_default_realms = false;
+						for (const realm_data of default_project_data().realms) {
+							dispatch('submit', realm_data);
+						}
+					}}
+				>
+					create {default_realms.length} new realms
+				</button>
+			</div>
+		{/if}
+	{/if}
 	{#if parse_error_message}
 		<div class="message-wrapper">
-			<Message status="error"><pre>{parse_error_message}</pre></Message>
+			<Alert status="error"><pre>{parse_error_message}</pre></Alert>
 		</div>
 	{/if}
 	<slot name="footer" {changed} />
