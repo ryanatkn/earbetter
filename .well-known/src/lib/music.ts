@@ -1,5 +1,5 @@
 import {z} from 'zod';
-import type {Flavored} from '@grogarden/util/types.js';
+import type {Flavored} from '@ryanatkn/belt/types.js';
 import {signal, type Signal} from '@preact/signals-core';
 import {getContext, setContext} from 'svelte';
 

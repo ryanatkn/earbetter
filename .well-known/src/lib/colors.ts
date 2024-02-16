@@ -1,6 +1,6 @@
-import type {Flavored} from '@grogarden/util/types.js';
+import type {Flavored} from '@ryanatkn/belt/types.js';
 
-// TODO copypasted from `@feltcoop/dealt`, maybe upstream to `@grogarden/util`? or a new repo?
+// TODO copypasted from `@feltcoop/dealt`, maybe upstream to `@ryanatkn/belt`? or a new repo?
 
 // https://stackoverflow.com/questions/2353211/hsl-to-rgb-color-conversion
 

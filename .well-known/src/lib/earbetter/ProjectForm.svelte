@@ -1,9 +1,9 @@
 <script lang="ts">
 	import {createEventDispatcher} from 'svelte';
 	import {slide} from 'svelte/transition';
-	import {swallow} from '@grogarden/util/dom.js';
-	import Dialog from '@fuz.dev/fuz_dialog/Dialog.svelte';
-	import Alert from '@fuz.dev/fuz_library/Alert.svelte';
+	import {swallow} from '@ryanatkn/belt/dom.js';
+	import Dialog from '@ryanatkn/fuz/Dialog.svelte';
+	import Alert from '@ryanatkn/fuz/Alert.svelte';
 
 	import {create_project_id, ProjectData, type ProjectId} from '$lib/earbetter/project';
 

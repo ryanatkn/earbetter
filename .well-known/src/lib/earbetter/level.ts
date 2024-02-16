@@ -1,7 +1,7 @@
-import {random_item, random_int} from '@grogarden/util/random.js';
+import {random_item, random_int} from '@ryanatkn/belt/random.js';
 import {z} from 'zod';
-import type {Flavored} from '@grogarden/util/types.js';
-import {Logger} from '@grogarden/util/log.js';
+import type {Flavored} from '@ryanatkn/belt/types.js';
+import {Logger} from '@ryanatkn/belt/log.js';
 import {signal, batch, Signal, effect} from '@preact/signals-core';
 import {base} from '$app/paths';
 

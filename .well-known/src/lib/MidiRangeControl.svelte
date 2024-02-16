@@ -1,5 +1,5 @@
 <script lang="ts">
-	import Alert from '@fuz.dev/fuz_library/Alert.svelte';
+	import Alert from '@ryanatkn/fuz/Alert.svelte';
 	import {slide} from 'svelte/transition';
 	import type {Signal} from '@preact/signals-core';
 

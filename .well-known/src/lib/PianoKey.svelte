@@ -1,6 +1,6 @@
 <script lang="ts">
 	import {createEventDispatcher} from 'svelte';
-	import {swallow} from '@grogarden/util/dom.js';
+	import {swallow} from '@ryanatkn/belt/dom.js';
 
 	import {type Midi, midi_naturals} from '$lib/music';
 	import {find_next_sibling, find_previous_sibling} from '$lib/dom';
