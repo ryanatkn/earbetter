@@ -1,8 +1,8 @@
 <script lang="ts">
 	import {onDestroy, onMount} from 'svelte';
-	import {is_editable, swallow} from '@grogarden/util/dom.js';
+	import {is_editable, swallow} from '@ryanatkn/belt/dom.js';
 	import {scale, fly} from 'svelte/transition';
-	import {plural} from '@grogarden/util/string.js';
+	import {plural} from '@ryanatkn/belt/string.js';
 
 	import {
 		create_level,
@@ -183,8 +183,8 @@
 				on:press={$status === 'waiting_for_input'
 					? (e) => on_press_key(e.detail)
 					: $status === 'complete'
-					  ? (e) => start_playing(ac, e.detail, with_velocity($volume, null), $instrument)
-					  : undefined}
+						? (e) => start_playing(ac, e.detail, with_velocity($volume, null), $instrument)
+						: undefined}
 				on:release={$status === 'complete' ? (e) => stop_playing(e.detail) : undefined}
 			/>
 		{/if}

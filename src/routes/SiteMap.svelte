@@ -1,7 +1,7 @@
 <script lang="ts">
 	import {base} from '$app/paths';
 	import {page} from '$app/stores';
-	import {strip_start} from '@grogarden/util/string.js';
+	import {strip_start} from '@ryanatkn/belt/string.js';
 
 	import {pages} from '$routes/nav';
 

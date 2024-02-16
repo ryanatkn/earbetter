@@ -9,7 +9,7 @@ import {
 	batch,
 } from '@preact/signals-core';
 import {getContext, setContext} from 'svelte';
-import {Logger} from '@grogarden/util/log.js';
+import {Logger} from '@ryanatkn/belt/log.js';
 
 import {
 	add_mistakes_to_level_stats,

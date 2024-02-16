@@ -1,6 +1,6 @@
 <script lang="ts">
 	import {createEventDispatcher} from 'svelte';
-	import {swallow} from '@grogarden/util/dom.js';
+	import {swallow} from '@ryanatkn/belt/dom.js';
 
 	import {type Midi, midi_naturals} from '$lib/music';
 	import {find_next_sibling, find_previous_sibling} from '$lib/dom';
@@ -92,27 +92,27 @@
 				dispatch('press', midi);
 				pressing = true;
 				e.currentTarget.focus();
-		  }
+			}
 		: undefined}
 	on:mouseup={clickable_and_enabled
 		? (e) => {
 				swallow(e);
 				dispatch('release', midi);
 				pressing = false;
-		  }
+			}
 		: undefined}
 	on:mouseenter={clickable_and_enabled && pressing
 		? (e) => {
 				swallow(e);
 				dispatch('press', midi);
 				e.currentTarget.focus();
-		  }
+			}
 		: undefined}
 	on:mouseleave={clickable_and_enabled
 		? (e) => {
 				swallow(e);
 				dispatch('release', midi);
-		  }
+			}
 		: undefined}
 	aria-label="piano key for midi {midi}"
 	data-note={midi}
