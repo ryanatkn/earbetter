@@ -6,10 +6,14 @@ import {getContext, setContext} from 'svelte';
 import {type Hsl, hsl_to_string, type Hue} from '$lib/colors';
 import type {Frequency} from '$lib/helpers';
 
-export const DEFAULT_TUNING = 440; // https://wikipedia.org/wiki/A440_(pitch_standard)
+// https://wikipedia.org/wiki/Musical_tuning
+// https://wikipedia.org/wiki/A440_(pitch_standard)
+export const DEFAULT_TUNING = 440;
 
 export const NOTE_FLAT_SYMBOL = '♭';
 export const NOTE_SHARP_SYMBOL = '♯';
+
+// https://wikipedia.org/wiki/Musical_note
 export type NoteName =
   | 'C-1' | 'C♯-1' | 'D-1' | 'D♯-1' | 'E-1' | 'F-1' | 'F♯-1' | 'G-1' | 'G♯-1' | 'A-1' | 'A♯-1' | 'B-1'
   | 'C0'  | 'C♯0'  | 'D0'  | 'D♯0'  | 'E0'  | 'F0'  | 'F♯0'  | 'G0'  | 'G♯0'  | 'A0'  | 'A♯0'  | 'B0'
@@ -23,51 +27,29 @@ export type NoteName =
   | 'C8'  | 'C♯8'  | 'D8'  | 'D♯8'  | 'E8'  | 'F8'  | 'F♯8'  | 'G8'  | 'G♯8'  | 'A8'  | 'A♯8'  | 'B8'
   | 'C9'  | 'C♯9'  | 'D9'  | 'D♯9'  | 'E9'  | 'F9'  | 'F♯9'  | 'G9'; // prettier-ignore
 
-export const chromas = Object.freeze([1,  2,  3,  4,  5,  6,  7,  8,  9,  10,  11, 12] as const); // prettier-ignore
-export type Chroma = (typeof chromas)[number]; // corresponds to indices of `pitch_classes` + 1
-
+// https://wikipedia.org/wiki/Octave
 export type Octave = -1 | 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9;
 
+// https://wikipedia.org/wiki/Semitone
 export const Semitones = z.number().int();
 export type Semitones = Flavored<z.infer<typeof Semitones>, 'Semitones'>;
 
+// https://wikipedia.org/wiki/Interval_(music)
 export const Intervals = z.array(Semitones);
 export type Intervals = z.infer<typeof Intervals>;
-// TODO replace with zod
+
+// https://wikipedia.org/wiki/Time_signature
+export const TimeSignature = z.tuple([z.number().int(), z.number().int()]);
+export type TimeSignature = z.infer<typeof TimeSignature>;
+export const DEFAULT_TIME_SIGNATURE: TimeSignature = [4, 4];
+
+// TODO replace with zod?
 export const serialize_intervals = (intervals: Intervals): string => intervals.join(', ');
 export const parse_intervals = (value: string): Intervals =>
 	value
 		.split(',')
 		.map((v) => Number(v.trim()) | 0)
 		.filter(Boolean); // exclude 0 intentionally
-
-export const compute_naturals = (min: Midi, max: Midi): Midi[] => {
-	const naturals: Midi[] = [];
-	for (let i = min; i <= max; i++) {
-		if (midi_naturals.has(i)) naturals.push(i);
-	}
-	return naturals;
-};
-
-export const transpose = (midi: Midi, semitones: Semitones): Midi => {
-	const transposed = midi + semitones;
-	if (!is_midi(transposed)) {
-		throw Error(`Failed to transpose midi ${midi} by ${semitones}`);
-	}
-	return transposed;
-};
-
-// TODO the hue shouldn't be hardcoded from the chroma - this relationship should be user-customizable (`app.colors` or `app.audio.colors` or something)
-export const chroma_to_hue: Map<Chroma, Hue> = new Map(
-	chromas.map((chroma) => [chroma, (chroma - 1) / 12]),
-);
-// TODO consider changing to a memoized helper function with optional saturation+lightness
-export const chroma_to_hsl: Map<Chroma, Hsl> = new Map(
-	chromas.map((chroma) => [chroma, [chroma_to_hue.get(chroma)!, 0.5, 0.5] as const]),
-);
-export const chroma_to_hsl_string: Map<Chroma, string> = new Map(
-	chromas.map((chroma) => [chroma, hsl_to_string(...chroma_to_hsl.get(chroma)!)]),
-);
 
 export const interval_short_names = Object.freeze(['P1', 'm2', 'M2', 'm3', 'M3', 'P4', 'd5', 'P5', 'm6', 'M6', 'm7', 'M7', 'P8'] as const); // prettier-ignore
 
@@ -149,6 +131,7 @@ export const get_scale = (): Signal<Scale> => getContext(SCALE_KEY);
 export const set_scale = (store: Signal<Scale> = signal(DEFAULT_SCALE)): Signal<Scale> =>
 	setContext(SCALE_KEY, store);
 
+// https://wikipedia.org/wiki/Pitch_class
 export const PitchClass = z.enum(['C', 'C♯', 'D', 'D♯', 'E', 'F', 'F♯', 'G', 'G♯', 'A', 'A♯', 'B']);
 export type PitchClass = z.infer<typeof PitchClass>;
 export const pitch_classes = PitchClass.options;
@@ -166,24 +149,21 @@ export const get_key = (): Signal<PitchClass> => getContext(KEY_KEY);
 export const set_key = (store: Signal<PitchClass> = signal(pitch_classes[0])): Signal<PitchClass> =>
 	setContext(KEY_KEY, store);
 
-export const to_notes_in_scale = (
-	scale: Scale,
-	key: PitchClass = 'C',
-	min_note: Midi = MIDI_MIN,
-	max_note: Midi = MIDI_MAX,
-): Set<Midi> => {
-	const notes: Midi[] = [];
-	const pitch_class_offset = pitch_classes.indexOf(key);
-	const note_offset_min = pitch_classes.indexOf(midi_pitch_classes[min_note]);
-	const initial_offset = pitch_class_offset - note_offset_min;
-	for (let i = min_note; i <= max_note; i++) {
-		const offset = (i - initial_offset) % 12;
-		if (offset === 0 || scale.notes.includes(offset)) {
-			notes.push(i);
-		}
-	}
-	return new Set(notes);
-};
+// https://wikipedia.org/wiki/Pitch_class
+export const chromas = Object.freeze([1,  2,  3,  4,  5,  6,  7,  8,  9,  10,  11, 12] as const); // prettier-ignore
+export type Chroma = (typeof chromas)[number]; // corresponds to indices of `pitch_classes` + 1
+
+// TODO the hue shouldn't be hardcoded from the chroma - this relationship should be user-customizable (`app.colors` or `app.audio.colors` or something)
+export const chroma_to_hue: Map<Chroma, Hue> = new Map(
+	chromas.map((chroma) => [chroma, (chroma - 1) / 12]),
+);
+// TODO consider changing to a memoized helper function with optional saturation+lightness
+export const chroma_to_hsl: Map<Chroma, Hsl> = new Map(
+	chromas.map((chroma) => [chroma, [chroma_to_hue.get(chroma)!, 0.5, 0.5] as const]),
+);
+export const chroma_to_hsl_string: Map<Chroma, string> = new Map(
+	chromas.map((chroma) => [chroma, hsl_to_string(...chroma_to_hsl.get(chroma)!)]),
+);
 
 /**
  * This code uses `Midi`, the midi index from 0 to 127,
@@ -195,8 +175,9 @@ export const to_notes_in_scale = (
  * and easy to work with both programmatically and mathematically.
  */
 
+// https://wikipedia.org/wiki/MIDI
 // TODO how to do this type? trying to avoid zod's `brand` but maybe the ergonomic tradeoff is ok
-// export type Midi = Flavored<number, 'Midi'>;
+// export type Midi = Flavored<number, 'Midi'>; // TODO consider the `identity` pattern used elsewhere
 export const Midi = z.number().int().min(0).max(127);
 export type Midi = Flavored<z.infer<typeof Midi>, 'Midi'>;
 
@@ -246,6 +227,22 @@ export const midi_naturals: Set<Midi> = new Set(
 	midis.filter((m) => midi_pitch_classes[m][1] !== NOTE_SHARP_SYMBOL),
 );
 
+export const compute_naturals = (min: Midi, max: Midi): Midi[] => {
+	const naturals: Midi[] = [];
+	for (let i = min; i <= max; i++) {
+		if (midi_naturals.has(i)) naturals.push(i);
+	}
+	return naturals;
+};
+
+export const transpose = (midi: Midi, semitones: Semitones): Midi => {
+	const transposed = midi + semitones;
+	if (!is_midi(transposed)) {
+		throw Error(`Failed to transpose midi ${midi} by ${semitones}`);
+	}
+	return transposed;
+};
+
 export const Notes = z.array(Midi);
 export type Notes = z.infer<typeof Notes>;
 // TODO replace with zod
@@ -256,3 +253,22 @@ export const parse_notes = (value: string): Notes =>
 		.map((v) => Number(v.trim()) | 0)
 		.filter((v) => !!v && Midi.safeParse(v).success) // exclude 0 intentionally because it's not a MIDI value
 		.sort((a, b) => a - b);
+
+export const to_notes_in_scale = (
+	scale: Scale,
+	key: PitchClass = 'C',
+	min_note: Midi = MIDI_MIN,
+	max_note: Midi = MIDI_MAX,
+): Set<Midi> => {
+	const notes: Midi[] = [];
+	const pitch_class_offset = pitch_classes.indexOf(key);
+	const note_offset_min = pitch_classes.indexOf(midi_pitch_classes[min_note]);
+	const initial_offset = pitch_class_offset - note_offset_min;
+	for (let i = min_note; i <= max_note; i++) {
+		const offset = (i - initial_offset) % 12;
+		if (offset === 0 || scale.notes.includes(offset)) {
+			notes.push(i);
+		}
+	}
+	return new Set(notes);
+};

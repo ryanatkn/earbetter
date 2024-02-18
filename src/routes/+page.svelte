@@ -14,6 +14,7 @@
 		<menu>
 			<li><a class="panel" href="{base}/game">play the game!</a></li>
 			<li><a class="panel" href="{base}/piano">play piano!</a></li>
+			<li><a class="panel" href="{base}/sequencer">sequencer!</a></li>
 		</menu>
 	</section>
 	<Footer />
