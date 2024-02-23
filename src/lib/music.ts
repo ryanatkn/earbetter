@@ -2,8 +2,8 @@ import {z} from 'zod';
 import type {Flavored} from '@ryanatkn/belt/types.js';
 import {signal, type Signal} from '@preact/signals-core';
 import {getContext, setContext} from 'svelte';
+import {type Hsl, hsl_to_string, type Hue} from '@ryanatkn/belt/colors.js';
 
-import {type Hsl, hsl_to_string, type Hue} from '$lib/colors';
 import type {Frequency} from '$lib/helpers';
 
 export const DEFAULT_TUNING = 440; // https://wikipedia.org/wiki/A440_(pitch_standard)
