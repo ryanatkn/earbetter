@@ -33,8 +33,8 @@
 <style>
 	/* TODO this is hacky, extract or reuse something? */
 	.preview {
-		padding: var(--spacing_md);
-		margin-bottom: var(--spacing_lg);
+		padding: var(--space_md);
+		margin-bottom: var(--space_lg);
 		text-align: center;
 		font-family: var(--font_family_mono);
 	}

@@ -23,11 +23,11 @@
 		margin: 0 auto;
 	}
 	.width_sm {
-		margin-top: var(--spacing_3);
+		margin-top: var(--space_xl3);
 	}
 	/* TODO hacky */
 	.width_sm :global(.section-title) {
-		border-top-left-radius: var(--border_radius_sm);
-		border-top-right-radius: var(--border_radius_sm);
+		border-top-left-radius: var(--radius_sm);
+		border-top-right-radius: var(--radius_sm);
 	}
 </style>

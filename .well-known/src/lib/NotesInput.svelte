@@ -108,7 +108,7 @@
 <div class="notes_input">
 	<div class="notes width_sm">
 		<!-- TODO copy button -->
-		<blockquote class="panel" style:margin="var(--spacing_lg) 0">
+		<blockquote class="panel" style:margin="var(--space_lg) 0">
 			<textarea bind:value={notes_str} on:input={(e) => update_notes_str(e.currentTarget.value)} />
 		</blockquote>
 		<button
@@ -149,7 +149,7 @@
 		{/if}
 	</div>
 	<section class="box">
-		<label style:margin-bottom="var(--spacing_lg)"
+		<label style:margin-bottom="var(--space_lg)"
 			>key <select bind:value={key}>
 				{#each pitch_classes as pc (pc)}
 					<option value={pc}>{pc}</option>
@@ -188,7 +188,7 @@
 		flex-direction: column;
 	}
 	.piano_wrapper {
-		padding: var(--spacing_md);
+		padding: var(--space_md);
 	}
 	.scales {
 		display: flex;

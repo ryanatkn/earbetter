@@ -51,7 +51,7 @@
 		display: flex;
 		flex-direction: column;
 		align-items: stretch;
-		margin-bottom: var(--spacing_md);
+		margin-bottom: var(--space_md);
 	}
 	button {
 		width: 100%;

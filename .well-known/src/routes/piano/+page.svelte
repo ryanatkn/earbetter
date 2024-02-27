@@ -110,6 +110,6 @@
 		align-items: center;
 	}
 	.piano-wrapper {
-		padding: var(--spacing_md);
+		padding: var(--space_md);
 	}
 </style>

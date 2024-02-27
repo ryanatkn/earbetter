@@ -32,6 +32,6 @@
 
 <style>
 	td {
-		padding: var(--spacing_xs3) 0;
+		padding: var(--space_xs3) 0;
 	}
 </style>

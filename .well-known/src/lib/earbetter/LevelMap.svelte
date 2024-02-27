@@ -191,7 +191,7 @@
 		align-items: center;
 	}
 	.width_sm {
-		margin: 0 var(--spacing_1);
+		margin: 0 var(--space_xl);
 	}
 	@media (max-width: 1111px) {
 		.map {

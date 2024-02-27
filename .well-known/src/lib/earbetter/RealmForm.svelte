@@ -158,7 +158,7 @@
 		{/if}
 		<button
 			type="button"
-			style:margin-top="var(--spacing_lg)"
+			style:margin-top="var(--space_lg)"
 			on:click={() => dispatch('duplicate', id)}
 		>
 			duplicate

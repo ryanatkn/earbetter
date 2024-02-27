@@ -32,14 +32,14 @@
 		align-items: center;
 	}
 	menu li:not(:last-child) {
-		margin-bottom: var(--spacing_3);
+		margin-bottom: var(--space_xl3);
 	}
 	menu a {
-		font-size: var(--size_3);
-		padding: var(--spacing_1);
+		font-size: var(--size_xl3);
+		padding: var(--space_xl);
 	}
 	.tagline {
-		margin-top: var(--spacing_3);
-		padding: var(--spacing_md);
+		margin-top: var(--space_xl3);
+		padding: var(--space_md);
 	}
 </style>
