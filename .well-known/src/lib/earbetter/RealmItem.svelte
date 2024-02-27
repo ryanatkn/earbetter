@@ -18,7 +18,7 @@
 	$: level_stats = project_data?.level_stats;
 </script>
 
-<li class="realm-item" transition:slide|local class:selected>
+<li class="realm_item" transition:slide|local class:selected>
 	{#if level_stats}
 		<RealmStatsSummary {realm_data} {level_stats} />
 	{/if}
@@ -49,13 +49,14 @@
 </li>
 
 <style>
-	li {
+	.realm_item {
+		display: flex;
 		width: 100%;
 	}
 	.plain-button:not(.selected) {
 		visibility: hidden;
 	}
-	.realm-item:hover .plain-button,
+	.realm_item:hover .plain-button,
 	li.selected .plain-button {
 		visibility: visible;
 	}
