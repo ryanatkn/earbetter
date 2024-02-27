@@ -27,10 +27,10 @@
 		align-items: center;
 	}
 	menu li:not(:last-child) {
-		margin-bottom: var(--spacing_md);
+		margin-bottom: var(--space_md);
 	}
 	menu a {
-		font-size: var(--size_1);
-		padding: var(--spacing_1);
+		font-size: var(--size_xl);
+		padding: var(--space_xl);
 	}
 </style>

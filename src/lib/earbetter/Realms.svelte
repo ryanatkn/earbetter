@@ -70,6 +70,6 @@
 		width: 100%;
 	}
 	.realm-items-wrapper {
-		padding-bottom: var(--spacing_md);
+		padding-bottom: var(--space_md);
 	}
 </style>

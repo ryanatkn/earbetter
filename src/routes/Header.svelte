@@ -11,12 +11,12 @@
 
 <style>
 	header {
-		margin: var(--spacing_3) auto 0;
+		margin: var(--space_xl3) auto 0;
 		text-align: center;
 		display: flex;
 		flex-direction: column;
 		align-items: center;
-		padding-top: var(--spacing_3);
+		padding-top: var(--space_xl3);
 	}
 	.panel {
 		display: flex;
@@ -24,6 +24,6 @@
 		align-items: center;
 	}
 	.icons {
-		font-size: var(--size_5);
+		font-size: var(--size_xl5);
 	}
 </style>

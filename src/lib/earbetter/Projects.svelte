@@ -56,7 +56,7 @@
 
 <style>
 	.create-new-project {
-		margin-top: var(--spacing_md);
+		margin-top: var(--space_md);
 		width: 100%;
 	}
 </style>

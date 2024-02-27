@@ -201,13 +201,13 @@
 						<div
 							class="panel padded_md box"
 							in:scale|local={{delay: 250}}
-							style:margin-bottom="var(--spacing_md)"
+							style:margin-bottom="var(--space_md)"
 						>
-							<div class="panel padded_md box box-text" style:margin-bottom="var(--spacing_md)">
+							<div class="panel padded_md box box-text" style:margin-bottom="var(--space_md)">
 								{#if $mistakes === 0}
-									<div style:font-size="var(--size_3)">flawless run!</div>
+									<div style:font-size="var(--size_xl3)">flawless run!</div>
 								{:else}
-									<div style:font-size="var(--size_3)">
+									<div style:font-size="var(--size_xl3)">
 										{$mistakes}
 									</div>
 									<div>
@@ -223,7 +223,7 @@
 							class="big"
 							on:click={() => exit_level_to_map()}
 							in:scale|local={{delay: 500}}
-							style:margin-bottom="var(--spacing_md)"
+							style:margin-bottom="var(--space_md)"
 						>
 							go back to the map &nbsp;<code>Space</code></button
 						>
@@ -272,7 +272,7 @@
 		--highlighted_animation: highlighting;
 	}
 	/* .debug {
-		font-size: var(--size_1);
+		font-size: var(--size_xl);
 		height: 100%;
 		width: 100%;
 		position: absolute;
@@ -304,11 +304,11 @@
 	}
 
 	.completed-header-icon {
-		font-size: var(--icon_size_1);
+		font-size: var(--icon_size_xl);
 		word-break: break-all;
 		text-align: center;
 		word-wrap: break-word;
-		padding: var(--spacing_xs);
+		padding: var(--space_xs);
 	}
 	@media (max-width: 500px) {
 		.completed-header-icon {
@@ -328,7 +328,7 @@
 		pointer-events: none;
 	}
 	.feedback-text-bursts {
-		font-size: var(--size_3);
+		font-size: var(--size_xl3);
 		position: fixed;
 		inset: 0;
 		z-index: 115;

@@ -57,6 +57,6 @@
 		flex: 1;
 	}
 	.icon-button {
-		font-size: var(--size_1);
+		font-size: var(--size_xl);
 	}
 </style>
