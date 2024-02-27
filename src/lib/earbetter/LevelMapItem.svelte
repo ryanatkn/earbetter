@@ -29,12 +29,12 @@
 	$: selected = editing || editing_this_level;
 </script>
 
-<li class="level-map-item" transition:slide|local class:selected>
+<li class="level_map_item" transition:slide|local class:selected>
 	{#if level_stats}
 		<LevelStatsSummary {level_data} {level_stats} />
 	{/if}
 	<button
-		class="level-button deselectable"
+		class="level_button deselectable"
 		title="play this level"
 		on:click={() => play_level(level_data.id)}
 		class:selected
@@ -60,14 +60,17 @@
 </li>
 
 <style>
+	.level_map_item {
+		display: flex;
+	}
 	.plain-button:not(.selected) {
 		visibility: hidden;
 	}
-	.level-map-item:hover .plain-button,
+	.level_map_item:hover .plain-button,
 	li.selected .plain-button {
 		visibility: visible;
 	}
-	.level-button {
+	.level_button {
 		flex: 1;
 	}
 	.icon-button {
