@@ -24,4 +24,4 @@ hey cool thanks for your interest
    which are currently unclear and open for
    [discussion](https://github.com/ryanatkn/earbetter/discussions),
    but everything is public domain and forking is encouraged
-1. please be kind and curious and help us make the thing better
+1. please be courteous and curious and help us make the thing better
