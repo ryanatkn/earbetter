@@ -86,7 +86,7 @@
 			start_importing_el.focus();
 		}}
 	>
-		<div class="importing prose padded_1 width_md box">
+		<div class="importing prose p_xl width_md box">
 			<h2>import realm data</h2>
 			<button
 				type="button"
@@ -144,7 +144,7 @@
 		{#if removing}
 			<div transition:slide|local>
 				<button
-					class="width_full"
+					class="w_100"
 					type="button"
 					style:margin-bottom={0}
 					on:click={() => {
@@ -179,7 +179,7 @@
 			<div transition:slide|local>
 				<button
 					type="button"
-					class="width_full"
+					class="w_100"
 					on:click={() => {
 						toggle_create_default_realms = false;
 						for (const realm_data of default_project_data().realms) {

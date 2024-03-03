@@ -25,7 +25,7 @@
 	};
 </script>
 
-<div class="panel padded_md">
+<div class="panel p_md">
 	<div class="prose">
 		<header>
 			<h2>levels</h2>

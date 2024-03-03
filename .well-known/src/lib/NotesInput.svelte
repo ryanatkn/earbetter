@@ -162,7 +162,7 @@
 			{/each}
 		</div>
 	</section>
-	<form class="width_sm prose panel padded_md">
+	<form class="width_sm prose panel p_md">
 		<fieldset>
 			<InstrumentControl {instrument} />
 			<VolumeControl {volume} />
