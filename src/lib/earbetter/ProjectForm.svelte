@@ -81,7 +81,7 @@
 			start_importing_el.focus();
 		}}
 	>
-		<div class="importing prose padded_1 width_md box">
+		<div class="importing prose p_xl width_md box">
 			<h2>import project data</h2>
 			<button
 				on:click={() => {
@@ -137,7 +137,7 @@
 		{#if removing}
 			<div transition:slide|local>
 				<button
-					class="width_full"
+					class="w_100"
 					type="button"
 					style:margin-bottom={0}
 					on:click={() => {

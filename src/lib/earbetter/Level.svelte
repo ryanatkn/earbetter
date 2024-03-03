@@ -193,17 +193,17 @@
 		{#if complete}
 			<div class="completed-level-feedback">
 				<div class="pane" transition:scale|local>
-					<div class="panel box padded_md">
+					<div class="panel box p_md">
 						<div class="box row" in:scale|local={{duration: 3000}}>
 							<div class="completed-header-icon" in:fly|local={{duration: 4000, x: -200}}>🎵</div>
 							<div class="completed-header-icon" in:fly|local={{duration: 4000, x: 200}}>🎶</div>
 						</div>
 						<div
-							class="panel padded_md box"
+							class="panel p_md box"
 							in:scale|local={{delay: 250}}
 							style:margin-bottom="var(--space_md)"
 						>
-							<div class="panel padded_md box box-text" style:margin-bottom="var(--space_md)">
+							<div class="panel p_md box box-text" style:margin-bottom="var(--space_md)">
 								{#if $mistakes === 0}
 									<div style:font-size="var(--size_xl3)">flawless run!</div>
 								{:else}
@@ -215,7 +215,7 @@
 									</div>
 								{/if}
 							</div>
-							<div class="panel padded_md">
+							<div class="panel p_md">
 								<LevelStatsSummary {level_data} {level_stats} />
 							</div>
 						</div>

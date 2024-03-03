@@ -5,7 +5,7 @@
 </script>
 
 <footer class:flush>
-	<div class="panel padded_md width_sm">
+	<div class="panel p_md width_sm">
 		<a href="https://github.com/ryanatkn/earbetter">source code</a>
 		<div>public domain</div>
 		<div class="breadcrumbs-wrapper">

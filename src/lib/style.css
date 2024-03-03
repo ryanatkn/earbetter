@@ -179,11 +179,6 @@ button {
 	--border_color: var(--accent_border_color_darker);
 }
 
-/* TODO hacky, just being lazy */
-.padded_md-x {
-	padding: 0 var(--space_md);
-}
-
 .progress-bar {
 	position: var(--progress_bar_position, absolute);
 	left: var(--progress_bar_left, 0);
