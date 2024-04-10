@@ -36,6 +36,6 @@
 		padding: var(--space_md);
 		margin-bottom: var(--space_lg);
 		text-align: center;
-		font-family: var(--font_family_mono);
+		font-family: var(--font_mono);
 	}
 </style>
