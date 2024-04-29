@@ -13,7 +13,7 @@
 	--button_color_hover: var(--darken_2);
 	--button_color_active: var(--darken_3);
 	--button_color_disabled: transparent;
-	--input_bg_color: var(--button_color);
+	--input_fill: var(--button_color);
 
 	/* felt overrides */
 	/* TODO hacky */
