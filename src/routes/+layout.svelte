@@ -14,9 +14,6 @@
 	import {sync_color_scheme} from '@ryanatkn/fuz/theme.js';
 	import {writable} from 'svelte/store';
 
-	const selected_color_scheme = writable('dark' as const);
-	sync_color_scheme($selected_color_scheme); // TODO probably shouldn't be needed
-
 	import {set_ac} from '$lib/ac';
 	import {adjust_volume, set_instrument, set_volume} from '$lib/helpers';
 	import {request_access} from '$lib/midi_access';
@@ -30,6 +27,9 @@
 	import InitMidiButton from '$lib/InitMidiButton.svelte';
 	import Footer from '$routes/Footer.svelte';
 	import SiteBreadcrumb from '$routes/SiteBreadcrumb.svelte';
+
+	const selected_color_scheme = writable('dark' as const);
+	sync_color_scheme($selected_color_scheme); // TODO probably shouldn't be needed
 
 	// load site data
 	const SITE_DATA_STORAGE_KEY = 'site';
