@@ -30,25 +30,43 @@
 	import Intervals_Input from '$lib/Intervals_Input.svelte';
 	import Notes_Input from '$lib/Notes_Input.svelte';
 	import Piano from '$lib/Piano.svelte';
+	import type {Snippet} from 'svelte';
 
-	const dispatch = createEventDispatcher<{
-		submit: Level_Data;
-		remove: Level_Id;
-		duplicate: Level_Id;
-	}>();
+	interface Props {
+		level_data?: Level_Data | null;
+		id?: Level_Id;
+		name?: string;
+		intervals?: Intervals;
+		tonics?: Midi[] | null;
+		trial_count?: number;
+		sequence_length?: number;
+		min_note?: Midi;
+		max_note?: Midi;
+		editing?: boolean;
+		onsubmit?: (level_data: Level_Data) => void;
+		onremove?: (level_id: Level_Id) => void;
+		onduplicate?: (level_id: Level_Id) => void;
+		footer?: Snippet<[changed: boolean, to_data: () => Level_Data]>;
+	}
 
-	export let level_data: Level_Data | null = null;
-	export let id: Level_Id = create_level_id();
-	export let name = DEFAULT_LEVEL_NAME;
-	export let intervals: Intervals = DEFAULT_INTERVALS;
-	export let tonics: Midi[] | null = DEFAULT_TONICS;
-	export let trial_count: number = DEFAULT_TRIAL_COUNT;
-	export let sequence_length: number = DEFAULT_SEQUENCE_LENGTH;
-	export let min_note: Midi = DEFAULT_MIN_NOTE;
-	export let max_note: Midi = DEFAULT_MAX_NOTE;
-	export let editing = false;
+	let {
+		level_data = null, // eslint-disable-line prefer-const
+		id = $bindable(create_level_id()),
+		name = $bindable(DEFAULT_LEVEL_NAME),
+		intervals = $bindable(DEFAULT_INTERVALS),
+		tonics = $bindable(DEFAULT_TONICS),
+		trial_count = $bindable(DEFAULT_TRIAL_COUNT),
+		sequence_length = $bindable(DEFAULT_SEQUENCE_LENGTH),
+		min_note = $bindable(DEFAULT_MIN_NOTE),
+		max_note = $bindable(DEFAULT_MAX_NOTE),
+		editing = false, // eslint-disable-line prefer-const
+		onsubmit, // eslint-disable-line prefer-const
+		onremove, // eslint-disable-line prefer-const
+		onduplicate, // eslint-disable-line prefer-const
+		footer, // eslint-disable-line prefer-const
+	}: Props = $props();
 
-	let removing = false;
+	let removing = $state(false);
 
 	const to_data = (): Level_Data => ({
 		id,
@@ -61,7 +79,8 @@
 		max_note,
 	});
 
-	$: set_level_data(level_data);
+	// TODO BLOCK @multiple misusing effect setting state
+	$effect(() => set_level_data(level_data));
 	const set_level_data = (level_data: Level_Data | null): void => {
 		if (level_data) {
 			id = level_data.id;
@@ -84,31 +103,37 @@
 		}
 	};
 
-	$: changed =
+	const changed = $derived(
 		!level_data ||
-		id !== level_data.id ||
-		name !== level_data.name ||
-		trial_count !== level_data.trial_count ||
-		sequence_length !== level_data.sequence_length ||
-		min_note !== level_data.min_note ||
-		max_note !== level_data.max_note ||
-		intervals.toString() !== level_data.intervals.toString() ||
-		tonics?.toString() !== level_data.tonics?.toString(); // TODO speed these comparisons up
+			id !== level_data.id ||
+			name !== level_data.name ||
+			trial_count !== level_data.trial_count ||
+			sequence_length !== level_data.sequence_length ||
+			min_note !== level_data.min_note ||
+			max_note !== level_data.max_note ||
+			intervals.toString() !== level_data.intervals.toString() ||
+			tonics?.toString() !== level_data.tonics?.toString(),
+	); // TODO speed these comparisons up
 
 	// TODO lots of similarity with `Project_Form`
-	let importing = false;
-	let picking_intervals = false;
-	let picking_tonics = false;
-	let serialized = '';
-	let updated = '';
-	$: changed_serialized = serialized !== updated;
-	let parse_error_message = '';
-	$: level_data, id, (parse_error_message = '');
-	let level_data_el: HTMLTextAreaElement;
-	let start_importing_el: HTMLButtonElement;
-	let intervals_el: HTMLInputElement;
-	let tonics_el: HTMLInputElement;
-	$: tonics_set = tonics && new Set(tonics);
+	let importing = $state(false);
+	let picking_intervals = $state(false);
+	let picking_tonics = $state(false);
+	let serialized = $state('');
+	let updated = $state('');
+	const changed_serialized = $derived(serialized !== updated);
+	let parse_error_message = $state('');
+	// TODO BLOCK @multiple misusing effect setting state
+	$effect(() => {
+		level_data;
+		id;
+		parse_error_message = '';
+	});
+	let level_data_el: HTMLTextAreaElement | undefined = $state();
+	let start_importing_el: HTMLButtonElement | undefined = $state();
+	let intervals_el: HTMLInputElement | undefined = $state();
+	let tonics_el: HTMLInputElement | undefined = $state();
+	const tonics_set = $derived(tonics && new Set(tonics));
 
 	const import_data = async (): Promise<void> => {
 		parse_error_message = '';
@@ -117,7 +142,7 @@
 			// add an `id` if there is none
 			if (json && !json.id) json.id = create_level_id();
 			const parsed = Level_Data.parse(json);
-			dispatch('submit', parsed);
+			onsubmit?.(parsed);
 		} catch (err) {
 			console.error('failed to import data', err);
 			parse_error_message = err.message || 'unknown error';
@@ -132,13 +157,13 @@
 
 	// this persists form values across UI states but not across page nav,
 	// would use SvelteKit snapshots for that - https://kit.svelte.dev/docs/snapshots
-	let intervals_input_selected_scale: Scale;
-	let intervals_input_octaves: number;
+	let intervals_input_selected_scale: Scale | undefined = $state();
+	let intervals_input_octaves: number | undefined = $state();
 
 	// TODO helper component for measuring? with `let:width` - first look at Svelte's new box bindings
-	let piano_width: number | undefined;
+	let piano_width: number | undefined = $state();
 
-	$: lowest_note_error = min_note >= max_note;
+	const lowest_note_error = $derived(min_note >= max_note);
 </script>
 
 <form class="level-def-form">
@@ -249,7 +274,7 @@
 		<button
 			class="accent"
 			type="button"
-			onclick={() => dispatch('submit', to_data())}
+			onclick={() => onsubmit?.(to_data())}
 			disabled={(editing && !changed) || lowest_note_error}
 		>
 			{#if editing}save changes to level{:else}create level{/if}
@@ -266,18 +291,14 @@
 						style:margin-bottom={0}
 						onclick={() => {
 							removing = false;
-							dispatch('remove', id);
+							onremove?.(id);
 						}}
 					>
 						✖ confirm remove
 					</button>
 				</div>
 			{/if}
-			<button
-				type="button"
-				style:margin-top="var(--space_lg)"
-				onclick={() => dispatch('duplicate', id)}
-			>
+			<button type="button" style:margin-top="var(--space_lg)" onclick={() => onduplicate?.(id)}>
 				duplicate
 			</button>
 		{/if}
@@ -289,14 +310,16 @@
 				<Alert status="error"><pre>{parse_error_message}</pre></Alert>
 			</div>
 		{/if}
-		<slot name="footer" {changed} {to_data} />
+		{#if footer}
+			{@render footer(changed, to_data)}
+		{/if}
 	</div>
 </form>
 {#if importing}
 	<Dialog
 		onclose={() => {
 			importing = false;
-			start_importing_el.focus();
+			start_importing_el?.focus();
 		}}
 	>
 		<div class="importing p_xl width_md box">
@@ -304,7 +327,7 @@
 			<button
 				onclick={() => {
 					void navigator.clipboard.writeText(updated);
-					level_data_el.select();
+					level_data_el?.select();
 				}}
 			>
 				copy to clipboard
@@ -322,46 +345,48 @@
 {/if}
 {#if picking_intervals}
 	<Dialog
-		let:close
 		onclose={() => {
 			picking_intervals = false;
-			intervals_el.focus();
+			intervals_el?.focus();
 		}}
 	>
-		<div class="p_xl width_md box">
-			<h2>pick intervals</h2>
-			<Intervals_Input
-				bind:selected_scale={intervals_input_selected_scale}
-				bind:octaves={intervals_input_octaves}
-				oninput={(e) => {
-					intervals = e.detail;
-					close();
-				}}
-			/>
-		</div>
+		{#snippet children(close)}
+			<div class="p_xl width_md box">
+				<h2>pick intervals</h2>
+				<Intervals_Input
+					bind:selected_scale={intervals_input_selected_scale}
+					bind:octaves={intervals_input_octaves}
+					oninput={(_intervals) => {
+						intervals = _intervals;
+						close();
+					}}
+				/>
+			</div>
+		{/snippet}
 	</Dialog>
 {/if}
 {#if picking_tonics}
 	<Dialog
-		let:close
 		onclose={() => {
 			picking_tonics = false;
-			tonics_el.focus();
+			tonics_el?.focus();
 		}}
 	>
-		<div class="p_xl width_md box">
-			<h2>pick tonics</h2>
-			<!-- TODO this `new Set` is a hack, probably change the data structure to a set, need serialization for storage -->
-			<Notes_Input
-				notes={new Set(tonics)}
-				{min_note}
-				{max_note}
-				oninput={(e) => {
-					tonics = e.detail;
-					close();
-				}}
-			/>
-		</div>
+		{#snippet children(close)}
+			<div class="p_xl width_md box">
+				<h2>pick tonics</h2>
+				<!-- TODO this `new Set` is a hack, probably change the data structure to a set, need serialization for storage -->
+				<Notes_Input
+					notes={new Set(tonics)}
+					{min_note}
+					{max_note}
+					oninput={(notes) => {
+						tonics = notes;
+						close();
+					}}
+				/>
+			</div>
+		{/snippet}
 	</Dialog>
 {/if}
 
