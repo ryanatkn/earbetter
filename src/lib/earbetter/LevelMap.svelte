@@ -4,18 +4,18 @@
 
 	import type {MIDIAccess} from '$lib/WebMIDI';
 	import {get_ac} from '$lib/ac.js';
-	import InitMidiButton from '$lib/InitMidiButton.svelte';
+	import Init_Midi_Button from '$lib/Init_Midi_Button.svelte';
 	import LevelForm from '$lib/earbetter/LevelForm.svelte';
 	import Projects from '$lib/earbetter/Projects.svelte';
-	import VolumeControl from '$lib/VolumeControl.svelte';
+	import Volume_Control from '$lib/Volume_Control.svelte';
 	import {get_instrument, get_volume, with_velocity} from '$lib/helpers.js';
-	import InstrumentControl from '$lib/InstrumentControl.svelte';
+	import Instrument_Control from '$lib/Instrument_Control.svelte';
 	import type {App} from '$lib/earbetter/app.js';
 	import ControlsInstructions from '$lib/earbetter/ControlsInstructions.svelte';
-	import MidiInput from '$lib/MidiInput.svelte';
-	import {start_playing, stop_playing} from '$lib/play_note';
+	import Midi_Input from '$lib/Midi_Input.svelte';
+	import {start_playing, stop_playing} from '$lib/play_note.js';
 	import Realms from '$lib/earbetter/Realms.svelte';
-	import {MISTAKE_HISTORY_LENGTH} from '$lib/earbetter/level';
+	import {MISTAKE_HISTORY_LENGTH} from '$lib/earbetter/level.js';
 	import RealmEditor from '$lib/earbetter/RealmEditor.svelte';
 	import LevelMapItems from '$lib/earbetter/LevelMapItems.svelte';
 	import ProjectEditor from '$lib/earbetter/ProjectEditor.svelte';
@@ -57,7 +57,7 @@
 	$: no_realms = !$realms?.length;
 </script>
 
-<MidiInput
+<Midi_Input
 	{midi_access}
 	on:note_start={(e) => {
 		start_playing(ac, e.detail.note, with_velocity($volume, e.detail.velocity), $instrument);
@@ -85,10 +85,10 @@
 						<h2>controls</h2>
 					</header>
 					<ControlsInstructions />
-					<VolumeControl {volume} />
-					<InstrumentControl {instrument} />
+					<Volume_Control {volume} />
+					<Instrument_Control {instrument} />
 					<aside>Earbetter supports MIDI devices like piano keyboards, connect and click:</aside>
-					<InitMidiButton {midi_access} />
+					<Init_Midi_Button {midi_access} />
 				</div>
 			</section>
 		</div>

@@ -10,14 +10,14 @@
 		LevelStats,
 		type Level,
 		type LevelData,
-	} from '$lib/earbetter/level';
+	} from '$lib/earbetter/level.js';
 	import Piano from '$lib/Piano.svelte';
 	import LevelProgressIndicator from '$lib/earbetter/LevelProgressIndicator.svelte';
 	import TrialProgressIndicator from '$lib/earbetter/TrialProgressIndicator.svelte';
 	import {get_ac} from '$lib/ac.js';
-	import MidiInput from '$lib/MidiInput.svelte';
+	import Midi_Input from '$lib/Midi_Input.svelte';
 	import type {Midi} from '$lib/music.js';
-	import {playing_notes, start_playing, stop_playing} from '$lib/play_note';
+	import {playing_notes, start_playing, stop_playing} from '$lib/play_note.js';
 	import {get_instrument, get_volume, with_velocity} from '$lib/helpers.js';
 	import {midi_access} from '$lib/midi_access.js';
 	import LevelStatsSummary from '$lib/earbetter/LevelStatsSummary.svelte';
@@ -140,7 +140,7 @@
 </script>
 
 <svelte:window on:keydown|capture={keydown} />
-<MidiInput
+<Midi_Input
 	{midi_access}
 	on:note_start={(e) => {
 		// TODO should this be ignored if it's not an enabled key? should the level itself ignore the guess?

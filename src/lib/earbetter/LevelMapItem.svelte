@@ -1,7 +1,7 @@
 <script lang="ts">
 	import {slide} from 'svelte/transition';
 
-	import type {LevelData} from '$lib/earbetter/level';
+	import type {LevelData} from '$lib/earbetter/level.js';
 	import type {App} from '$lib/earbetter/app.js';
 	import LevelStatsSummary from '$lib/earbetter/LevelStatsSummary.svelte';
 

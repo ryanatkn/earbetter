@@ -17,7 +17,7 @@ import {
 	type Level,
 	LevelData,
 	type LevelId,
-} from '$lib/earbetter/level';
+} from '$lib/earbetter/level.js';
 import {ProjectData, ProjectId, ProjectName} from '$lib/earbetter/project';
 import {load_from_storage, set_in_storage} from '$lib/storage.js';
 import {RealmId, RealmData} from '$lib/earbetter/realm';

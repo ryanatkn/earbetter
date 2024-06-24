@@ -10,7 +10,7 @@
 		lookup_scale,
 	} from '$lib/music.js';
 
-	// TODO naming convention between `IntervalsInput` and `SelectNotesControl`?
+	// TODO naming convention between `IntervalsInput` and `Select_Notes_Control`?
 
 	export let scale: Signal<Scale>;
 	export let key: Signal<PitchClass>;

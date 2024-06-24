@@ -6,8 +6,8 @@
 	import Earbetter from '$lib/earbetter/Earbetter.svelte';
 	import Header from '$routes/Header.svelte';
 	import Footer from '$routes/Footer.svelte';
-	import {LevelHashData} from '$lib/earbetter/level';
-	import {parse_from_hash} from '$lib/url';
+	import {Level_Hash_Data} from '$lib/earbetter/level.js';
+	import {parse_from_hash} from '$lib/url.js';
 	import {get_app} from '$lib/earbetter/app.js';
 
 	const go_back = () => goto(`${base}/game`);
@@ -15,13 +15,16 @@
 	const app = get_app();
 
 	// TODO add this to the app data so it's persisted when we navigate, and can be saved if it's not in the list
-	$: parsed = LevelHashData.safeParse(parse_from_hash($page.url.hash));
-	$: active_level_data = parsed.success ? parsed.data : null;
-	$: if (active_level_data === null) {
-		void go_back();
-	} else {
-		app.active_level_data.value = active_level_data.level;
-	}
+	const parsed = $derived(Level_Hash_Data.safeParse(parse_from_hash($page.url.hash)));
+	const active_level_data = $derived(parsed.success ? parsed.data : null);
+	// TODO BLOCK @multiple misusing effect setting state
+	$effect(() => {
+		if (active_level_data === null) {
+			void go_back();
+		} else {
+			app.active_level_data.value = active_level_data.level;
+		}
+	});
 </script>
 
 <svelte:head>
@@ -29,7 +32,7 @@
 </svelte:head>
 
 <main>
-	<button class="go-back icon_button plain_button" onclick={go_back}>←</button>
+	<button title="go back" class="go_back icon_button plain_button" onclick={go_back}>←</button>
 	<Earbetter {app}>
 		<svelte:fragment slot="header"><Header /></svelte:fragment>
 		<svelte:fragment slot="footer"><Footer /></svelte:fragment>
@@ -37,7 +40,7 @@
 </main>
 
 <style>
-	.go-back {
+	.go_back {
 		position: absolute;
 		top: 0;
 		right: 0;

@@ -5,7 +5,7 @@
 
 	import {pages} from '$routes/nav';
 
-	$: selected_slug = strip_start($page.url.pathname, base);
+	const selected_slug = $derived(strip_start($page.url.pathname, base));
 </script>
 
 <header class="section_title"><h2>site map</h2></header>

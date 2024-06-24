@@ -15,7 +15,7 @@
 		LevelData,
 		type LevelId,
 		DEFAULT_TONICS,
-	} from '$lib/earbetter/level';
+	} from '$lib/earbetter/level.js';
 	import {
 		parse_intervals,
 		serialize_intervals,

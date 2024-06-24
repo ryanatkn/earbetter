@@ -233,15 +233,15 @@
       "default": "./dist/id.js",
       "types": "./dist/id.d.ts"
     },
-    "./InitMidiButton.svelte": {
-      "svelte": "./dist/InitMidiButton.svelte",
-      "default": "./dist/InitMidiButton.svelte",
-      "types": "./dist/InitMidiButton.svelte.d.ts"
+    "./Init_Midi_Button.svelte": {
+      "svelte": "./dist/Init_Midi_Button.svelte",
+      "default": "./dist/Init_Midi_Button.svelte",
+      "types": "./dist/Init_Midi_Button.svelte.d.ts"
     },
-    "./InstrumentControl.svelte": {
-      "svelte": "./dist/InstrumentControl.svelte",
-      "default": "./dist/InstrumentControl.svelte",
-      "types": "./dist/InstrumentControl.svelte.d.ts"
+    "./Instrument_Control.svelte": {
+      "svelte": "./dist/Instrument_Control.svelte",
+      "default": "./dist/Instrument_Control.svelte",
+      "types": "./dist/Instrument_Control.svelte.d.ts"
     },
     "./IntervalsInput.svelte": {
       "svelte": "./dist/IntervalsInput.svelte",
@@ -256,15 +256,15 @@
       "default": "./dist/midi_helpers.js",
       "types": "./dist/midi_helpers.d.ts"
     },
-    "./MidiInput.svelte": {
-      "svelte": "./dist/MidiInput.svelte",
-      "default": "./dist/MidiInput.svelte",
-      "types": "./dist/MidiInput.svelte.d.ts"
+    "./Midi_Input.svelte": {
+      "svelte": "./dist/Midi_Input.svelte",
+      "default": "./dist/Midi_Input.svelte",
+      "types": "./dist/Midi_Input.svelte.d.ts"
     },
-    "./MidiRangeControl.svelte": {
-      "svelte": "./dist/MidiRangeControl.svelte",
-      "default": "./dist/MidiRangeControl.svelte",
-      "types": "./dist/MidiRangeControl.svelte.d.ts"
+    "./Midi_Range_Control.svelte": {
+      "svelte": "./dist/Midi_Range_Control.svelte",
+      "default": "./dist/Midi_Range_Control.svelte",
+      "types": "./dist/Midi_Range_Control.svelte.d.ts"
     },
     "./music.js": {
       "default": "./dist/music.js",
@@ -297,10 +297,10 @@
       "default": "./dist/projects/default_project.js",
       "types": "./dist/projects/default_project.d.ts"
     },
-    "./SelectNotesControl.svelte": {
-      "svelte": "./dist/SelectNotesControl.svelte",
-      "default": "./dist/SelectNotesControl.svelte",
-      "types": "./dist/SelectNotesControl.svelte.d.ts"
+    "./Select_Notes_Control.svelte": {
+      "svelte": "./dist/Select_Notes_Control.svelte",
+      "default": "./dist/Select_Notes_Control.svelte",
+      "types": "./dist/Select_Notes_Control.svelte.d.ts"
     },
     "./storage.js": {
       "default": "./dist/storage.js",
@@ -318,10 +318,10 @@
       "default": "./dist/url.js",
       "types": "./dist/url.d.ts"
     },
-    "./VolumeControl.svelte": {
-      "svelte": "./dist/VolumeControl.svelte",
-      "default": "./dist/VolumeControl.svelte",
-      "types": "./dist/VolumeControl.svelte.d.ts"
+    "./Volume_Control.svelte": {
+      "svelte": "./dist/Volume_Control.svelte",
+      "default": "./dist/Volume_Control.svelte",
+      "types": "./dist/Volume_Control.svelte.d.ts"
     },
     "./WebMIDI.js": {
       "default": "./dist/WebMIDI.js",

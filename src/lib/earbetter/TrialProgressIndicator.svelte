@@ -1,7 +1,7 @@
 <script lang="ts">
 	import {fade} from 'svelte/transition';
 
-	import type {Level, Status} from '$lib/earbetter/level';
+	import type {Level, Status} from '$lib/earbetter/level.js';
 
 	export let level: Level;
 

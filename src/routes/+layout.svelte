@@ -23,9 +23,9 @@
 	import {load_from_storage, set_in_storage} from '$lib/storage.js';
 	import Site_Map from '$routes/Site_Map.svelte';
 	import {SiteData} from '$routes/site_data.js';
-	import VolumeControl from '$lib/VolumeControl.svelte';
-	import InstrumentControl from '$lib/InstrumentControl.svelte';
-	import InitMidiButton from '$lib/InitMidiButton.svelte';
+	import Volume_Control from '$lib/Volume_Control.svelte';
+	import Instrument_Control from '$lib/Instrument_Control.svelte';
+	import Init_Midi_Button from '$lib/Init_Midi_Button.svelte';
 	import Footer from '$routes/Footer.svelte';
 	import Site_Breadcrumb from '$routes/Site_Breadcrumb.svelte';
 
@@ -146,10 +146,10 @@
 					</h1>
 					<h2 class="section_title">settings</h2>
 					<form class="width_sm box px_md">
-						<VolumeControl {volume} />
-						<InstrumentControl {instrument} />
+						<Volume_Control {volume} />
+						<Instrument_Control {instrument} />
 						<aside>Earbetter supports MIDI devices like piano keyboards, connect and click:</aside>
-						<InitMidiButton />
+						<Init_Midi_Button />
 					</form>
 				</section>
 				<section>

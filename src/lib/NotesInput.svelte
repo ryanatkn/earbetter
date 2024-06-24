@@ -6,12 +6,12 @@
 	import Piano from '$lib/Piano.svelte';
 	import {get_ac} from '$lib/ac.js';
 	import {midi_access} from '$lib/midi_access.js';
-	import MidiInput from '$lib/MidiInput.svelte';
-	import {playing_notes, start_playing, stop_playing} from '$lib/play_note';
-	import InitMidiButton from '$lib/InitMidiButton.svelte';
-	import VolumeControl from '$lib/VolumeControl.svelte';
+	import Midi_Input from '$lib/Midi_Input.svelte';
+	import {playing_notes, start_playing, stop_playing} from '$lib/play_note.js';
+	import Init_Midi_Button from '$lib/Init_Midi_Button.svelte';
+	import Volume_Control from '$lib/Volume_Control.svelte';
 	import {get_instrument, get_volume, with_velocity} from '$lib/helpers.js';
-	import InstrumentControl from '$lib/InstrumentControl.svelte';
+	import Instrument_Control from '$lib/Instrument_Control.svelte';
 	import {
 		Midi,
 		serialize_notes,
@@ -99,7 +99,7 @@
 
 <svelte:window bind:innerWidth />
 
-<MidiInput
+<Midi_Input
 	{midi_access}
 	on:note_start={(e) => play(e.detail.note, e.detail.velocity)}
 	on:note_stop={(e) => stop_playing(e.detail.note)}
@@ -164,11 +164,11 @@
 	</section>
 	<form class="width_sm panel p_md">
 		<fieldset>
-			<InstrumentControl {instrument} />
-			<VolumeControl {volume} />
+			<Instrument_Control {instrument} />
+			<Volume_Control {volume} />
 		</fieldset>
 		<fieldset>
-			<InitMidiButton />
+			<Init_Midi_Button />
 		</fieldset>
 	</form>
 </div>

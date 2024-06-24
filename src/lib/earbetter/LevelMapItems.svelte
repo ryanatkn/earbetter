@@ -1,7 +1,7 @@
 <script lang="ts">
 	import LevelMapItem from '$lib/earbetter/LevelMapItem.svelte';
 	import type {App} from '$lib/earbetter/app.js';
-	import {LevelData} from '$lib/earbetter/level';
+	import {LevelData} from '$lib/earbetter/level.js';
 
 	export let app: App;
 	export let levels: LevelData[]; // TODO making this a prop here, but using `app` most places, maybe change it to context?

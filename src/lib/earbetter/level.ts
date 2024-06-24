@@ -6,9 +6,9 @@ import {signal, batch, Signal, effect} from '@preact/signals-core';
 import {base} from '$app/paths';
 
 import {Midi, Intervals, Notes} from '$lib/music.js';
-import {play_note} from '$lib/play_note';
+import {play_note} from '$lib/play_note.js';
 import type {Instrument, Milliseconds, Volume} from '$lib/helpers.js';
-import {serialize_to_hash} from '$lib/url';
+import {serialize_to_hash} from '$lib/url.js';
 import {to_random_id} from '$lib/id';
 
 // TODO this isn't idiomatic signals code yet, uses `peek` too much
@@ -46,10 +46,10 @@ export const LevelData = z.object({
 });
 export type LevelData = z.infer<typeof LevelData>;
 
-export const LevelHashData = z.object({
+export const Level_Hash_Data = z.object({
 	level: LevelData,
 });
-export type LevelHashData = z.infer<typeof LevelHashData>;
+export type Level_Hash_Data = z.infer<typeof Level_Hash_Data>;
 
 export type Status =
 	| 'initial'
@@ -353,7 +353,7 @@ const get_correct_guess = (trial: Trial | null): Midi | null => {
 };
 
 export const to_play_level_url = (level_data: LevelData): string => {
-	const data: LevelHashData = {level: level_data};
+	const data: Level_Hash_Data = {level: level_data};
 	return `${base}/game/play` + serialize_to_hash(data);
 };
 

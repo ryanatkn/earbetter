@@ -3,8 +3,8 @@
 	import {page} from '$app/stores';
 	import {base} from '$app/paths';
 
-	$: pathname = $page.url.pathname;
-	$: home = pathname === base + '/';
+	const pathname = $derived($page.url.pathname);
+	const home = $derived(pathname === base + '/');
 </script>
 
 <!-- TODO this awkwardly nests a link -->

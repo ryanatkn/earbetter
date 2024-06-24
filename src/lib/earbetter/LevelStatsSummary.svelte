@@ -1,6 +1,6 @@
 <script lang="ts">
-	import type {LevelData} from '$lib/earbetter/level';
-	import {MISTAKE_HISTORY_LENGTH, type LevelStats} from '$lib/earbetter/level';
+	import type {LevelData} from '$lib/earbetter/level.js';
+	import {MISTAKE_HISTORY_LENGTH, type LevelStats} from '$lib/earbetter/level.js';
 	import {plural} from '@ryanatkn/belt/string.js';
 
 	export let level_data: LevelData;
