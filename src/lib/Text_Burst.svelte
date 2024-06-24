@@ -3,21 +3,42 @@
 	import {GR_2} from '@ryanatkn/belt/maths.js';
 	import {onMount} from 'svelte';
 
-	export let count: number;
-	export let items: string[];
-	export let duration = 2000;
-	export let x_radius = 250;
-	export let y_radius = 250;
-	export let scale_min = 1;
-	export let scale_max = GR_2;
-	export let hue_rotation_min = 0;
-	export let hue_rotation_max = 0; // set to 360 to get a random range of colors
-	export let start_rotation_min = 0;
-	export let start_rotation_max = 360;
-	export let end_rotation_min = 0;
-	export let end_rotation_max = 360;
+	interface Props {
+		count: number;
+		items: string[];
+		duration?: number;
+		x_radius?: number;
+		y_radius?: number;
+		scale_min?: number;
+		scale_max?: number;
+		hue_rotation_min?: number;
+		/**
+		 * Set to 359 to get a random range of colors.
+		 */
+		hue_rotation_max?: number;
+		start_rotation_min?: number;
+		start_rotation_max?: number;
+		end_rotation_min?: number;
+		end_rotation_max?: number;
+	}
 
-	let done = false;
+	const {
+		count,
+		items,
+		duration = 2000,
+		x_radius = 250,
+		y_radius = 250,
+		scale_min = 1,
+		scale_max = GR_2,
+		hue_rotation_min = 0,
+		hue_rotation_max = 0,
+		start_rotation_min = 0,
+		start_rotation_max = 359,
+		end_rotation_min = 0,
+		end_rotation_max = 359,
+	}: Props = $props();
+
+	let done = $state(false);
 
 	let timeout: number;
 	onMount(() => {
