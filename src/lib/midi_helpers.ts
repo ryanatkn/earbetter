@@ -25,7 +25,7 @@ export const parse_midi_message = (e: MIDIMessageEvent): Midi_Message => {
 	return {
 		command: e.data[0] >> 4,
 		channel: e.data[0] & 0xf,
-		note: e.data[1] as Midi, // TODO cast is needed because webMIDI doesn't include the type - should it?
+		note: e.data[1],
 		velocity: e.data[2] / 127,
 	};
 };

@@ -31,12 +31,12 @@ export const Level_Id = z.string();
 export type Level_Id = Flavored<z.infer<typeof Level_Id>, 'Level_Id'>; // TODO @multiple this doesn't work when used as a schema, use z.brand() instead? or are the egonomics too bad?
 export const create_level_id = (): Level_Id => to_random_id();
 
-export const LevelName = z.string().min(1).max(1000);
-export type LevelName = Flavored<z.infer<typeof LevelName>, 'LevelName'>; // TODO @multiple this doesn't work when used as a schema, use z.brand() instead? or are the egonomics too bad?
+export const Level_Name = z.string().min(1).max(1000);
+export type Level_Name = Flavored<z.infer<typeof Level_Name>, 'Level_Name'>; // TODO @multiple this doesn't work when used as a schema, use z.brand() instead? or are the egonomics too bad?
 
 export const Level_Data = z.object({
 	id: Level_Id.default(create_level_id),
-	name: LevelName.default(DEFAULT_LEVEL_NAME),
+	name: Level_Name.default(DEFAULT_LEVEL_NAME),
 	intervals: Intervals.default(DEFAULT_INTERVALS),
 	tonics: Notes.nullable().default(null),
 	trial_count: z.number().default(DEFAULT_TRIAL_COUNT),
@@ -138,14 +138,14 @@ const to_random_tonic = (def: Level_Data): Midi => {
 	const interval_min = def.intervals.reduce((max, v) => Math.min(max, v));
 	const tonic_max = Math.min(max_note - interval_max, max_note);
 	const tonic_min = Math.max(min_note - interval_min, min_note);
-	return (
-		tonic_min < tonic_max ? random_int(tonic_min, tonic_max) : to_fallback_tonic(min_note, max_note)
-	) as Midi;
+	return tonic_min < tonic_max
+		? random_int(tonic_min, tonic_max)
+		: to_fallback_tonic(min_note, max_note);
 };
 
 const to_fallback_tonic = (min_note: Midi, max_note: Midi): Midi => {
 	const offset = ((max_note - min_note) / 4) | 0;
-	return random_int(min_note + offset, max_note - offset) as Midi;
+	return random_int(min_note + offset, max_note - offset);
 };
 
 const DEFAULT_STATUS: Status = 'initial';
@@ -357,11 +357,11 @@ export const to_play_level_url = (level_data: Level_Data): string => {
 	return `${base}/game/play` + serialize_to_hash(data);
 };
 
-export const MistakesLevel_Stats = z.record(Level_Id, z.array(z.number()));
-export type MistakesLevel_Stats = z.infer<typeof MistakesLevel_Stats>;
+export const Mistakes_Level_Stats = z.record(Level_Id, z.array(z.number()));
+export type Mistakes_Level_Stats = z.infer<typeof Mistakes_Level_Stats>;
 
 export const Level_Stats = z.object({
-	mistakes: MistakesLevel_Stats,
+	mistakes: Mistakes_Level_Stats,
 });
 export type Level_Stats = z.infer<typeof Level_Stats>;
 

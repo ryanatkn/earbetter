@@ -153,7 +153,7 @@ export class App {
 			}
 		}
 		if (ids_to_delete) {
-			loaded.projects = loaded.projects.filter((p) => !ids_to_delete!.includes(p.id));
+			loaded.projects = loaded.projects.filter((p) => !ids_to_delete.includes(p.id));
 		}
 		return loaded;
 	}

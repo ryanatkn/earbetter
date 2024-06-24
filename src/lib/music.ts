@@ -215,7 +215,7 @@ export const midi_to_freq = (note: Midi, tuning: Frequency = DEFAULT_TUNING): Fr
 	2 ** ((note - 69) / 12) * tuning;
 
 export const freq_to_midi = (freq: Frequency, tuning: Frequency): Midi =>
-	Math.round(12 * Math.log2(freq / tuning) + 69) as Midi;
+	Math.round(12 * Math.log2(freq / tuning) + 69);
 
 export const freq_to_midi_safe = (freq: Frequency, tuning: Frequency): Midi | null => {
 	const midi = freq_to_midi(freq, tuning);
