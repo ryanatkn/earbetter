@@ -14,7 +14,7 @@
 
 <main>
 	<Earbetter {app}>
-		<svelte:fragment slot="header"><Header /></svelte:fragment>
-		<svelte:fragment slot="footer"><Footer /></svelte:fragment>
+		{#snippet header()}<Header />{/snippet}
+		{#snippet footer()}<Footer />{/snippet}
 	</Earbetter>
 </main>

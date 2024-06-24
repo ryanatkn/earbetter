@@ -1,5 +1,5 @@
 <script lang="ts">
-	import {onDestroy} from 'svelte';
+	import {onDestroy, type Snippet} from 'svelte';
 
 	import Level_Map from '$lib/earbetter/Level_Map.svelte';
 	import Level from '$lib/earbetter/Level.svelte';
@@ -8,21 +8,31 @@
 	import {midi_access} from '$lib/midi_access.js';
 	import type {App} from '$lib/earbetter/app.js';
 
-	export let app: App;
+	interface Props {
+		app: App;
+		header?: Snippet;
+		footer?: Snippet;
+	}
 
-	$: ({active_level_data, exit_level_to_map, register_success, selected_project_data} = app);
+	const {app, header, footer}: Props = $props();
+
+	const {active_level_data, exit_level_to_map, register_success, selected_project_data} =
+		$derived(app);
 
 	const ac = get_ac();
 	(window as any).audio = ac;
 
 	// TODO this is hacky because of how `Level.svelte` instantiates the `level` instance, see in multiple places
-	let level: LevelType; // TODO resolve ambiguity
-	$: if (level) app.level.value = level;
+	let level: LevelType | undefined = $state(); // TODO resolve ambiguity
+	// TODO BLOCK @multiple misusing effect setting state
+	$effect(() => {
+		if (level) app.level.value = level;
+	});
 	onDestroy(() => {
 		if (level && level === app.level.peek()) app.level.value = null;
 	});
 
-	$: level_stats = $selected_project_data?.level_stats;
+	const level_stats = $derived($selected_project_data?.level_stats);
 </script>
 
 {#if $active_level_data && level_stats}
@@ -36,9 +46,9 @@
 		/>
 	</div>
 {:else}
-	<slot name="header" />
+	{#if header}{@render header()}{/if}
 	<Level_Map {app} {midi_access} />
-	<slot name="footer" />
+	{#if footer}{@render footer()}{/if}
 {/if}
 
 <style>

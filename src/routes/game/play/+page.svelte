@@ -34,8 +34,8 @@
 <main>
 	<button title="go back" class="go_back icon_button plain_button" onclick={go_back}>←</button>
 	<Earbetter {app}>
-		<svelte:fragment slot="header"><Header /></svelte:fragment>
-		<svelte:fragment slot="footer"><Footer /></svelte:fragment>
+		{#snippet header()}<Header />{/snippet}
+		{#snippet footer()}<Footer />{/snippet}
 	</Earbetter>
 </main>
 
