@@ -6,21 +6,33 @@
 
 	import {create_realm_id, Realm_Data, type Realm_Id} from '$lib/earbetter/realm.js';
 	import default_project_data from '$lib/projects/default_project.js';
+	import type {Snippet} from 'svelte';
 
-	const dispatch = createEventDispatcher<{
-		submit: Realm_Data;
-		remove: Realm_Id;
-		duplicate: Realm_Id;
-	}>();
+	interface Props {
+		realm_data?: Realm_Data | null;
+		id?: Realm_Id;
+		name?: string;
+		editing?: boolean;
+		onsubmit?: (data: Realm_Data) => void;
+		onremove?: (realm_id: Realm_Id) => void;
+		onduplicate?: (realm_id: Realm_Id) => void;
+		footer?: Snippet<[changed: boolean]>;
+	}
 
 	const DEFAULT_NAME = 'new realm';
 
-	export let realm_data: Realm_Data | null = null;
-	export let id = create_realm_id();
-	export let name = DEFAULT_NAME;
-	export let editing = false;
+	let {
+		realm_data = null, // eslint-disable-line prefer-const
+		id = $bindable(create_realm_id()),
+		name = $bindable(DEFAULT_NAME),
+		editing = false, // eslint-disable-line prefer-const
+		onsubmit, // eslint-disable-line prefer-const
+		onremove, // eslint-disable-line prefer-const
+		onduplicate, // eslint-disable-line prefer-const
+		footer, // eslint-disable-line prefer-const
+	}: Props = $props();
 
-	let removing = false;
+	let removing = $state(false);
 
 	const to_data = (): Realm_Data =>
 		Realm_Data.parse({
@@ -29,7 +41,10 @@
 			name,
 		});
 
-	$: set_realm_data(realm_data);
+	// TODO BLOCK @multiple misusing effect setting state
+	$effect(() => {
+		set_realm_data(realm_data);
+	});
 	const set_realm_data = (realm_data: Realm_Data | null): void => {
 		console.log(`set_realm_data`, realm_data);
 		if (realm_data) {
@@ -41,17 +56,22 @@
 		}
 	};
 
-	$: changed = !realm_data || id !== realm_data.id || name !== realm_data.name;
+	const changed = $derived(!realm_data || id !== realm_data.id || name !== realm_data.name);
 
 	// TODO lots of similarity with `Level_Form`
-	let importing = false;
-	let serialized = '';
-	let updated = '';
-	$: changed_serialized = serialized !== updated;
-	let parse_error_message = '';
-	$: realm_data, id, (parse_error_message = '');
-	let realm_data_el: HTMLTextAreaElement;
-	let start_importing_el: HTMLButtonElement;
+	let importing = $state(false);
+	let serialized = $state('');
+	let updated = $state('');
+	const changed_serialized = $derived(serialized !== updated);
+	let parse_error_message = $state('');
+	// TODO BLOCK @multiple misusing effect setting state
+	$effect(() => {
+		realm_data;
+		id;
+		parse_error_message = '';
+	});
+	let realm_data_el: HTMLTextAreaElement | undefined = $state();
+	let start_importing_el: HTMLButtonElement | undefined = $state();
 
 	const import_data = async (): Promise<void> => {
 		parse_error_message = '';
@@ -60,7 +80,7 @@
 			// add an `id` if there is none
 			if (json && !json.id) json.id = create_realm_id();
 			const parsed = Realm_Data.parse(json);
-			dispatch('submit', parsed);
+			onsubmit?.(parsed);
 		} catch (err) {
 			console.error('failed to import data', err);
 			parse_error_message = err.message || 'unknown error';
@@ -75,14 +95,14 @@
 
 	const default_realms = default_project_data().realms;
 
-	let toggle_create_default_realms = false;
+	let toggle_create_default_realms = $state(false);
 </script>
 
 {#if importing}
 	<Dialog
 		onclose={() => {
 			importing = false;
-			start_importing_el.focus();
+			start_importing_el?.focus();
 		}}
 	>
 		<div class="importing p_xl width_md box">
@@ -91,12 +111,12 @@
 				type="button"
 				onclick={() => {
 					void navigator.clipboard.writeText(updated);
-					realm_data_el.select();
+					realm_data_el?.select();
 				}}
 			>
 				copy to clipboard
 			</button>
-			<textarea bind:value={updated} bind:this={realm_data_el} />
+			<textarea bind:value={updated} bind:this={realm_data_el}></textarea>
 			<button
 				onclick={import_data}
 				disabled={!changed_serialized}
@@ -122,7 +142,7 @@
 				onkeydown={(e) => {
 					if (e.key === 'Enter') {
 						swallow(e);
-						dispatch('submit', to_data());
+						onsubmit?.(to_data());
 					}
 				}}
 			/>
@@ -131,7 +151,7 @@
 	<button
 		class="accent"
 		type="button"
-		onclick={() => dispatch('submit', to_data())}
+		onclick={() => onsubmit?.(to_data())}
 		disabled={editing && !changed}
 	>
 		{#if editing}save changes to realm{:else}create realm{/if}
@@ -148,18 +168,14 @@
 					style:margin-bottom={0}
 					onclick={() => {
 						removing = false;
-						dispatch('remove', id);
+						onremove?.(id);
 					}}
 				>
 					✖ confirm remove
 				</button>
 			</div>
 		{/if}
-		<button
-			type="button"
-			style:margin-top="var(--space_lg)"
-			onclick={() => dispatch('duplicate', id)}
-		>
+		<button type="button" style:margin-top="var(--space_lg)" onclick={() => onduplicate?.(id)}>
 			duplicate
 		</button>
 	{/if}
@@ -182,7 +198,7 @@
 					onclick={() => {
 						toggle_create_default_realms = false;
 						for (const realm_data of default_project_data().realms) {
-							dispatch('submit', realm_data);
+							onsubmit?.(realm_data);
 						}
 					}}
 				>
@@ -196,7 +212,9 @@
 			<Alert status="error"><pre>{parse_error_message}</pre></Alert>
 		</div>
 	{/if}
-	<slot name="footer" {changed} />
+	{#if footer}
+		{@render footer(changed)}
+	{/if}
 </form>
 
 <style>
