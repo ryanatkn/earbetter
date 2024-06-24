@@ -1,5 +1,5 @@
 <script lang="ts">
-	import SiteBreadcrumb from '$routes/SiteBreadcrumb.svelte';
+	import Site_Breadcrumb from '$routes/Site_Breadcrumb.svelte';
 
 	interface Props {
 		flush?: boolean;
@@ -13,7 +13,7 @@
 		<a href="https://github.com/ryanatkn/earbetter">source code</a>
 		<div>public domain</div>
 		<div class="size_xl2">
-			<SiteBreadcrumb />
+			<Site_Breadcrumb />
 		</div>
 	</div>
 </footer>

@@ -21,13 +21,13 @@
 	import {App, set_app} from '$lib/earbetter/app.js';
 	import {set_enabled_notes, set_key, set_scale, to_notes_in_scale} from '$lib/music.js';
 	import {load_from_storage, set_in_storage} from '$lib/storage.js';
-	import SiteMap from '$routes/SiteMap.svelte';
+	import Site_Map from '$routes/Site_Map.svelte';
 	import {SiteData} from '$routes/site_data.js';
 	import VolumeControl from '$lib/VolumeControl.svelte';
 	import InstrumentControl from '$lib/InstrumentControl.svelte';
 	import InitMidiButton from '$lib/InitMidiButton.svelte';
 	import Footer from '$routes/Footer.svelte';
-	import SiteBreadcrumb from '$routes/SiteBreadcrumb.svelte';
+	import Site_Breadcrumb from '$routes/Site_Breadcrumb.svelte';
 
 	interface Props {
 		children: Snippet;
@@ -142,7 +142,7 @@
 			<div class="bg">
 				<section>
 					<h1 class="section_title box">
-						earbetter <div class="size_md"><SiteBreadcrumb /></div>
+						earbetter <div class="size_md"><Site_Breadcrumb /></div>
 					</h1>
 					<h2 class="section_title">settings</h2>
 					<form class="width_sm box px_md">
@@ -153,7 +153,7 @@
 					</form>
 				</section>
 				<section>
-					<SiteMap />
+					<Site_Map />
 				</section>
 				<section class="box width_sm">
 					<h2 class="section_title">data</h2>

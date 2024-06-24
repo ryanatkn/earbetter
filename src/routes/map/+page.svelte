@@ -1,7 +1,7 @@
 <script lang="ts">
 	import Header from '$routes/Header.svelte';
 	import Footer from '$routes/Footer.svelte';
-	import SiteMap from '$routes/SiteMap.svelte';
+	import Site_Map from '$routes/Site_Map.svelte';
 </script>
 
 <svelte:head>
@@ -10,7 +10,7 @@
 <main>
 	<Header />
 	<div class="width_sm panel">
-		<SiteMap />
+		<Site_Map />
 	</div>
 	<Footer />
 </main>

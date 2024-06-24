@@ -1,7 +1,3 @@
-<script lang="ts">
-	//
-</script>
-
 <header>
 	<div class="box panel p_md">
 		<h1>earbetter</h1>
