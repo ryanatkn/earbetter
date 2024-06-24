@@ -115,25 +115,25 @@
       "default": "./dist/earbetter/level.js",
       "types": "./dist/earbetter/level.d.ts"
     },
-    "./earbetter/LevelForm.svelte": {
-      "svelte": "./dist/earbetter/LevelForm.svelte",
-      "default": "./dist/earbetter/LevelForm.svelte",
-      "types": "./dist/earbetter/LevelForm.svelte.d.ts"
+    "./earbetter/Level_Form.svelte": {
+      "svelte": "./dist/earbetter/Level_Form.svelte",
+      "default": "./dist/earbetter/Level_Form.svelte",
+      "types": "./dist/earbetter/Level_Form.svelte.d.ts"
     },
-    "./earbetter/LevelMap.svelte": {
-      "svelte": "./dist/earbetter/LevelMap.svelte",
-      "default": "./dist/earbetter/LevelMap.svelte",
-      "types": "./dist/earbetter/LevelMap.svelte.d.ts"
+    "./earbetter/Level_Map.svelte": {
+      "svelte": "./dist/earbetter/Level_Map.svelte",
+      "default": "./dist/earbetter/Level_Map.svelte",
+      "types": "./dist/earbetter/Level_Map.svelte.d.ts"
     },
-    "./earbetter/LevelMapItem.svelte": {
-      "svelte": "./dist/earbetter/LevelMapItem.svelte",
-      "default": "./dist/earbetter/LevelMapItem.svelte",
-      "types": "./dist/earbetter/LevelMapItem.svelte.d.ts"
+    "./earbetter/Level_Map_Item.svelte": {
+      "svelte": "./dist/earbetter/Level_Map_Item.svelte",
+      "default": "./dist/earbetter/Level_Map_Item.svelte",
+      "types": "./dist/earbetter/Level_Map_Item.svelte.d.ts"
     },
-    "./earbetter/LevelMapItems.svelte": {
-      "svelte": "./dist/earbetter/LevelMapItems.svelte",
-      "default": "./dist/earbetter/LevelMapItems.svelte",
-      "types": "./dist/earbetter/LevelMapItems.svelte.d.ts"
+    "./earbetter/Level_Map_Items.svelte": {
+      "svelte": "./dist/earbetter/Level_Map_Items.svelte",
+      "default": "./dist/earbetter/Level_Map_Items.svelte",
+      "types": "./dist/earbetter/Level_Map_Items.svelte.d.ts"
     },
     "./earbetter/Level_Progress_Indicator.svelte": {
       "svelte": "./dist/earbetter/Level_Progress_Indicator.svelte",
@@ -149,25 +149,25 @@
       "default": "./dist/earbetter/project.js",
       "types": "./dist/earbetter/project.d.ts"
     },
-    "./earbetter/ProjectEditor.svelte": {
-      "svelte": "./dist/earbetter/ProjectEditor.svelte",
-      "default": "./dist/earbetter/ProjectEditor.svelte",
-      "types": "./dist/earbetter/ProjectEditor.svelte.d.ts"
+    "./earbetter/Project_Editor.svelte": {
+      "svelte": "./dist/earbetter/Project_Editor.svelte",
+      "default": "./dist/earbetter/Project_Editor.svelte",
+      "types": "./dist/earbetter/Project_Editor.svelte.d.ts"
     },
-    "./earbetter/ProjectForm.svelte": {
-      "svelte": "./dist/earbetter/ProjectForm.svelte",
-      "default": "./dist/earbetter/ProjectForm.svelte",
-      "types": "./dist/earbetter/ProjectForm.svelte.d.ts"
+    "./earbetter/Project_Form.svelte": {
+      "svelte": "./dist/earbetter/Project_Form.svelte",
+      "default": "./dist/earbetter/Project_Form.svelte",
+      "types": "./dist/earbetter/Project_Form.svelte.d.ts"
     },
-    "./earbetter/ProjectItem.svelte": {
-      "svelte": "./dist/earbetter/ProjectItem.svelte",
-      "default": "./dist/earbetter/ProjectItem.svelte",
-      "types": "./dist/earbetter/ProjectItem.svelte.d.ts"
+    "./earbetter/Project_Item.svelte": {
+      "svelte": "./dist/earbetter/Project_Item.svelte",
+      "default": "./dist/earbetter/Project_Item.svelte",
+      "types": "./dist/earbetter/Project_Item.svelte.d.ts"
     },
-    "./earbetter/ProjectItems.svelte": {
-      "svelte": "./dist/earbetter/ProjectItems.svelte",
-      "default": "./dist/earbetter/ProjectItems.svelte",
-      "types": "./dist/earbetter/ProjectItems.svelte.d.ts"
+    "./earbetter/Project_Items.svelte": {
+      "svelte": "./dist/earbetter/Project_Items.svelte",
+      "default": "./dist/earbetter/Project_Items.svelte",
+      "types": "./dist/earbetter/Project_Items.svelte.d.ts"
     },
     "./earbetter/Projects.svelte": {
       "svelte": "./dist/earbetter/Projects.svelte",
@@ -182,35 +182,35 @@
       "default": "./dist/earbetter/realm.js",
       "types": "./dist/earbetter/realm.d.ts"
     },
-    "./earbetter/RealmEditor.svelte": {
-      "svelte": "./dist/earbetter/RealmEditor.svelte",
-      "default": "./dist/earbetter/RealmEditor.svelte",
-      "types": "./dist/earbetter/RealmEditor.svelte.d.ts"
+    "./earbetter/Realm_Editor.svelte": {
+      "svelte": "./dist/earbetter/Realm_Editor.svelte",
+      "default": "./dist/earbetter/Realm_Editor.svelte",
+      "types": "./dist/earbetter/Realm_Editor.svelte.d.ts"
     },
-    "./earbetter/RealmForm.svelte": {
-      "svelte": "./dist/earbetter/RealmForm.svelte",
-      "default": "./dist/earbetter/RealmForm.svelte",
-      "types": "./dist/earbetter/RealmForm.svelte.d.ts"
+    "./earbetter/Realm_Form.svelte": {
+      "svelte": "./dist/earbetter/Realm_Form.svelte",
+      "default": "./dist/earbetter/Realm_Form.svelte",
+      "types": "./dist/earbetter/Realm_Form.svelte.d.ts"
     },
-    "./earbetter/RealmItem.svelte": {
-      "svelte": "./dist/earbetter/RealmItem.svelte",
-      "default": "./dist/earbetter/RealmItem.svelte",
-      "types": "./dist/earbetter/RealmItem.svelte.d.ts"
+    "./earbetter/Realm_Item.svelte": {
+      "svelte": "./dist/earbetter/Realm_Item.svelte",
+      "default": "./dist/earbetter/Realm_Item.svelte",
+      "types": "./dist/earbetter/Realm_Item.svelte.d.ts"
     },
-    "./earbetter/RealmItems.svelte": {
-      "svelte": "./dist/earbetter/RealmItems.svelte",
-      "default": "./dist/earbetter/RealmItems.svelte",
-      "types": "./dist/earbetter/RealmItems.svelte.d.ts"
+    "./earbetter/Realm_Items.svelte": {
+      "svelte": "./dist/earbetter/Realm_Items.svelte",
+      "default": "./dist/earbetter/Realm_Items.svelte",
+      "types": "./dist/earbetter/Realm_Items.svelte.d.ts"
     },
     "./earbetter/Realms.svelte": {
       "svelte": "./dist/earbetter/Realms.svelte",
       "default": "./dist/earbetter/Realms.svelte",
       "types": "./dist/earbetter/Realms.svelte.d.ts"
     },
-    "./earbetter/RealmStatsSummary.svelte": {
-      "svelte": "./dist/earbetter/RealmStatsSummary.svelte",
-      "default": "./dist/earbetter/RealmStatsSummary.svelte",
-      "types": "./dist/earbetter/RealmStatsSummary.svelte.d.ts"
+    "./earbetter/Realm_Stats_Summary.svelte": {
+      "svelte": "./dist/earbetter/Realm_Stats_Summary.svelte",
+      "default": "./dist/earbetter/Realm_Stats_Summary.svelte",
+      "types": "./dist/earbetter/Realm_Stats_Summary.svelte.d.ts"
     },
     "./earbetter/Trial_Progress_Indicator.svelte": {
       "svelte": "./dist/earbetter/Trial_Progress_Indicator.svelte",

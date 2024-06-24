@@ -2,10 +2,10 @@
 	import type {Signal} from '@preact/signals-core';
 	import {slide} from 'svelte/transition';
 
-	import type {MIDIAccess} from '$lib/Web_MIDI.js';
+	import type {MIDIAccess} from '$lib/WebMIDI.js';
 	import {get_ac} from '$lib/ac.js';
 	import Init_Midi_Button from '$lib/Init_Midi_Button.svelte';
-	import LevelForm from '$lib/earbetter/LevelForm.svelte';
+	import Level_Form from '$lib/earbetter/Level_Form.svelte';
 	import Projects from '$lib/earbetter/Projects.svelte';
 	import Volume_Control from '$lib/Volume_Control.svelte';
 	import {get_instrument, get_volume, with_velocity} from '$lib/helpers.js';
@@ -16,9 +16,9 @@
 	import {start_playing, stop_playing} from '$lib/play_note.js';
 	import Realms from '$lib/earbetter/Realms.svelte';
 	import {MISTAKE_HISTORY_LENGTH} from '$lib/earbetter/level.js';
-	import RealmEditor from '$lib/earbetter/RealmEditor.svelte';
-	import LevelMapItems from '$lib/earbetter/LevelMapItems.svelte';
-	import ProjectEditor from '$lib/earbetter/ProjectEditor.svelte';
+	import Realm_Editor from '$lib/earbetter/Realm_Editor.svelte';
+	import Level_Map_Items from '$lib/earbetter/Level_Map_Items.svelte';
+	import Project_Editor from '$lib/earbetter/Project_Editor.svelte';
 
 	export let app: App;
 	export let midi_access: Signal<MIDIAccess | null>;
@@ -76,7 +76,7 @@
 			{/if}
 			{#if ($editing_project && $editing_project_data) || !$selected_project_data}
 				<section class="card" transition:slide|local>
-					<ProjectEditor {app} />
+					<Project_Editor {app} />
 				</section>
 			{/if}
 			<section class="card" transition:slide|local>
@@ -127,7 +127,7 @@
 		</section>
 		{#if ($editing_realm && $editing_realm_data) || no_realms}
 			<section class="card" transition:slide|local>
-				<RealmEditor {app} />
+				<Realm_Editor {app} />
 			</section>
 		{/if}
 	</div>
@@ -135,13 +135,13 @@
 		<div class="width_sm">
 			{#if $levels}
 				<section class="card" transition:slide|local>
-					<LevelMapItems {app} levels={$levels} />
+					<Level_Map_Items {app} levels={$levels} />
 				</section>
 			{/if}
 			{#if $selected_realm_id && (($editing_level && $levels) || $levels?.length === 0)}
 				<section class="card" transition:slide|local>
 					<div class="panel p_md">
-						<LevelForm
+						<Level_Form
 							{editing}
 							bind:id
 							level_data={$draft_level_data}
@@ -167,7 +167,7 @@
 									</button>
 								{/if}
 							</svelte:fragment>
-						</LevelForm>
+						</Level_Form>
 					</div>
 				</section>
 			{/if}

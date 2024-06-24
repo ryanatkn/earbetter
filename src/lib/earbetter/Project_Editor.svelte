@@ -1,5 +1,5 @@
 <script lang="ts">
-	import ProjectForm from '$lib/earbetter/ProjectForm.svelte';
+	import Project_Form from '$lib/earbetter/Project_Form.svelte';
 	import type {App} from '$lib/earbetter/app.js';
 
 	export let app: App; // TODO maybe change to be more granular objects?
@@ -19,7 +19,7 @@
 </script>
 
 <div class="panel p_md">
-	<ProjectForm
+	<Project_Form
 		{editing}
 		bind:id
 		project_data={$editing_project_data}
@@ -36,5 +36,5 @@
 				</button>
 			{/if}
 		</svelte:fragment>
-	</ProjectForm>
+	</Project_Form>
 </div>

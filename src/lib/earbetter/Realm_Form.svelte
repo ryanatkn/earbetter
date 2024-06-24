@@ -5,52 +5,53 @@
 	import Dialog from '@ryanatkn/fuz/Dialog.svelte';
 	import Alert from '@ryanatkn/fuz/Alert.svelte';
 
-	import {create_project_id, Project_Data, type Project_Id} from '$lib/earbetter/project.js';
+	import {create_realm_id, Realm_Data, type Realm_Id} from '$lib/earbetter/realm.js';
+	import default_project_data from '$lib/projects/default_project.js';
 
 	const dispatch = createEventDispatcher<{
-		submit: Project_Data;
-		remove: Project_Id;
-		duplicate: Project_Id;
+		submit: Realm_Data;
+		remove: Realm_Id;
+		duplicate: Realm_Id;
 	}>();
 
-	const DEFAULT_NAME = 'new project';
+	const DEFAULT_NAME = 'new realm';
 
-	export let project_data: Project_Data | null = null;
-	export let id = create_project_id();
+	export let realm_data: Realm_Data | null = null;
+	export let id = create_realm_id();
 	export let name = DEFAULT_NAME;
 	export let editing = false;
 
 	let removing = false;
 
-	const to_data = (): Project_Data =>
-		Project_Data.parse({
-			...project_data,
+	const to_data = (): Realm_Data =>
+		Realm_Data.parse({
+			...realm_data,
 			id,
 			name,
 		});
 
-	$: set_project_data(project_data);
-	const set_project_data = (project_data: Project_Data | null): void => {
-		console.log(`set_project_data`, project_data);
-		if (project_data) {
-			id = project_data.id;
-			name = project_data.name;
+	$: set_realm_data(realm_data);
+	const set_realm_data = (realm_data: Realm_Data | null): void => {
+		console.log(`set_realm_data`, realm_data);
+		if (realm_data) {
+			id = realm_data.id;
+			name = realm_data.name;
 		} else {
-			id = create_project_id(); // TODO duplicates work on first mount with no project_data, but not sure it's worth fixing, maybe there's a better pattern without this?
+			id = create_realm_id(); // TODO duplicates work on first mount with no realm_data, but not sure it's worth fixing, maybe there's a better pattern without this?
 			name = DEFAULT_NAME;
 		}
 	};
 
-	$: changed = !project_data || id !== project_data.id || name !== project_data.name;
+	$: changed = !realm_data || id !== realm_data.id || name !== realm_data.name;
 
-	// TODO lots of similarity with `LevelForm`
+	// TODO lots of similarity with `Level_Form`
 	let importing = false;
 	let serialized = '';
 	let updated = '';
 	$: changed_serialized = serialized !== updated;
 	let parse_error_message = '';
-	$: project_data, id, (parse_error_message = '');
-	let project_data_el: HTMLTextAreaElement;
+	$: realm_data, id, (parse_error_message = '');
+	let realm_data_el: HTMLTextAreaElement;
 	let start_importing_el: HTMLButtonElement;
 
 	const import_data = async (): Promise<void> => {
@@ -58,8 +59,8 @@
 		try {
 			const json = JSON.parse(updated);
 			// add an `id` if there is none
-			if (json && !json.id) json.id = create_project_id();
-			const parsed = Project_Data.parse(json);
+			if (json && !json.id) json.id = create_realm_id();
+			const parsed = Realm_Data.parse(json);
 			dispatch('submit', parsed);
 		} catch (err) {
 			console.error('failed to import data', err);
@@ -72,6 +73,10 @@
 		serialized = updated = JSON.stringify(to_data());
 		importing = true;
 	};
+
+	const default_realms = default_project_data().realms;
+
+	let toggle_create_default_realms = false;
 </script>
 
 {#if importing}
@@ -82,30 +87,32 @@
 		}}
 	>
 		<div class="importing p_xl width_md box">
-			<h2>import project data</h2>
+			<h2>import realm data</h2>
 			<button
+				type="button"
 				onclick={() => {
 					void navigator.clipboard.writeText(updated);
-					project_data_el.select();
+					realm_data_el.select();
 				}}
 			>
 				copy to clipboard
 			</button>
-			<textarea bind:value={updated} bind:this={project_data_el} />
+			<textarea bind:value={updated} bind:this={realm_data_el} />
 			<button
 				onclick={import_data}
 				disabled={!changed_serialized}
+				type="button"
 				title={changed_serialized ? undefined : 'data has not changed'}
 			>
-				import project data
+				import realm data
 			</button>
 		</div>
 	</Dialog>
 {/if}
-<form class="project-def-form">
+<form class="realm-def-form">
 	<header>
 		<h2>
-			{#if editing}editing project{:else}create a new project{/if}
+			{#if editing}editing realm{:else}create a new realm{/if}
 		</h2>
 	</header>
 	<fieldset>
@@ -128,11 +135,11 @@
 		onclick={() => dispatch('submit', to_data())}
 		disabled={editing && !changed}
 	>
-		{#if editing}save changes to project{:else}create project{/if}
+		{#if editing}save changes to realm{:else}create realm{/if}
 	</button>
 	{#if editing}
 		<button type="button" style:margin-bottom={0} onclick={() => (removing = !removing)}>
-			remove project
+			remove realm
 		</button>
 		{#if removing}
 			<div transition:slide|local>
@@ -160,6 +167,31 @@
 	<button type="button" onclick={start_importing_data} bind:this={start_importing_el}>
 		{#if editing}import/export data{:else}import data{/if}
 	</button>
+	{#if !editing}
+		<button
+			type="button"
+			onclick={() => (toggle_create_default_realms = !toggle_create_default_realms)}
+			style:margin-bottom={0}
+		>
+			create default realms
+		</button>
+		{#if toggle_create_default_realms}
+			<div transition:slide|local>
+				<button
+					type="button"
+					class="w_100"
+					onclick={() => {
+						toggle_create_default_realms = false;
+						for (const realm_data of default_project_data().realms) {
+							dispatch('submit', realm_data);
+						}
+					}}
+				>
+					create {default_realms.length} new realms
+				</button>
+			</div>
+		{/if}
+	{/if}
 	{#if parse_error_message}
 		<div class="message-wrapper">
 			<Alert status="error"><pre>{parse_error_message}</pre></Alert>

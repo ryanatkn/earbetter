@@ -2,7 +2,7 @@
 	import {slide} from 'svelte/transition';
 
 	import {Realm_Data} from '$lib/earbetter/realm.js';
-	import RealmItems from '$lib/earbetter/RealmItems.svelte';
+	import Realm_Items from '$lib/earbetter/Realm_Items.svelte';
 	import type {App} from '$lib/earbetter/app.js';
 
 	export let app: App; // TODO maybe change to be more granular objects?
@@ -43,7 +43,7 @@
 	</header>
 	{#if $realms && $selected_project_data}
 		<div class="realm-items-wrapper" transition:slide|local>
-			<RealmItems
+			<Realm_Items
 				project_data={$selected_project_data}
 				selected_realm_data={$selected_realm_data}
 				realms={$realms}

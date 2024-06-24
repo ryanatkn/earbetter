@@ -1,6 +1,6 @@
 import {type Signal, signal} from '@preact/signals-core';
 
-import type {MIDIAccess} from '$lib/Web_MIDI.js';
+import type {MIDIAccess} from '$lib/WebMIDI.js';
 import {request_midi_access} from '$lib/midi_helpers.js';
 
 /** global store holding the result of `navigator.requestMIDIAccess` */

@@ -5,7 +5,7 @@ import type {
 	MIDIAccess,
 	MIDIChannel,
 	requestMIDIAccess,
-} from '$lib/Web_MIDI.js';
+} from '$lib/WebMIDI.js';
 import type {Midi} from '$lib/music.js';
 
 // WebMIDI helpers specific to cosmicplayground
@@ -31,7 +31,7 @@ export const parse_midi_message = (e: MIDIMessageEvent): MidiMessage => {
 /**
  * Uses `navigator.requestMIDIAccess`, throwing an error on failure.
  * Callers should normally prefer to use `$lib/midi_access.ts#request_access` instead of this.
- * @param opts - WebMIDI options - https://developer.mozilla.org/en-US/docs/Web/API/Web_MIDI_API
+ * @param opts - WebMIDI options - https://developer.mozilla.org/en-US/docs/Web/API/WebMIDI_API
  * @returns
  */
 export const request_midi_access = async (opts?: Partial<MIDIOptions>): Promise<MIDIAccess> => {

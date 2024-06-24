@@ -1,5 +1,5 @@
 <script lang="ts">
-	import RealmForm from '$lib/earbetter/RealmForm.svelte';
+	import Realm_Form from '$lib/earbetter/Realm_Form.svelte';
 	import type {App} from '$lib/earbetter/app.js';
 
 	export let app: App; // TODO maybe change to be more granular objects?
@@ -23,7 +23,7 @@
 </script>
 
 <div class="panel p_md">
-	<RealmForm
+	<Realm_Form
 		{editing}
 		bind:id
 		realm_data={$editing_realm_data}
@@ -40,5 +40,5 @@
 				</button>
 			{/if}
 		</svelte:fragment>
-	</RealmForm>
+	</Realm_Form>
 </div>

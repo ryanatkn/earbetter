@@ -2,7 +2,7 @@
 	import {slide} from 'svelte/transition';
 
 	import type {Realm_Data, Realm_Id} from '$lib/earbetter/realm.js';
-	import RealmStatsSummary from '$lib/earbetter/RealmStatsSummary.svelte';
+	import Realm_Stats_Summary from '$lib/earbetter/Realm_Stats_Summary.svelte';
 	import type {Project_Data} from '$lib/earbetter/project.js';
 
 	export let realm_data: Realm_Data;
@@ -20,7 +20,7 @@
 
 <li class="realm_item" transition:slide|local class:selected>
 	{#if level_stats}
-		<RealmStatsSummary {realm_data} {level_stats} />
+		<Realm_Stats_Summary {realm_data} {level_stats} />
 	{/if}
 	{#if select}
 		<button class="realm-button" onclick={() => select?.(realm_data.id)} class:selected>

@@ -1,7 +1,7 @@
 <script lang="ts">
 	import {onDestroy} from 'svelte';
 
-	import LevelMap from '$lib/earbetter/LevelMap.svelte';
+	import Level_Map from '$lib/earbetter/Level_Map.svelte';
 	import Level from '$lib/earbetter/Level.svelte';
 	import type {Level as LevelType} from '$lib/earbetter/level.js';
 	import {get_ac} from '$lib/ac.js';
@@ -37,7 +37,7 @@
 	</div>
 {:else}
 	<slot name="header" />
-	<LevelMap {app} {midi_access} />
+	<Level_Map {app} {midi_access} />
 	<slot name="footer" />
 {/if}
 

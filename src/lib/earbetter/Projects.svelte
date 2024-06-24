@@ -1,6 +1,6 @@
 <script lang="ts">
 	import {Project_Data} from '$lib/earbetter/project.js';
-	import ProjectItems from '$lib/earbetter/ProjectItems.svelte';
+	import Project_Items from '$lib/earbetter/Project_Items.svelte';
 	import type {App} from '$lib/earbetter/app.js';
 
 	export let app: App; // TODO maybe change to be more granular objects?
@@ -27,7 +27,7 @@
 	<header>
 		<h2>projects</h2>
 	</header>
-	<ProjectItems
+	<Project_Items
 		selected_project_id={$selected_project_id}
 		editing_project_id={$editing_project ? $editing_project_id : null}
 		{projects}

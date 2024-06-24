@@ -1,5 +1,5 @@
 <script lang="ts">
-	import LevelMapItem from '$lib/earbetter/LevelMapItem.svelte';
+	import Level_Map_Item from '$lib/earbetter/Level_Map_Item.svelte';
 	import type {App} from '$lib/earbetter/app.js';
 	import {Level_Data} from '$lib/earbetter/level.js';
 
@@ -32,7 +32,7 @@
 	</header>
 	<menu class="levels">
 		{#each levels as d (d.id)}
-			<LevelMapItem {app} level_data={d} />
+			<Level_Map_Item {app} level_data={d} />
 		{/each}
 	</menu>
 	<button

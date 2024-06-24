@@ -1,6 +1,6 @@
 <script lang="ts">
 	import type {Realm_Data, Realm_Id} from '$lib/earbetter/realm.js';
-	import RealmItem from '$lib/earbetter/RealmItem.svelte';
+	import Realm_Item from '$lib/earbetter/Realm_Item.svelte';
 	import type {Project_Data} from '$lib/earbetter/project.js';
 
 	export let selected_realm_data: Realm_Data | null = null;
@@ -18,7 +18,7 @@
 
 <menu class="realms-list width_sm">
 	{#each realms as realm (realm.id)}
-		<RealmItem
+		<Realm_Item
 			realm_data={lookup_realm_data(realm.id)}
 			{project_data}
 			select={select_realm}

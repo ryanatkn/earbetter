@@ -1,6 +1,6 @@
 <script lang="ts">
 	import type {Project_Data, Project_Id, ProjectMetadata} from '$lib/earbetter/project.js';
-	import ProjectItem from '$lib/earbetter/ProjectItem.svelte';
+	import Project_Item from '$lib/earbetter/Project_Item.svelte';
 
 	export let selected_project_id: Project_Id | null = null;
 	export let editing_project_id: Project_Id | null = null;
@@ -14,7 +14,7 @@
 
 <menu class="projects width_sm">
 	{#each projects as project (project.id)}
-		<ProjectItem
+		<Project_Item
 			{project}
 			project_data={project_datas.find((p) => p.id === project.id)}
 			load={load_project}
