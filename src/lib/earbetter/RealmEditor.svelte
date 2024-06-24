@@ -1,6 +1,6 @@
 <script lang="ts">
 	import RealmForm from '$lib/earbetter/RealmForm.svelte';
-	import type {App} from '$lib/earbetter/app';
+	import type {App} from '$lib/earbetter/app.js';
 
 	export let app: App; // TODO maybe change to be more granular objects?
 
@@ -35,7 +35,7 @@
 	>
 		<svelte:fragment slot="footer" let:changed>
 			{#if editing}
-				<button type="button" on:click={() => (editing_realm.value = false)}>
+				<button type="button" onclick={() => (editing_realm.value = false)}>
 					{#if changed}discard changes and stop editing{:else}stop editing this realm{/if}
 				</button>
 			{/if}

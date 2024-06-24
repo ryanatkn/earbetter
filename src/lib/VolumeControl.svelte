@@ -1,7 +1,7 @@
 <script lang="ts">
 	import type {Signal} from '@preact/signals-core';
 
-	import type {Volume} from '$lib/helpers';
+	import type {Volume} from '$lib/helpers.js';
 
 	export let volume: Signal<Volume>;
 

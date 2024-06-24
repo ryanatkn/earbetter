@@ -13,20 +13,27 @@
 	import {afterNavigate} from '$app/navigation';
 	import {sync_color_scheme} from '@ryanatkn/fuz/theme.js';
 	import {writable} from 'svelte/store';
+	import type {Snippet} from 'svelte';
 
-	import {set_ac} from '$lib/ac';
-	import {adjust_volume, set_instrument, set_volume} from '$lib/helpers';
-	import {request_access} from '$lib/midi_access';
-	import {App, set_app} from '$lib/earbetter/app';
-	import {set_enabled_notes, set_key, set_scale, to_notes_in_scale} from '$lib/music';
-	import {load_from_storage, set_in_storage} from '$lib/storage';
+	import {set_ac} from '$lib/ac.js';
+	import {adjust_volume, set_instrument, set_volume} from '$lib/helpers.js';
+	import {request_access} from '$lib/midi_access.js';
+	import {App, set_app} from '$lib/earbetter/app.js';
+	import {set_enabled_notes, set_key, set_scale, to_notes_in_scale} from '$lib/music.js';
+	import {load_from_storage, set_in_storage} from '$lib/storage.js';
 	import SiteMap from '$routes/SiteMap.svelte';
-	import {SiteData} from '$routes/site_data';
+	import {SiteData} from '$routes/site_data.js';
 	import VolumeControl from '$lib/VolumeControl.svelte';
 	import InstrumentControl from '$lib/InstrumentControl.svelte';
 	import InitMidiButton from '$lib/InitMidiButton.svelte';
 	import Footer from '$routes/Footer.svelte';
 	import SiteBreadcrumb from '$routes/SiteBreadcrumb.svelte';
+
+	interface Props {
+		children: Snippet;
+	}
+
+	const {children}: Props = $props();
 
 	const selected_color_scheme = writable('dark' as const);
 	sync_color_scheme($selected_color_scheme); // TODO probably shouldn't be needed
@@ -65,7 +72,7 @@
 	if (browser) (window as any).app = app;
 
 	// TODO add to app? context? global store?
-	let show_main_menu = false;
+	let show_main_menu = $state(false);
 	afterNavigate(() => (show_main_menu = false));
 
 	// TODO refactor
@@ -117,7 +124,7 @@
 		}
 	};
 
-	let deleting = false;
+	let deleting = $state(false);
 </script>
 
 <svelte:head>
@@ -128,7 +135,7 @@
 <svelte:window on:keydown={keydown} />
 
 <Themed {selected_color_scheme} color_scheme_fallback={$selected_color_scheme}>
-	<slot />
+	{@render children()}
 
 	{#if show_main_menu}
 		<Dialog on:close={() => (show_main_menu = false)}>
@@ -159,11 +166,11 @@
 							</aside>
 						</div>
 					</div>
-					<button on:click={() => (deleting = !deleting)}> clear saved data </button>
+					<button onclick={() => (deleting = !deleting)}> clear saved data </button>
 					{#if deleting}
 						<div transition:slide|local>
 							<button
-								on:click={() => {
+								onclick={() => {
 									localStorage.clear();
 									location.reload();
 								}}

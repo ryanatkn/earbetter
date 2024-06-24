@@ -1,6 +1,6 @@
 <script lang="ts">
 	import LevelMapItem from '$lib/earbetter/LevelMapItem.svelte';
-	import type {App} from '$lib/earbetter/app';
+	import type {App} from '$lib/earbetter/app.js';
 	import {LevelData} from '$lib/earbetter/level';
 
 	export let app: App;
@@ -40,7 +40,7 @@
 	<button
 		class:selected={editing_draft || no_levels}
 		class:deselectable={!no_levels}
-		on:click={click_create_new}
+		onclick={click_create_new}
 	>
 		create a new level
 	</button>

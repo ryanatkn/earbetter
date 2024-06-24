@@ -3,7 +3,7 @@
 
 	import {RealmData} from '$lib/earbetter/realm';
 	import RealmItems from '$lib/earbetter/RealmItems.svelte';
-	import type {App} from '$lib/earbetter/app';
+	import type {App} from '$lib/earbetter/app.js';
 
 	export let app: App; // TODO maybe change to be more granular objects?
 
@@ -59,7 +59,7 @@
 	<button
 		class={no_realms ? undefined : 'deselectable'}
 		class:selected={creating || no_realms}
-		on:click={click_create_new}
+		onclick={click_create_new}
 	>
 		create a new realm
 	</button>

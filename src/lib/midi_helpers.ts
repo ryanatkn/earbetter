@@ -6,7 +6,7 @@ import type {
 	MIDIChannel,
 	requestMIDIAccess,
 } from '$lib/WebMIDI';
-import type {Midi} from '$lib/music';
+import type {Midi} from '$lib/music.js';
 
 // WebMIDI helpers specific to cosmicplayground
 

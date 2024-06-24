@@ -7,8 +7,8 @@ import {
 	type Instrument,
 	type Milliseconds,
 	type Volume,
-} from '$lib/helpers';
-import {type Midi, midi_to_freq} from '$lib/music';
+} from '$lib/helpers.js';
+import {type Midi, midi_to_freq} from '$lib/music.js';
 
 // TODO this API is haphazard, in particular `play_note` versus `start_playing` and `stop_playing`,
 // and we need to support more options like `velocity`, should probably have a single options object

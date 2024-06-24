@@ -1,6 +1,6 @@
 <script lang="ts">
 	import ProjectForm from '$lib/earbetter/ProjectForm.svelte';
-	import type {App} from '$lib/earbetter/app';
+	import type {App} from '$lib/earbetter/app.js';
 
 	export let app: App; // TODO maybe change to be more granular objects?
 
@@ -31,7 +31,7 @@
 	>
 		<svelte:fragment slot="footer" let:changed>
 			{#if editing}
-				<button type="button" on:click={() => (editing_project.value = false)}>
+				<button type="button" onclick={() => (editing_project.value = false)}>
 					{#if changed}discard changes and stop editing{:else}stop editing this project{/if}
 				</button>
 			{/if}

@@ -1,7 +1,7 @@
 <script lang="ts">
 	import {ProjectData} from '$lib/earbetter/project';
 	import ProjectItems from '$lib/earbetter/ProjectItems.svelte';
-	import type {App} from '$lib/earbetter/app';
+	import type {App} from '$lib/earbetter/app.js';
 
 	export let app: App; // TODO maybe change to be more granular objects?
 
@@ -42,7 +42,7 @@
 	<button
 		class="create-new-project deselectable"
 		class:selected={creating}
-		on:click={() => {
+		onclick={() => {
 			if (creating) {
 				editing_project.value = false;
 			} else {

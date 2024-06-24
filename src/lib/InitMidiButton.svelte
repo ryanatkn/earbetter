@@ -7,7 +7,7 @@
 	import {
 		midi_access as default_midi_access,
 		request_access as default_request_access,
-	} from '$lib/midi_access';
+	} from '$lib/midi_access.js';
 
 	export let midi_access: Signal<MIDIAccess | null> = default_midi_access;
 	export const request_access: () => Promise<MIDIAccess | null> = default_request_access;
@@ -26,7 +26,7 @@
 <button
 	type="button"
 	class="big"
-	on:click={async () => {
+	onclick={async () => {
 		if (!midi_access) return;
 		request_status = 'pending';
 		try {

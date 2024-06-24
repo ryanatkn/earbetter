@@ -3,14 +3,14 @@
 	import {slide} from 'svelte/transition';
 
 	import type {MIDIAccess} from '$lib/WebMIDI';
-	import {get_ac} from '$lib/ac';
+	import {get_ac} from '$lib/ac.js';
 	import InitMidiButton from '$lib/InitMidiButton.svelte';
 	import LevelForm from '$lib/earbetter/LevelForm.svelte';
 	import Projects from '$lib/earbetter/Projects.svelte';
 	import VolumeControl from '$lib/VolumeControl.svelte';
-	import {get_instrument, get_volume, with_velocity} from '$lib/helpers';
+	import {get_instrument, get_volume, with_velocity} from '$lib/helpers.js';
 	import InstrumentControl from '$lib/InstrumentControl.svelte';
-	import type {App} from '$lib/earbetter/app';
+	import type {App} from '$lib/earbetter/app.js';
 	import ControlsInstructions from '$lib/earbetter/ControlsInstructions.svelte';
 	import MidiInput from '$lib/MidiInput.svelte';
 	import {start_playing, stop_playing} from '$lib/play_note';
@@ -118,7 +118,7 @@
 							>
 						</aside>
 						<div class="box row">
-							<button style:margin="0" on:click={() => toggle_game_help()}>ok, hide this</button>
+							<button style:margin="0" onclick={() => toggle_game_help()}>ok, hide this</button>
 						</div>
 					</div>
 				</div>
@@ -157,14 +157,14 @@
 								{#if editing}
 									<button
 										type="button"
-										on:click={async () => {
+										onclick={async () => {
 											if (changed) update_level(to_data());
 											await play_level(id);
 										}}
 									>
 										play!
 									</button>
-									<button type="button" on:click={() => edit_level(null)}>
+									<button type="button" onclick={() => edit_level(null)}>
 										{#if changed}discard changes and stop editing{:else}stop editing this level{/if}
 									</button>
 								{/if}

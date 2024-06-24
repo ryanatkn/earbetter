@@ -3,20 +3,20 @@
 	import {effect, signal} from '@preact/signals-core';
 
 	import Piano from '$lib/Piano.svelte';
-	import {get_ac} from '$lib/ac';
-	import {midi_access} from '$lib/midi_access';
+	import {get_ac} from '$lib/ac.js';
+	import {midi_access} from '$lib/midi_access.js';
 	import MidiInput from '$lib/MidiInput.svelte';
 	import {playing_notes, start_playing, stop_playing} from '$lib/play_note';
 	import InitMidiButton from '$lib/InitMidiButton.svelte';
 	import VolumeControl from '$lib/VolumeControl.svelte';
 	import Header from '$routes/Header.svelte';
 	import Footer from '$routes/Footer.svelte';
-	import {get_instrument, get_volume, with_velocity} from '$lib/helpers';
+	import {get_instrument, get_volume, with_velocity} from '$lib/helpers.js';
 	import InstrumentControl from '$lib/InstrumentControl.svelte';
 	import MidiRangeControl from '$lib/MidiRangeControl.svelte';
-	import {get_scale, get_key, get_enabled_notes, Midi} from '$lib/music';
+	import {get_scale, get_key, get_enabled_notes, Midi} from '$lib/music.js';
 	import SelectNotesControl from '$lib/SelectNotesControl.svelte';
-	import {load_from_storage, set_in_storage} from '$lib/storage';
+	import {load_from_storage, set_in_storage} from '$lib/storage.js';
 
 	// TODO extract? is pretty specific
 	const PianoSettings = z.object({

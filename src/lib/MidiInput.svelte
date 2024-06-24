@@ -4,7 +4,7 @@
 
 	import {type MIDIMessageEvent, MIDICommand, type MIDIAccess} from '$lib/WebMIDI';
 	import {parse_midi_message} from '$lib/midi_helpers';
-	import type {Midi} from '$lib/music';
+	import type {Midi} from '$lib/music.js';
 
 	const log = console.log.bind(console);
 

@@ -5,9 +5,9 @@ import {Logger} from '@ryanatkn/belt/log.js';
 import {signal, batch, Signal, effect} from '@preact/signals-core';
 import {base} from '$app/paths';
 
-import {Midi, Intervals, Notes} from '$lib/music';
+import {Midi, Intervals, Notes} from '$lib/music.js';
 import {play_note} from '$lib/play_note';
-import type {Instrument, Milliseconds, Volume} from '$lib/helpers';
+import type {Instrument, Milliseconds, Volume} from '$lib/helpers.js';
 import {serialize_to_hash} from '$lib/url';
 import {to_random_id} from '$lib/id';
 

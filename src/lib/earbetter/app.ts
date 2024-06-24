@@ -19,7 +19,7 @@ import {
 	type LevelId,
 } from '$lib/earbetter/level';
 import {ProjectData, ProjectId, ProjectName} from '$lib/earbetter/project';
-import {load_from_storage, set_in_storage} from '$lib/storage';
+import {load_from_storage, set_in_storage} from '$lib/storage.js';
 import {RealmId, RealmData} from '$lib/earbetter/realm';
 import default_project_data from '$lib/projects/default_project';
 import {to_next_name} from '$lib/entity';

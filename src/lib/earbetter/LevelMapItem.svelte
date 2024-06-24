@@ -2,7 +2,7 @@
 	import {slide} from 'svelte/transition';
 
 	import type {LevelData} from '$lib/earbetter/level';
-	import type {App} from '$lib/earbetter/app';
+	import type {App} from '$lib/earbetter/app.js';
 	import LevelStatsSummary from '$lib/earbetter/LevelStatsSummary.svelte';
 
 	export let app: App;
@@ -36,7 +36,7 @@
 	<button
 		class="level_button deselectable"
 		title="play this level"
-		on:click={() => play_level(level_data.id)}
+		onclick={() => play_level(level_data.id)}
 		class:selected
 	>
 		{level_data.name}
@@ -45,14 +45,14 @@
 		class="icon-button plain-button"
 		class:selected={!removing && editing}
 		title={removing ? 'remove level' : editing ? 'stop editing level' : 'edit level'}
-		on:click={() =>
+		onclick={() =>
 			removing ? remove_level(level_data.id) : edit_level(editing ? null : level_data)}
 	>
 		{#if removing}✖{:else}✎{/if}
 	</button>
 	<button
 		class="icon-button plain-button"
-		on:click={() => (removing = !removing)}
+		onclick={() => (removing = !removing)}
 		title={removing ? 'cancel removing' : 'remove level'}
 	>
 		{#if removing}×{:else}✕{/if}

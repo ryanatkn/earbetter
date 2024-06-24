@@ -17,7 +17,7 @@
 
 <li class="project_item" transition:slide|local class:selected>
 	{#if select}
-		<button class="project-button" on:click={() => select?.(project.id)} class:selected>
+		<button class="project-button" onclick={() => select?.(project.id)} class:selected>
 			{project.name}
 		</button>
 	{/if}
@@ -26,7 +26,7 @@
 			class="icon-button plain-button deselectable"
 			title={removing ? 'remove project' : 'edit project'}
 			class:selected={selected && !removing && editing}
-			on:click={() => (removing ? remove?.(project.id) : edit?.(project_data || load(project.id)))}
+			onclick={() => (removing ? remove?.(project.id) : edit?.(project_data || load(project.id)))}
 		>
 			{#if removing}✖{:else}✎{/if}
 		</button>
@@ -34,7 +34,7 @@
 	{#if remove}
 		<button
 			class="icon-button plain-button"
-			on:click={() => (removing = !removing)}
+			onclick={() => (removing = !removing)}
 			title={removing ? 'cancel removing' : 'remove project'}
 		>
 			{#if removing}×{:else}✕{/if}

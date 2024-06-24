@@ -4,13 +4,13 @@
 	import {createEventDispatcher} from 'svelte';
 
 	import Piano from '$lib/Piano.svelte';
-	import {get_ac} from '$lib/ac';
-	import {midi_access} from '$lib/midi_access';
+	import {get_ac} from '$lib/ac.js';
+	import {midi_access} from '$lib/midi_access.js';
 	import MidiInput from '$lib/MidiInput.svelte';
 	import {playing_notes, start_playing, stop_playing} from '$lib/play_note';
 	import InitMidiButton from '$lib/InitMidiButton.svelte';
 	import VolumeControl from '$lib/VolumeControl.svelte';
-	import {get_instrument, get_volume, with_velocity} from '$lib/helpers';
+	import {get_instrument, get_volume, with_velocity} from '$lib/helpers.js';
 	import InstrumentControl from '$lib/InstrumentControl.svelte';
 	import {
 		Midi,
@@ -22,7 +22,7 @@
 		DEFAULT_PITCH_CLASS,
 		pitch_classes,
 		to_notes_in_scale,
-	} from '$lib/music';
+	} from '$lib/music.js';
 
 	const dispatch = createEventDispatcher<{
 		input: Notes | null;
@@ -113,7 +113,7 @@
 		</blockquote>
 		<button
 			type="button"
-			on:click={(e) => {
+			onclick={(e) => {
 				swallow(e);
 				notes = null;
 			}}
@@ -122,7 +122,7 @@
 		<button
 			type="button"
 			class="accent"
-			on:click={(e) => {
+			onclick={(e) => {
 				swallow(e);
 				dispatch('input', notes_array);
 			}}
@@ -158,7 +158,7 @@
 		>
 		<div class="scales">
 			{#each scales as scale (scale.name)}
-				<button on:click={() => toggle_scale(scale)}>{scale.name}</button>
+				<button onclick={() => toggle_scale(scale)}>{scale.name}</button>
 			{/each}
 		</div>
 	</section>

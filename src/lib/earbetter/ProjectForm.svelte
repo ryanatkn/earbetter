@@ -84,7 +84,7 @@
 		<div class="importing prose p_xl width_md box">
 			<h2>import project data</h2>
 			<button
-				on:click={() => {
+				onclick={() => {
 					void navigator.clipboard.writeText(updated);
 					project_data_el.select();
 				}}
@@ -93,7 +93,7 @@
 			</button>
 			<textarea bind:value={updated} bind:this={project_data_el} />
 			<button
-				on:click={import_data}
+				onclick={import_data}
 				disabled={!changed_serialized}
 				title={changed_serialized ? undefined : 'data has not changed'}
 			>
@@ -125,13 +125,13 @@
 	<button
 		class="accent"
 		type="button"
-		on:click={() => dispatch('submit', to_data())}
+		onclick={() => dispatch('submit', to_data())}
 		disabled={editing && !changed}
 	>
 		{#if editing}save changes to project{:else}create project{/if}
 	</button>
 	{#if editing}
-		<button type="button" style:margin-bottom={0} on:click={() => (removing = !removing)}>
+		<button type="button" style:margin-bottom={0} onclick={() => (removing = !removing)}>
 			remove project
 		</button>
 		{#if removing}
@@ -140,7 +140,7 @@
 					class="w_100"
 					type="button"
 					style:margin-bottom={0}
-					on:click={() => {
+					onclick={() => {
 						removing = false;
 						dispatch('remove', id);
 					}}
@@ -152,12 +152,12 @@
 		<button
 			type="button"
 			style:margin-top="var(--space_lg)"
-			on:click={() => dispatch('duplicate', id)}
+			onclick={() => dispatch('duplicate', id)}
 		>
 			duplicate
 		</button>
 	{/if}
-	<button type="button" on:click={start_importing_data} bind:this={start_importing_el}>
+	<button type="button" onclick={start_importing_data} bind:this={start_importing_el}>
 		{#if editing}import/export data{:else}import data{/if}
 	</button>
 	{#if parse_error_message}

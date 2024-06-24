@@ -4,7 +4,7 @@ import {signal, type Signal} from '@preact/signals-core';
 import {getContext, setContext} from 'svelte';
 import {type Hsl, hsl_to_string, type Hue} from '@ryanatkn/belt/colors.js';
 
-import type {Frequency} from '$lib/helpers';
+import type {Frequency} from '$lib/helpers.js';
 
 export const DEFAULT_TUNING = 440; // https://wikipedia.org/wiki/A440_(pitch_standard)
 

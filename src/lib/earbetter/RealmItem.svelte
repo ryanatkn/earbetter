@@ -23,7 +23,7 @@
 		<RealmStatsSummary {realm_data} {level_stats} />
 	{/if}
 	{#if select}
-		<button class="realm-button" on:click={() => select?.(realm_data.id)} class:selected>
+		<button class="realm-button" onclick={() => select?.(realm_data.id)} class:selected>
 			{realm_data.name}
 		</button>
 	{/if}
@@ -32,7 +32,7 @@
 			class="icon-button plain-button deselectable"
 			class:selected={selected && !removing && editing}
 			title={removing ? 'remove realm' : editing ? 'stop editing realm' : 'edit realm'}
-			on:click={() => (removing ? remove?.(realm_data.id) : edit?.(realm_data))}
+			onclick={() => (removing ? remove?.(realm_data.id) : edit?.(realm_data))}
 		>
 			{#if removing}✖{:else}✎{/if}
 		</button>
@@ -40,7 +40,7 @@
 	{#if remove}
 		<button
 			class="icon-button plain-button"
-			on:click={() => (removing = !removing)}
+			onclick={() => (removing = !removing)}
 			title={removing ? 'cancel removing' : 'remove realm'}
 		>
 			{#if removing}×{:else}✕{/if}

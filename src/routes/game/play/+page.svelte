@@ -8,7 +8,7 @@
 	import Footer from '$routes/Footer.svelte';
 	import {LevelHashData} from '$lib/earbetter/level';
 	import {parse_from_hash} from '$lib/url';
-	import {get_app} from '$lib/earbetter/app';
+	import {get_app} from '$lib/earbetter/app.js';
 
 	const go_back = () => goto(`${base}/game`);
 
@@ -29,7 +29,7 @@
 </svelte:head>
 
 <main>
-	<button class="go-back icon-button plain-button" on:click={go_back}>←</button>
+	<button class="go-back icon-button plain-button" onclick={go_back}>←</button>
 	<Earbetter {app}>
 		<svelte:fragment slot="header"><Header /></svelte:fragment>
 		<svelte:fragment slot="footer"><Footer /></svelte:fragment>

@@ -27,7 +27,7 @@
 		Intervals,
 		serialize_notes,
 		parse_notes,
-	} from '$lib/music';
+	} from '$lib/music.js';
 	import IntervalsInput from '$lib/IntervalsInput.svelte';
 	import NotesInput from '$lib/NotesInput.svelte';
 	import Piano from '$lib/Piano.svelte';
@@ -164,7 +164,7 @@
 					on:input={(e) => (intervals = parse_intervals(e.currentTarget.value))}
 				/>
 			</label>
-			<button type="button" on:click={() => (picking_intervals = true)}> pick intervals </button>
+			<button type="button" onclick={() => (picking_intervals = true)}> pick intervals </button>
 			<details>
 				<summary>more about <code>intervals</code></summary>
 				<p>
@@ -237,7 +237,7 @@
 					placeholder="all"
 				/>
 			</label>
-			<button type="button" on:click={() => (picking_tonics = true)}> pick tonics </button>
+			<button type="button" onclick={() => (picking_tonics = true)}> pick tonics </button>
 			<details>
 				<summary>more about <code>tonics</code></summary>
 				<p>
@@ -250,13 +250,13 @@
 		<button
 			class="accent"
 			type="button"
-			on:click={() => dispatch('submit', to_data())}
+			onclick={() => dispatch('submit', to_data())}
 			disabled={(editing && !changed) || lowest_note_error}
 		>
 			{#if editing}save changes to level{:else}create level{/if}
 		</button>
 		{#if editing}
-			<button type="button" style:margin-bottom={0} on:click={() => (removing = !removing)}>
+			<button type="button" style:margin-bottom={0} onclick={() => (removing = !removing)}>
 				remove level
 			</button>
 			{#if removing}
@@ -265,7 +265,7 @@
 						class="w_100"
 						type="button"
 						style:margin-bottom={0}
-						on:click={() => {
+						onclick={() => {
 							removing = false;
 							dispatch('remove', id);
 						}}
@@ -277,12 +277,12 @@
 			<button
 				type="button"
 				style:margin-top="var(--space_lg)"
-				on:click={() => dispatch('duplicate', id)}
+				onclick={() => dispatch('duplicate', id)}
 			>
 				duplicate
 			</button>
 		{/if}
-		<button type="button" on:click={start_importing_data} bind:this={start_importing_el}>
+		<button type="button" onclick={start_importing_data} bind:this={start_importing_el}>
 			{#if editing}import/export data{:else}import data{/if}
 		</button>
 		{#if parse_error_message}
@@ -303,7 +303,7 @@
 		<div class="importing prose p_xl width_md box">
 			<h2>import level data</h2>
 			<button
-				on:click={() => {
+				onclick={() => {
 					void navigator.clipboard.writeText(updated);
 					level_data_el.select();
 				}}
@@ -312,7 +312,7 @@
 			</button>
 			<textarea bind:value={updated} bind:this={level_data_el} />
 			<button
-				on:click={import_data}
+				onclick={import_data}
 				disabled={!changed_serialized}
 				title={changed_serialized ? undefined : 'data has not changed'}
 			>

@@ -3,7 +3,7 @@
 	import {slide} from 'svelte/transition';
 	import type {Signal} from '@preact/signals-core';
 
-	import {midi_names, MIDI_MAX, MIDI_MIN, type Midi} from '$lib/music';
+	import {midi_names, MIDI_MAX, MIDI_MIN, type Midi} from '$lib/music.js';
 
 	export let min_note: Signal<Midi>;
 	export let max_note: Signal<Midi>;

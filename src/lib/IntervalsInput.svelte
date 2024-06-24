@@ -1,7 +1,7 @@
 <script lang="ts">
 	import {createEventDispatcher} from 'svelte';
 
-	import {Intervals, Scale, scales, to_scale_notes} from '$lib/music';
+	import {Intervals, Scale, scales, to_scale_notes} from '$lib/music.js';
 
 	// TODO naming convention between `IntervalsInput` and `SelectNotesControl`?
 
@@ -28,7 +28,7 @@
 	<input type="range" min={1} max={6} bind:value={octaves} />
 </label>
 <small class="preview width_sm panel">{intervals.join(', ')}</small>
-<button type="button" on:click={() => dispatch('input', intervals)}> use these intervals </button>
+<button type="button" onclick={() => dispatch('input', intervals)}> use these intervals </button>
 
 <style>
 	/* TODO this is hacky, extract or reuse something? */

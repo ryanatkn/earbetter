@@ -14,12 +14,12 @@
 	import Piano from '$lib/Piano.svelte';
 	import LevelProgressIndicator from '$lib/earbetter/LevelProgressIndicator.svelte';
 	import TrialProgressIndicator from '$lib/earbetter/TrialProgressIndicator.svelte';
-	import {get_ac} from '$lib/ac';
+	import {get_ac} from '$lib/ac.js';
 	import MidiInput from '$lib/MidiInput.svelte';
-	import type {Midi} from '$lib/music';
+	import type {Midi} from '$lib/music.js';
 	import {playing_notes, start_playing, stop_playing} from '$lib/play_note';
-	import {get_instrument, get_volume, with_velocity} from '$lib/helpers';
-	import {midi_access} from '$lib/midi_access';
+	import {get_instrument, get_volume, with_velocity} from '$lib/helpers.js';
+	import {midi_access} from '$lib/midi_access.js';
 	import LevelStatsSummary from '$lib/earbetter/LevelStatsSummary.svelte';
 	import TextBurst from '$lib/TextBurst.svelte';
 
@@ -157,14 +157,7 @@
 	}}
 />
 <!-- hide from screen readers, see keyboard commands -->
-<div
-	class="level"
-	class:initial
-	bind:clientWidth
-	on:click={click}
-	bind:this={el}
-	aria-hidden="true"
->
+<div class="level" class:initial bind:clientWidth onclick={click} bind:this={el} aria-hidden="true">
 	<div class="level-progress" title="level progress">
 		<LevelProgressIndicator {level} />
 	</div>
@@ -221,13 +214,13 @@
 						</div>
 						<button
 							class="big"
-							on:click={() => exit_level_to_map()}
+							onclick={() => exit_level_to_map()}
 							in:scale|local={{delay: 500}}
 							style:margin-bottom="var(--space_md)"
 						>
 							go back to the map &nbsp;<code>Space</code></button
 						>
-						<button class="big" on:click={() => level.reset()} in:scale|local={{delay: 750}}>
+						<button class="big" onclick={() => level.reset()} in:scale|local={{delay: 750}}>
 							replay level &nbsp;<code>r</code>
 						</button>
 					</div>

@@ -2,7 +2,7 @@
 	import {createEventDispatcher} from 'svelte';
 	import {swallow} from '@ryanatkn/belt/dom.js';
 
-	import {type Midi, midi_naturals} from '$lib/music';
+	import {type Midi, midi_naturals} from '$lib/music.js';
 	import {find_next_sibling, find_previous_sibling} from '$lib/dom';
 
 	const dispatch = createEventDispatcher<{press: Midi; release: Midi}>();
