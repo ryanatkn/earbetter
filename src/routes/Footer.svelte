@@ -1,7 +1,11 @@
 <script lang="ts">
 	import SiteBreadcrumb from '$routes/SiteBreadcrumb.svelte';
 
-	export let flush = false;
+	interface Props {
+		flush?: boolean;
+	}
+
+	const {flush = false}: Props = $props();
 </script>
 
 <footer class:flush>
