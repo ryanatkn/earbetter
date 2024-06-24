@@ -80,7 +80,7 @@
 				</section>
 			{/if}
 			<section class="card" transition:slide|local>
-				<div class="panel p_md prose">
+				<div class="panel p_md">
 					<header>
 						<h2>controls</h2>
 					</header>
@@ -97,29 +97,27 @@
 		{#if $show_game_help}
 			<section class="card" transition:slide|local>
 				<div class="panel p_md">
-					<div class="prose">
-						<p>
-							Earbetter is an <a href="https://wikipedia.org/wiki/Ear_training">ear training</a> tool:
-						</p>
-						<ul>
-							<li>each level is a standalone challenge that's a series of trials</li>
-							<li>
-								your level score is the sum of mistakes in your best {MISTAKE_HISTORY_LENGTH}
-								runs, win a ★ at 0
-							</li>
-							<li>realms group levels into bigger challenges</li>
-							<li>projects group realms so you can customize various experiences</li>
-						</ul>
-						<p>more info in <a href="https://github.com/ryanatkn/earbetter">the readme</a></p>
-						<aside>
-							Earbetter is in early development, and many things are unfinished and unknown -
-							feedback is appreciated on <a href="https://github.com/ryanatkn/earbetter"
-								>the GitHub discussions and issues</a
-							>
-						</aside>
-						<div class="box row">
-							<button style:margin="0" onclick={() => toggle_game_help()}>ok, hide this</button>
-						</div>
+					<p>
+						Earbetter is an <a href="https://wikipedia.org/wiki/Ear_training">ear training</a> tool:
+					</p>
+					<ul>
+						<li>each level is a standalone challenge that's a series of trials</li>
+						<li>
+							your level score is the sum of mistakes in your best {MISTAKE_HISTORY_LENGTH}
+							runs, win a ★ at 0
+						</li>
+						<li>realms group levels into bigger challenges</li>
+						<li>projects group realms so you can customize various experiences</li>
+					</ul>
+					<p>more info in <a href="https://github.com/ryanatkn/earbetter">the readme</a></p>
+					<aside>
+						Earbetter is in early development, and many things are unfinished and unknown - feedback
+						is appreciated on <a href="https://github.com/ryanatkn/earbetter"
+							>the GitHub discussions and issues</a
+						>
+					</aside>
+					<div class="box row">
+						<button style:margin="0" onclick={() => toggle_game_help()}>ok, hide this</button>
 					</div>
 				</div>
 			</section>
@@ -142,7 +140,7 @@
 			{/if}
 			{#if $selected_realm_id && (($editing_level && $levels) || $levels?.length === 0)}
 				<section class="card" transition:slide|local>
-					<div class="panel p_md prose">
+					<div class="panel p_md">
 						<LevelForm
 							{editing}
 							bind:id

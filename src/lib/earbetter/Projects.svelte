@@ -24,11 +24,9 @@
 </script>
 
 <div class="panel p_md">
-	<div class="prose">
-		<header>
-			<h2>projects</h2>
-		</header>
-	</div>
+	<header>
+		<h2>projects</h2>
+	</header>
 	<ProjectItems
 		selected_project_id={$selected_project_id}
 		editing_project_id={$editing_project ? $editing_project_id : null}

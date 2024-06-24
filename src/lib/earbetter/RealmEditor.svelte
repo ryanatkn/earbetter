@@ -22,7 +22,7 @@
 	$: console.log(`$realms`, $realms);
 </script>
 
-<div class="panel p_md prose">
+<div class="panel p_md">
 	<RealmForm
 		{editing}
 		bind:id

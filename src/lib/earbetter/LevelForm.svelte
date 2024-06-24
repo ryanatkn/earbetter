@@ -300,7 +300,7 @@
 			start_importing_el.focus();
 		}}
 	>
-		<div class="importing prose p_xl width_md box">
+		<div class="importing p_xl width_md box">
 			<h2>import level data</h2>
 			<button
 				onclick={() => {
@@ -329,7 +329,7 @@
 			intervals_el.focus();
 		}}
 	>
-		<div class="prose p_xl width_md box">
+		<div class="p_xl width_md box">
 			<h2>pick intervals</h2>
 			<IntervalsInput
 				bind:selected_scale={intervals_input_selected_scale}
@@ -351,9 +351,7 @@
 		}}
 	>
 		<div class="p_xl width_md box">
-			<div class="prose">
-				<h2>pick tonics</h2>
-			</div>
+			<h2>pick tonics</h2>
 			<!-- TODO this `new Set` is a hack, probably change the data structure to a set, need serialization for storage -->
 			<NotesInput
 				notes={new Set(tonics)}

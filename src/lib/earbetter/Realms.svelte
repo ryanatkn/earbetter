@@ -38,11 +38,9 @@
 </script>
 
 <div class="panel p_md">
-	<div class="prose">
-		<header>
-			<h2>realms</h2>
-		</header>
-	</div>
+	<header>
+		<h2>realms</h2>
+	</header>
 	{#if $realms && $selected_project_data}
 		<div class="realm-items-wrapper" transition:slide|local>
 			<RealmItems

@@ -110,9 +110,6 @@ code {
 .row label {
 	margin-bottom: 0 !important;
 }
-.prose .row:not(:last-child) {
-	margin-bottom: var(--space_lg);
-}
 
 th,
 td {

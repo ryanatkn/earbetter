@@ -26,12 +26,10 @@
 </script>
 
 <div class="panel p_md">
-	<div class="prose">
-		<header>
-			<h2>levels</h2>
-			<h3>{$selected_realm_data?.name}</h3>
-		</header>
-	</div>
+	<header>
+		<h2>levels</h2>
+		<h3>{$selected_realm_data?.name}</h3>
+	</header>
 	<menu class="levels">
 		{#each levels as d (d.id)}
 			<LevelMapItem {app} level_data={d} />
