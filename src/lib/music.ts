@@ -10,7 +10,7 @@ export const DEFAULT_TUNING = 440; // https://wikipedia.org/wiki/A440_(pitch_sta
 
 export const NOTE_FLAT_SYMBOL = '♭';
 export const NOTE_SHARP_SYMBOL = '♯';
-export type NoteName =
+export type Note_Name =
   | 'C-1' | 'C♯-1' | 'D-1' | 'D♯-1' | 'E-1' | 'F-1' | 'F♯-1' | 'G-1' | 'G♯-1' | 'A-1' | 'A♯-1' | 'B-1'
   | 'C0'  | 'C♯0'  | 'D0'  | 'D♯0'  | 'E0'  | 'F0'  | 'F♯0'  | 'G0'  | 'G♯0'  | 'A0'  | 'A♯0'  | 'B0'
   | 'C1'  | 'C♯1'  | 'D1'  | 'D♯1'  | 'E1'  | 'F1'  | 'F♯1'  | 'G1'  | 'G♯1'  | 'A1'  | 'A♯1'  | 'B1'
@@ -49,10 +49,10 @@ export const compute_naturals = (min: Midi, max: Midi): Midi[] => {
 	return naturals;
 };
 
-export const transpose = (midi: Midi, semitones: Semitones): Midi => {
-	const transposed = midi + semitones;
+export const transpose = (note: Midi, semitones: Semitones): Midi => {
+	const transposed = note + semitones;
 	if (!is_midi(transposed)) {
-		throw Error(`Failed to transpose midi ${midi} by ${semitones}`);
+		throw Error(`Failed to transpose midi ${note} by ${semitones}`);
 	}
 	return transposed;
 };
@@ -71,7 +71,7 @@ export const chroma_to_hsl_string: Map<Chroma, string> = new Map(
 
 export const interval_short_names = Object.freeze(['P1', 'm2', 'M2', 'm3', 'M3', 'P4', 'd5', 'P5', 'm6', 'M6', 'm7', 'M7', 'P8'] as const); // prettier-ignore
 
-export type IntervalShortNames = (typeof interval_short_names)[number];
+export type Interval_Short_Names = (typeof interval_short_names)[number];
 
 export const interval_names = Object.freeze([
 	'perfect unison',
@@ -89,7 +89,7 @@ export const interval_names = Object.freeze([
 	'perfect octave',
 ] as const);
 
-export type IntervalNames = (typeof interval_names)[number];
+export type Interval_Names = (typeof interval_names)[number];
 
 const ENABLED_NOTES_KEY = Symbol('enabled_notes');
 export const get_enabled_notes = (): Signal<Set<Midi> | null> => getContext(ENABLED_NOTES_KEY);
@@ -97,11 +97,11 @@ export const set_enabled_notes = (
 	store: Signal<Set<Midi> | null> = signal(null),
 ): Signal<Set<Midi> | null> => setContext(ENABLED_NOTES_KEY, store);
 
-export const ScaleName = z.string();
-export type ScaleName = Flavored<z.infer<typeof ScaleName>, 'ScaleName'>; // TODO @multiple this doesn't work when used as a schema, use z.brand() instead? or are the egonomics too bad?
+export const Scale_Name = z.string();
+export type Scale_Name = Flavored<z.infer<typeof Scale_Name>, 'Scale_Name'>; // TODO @multiple this doesn't work when used as a schema, use z.brand() instead? or are the egonomics too bad?
 
 export const Scale = z.object({
-	name: ScaleName,
+	name: Scale_Name,
 	notes: z.array(Semitones),
 });
 export type Scale = z.infer<typeof Scale>;
@@ -122,8 +122,8 @@ export const scales: Scale[] = [
 ];
 export const DEFAULT_SCALE = scales[0];
 
-export const scale_by_name: Map<ScaleName, Scale> = new Map(scales.map((s) => [s.name, s]));
-export const lookup_scale = (name: ScaleName): Scale => {
+export const scale_by_name: Map<Scale_Name, Scale> = new Map(scales.map((s) => [s.name, s]));
+export const lookup_scale = (name: Scale_Name): Scale => {
 	const found = scale_by_name.get(name);
 	if (!found) throw Error('unknown scale ' + name);
 	return found;
@@ -211,8 +211,8 @@ export const is_midi = (n: number): n is Midi =>
 	n >= MIDI_MIN && n <= MIDI_MAX && Number.isInteger(n);
 
 // note/midi/frequency formulas: https://newt.phys.unsw.edu.au/jw/notes.html
-export const midi_to_freq = (midi: Midi, tuning: Frequency = DEFAULT_TUNING): Frequency =>
-	2 ** ((midi - 69) / 12) * tuning;
+export const midi_to_freq = (note: Midi, tuning: Frequency = DEFAULT_TUNING): Frequency =>
+	2 ** ((note - 69) / 12) * tuning;
 
 export const freq_to_midi = (freq: Frequency, tuning: Frequency): Midi =>
 	Math.round(12 * Math.log2(freq / tuning) + 69) as Midi;
@@ -238,9 +238,9 @@ export const midi_octaves: Octave[] & Record<Midi, Octave> = Object.freeze(
 	midis.map((m) => Math.floor(m / 12) - 1),
 ) as Octave[];
 
-export const midi_names: NoteName[] & Record<Midi, NoteName> = Object.freeze(
+export const midi_names: Note_Name[] & Record<Midi, Note_Name> = Object.freeze(
 	midis.map((m) => midi_pitch_classes[m] + midi_octaves[m]),
-) as NoteName[];
+) as Note_Name[];
 
 export const midi_naturals: Set<Midi> = new Set(
 	midis.filter((m) => midi_pitch_classes[m][1] !== NOTE_SHARP_SYMBOL),

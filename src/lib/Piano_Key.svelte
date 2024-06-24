@@ -17,8 +17,8 @@
 		highlighted?: boolean;
 		emphasized?: boolean;
 		show_middle_c?: boolean;
-		onpress?: (midi: Midi) => void;
-		onrelease?: (midi: Midi) => void;
+		onpress?: (note: Midi) => void;
+		onrelease?: (note: Midi) => void;
 	}
 
 	let {

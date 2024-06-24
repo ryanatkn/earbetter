@@ -13,8 +13,8 @@
 		highlighted_keys?: Set<Midi> | null;
 		emphasized_keys?: Set<Midi> | null;
 		clickable?: boolean;
-		onpress?: (midi: Midi) => void;
-		onrelease?: (midi: Midi) => void;
+		onpress?: (note: Midi) => void;
+		onrelease?: (note: Midi) => void;
 	}
 
 	const {
