@@ -3,7 +3,7 @@
 	import {page} from '$app/stores';
 	import {strip_start} from '@ryanatkn/belt/string.js';
 
-	import {pages} from '$routes/nav';
+	import {pages} from '$routes/page_data.js';
 
 	const selected_slug = $derived(strip_start($page.url.pathname, base));
 </script>

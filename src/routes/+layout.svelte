@@ -22,7 +22,7 @@
 	import {set_enabled_notes, set_key, set_scale, to_notes_in_scale} from '$lib/music.js';
 	import {load_from_storage, set_in_storage} from '$lib/storage.js';
 	import Site_Map from '$routes/Site_Map.svelte';
-	import {SiteData} from '$routes/site_data.js';
+	import {Site_Data} from '$routes/site_data.js';
 	import Volume_Control from '$lib/Volume_Control.svelte';
 	import Instrument_Control from '$lib/Instrument_Control.svelte';
 	import Init_Midi_Button from '$lib/Init_Midi_Button.svelte';
@@ -42,8 +42,8 @@
 	const SITE_DATA_STORAGE_KEY = 'site';
 	const initial_site_data = load_from_storage(
 		SITE_DATA_STORAGE_KEY,
-		() => SiteData.parse({}),
-		SiteData.parse,
+		() => Site_Data.parse({}),
+		Site_Data.parse,
 	);
 
 	const get_ac = set_ac();
@@ -58,7 +58,7 @@
 	);
 
 	// save site data
-	const to_site_data = (): SiteData => ({
+	const to_site_data = (): Site_Data => ({
 		// note these have to use `.value`, the `$`-prefix doesn't work for reactivity
 		volume: volume.value,
 		instrument: instrument.value,

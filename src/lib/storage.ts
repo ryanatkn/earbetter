@@ -8,7 +8,6 @@ import {browser} from '$app/environment';
  * @param key - The `localStorage` key.
  * @param defaultValue - Can be a lazily called function to avoid waste.
  * @param parse
- * @returns
  */
 export const load_from_storage = <T>(
 	key: string,

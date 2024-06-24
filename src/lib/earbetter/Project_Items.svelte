@@ -1,10 +1,10 @@
 <script lang="ts">
-	import type {Project_Data, Project_Id, ProjectMetadata} from '$lib/earbetter/project.js';
+	import type {Project_Data, Project_Id, Project_Metadata} from '$lib/earbetter/project.js';
 	import Project_Item from '$lib/earbetter/Project_Item.svelte';
 
 	export let selected_project_id: Project_Id | null = null;
 	export let editing_project_id: Project_Id | null = null;
-	export let projects: ProjectMetadata[] = [];
+	export let projects: Project_Metadata[] = [];
 	export let project_datas: Project_Data[] = [];
 	export let load_project: (id: Project_Id) => Project_Data | null;
 	export let select_project: (id: Project_Id) => void;

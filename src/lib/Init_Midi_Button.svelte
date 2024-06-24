@@ -9,18 +9,23 @@
 		request_access as default_request_access,
 	} from '$lib/midi_access.js';
 
-	export let midi_access: Signal<MIDIAccess | null> = default_midi_access;
-	export const request_access: () => Promise<MIDIAccess | null> = default_request_access;
+	interface Props {
+		midi_access?: Signal<MIDIAccess | null>;
+		request_access?: () => Promise<MIDIAccess | null>;
+	}
+
+	const {midi_access = default_midi_access, request_access = default_request_access}: Props =
+		$props();
 
 	// TODO move MIDI initialization to some other action, like the button to start a level
 
-	let request_status: Async_Status = 'initial';
+	let request_status: Async_Status = $state('initial');
 
-	$: disabled = !!$midi_access || request_status === 'pending';
+	const disabled = $derived(!!$midi_access || request_status === 'pending');
 
-	$: midi_inputs = $midi_access && Array.from($midi_access.inputs.values());
+	const midi_inputs = $derived($midi_access && Array.from($midi_access.inputs.values()));
 
-	let request_error: string | undefined;
+	let request_error: string | undefined = $state();
 </script>
 
 <button

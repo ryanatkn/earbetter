@@ -80,8 +80,8 @@
 				max_note={$max_note}
 				{pressed_keys}
 				enabled_notes={$enabled_notes}
-				onpress={(e) => play(e.detail)}
-				onrelease={(e) => stop_playing(e.detail)}
+				onpress={(note) => play(note)}
+				onrelease={(note) => stop_playing(note)}
 			/>
 		{/if}
 	</div>

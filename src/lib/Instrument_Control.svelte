@@ -3,7 +3,11 @@
 
 	import {instruments, type Instrument} from '$lib/helpers.js';
 
-	export let instrument: Signal<Instrument>;
+	interface Props {
+		instrument: Signal<Instrument>;
+	}
+
+	const {instrument}: Props = $props();
 
 	// TODO remove after signals adds `set` so we can use two-way binding
 	const input = (e: any) => (instrument.value = e.currentTarget.value);

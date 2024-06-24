@@ -17,11 +17,11 @@ const random_project_name = (): Project_Name => random_item(emojis).icon + rando
 
 // Like `Project_Data` but just the stuff needed for display.
 // Used to avoid loading every project into memory at startup.
-export const ProjectMetadata = z.object({
+export const Project_Metadata = z.object({
 	id: Project_Id,
 	name: Project_Name,
 });
-export type ProjectMetadata = z.infer<typeof ProjectMetadata>;
+export type Project_Metadata = z.infer<typeof Project_Metadata>;
 
 export const Project_Data = z.object({
 	id: Project_Id.default(create_project_id),

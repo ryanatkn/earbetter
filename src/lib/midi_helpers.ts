@@ -10,16 +10,18 @@ import type {Midi} from '$lib/music.js';
 
 // WebMIDI helpers specific to cosmicplayground
 
-export type MidiMessage = {
+export type Midi_Message = {
 	command: MIDICommand;
 	channel: MIDIChannel;
 	note: Midi;
 	velocity: number; // [0, 1]
 };
 
-// Parse basic information out of a MIDI message.
-// https://stackoverflow.com/questions/40902864/how-to-parse-web-midi-api-input-messages-onmidimessage
-export const parse_midi_message = (e: MIDIMessageEvent): MidiMessage => {
+/**
+ * Parse basic information out of a MIDI message.
+ * https://stackoverflow.com/questions/40902864/how-to-parse-web-midi-api-input-messages-onmidimessage
+ */
+export const parse_midi_message = (e: MIDIMessageEvent): Midi_Message => {
 	return {
 		command: e.data[0] >> 4,
 		channel: e.data[0] & 0xf,
@@ -32,7 +34,6 @@ export const parse_midi_message = (e: MIDIMessageEvent): MidiMessage => {
  * Uses `navigator.requestMIDIAccess`, throwing an error on failure.
  * Callers should normally prefer to use `$lib/midi_access.ts#request_access` instead of this.
  * @param opts - WebMIDI options - https://developer.mozilla.org/en-US/docs/Web/API/WebMIDI_API
- * @returns
  */
 export const request_midi_access = async (opts?: Partial<MIDIOptions>): Promise<MIDIAccess> => {
 	const n = navigator as any;

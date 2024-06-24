@@ -247,7 +247,7 @@ export const midi_naturals: Set<Midi> = new Set(
 );
 
 export const Notes = z.array(Midi);
-export type Notes = z.infer<typeof Notes>;
+export type Notes = Flavored<z.infer<typeof Notes>, 'Notes'>; // TODO @multiple this doesn't work when used as a schema, use z.brand() instead? or are the egonomics too bad?
 // TODO replace with zod
 export const serialize_notes = (notes: Notes | null): string => (notes ? notes.join(', ') : '');
 export const parse_notes = (value: string): Notes =>
