@@ -107,7 +107,8 @@
 	<div class="notes width_sm">
 		<!-- TODO copy button -->
 		<blockquote class="panel" style:margin="var(--space_lg) 0">
-			<textarea bind:value={notes_str} oninput={(e) => update_notes_str(e.currentTarget.value)} />
+			<textarea bind:value={notes_str} oninput={(e) => update_notes_str(e.currentTarget.value)}
+			></textarea>
 		</blockquote>
 		<button
 			type="button"

@@ -309,7 +309,7 @@
 			>
 				copy to clipboard
 			</button>
-			<textarea bind:value={updated} bind:this={level_data_el} />
+			<textarea bind:value={updated} bind:this={level_data_el}></textarea>
 			<button
 				onclick={import_data}
 				disabled={!changed_serialized}

@@ -3,23 +3,35 @@
 	import {swallow} from '@ryanatkn/belt/dom.js';
 	import Dialog from '@ryanatkn/fuz/Dialog.svelte';
 	import Alert from '@ryanatkn/fuz/Alert.svelte';
+	import type {Snippet} from 'svelte';
 
 	import {create_project_id, Project_Data, type Project_Id} from '$lib/earbetter/project.js';
 
-	const dispatch = createEventDispatcher<{
-		submit: Project_Data;
-		remove: Project_Id;
-		duplicate: Project_Id;
-	}>();
+	interface Props {
+		project_data?: Project_Data | null;
+		id?: Project_Id;
+		name?: string;
+		editing?: boolean;
+		onsubmit: (project_data: Project_Data) => void;
+		onremove: (project_id: Project_Id) => void;
+		onduplicate: (project_id: Project_Id) => void;
+		footer?: Snippet<[changed: boolean]>;
+	}
 
 	const DEFAULT_NAME = 'new project';
 
-	export let project_data: Project_Data | null = null;
-	export let id = create_project_id();
-	export let name = DEFAULT_NAME;
-	export let editing = false;
+	let {
+		project_data = null, // eslint-disable-line prefer-const
+		id = $bindable(create_project_id()),
+		name = $bindable(DEFAULT_NAME),
+		editing = false, // eslint-disable-line prefer-const
+		onsubmit, // eslint-disable-line prefer-const
+		onremove, // eslint-disable-line prefer-const
+		onduplicate, // eslint-disable-line prefer-const
+		footer, // eslint-disable-line prefer-const
+	}: Props = $props();
 
-	let removing = false;
+	let removing = $state(false);
 
 	const to_data = (): Project_Data =>
 		Project_Data.parse({
@@ -28,7 +40,8 @@
 			name,
 		});
 
-	$: set_project_data(project_data);
+	// TODO BLOCK @multiple misusing effect setting state
+	$effect(() => set_project_data(project_data));
 	const set_project_data = (project_data: Project_Data | null): void => {
 		console.log(`set_project_data`, project_data);
 		if (project_data) {
@@ -40,17 +53,22 @@
 		}
 	};
 
-	$: changed = !project_data || id !== project_data.id || name !== project_data.name;
+	const changed = $derived(!project_data || id !== project_data.id || name !== project_data.name);
 
 	// TODO lots of similarity with `Level_Form`
-	let importing = false;
-	let serialized = '';
-	let updated = '';
-	$: changed_serialized = serialized !== updated;
-	let parse_error_message = '';
-	$: project_data, id, (parse_error_message = '');
-	let project_data_el: HTMLTextAreaElement;
-	let start_importing_el: HTMLButtonElement;
+	let importing = $state(false);
+	let serialized = $state('');
+	let updated = $state('');
+	const changed_serialized = $derived(serialized !== updated);
+	let parse_error_message = $state('');
+	// TODO BLOCK @multiple misusing effect setting state
+	$effect(() => {
+		project_data;
+		id;
+		parse_error_message = '';
+	});
+	let project_data_el: HTMLTextAreaElement | undefined = $state();
+	let start_importing_el: HTMLButtonElement | undefined = $state();
 
 	const import_data = async (): Promise<void> => {
 		parse_error_message = '';
@@ -59,7 +77,7 @@
 			// add an `id` if there is none
 			if (json && !json.id) json.id = create_project_id();
 			const parsed = Project_Data.parse(json);
-			dispatch('submit', parsed);
+			onsubmit?.(parsed);
 		} catch (err) {
 			console.error('failed to import data', err);
 			parse_error_message = err.message || 'unknown error';
@@ -77,7 +95,7 @@
 	<Dialog
 		onclose={() => {
 			importing = false;
-			start_importing_el.focus();
+			start_importing_el?.focus();
 		}}
 	>
 		<div class="importing p_xl width_md box">
@@ -85,12 +103,12 @@
 			<button
 				onclick={() => {
 					void navigator.clipboard.writeText(updated);
-					project_data_el.select();
+					project_data_el?.select();
 				}}
 			>
 				copy to clipboard
 			</button>
-			<textarea bind:value={updated} bind:this={project_data_el} />
+			<textarea bind:value={updated} bind:this={project_data_el}></textarea>
 			<button
 				onclick={import_data}
 				disabled={!changed_serialized}
@@ -115,7 +133,7 @@
 				onkeydown={(e) => {
 					if (e.key === 'Enter') {
 						swallow(e);
-						dispatch('submit', to_data());
+						onsubmit?.(to_data());
 					}
 				}}
 			/>
@@ -124,7 +142,7 @@
 	<button
 		class="accent"
 		type="button"
-		onclick={() => dispatch('submit', to_data())}
+		onclick={() => onsubmit?.(to_data())}
 		disabled={editing && !changed}
 	>
 		{#if editing}save changes to project{:else}create project{/if}
@@ -141,18 +159,14 @@
 					style:margin-bottom={0}
 					onclick={() => {
 						removing = false;
-						dispatch('remove', id);
+						onremove?.(id);
 					}}
 				>
 					✖ confirm remove
 				</button>
 			</div>
 		{/if}
-		<button
-			type="button"
-			style:margin-top="var(--space_lg)"
-			onclick={() => dispatch('duplicate', id)}
-		>
+		<button type="button" style:margin-top="var(--space_lg)" onclick={() => onduplicate?.(id)}>
 			duplicate
 		</button>
 	{/if}
@@ -164,7 +178,9 @@
 			<Alert status="error"><pre>{parse_error_message}</pre></Alert>
 		</div>
 	{/if}
-	<slot name="footer" {changed} />
+	{#if footer}
+		{@render footer(changed)}
+	{/if}
 </form>
 
 <style>

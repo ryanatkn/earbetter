@@ -13,7 +13,7 @@
 		id?: Realm_Id;
 		name?: string;
 		editing?: boolean;
-		onsubmit?: (data: Realm_Data) => void;
+		onsubmit?: (realm_data: Realm_Data) => void;
 		onremove?: (realm_id: Realm_Id) => void;
 		onduplicate?: (realm_id: Realm_Id) => void;
 		footer?: Snippet<[changed: boolean]>;
