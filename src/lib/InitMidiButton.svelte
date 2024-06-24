@@ -3,7 +3,7 @@
 	import {fade} from 'svelte/transition';
 	import type {Signal} from '@preact/signals-core';
 
-	import type {MIDIAccess} from '$lib/WebMIDI';
+	import type {MIDIAccess} from '$lib/WebMIDI.js';
 	import {
 		midi_access as default_midi_access,
 		request_access as default_request_access,

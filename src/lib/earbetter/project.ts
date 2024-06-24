@@ -3,9 +3,9 @@ import {random_item} from '@ryanatkn/belt/random.js';
 import type {Flavored} from '@ryanatkn/belt/types.js';
 
 import {DEFAULT_LEVEL_STATS, LevelStats} from '$lib/earbetter/level.js';
-import {emojis} from '$lib/emoji';
+import {emojis} from '$lib/emoji.js';
 import {RealmData} from '$lib/earbetter/realm.js';
-import {to_random_id} from '$lib/id';
+import {to_random_id} from '$lib/id.js';
 
 export const ProjectId = z.string();
 export type ProjectId = Flavored<z.infer<typeof ProjectId>, 'ProjectId'>;

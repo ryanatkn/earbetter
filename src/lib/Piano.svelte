@@ -1,7 +1,7 @@
 <script lang="ts">
 	import PianoKey from '$lib/PianoKey.svelte';
 	import {MIDI_MIN, MIDI_MAX, type Midi} from '$lib/music.js';
-	import {compute_piano} from '$lib/piano';
+	import {compute_piano} from '$lib/piano.js';
 
 	export let width: number;
 	export let max_height: number | undefined = undefined;

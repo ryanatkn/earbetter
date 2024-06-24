@@ -3,7 +3,7 @@
 	import {swallow} from '@ryanatkn/belt/dom.js';
 
 	import {type Midi, midi_naturals} from '$lib/music.js';
-	import {find_next_sibling, find_previous_sibling} from '$lib/dom';
+	import {find_next_sibling, find_previous_sibling} from '$lib/dom.js';
 
 	const dispatch = createEventDispatcher<{press: Midi; release: Midi}>();
 

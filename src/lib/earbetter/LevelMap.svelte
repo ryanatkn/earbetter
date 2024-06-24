@@ -2,7 +2,7 @@
 	import type {Signal} from '@preact/signals-core';
 	import {slide} from 'svelte/transition';
 
-	import type {MIDIAccess} from '$lib/WebMIDI';
+	import type {MIDIAccess} from '$lib/WebMIDI.js';
 	import {get_ac} from '$lib/ac.js';
 	import Init_Midi_Button from '$lib/Init_Midi_Button.svelte';
 	import LevelForm from '$lib/earbetter/LevelForm.svelte';

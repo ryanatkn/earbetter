@@ -2,7 +2,7 @@ import {z} from 'zod';
 import type {Flavored} from '@ryanatkn/belt/types.js';
 
 import {LevelData} from '$lib/earbetter/level.js';
-import {to_random_id} from '$lib/id';
+import {to_random_id} from '$lib/id.js';
 
 export const RealmId = z.string();
 export type RealmId = Flavored<z.infer<typeof RealmId>, 'RealmId'>;

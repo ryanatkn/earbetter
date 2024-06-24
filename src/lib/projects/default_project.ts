@@ -1,6 +1,6 @@
 import {DEFAULT_MIN_NOTE} from '$lib/earbetter/level.js';
 import {ProjectData} from '$lib/earbetter/project.js';
-import {to_default_scale_realm} from '$lib/earbetter/realm_helpers';
+import {to_default_scale_realm} from '$lib/earbetter/realm_helpers.js';
 
 const data = (): ProjectData =>
 	ProjectData.parse({
