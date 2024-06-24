@@ -28,8 +28,8 @@
 		serialize_notes,
 		parse_notes,
 	} from '$lib/music.js';
-	import IntervalsInput from '$lib/IntervalsInput.svelte';
-	import NotesInput from '$lib/NotesInput.svelte';
+	import Intervals_Input from '$lib/Intervals_Input.svelte';
+	import Notes_Input from '$lib/Notes_Input.svelte';
 	import Piano from '$lib/Piano.svelte';
 
 	const dispatch = createEventDispatcher<{
@@ -331,7 +331,7 @@
 	>
 		<div class="p_xl width_md box">
 			<h2>pick intervals</h2>
-			<IntervalsInput
+			<Intervals_Input
 				bind:selected_scale={intervals_input_selected_scale}
 				bind:octaves={intervals_input_octaves}
 				on:input={(e) => {
@@ -353,7 +353,7 @@
 		<div class="p_xl width_md box">
 			<h2>pick tonics</h2>
 			<!-- TODO this `new Set` is a hack, probably change the data structure to a set, need serialization for storage -->
-			<NotesInput
+			<Notes_Input
 				notes={new Set(tonics)}
 				{min_note}
 				{max_note}

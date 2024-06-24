@@ -243,10 +243,10 @@
       "default": "./dist/Instrument_Control.svelte",
       "types": "./dist/Instrument_Control.svelte.d.ts"
     },
-    "./IntervalsInput.svelte": {
-      "svelte": "./dist/IntervalsInput.svelte",
-      "default": "./dist/IntervalsInput.svelte",
-      "types": "./dist/IntervalsInput.svelte.d.ts"
+    "./Intervals_Input.svelte": {
+      "svelte": "./dist/Intervals_Input.svelte",
+      "default": "./dist/Intervals_Input.svelte",
+      "types": "./dist/Intervals_Input.svelte.d.ts"
     },
     "./midi_access.js": {
       "default": "./dist/midi_access.js",
@@ -270,10 +270,10 @@
       "default": "./dist/music.js",
       "types": "./dist/music.d.ts"
     },
-    "./NotesInput.svelte": {
-      "svelte": "./dist/NotesInput.svelte",
-      "default": "./dist/NotesInput.svelte",
-      "types": "./dist/NotesInput.svelte.d.ts"
+    "./Notes_Input.svelte": {
+      "svelte": "./dist/Notes_Input.svelte",
+      "default": "./dist/Notes_Input.svelte",
+      "types": "./dist/Notes_Input.svelte.d.ts"
     },
     "./Piano.svelte": {
       "svelte": "./dist/Piano.svelte",
@@ -284,10 +284,10 @@
       "default": "./dist/piano.js",
       "types": "./dist/piano.d.ts"
     },
-    "./PianoKey.svelte": {
-      "svelte": "./dist/PianoKey.svelte",
-      "default": "./dist/PianoKey.svelte",
-      "types": "./dist/PianoKey.svelte.d.ts"
+    "./Piano_Key.svelte": {
+      "svelte": "./dist/Piano_Key.svelte",
+      "default": "./dist/Piano_Key.svelte",
+      "types": "./dist/Piano_Key.svelte.d.ts"
     },
     "./play_note.js": {
       "default": "./dist/play_note.js",

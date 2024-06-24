@@ -3,7 +3,7 @@
 
 	import {Intervals, Scale, scales, to_scale_notes} from '$lib/music.js';
 
-	// TODO naming convention between `IntervalsInput` and `Select_Notes_Control`?
+	// TODO naming convention between `Intervals_Input` and `Select_Notes_Control`?
 
 	const dispatch = createEventDispatcher<{input: Intervals}>();
 

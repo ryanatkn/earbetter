@@ -1,5 +1,5 @@
 <script lang="ts">
-	import PianoKey from '$lib/PianoKey.svelte';
+	import Piano_Key from '$lib/Piano_Key.svelte';
 	import {MIDI_MIN, MIDI_MAX, type Midi} from '$lib/music.js';
 	import {compute_piano} from '$lib/piano.js';
 
@@ -35,7 +35,7 @@
 >
 	<div class="piano-keys">
 		{#each piano_keys as { midi, left_offset } (midi)}
-			<PianoKey
+			<Piano_Key
 				onpress
 				onrelease
 				{midi}
