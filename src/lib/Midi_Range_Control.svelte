@@ -5,11 +5,16 @@
 
 	import {midi_names, MIDI_MAX, MIDI_MIN, type Midi} from '$lib/music.js';
 
-	export let min_note: Signal<Midi>;
-	export let max_note: Signal<Midi>;
+	interface Props {
+		min_note: Signal<Midi>;
+		max_note: Signal<Midi>;
+	}
 
-	$: error_message = $min_note > $max_note ? 'note min cannot be larger than the max' : false;
-	// TODO add error state to Felt controls (maybe `.error`?)
+	const {min_note, max_note}: Props = $props();
+
+	const error_message = $derived(
+		$min_note > $max_note ? 'note min cannot be larger than the max' : false,
+	);
 
 	// TODO remove and use `bind:` once Signals support it
 	const input_min_note = (e: any) => (min_note.value = Number(e.currentTarget.value));
