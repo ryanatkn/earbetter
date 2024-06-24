@@ -43,9 +43,19 @@
 		transition:fade|local
 	>
 		{#each {length: $trial.sequence.length} as _, index}
-			<div class="trial" style="background-color: {to_bg_color($status, index, current_index)}" />
+			<div
+				class="trial"
+				style="background-color: {to_bg_color($status, index, current_index)}"
+				aria-hidden="true"
+			></div>
 		{/each}
-		<div class="progress_bar" />
+		<div
+			class="progress_bar"
+			aria-label="trial progress"
+			aria-valuemin={0}
+			aria-valuemax={100}
+			aria-valuenow={Math.floor(percent_complete * 100)}
+		></div>
 	</div>
 {/if}
 

@@ -21,9 +21,19 @@
 
 <div class="level-progress-indicator" style:--progress_bar_percent={percent_complete}>
 	{#each {length: $def.trial_count} as _, index}
-		<div class="level" style="background-color: {to_bg_color($status, $trial, $trials, index)}" />
+		<div
+			class="level"
+			style="background-color: {to_bg_color($status, $trial, $trials, index)}"
+			aria-hidden="true"
+		></div>
 	{/each}
-	<div class="progress_bar" />
+	<div
+		class="progress_bar"
+		aria-label="level progress"
+		aria-valuemin={0}
+		aria-valuemax={100}
+		aria-valuenow={Math.floor(percent_complete * 100)}
+	></div>
 </div>
 
 <style>
