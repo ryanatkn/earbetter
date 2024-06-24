@@ -27,15 +27,15 @@ export const DEFAULT_TONICS: Notes | null = null;
 export const DEFAULT_MIN_NOTE: Midi = 48;
 export const DEFAULT_MAX_NOTE: Midi = 84;
 
-export const LevelId = z.string();
-export type LevelId = Flavored<z.infer<typeof LevelId>, 'LevelId'>;
-export const create_level_id = (): LevelId => to_random_id();
+export const Level_Id = z.string();
+export type Level_Id = Flavored<z.infer<typeof Level_Id>, 'Level_Id'>;
+export const create_level_id = (): Level_Id => to_random_id();
 
 export const LevelName = z.string().min(1).max(1000);
 export type LevelName = Flavored<z.infer<typeof LevelName>, 'LevelName'>;
 
-export const LevelData = z.object({
-	id: LevelId.default(create_level_id),
+export const Level_Data = z.object({
+	id: Level_Id.default(create_level_id),
 	name: LevelName.default(DEFAULT_LEVEL_NAME),
 	intervals: Intervals.default(DEFAULT_INTERVALS),
 	tonics: Notes.nullable().default(null),
@@ -44,10 +44,10 @@ export const LevelData = z.object({
 	min_note: Midi.default(DEFAULT_MIN_NOTE),
 	max_note: Midi.default(DEFAULT_MAX_NOTE),
 });
-export type LevelData = z.infer<typeof LevelData>;
+export type Level_Data = z.infer<typeof Level_Data>;
 
 export const Level_Hash_Data = z.object({
-	level: LevelData,
+	level: Level_Data,
 });
 export type Level_Hash_Data = z.infer<typeof Level_Hash_Data>;
 
@@ -62,7 +62,7 @@ export type Status =
 // TODO ambiguity with `Level.svelte` -- consider combining the two? or renaming the component, maybe it's the `LevelScene`
 // (hm not sure about that, but the ergnomics of components may be worth it)
 export interface Level {
-	def: Signal<LevelData>;
+	def: Signal<Level_Data>;
 	status: Signal<Status>;
 	mistakes: Signal<number>;
 	trial: Signal<Trial | null>;
@@ -92,7 +92,7 @@ export interface Trial {
 	retry_count: number;
 }
 
-const create_next_trial = (def: LevelData, current_trial: Trial | null): Trial => {
+const create_next_trial = (def: Level_Data, current_trial: Trial | null): Trial => {
 	const {min_note, max_note} = def;
 
 	const tonic = to_random_tonic(def);
@@ -130,7 +130,7 @@ const create_next_trial = (def: LevelData, current_trial: Trial | null): Trial =
 	};
 };
 
-const to_random_tonic = (def: LevelData): Midi => {
+const to_random_tonic = (def: Level_Data): Midi => {
 	const {tonics} = def;
 	if (tonics?.length) return random_item(tonics);
 	const {min_note, max_note} = def;
@@ -153,12 +153,12 @@ const DEFAULT_TRIAL: Trial | null = null;
 const DEFAULT_TRIALS: Trial[] = [];
 
 export const create_level = (
-	level_data: LevelData, // TODO maybe make optional?
+	level_data: Level_Data, // TODO maybe make optional?
 	ac: AudioContext,
 	volume: Signal<Volume>,
 	instrument: Signal<Instrument>,
 ): Level => {
-	const def: Signal<LevelData> = signal(level_data);
+	const def: Signal<Level_Data> = signal(level_data);
 	const status: Signal<Status> = signal(DEFAULT_STATUS);
 	const mistakes: Signal<number> = signal(0);
 	const trial: Signal<Trial | null> = signal(DEFAULT_TRIAL);
@@ -352,26 +352,26 @@ const get_correct_guess = (trial: Trial | null): Midi | null => {
 	return trial.sequence[trial.guessing_index];
 };
 
-export const to_play_level_url = (level_data: LevelData): string => {
+export const to_play_level_url = (level_data: Level_Data): string => {
 	const data: Level_Hash_Data = {level: level_data};
 	return `${base}/game/play` + serialize_to_hash(data);
 };
 
-export const MistakesLevelStats = z.record(LevelId, z.array(z.number()));
-export type MistakesLevelStats = z.infer<typeof MistakesLevelStats>;
+export const MistakesLevel_Stats = z.record(Level_Id, z.array(z.number()));
+export type MistakesLevel_Stats = z.infer<typeof MistakesLevel_Stats>;
 
-export const LevelStats = z.object({
-	mistakes: MistakesLevelStats,
+export const Level_Stats = z.object({
+	mistakes: MistakesLevel_Stats,
 });
-export type LevelStats = z.infer<typeof LevelStats>;
+export type Level_Stats = z.infer<typeof Level_Stats>;
 
-export const DEFAULT_LEVEL_STATS: LevelStats = {mistakes: {}};
+export const DEFAULT_LEVEL_STATS: Level_Stats = {mistakes: {}};
 
 export const add_mistakes_to_level_stats = (
-	level_stats: LevelStats,
-	id: LevelId,
+	level_stats: Level_Stats,
+	id: Level_Id,
 	mistakes: number,
-): LevelStats => {
+): Level_Stats => {
 	const s = {...level_stats};
 	s.mistakes = {...s.mistakes}; // preserves key order
 	s.mistakes[id] = add_mistakes(s.mistakes[id], mistakes);

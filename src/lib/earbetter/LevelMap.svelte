@@ -2,7 +2,7 @@
 	import type {Signal} from '@preact/signals-core';
 	import {slide} from 'svelte/transition';
 
-	import type {MIDIAccess} from '$lib/WebMIDI.js';
+	import type {MIDIAccess} from '$lib/Web_MIDI.js';
 	import {get_ac} from '$lib/ac.js';
 	import Init_Midi_Button from '$lib/Init_Midi_Button.svelte';
 	import LevelForm from '$lib/earbetter/LevelForm.svelte';
@@ -11,7 +11,7 @@
 	import {get_instrument, get_volume, with_velocity} from '$lib/helpers.js';
 	import Instrument_Control from '$lib/Instrument_Control.svelte';
 	import type {App} from '$lib/earbetter/app.js';
-	import ControlsInstructions from '$lib/earbetter/ControlsInstructions.svelte';
+	import Controls_Instructions from '$lib/earbetter/Controls_Instructions.svelte';
 	import Midi_Input from '$lib/Midi_Input.svelte';
 	import {start_playing, stop_playing} from '$lib/play_note.js';
 	import Realms from '$lib/earbetter/Realms.svelte';
@@ -84,7 +84,7 @@
 					<header>
 						<h2>controls</h2>
 					</header>
-					<ControlsInstructions />
+					<Controls_Instructions />
 					<Volume_Control {volume} />
 					<Instrument_Control {instrument} />
 					<aside>Earbetter supports MIDI devices like piano keyboards, connect and click:</aside>

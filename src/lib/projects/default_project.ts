@@ -1,9 +1,9 @@
 import {DEFAULT_MIN_NOTE} from '$lib/earbetter/level.js';
-import {ProjectData} from '$lib/earbetter/project.js';
+import {Project_Data} from '$lib/earbetter/project.js';
 import {to_default_scale_realm} from '$lib/earbetter/realm_helpers.js';
 
-const data = (): ProjectData =>
-	ProjectData.parse({
+const data = (): Project_Data =>
+	Project_Data.parse({
 		realms: [
 			to_default_scale_realm('major pentatonic'),
 			to_default_scale_realm('major', 'major scale (Ionian)'),

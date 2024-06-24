@@ -36,8 +36,8 @@
 	<div class="piano-keys">
 		{#each piano_keys as { midi, left_offset } (midi)}
 			<PianoKey
-				on:press
-				on:release
+				onpress
+				onrelease
 				{midi}
 				{left_offset}
 				bind:pressing

@@ -1,7 +1,7 @@
 <script lang="ts">
 	import {slide} from 'svelte/transition';
 
-	import {RealmData} from '$lib/earbetter/realm.js';
+	import {Realm_Data} from '$lib/earbetter/realm.js';
 	import RealmItems from '$lib/earbetter/RealmItems.svelte';
 	import type {App} from '$lib/earbetter/app.js';
 
@@ -32,7 +32,7 @@
 		} else if (creating) {
 			editing_realm.value = false;
 		} else {
-			edit_realm(RealmData.parse({}));
+			edit_realm(Realm_Data.parse({}));
 		}
 	};
 </script>

@@ -5,33 +5,33 @@
 	import Dialog from '@ryanatkn/fuz/Dialog.svelte';
 	import Alert from '@ryanatkn/fuz/Alert.svelte';
 
-	import {create_realm_id, RealmData, type RealmId} from '$lib/earbetter/realm.js';
+	import {create_realm_id, Realm_Data, type Realm_Id} from '$lib/earbetter/realm.js';
 	import default_project_data from '$lib/projects/default_project.js';
 
 	const dispatch = createEventDispatcher<{
-		submit: RealmData;
-		remove: RealmId;
-		duplicate: RealmId;
+		submit: Realm_Data;
+		remove: Realm_Id;
+		duplicate: Realm_Id;
 	}>();
 
 	const DEFAULT_NAME = 'new realm';
 
-	export let realm_data: RealmData | null = null;
+	export let realm_data: Realm_Data | null = null;
 	export let id = create_realm_id();
 	export let name = DEFAULT_NAME;
 	export let editing = false;
 
 	let removing = false;
 
-	const to_data = (): RealmData =>
-		RealmData.parse({
+	const to_data = (): Realm_Data =>
+		Realm_Data.parse({
 			...realm_data,
 			id,
 			name,
 		});
 
 	$: set_realm_data(realm_data);
-	const set_realm_data = (realm_data: RealmData | null): void => {
+	const set_realm_data = (realm_data: Realm_Data | null): void => {
 		console.log(`set_realm_data`, realm_data);
 		if (realm_data) {
 			id = realm_data.id;
@@ -60,7 +60,7 @@
 			const json = JSON.parse(updated);
 			// add an `id` if there is none
 			if (json && !json.id) json.id = create_realm_id();
-			const parsed = RealmData.parse(json);
+			const parsed = Realm_Data.parse(json);
 			dispatch('submit', parsed);
 		} catch (err) {
 			console.error('failed to import data', err);

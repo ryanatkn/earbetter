@@ -1,15 +1,15 @@
 <script lang="ts">
-	import type {ProjectData, ProjectId, ProjectMetadata} from '$lib/earbetter/project.js';
+	import type {Project_Data, Project_Id, ProjectMetadata} from '$lib/earbetter/project.js';
 	import ProjectItem from '$lib/earbetter/ProjectItem.svelte';
 
-	export let selected_project_id: ProjectId | null = null;
-	export let editing_project_id: ProjectId | null = null;
+	export let selected_project_id: Project_Id | null = null;
+	export let editing_project_id: Project_Id | null = null;
 	export let projects: ProjectMetadata[] = [];
-	export let project_datas: ProjectData[] = [];
-	export let load_project: (id: ProjectId) => ProjectData | null;
-	export let select_project: (id: ProjectId) => void;
-	export let edit_project: (project_data: ProjectData | null) => void;
-	export let remove_project: (id: ProjectId) => void;
+	export let project_datas: Project_Data[] = [];
+	export let load_project: (id: Project_Id) => Project_Data | null;
+	export let select_project: (id: Project_Id) => void;
+	export let edit_project: (project_data: Project_Data | null) => void;
+	export let remove_project: (id: Project_Id) => void;
 </script>
 
 <menu class="projects width_sm">

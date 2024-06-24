@@ -1,10 +1,10 @@
 <script lang="ts">
 	import LevelMapItem from '$lib/earbetter/LevelMapItem.svelte';
 	import type {App} from '$lib/earbetter/app.js';
-	import {LevelData} from '$lib/earbetter/level.js';
+	import {Level_Data} from '$lib/earbetter/level.js';
 
 	export let app: App;
-	export let levels: LevelData[]; // TODO making this a prop here, but using `app` most places, maybe change it to context?
+	export let levels: Level_Data[]; // TODO making this a prop here, but using `app` most places, maybe change it to context?
 
 	$: ({selected_realm_data, editing_level, draft_level_data, edit_level} = app);
 
@@ -20,7 +20,7 @@
 			// eslint-disable-next-line @typescript-eslint/no-unnecessary-type-assertion
 			(document.querySelector('.level-def-form input') as HTMLInputElement | null)?.focus?.();
 		} else {
-			edit_level(editing_draft ? null : LevelData.parse({}));
+			edit_level(editing_draft ? null : Level_Data.parse({}));
 		}
 	};
 </script>

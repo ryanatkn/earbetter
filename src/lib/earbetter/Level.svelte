@@ -6,27 +6,27 @@
 
 	import {
 		create_level,
-		LevelId,
-		LevelStats,
+		Level_Id,
+		Level_Stats,
 		type Level,
-		type LevelData,
+		type Level_Data,
 	} from '$lib/earbetter/level.js';
 	import Piano from '$lib/Piano.svelte';
-	import LevelProgressIndicator from '$lib/earbetter/LevelProgressIndicator.svelte';
-	import TrialProgressIndicator from '$lib/earbetter/TrialProgressIndicator.svelte';
+	import Level_Progress_Indicator from '$lib/earbetter/Level_Progress_Indicator.svelte';
+	import Trial_Progress_Indicator from '$lib/earbetter/Trial_Progress_Indicator.svelte';
 	import {get_ac} from '$lib/ac.js';
 	import Midi_Input from '$lib/Midi_Input.svelte';
 	import type {Midi} from '$lib/music.js';
 	import {playing_notes, start_playing, stop_playing} from '$lib/play_note.js';
 	import {get_instrument, get_volume, with_velocity} from '$lib/helpers.js';
 	import {midi_access} from '$lib/midi_access.js';
-	import LevelStatsSummary from '$lib/earbetter/LevelStatsSummary.svelte';
-	import TextBurst from '$lib/TextBurst.svelte';
+	import Level_Stats_Summary from '$lib/earbetter/Level_Stats_Summary.svelte';
+	import Text_Burst from '$lib/Text_Burst.svelte';
 
-	export let level_data: LevelData; // TODO currently is not reactive, see below
-	export let level_stats: LevelStats;
+	export let level_data: Level_Data; // TODO currently is not reactive, see below
+	export let level_stats: Level_Stats;
 	export let exit_level_to_map: () => void;
-	export let register_success: (id: LevelId, mistake_count: number) => void; // TODO naming this param `mistakes` breaks svelte-check, should be fixed in next release
+	export let register_success: (id: Level_Id, mistake_count: number) => void; // TODO naming this param `mistakes` breaks svelte-check, should be fixed in next release
 
 	let clientWidth: number | undefined;
 
@@ -159,10 +159,10 @@
 <!-- hide from screen readers, see keyboard commands -->
 <div class="level" class:initial bind:clientWidth onclick={click} bind:this={el} aria-hidden="true">
 	<div class="level-progress" title="level progress">
-		<LevelProgressIndicator {level} />
+		<Level_Progress_Indicator {level} />
 	</div>
 	<div class="trial-progress" title="trial progress">
-		<TrialProgressIndicator {level} />
+		<Trial_Progress_Indicator {level} />
 	</div>
 	<div class="piano-wrapper" style:padding="{piano_padding}px" bind:this={piano_wrapper_el}>
 		{#if clientWidth}
@@ -173,12 +173,12 @@
 				enabled_notes={$trial?.valid_notes}
 				{pressed_keys}
 				{highlighted_keys}
-				on:press={$status === 'waiting_for_input'
+				onpress={$status === 'waiting_for_input'
 					? (e) => on_press_key(e.detail)
 					: $status === 'complete'
 						? (e) => start_playing(ac, e.detail, with_velocity($volume, null), $instrument)
 						: undefined}
-				on:release={$status === 'complete' ? (e) => stop_playing(e.detail) : undefined}
+				onrelease={$status === 'complete' ? (e) => stop_playing(e.detail) : undefined}
 			/>
 		{/if}
 	</div>
@@ -209,7 +209,7 @@
 								{/if}
 							</div>
 							<div class="panel p_md">
-								<LevelStatsSummary {level_data} {level_stats} />
+								<Level_Stats_Summary {level_data} {level_stats} />
 							</div>
 						</div>
 						<button
@@ -232,13 +232,13 @@
 				<div style:transform="translate3d({text_burst_offset_x}px, {text_burst_offset_y}px, 0)">
 					{#if last_feedback_status === 'success'}
 						{#key feedback_count}
-							<TextBurst count={11} items={['🎵', '🎶', '🌸', '🌻', '🌼', '🍀']} />
+							<Text_Burst count={11} items={['🎵', '🎶', '🌸', '🌻', '🌼', '🍀']} />
 						{/key}
 					{/if}
 					{#if last_feedback_status === 'failure'}
 						<!-- TODO grayscale? -->
 						{#key feedback_count}
-							<TextBurst count={5} items={['🦜', '⁉', '❔', '❌']} />
+							<Text_Burst count={5} items={['🦜', '⁉', '❔', '❌']} />
 						{/key}
 					{/if}
 				</div>

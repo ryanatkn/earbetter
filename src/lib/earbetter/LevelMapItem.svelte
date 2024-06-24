@@ -1,12 +1,12 @@
 <script lang="ts">
 	import {slide} from 'svelte/transition';
 
-	import type {LevelData} from '$lib/earbetter/level.js';
+	import type {Level_Data} from '$lib/earbetter/level.js';
 	import type {App} from '$lib/earbetter/app.js';
-	import LevelStatsSummary from '$lib/earbetter/LevelStatsSummary.svelte';
+	import Level_Stats_Summary from '$lib/earbetter/Level_Stats_Summary.svelte';
 
 	export let app: App;
-	export let level_data: LevelData;
+	export let level_data: Level_Data;
 
 	$: ({
 		editing_level,
@@ -31,7 +31,7 @@
 
 <li class="level_map_item" transition:slide|local class:selected>
 	{#if level_stats}
-		<LevelStatsSummary {level_data} {level_stats} />
+		<Level_Stats_Summary {level_data} {level_stats} />
 	{/if}
 	<button
 		class="level_button deselectable"

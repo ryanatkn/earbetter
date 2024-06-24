@@ -1,15 +1,15 @@
 <script lang="ts">
 	import {slide} from 'svelte/transition';
 
-	import type {RealmData, RealmId} from '$lib/earbetter/realm.js';
+	import type {Realm_Data, Realm_Id} from '$lib/earbetter/realm.js';
 	import RealmStatsSummary from '$lib/earbetter/RealmStatsSummary.svelte';
-	import type {ProjectData} from '$lib/earbetter/project.js';
+	import type {Project_Data} from '$lib/earbetter/project.js';
 
-	export let realm_data: RealmData;
-	export let project_data: ProjectData;
-	export let select: ((id: RealmId) => void) | null = null; // TODO event? or is the ability to have a return value for ephemeral state desired?
-	export let edit: ((realm_data: RealmData | null) => void) | null = null; // TODO event? or is the ability to have a return value for ephemeral state desired?
-	export let remove: ((id: RealmId) => void) | null = null; // TODO event? or is the ability to have a return value for ephemeral state desired?
+	export let realm_data: Realm_Data;
+	export let project_data: Project_Data;
+	export let select: ((id: Realm_Id) => void) | null = null; // TODO event? or is the ability to have a return value for ephemeral state desired?
+	export let edit: ((realm_data: Realm_Data | null) => void) | null = null; // TODO event? or is the ability to have a return value for ephemeral state desired?
+	export let remove: ((id: Realm_Id) => void) | null = null; // TODO event? or is the ability to have a return value for ephemeral state desired?
 	export let selected: boolean;
 	export let editing: boolean;
 

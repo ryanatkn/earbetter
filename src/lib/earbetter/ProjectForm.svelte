@@ -5,32 +5,32 @@
 	import Dialog from '@ryanatkn/fuz/Dialog.svelte';
 	import Alert from '@ryanatkn/fuz/Alert.svelte';
 
-	import {create_project_id, ProjectData, type ProjectId} from '$lib/earbetter/project.js';
+	import {create_project_id, Project_Data, type Project_Id} from '$lib/earbetter/project.js';
 
 	const dispatch = createEventDispatcher<{
-		submit: ProjectData;
-		remove: ProjectId;
-		duplicate: ProjectId;
+		submit: Project_Data;
+		remove: Project_Id;
+		duplicate: Project_Id;
 	}>();
 
 	const DEFAULT_NAME = 'new project';
 
-	export let project_data: ProjectData | null = null;
+	export let project_data: Project_Data | null = null;
 	export let id = create_project_id();
 	export let name = DEFAULT_NAME;
 	export let editing = false;
 
 	let removing = false;
 
-	const to_data = (): ProjectData =>
-		ProjectData.parse({
+	const to_data = (): Project_Data =>
+		Project_Data.parse({
 			...project_data,
 			id,
 			name,
 		});
 
 	$: set_project_data(project_data);
-	const set_project_data = (project_data: ProjectData | null): void => {
+	const set_project_data = (project_data: Project_Data | null): void => {
 		console.log(`set_project_data`, project_data);
 		if (project_data) {
 			id = project_data.id;
@@ -59,7 +59,7 @@
 			const json = JSON.parse(updated);
 			// add an `id` if there is none
 			if (json && !json.id) json.id = create_project_id();
-			const parsed = ProjectData.parse(json);
+			const parsed = Project_Data.parse(json);
 			dispatch('submit', parsed);
 		} catch (err) {
 			console.error('failed to import data', err);

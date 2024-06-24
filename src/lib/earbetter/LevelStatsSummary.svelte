@@ -1,11 +1,11 @@
 <script lang="ts">
 	import {plural} from '@ryanatkn/belt/string.js';
 
-	import type {LevelData} from '$lib/earbetter/level.js';
-	import {MISTAKE_HISTORY_LENGTH, type LevelStats} from '$lib/earbetter/level.js';
+	import type {Level_Data} from '$lib/earbetter/level.js';
+	import {MISTAKE_HISTORY_LENGTH, type Level_Stats} from '$lib/earbetter/level.js';
 
-	export let level_data: LevelData;
-	export let level_stats: LevelStats;
+	export let level_data: Level_Data;
+	export let level_stats: Level_Stats;
 
 	$: mistakes = level_stats.mistakes[level_data.id] || [];
 	$: ({length} = mistakes);

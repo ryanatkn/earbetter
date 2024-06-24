@@ -15,12 +15,12 @@ import {
 	add_mistakes_to_level_stats,
 	to_play_level_url,
 	type Level,
-	LevelData,
-	type LevelId,
+	Level_Data,
+	type Level_Id,
 } from '$lib/earbetter/level.js';
-import {ProjectData, ProjectId, ProjectName} from '$lib/earbetter/project.js';
+import {Project_Data, Project_Id, Project_Name} from '$lib/earbetter/project.js';
 import {load_from_storage, set_in_storage} from '$lib/storage.js';
-import {RealmId, RealmData} from '$lib/earbetter/realm.js';
+import {Realm_Id, Realm_Data} from '$lib/earbetter/realm.js';
 import default_project_data from '$lib/projects/default_project.js';
 import {to_next_name} from '$lib/entity.js';
 
@@ -30,13 +30,13 @@ const log = new Logger('[app]');
 
 // TODO refactor all storage calls, and rethink in signals instead of all top-level orchestration (that's less reusable)
 
-export const AppData = z.object({
-	projects: z.array(z.object({id: ProjectId, name: ProjectName})).default([]),
-	selected_project_id: z.union([ProjectId, z.null()]).default(null),
-	selected_realm_id: z.union([RealmId, z.null()]).default(null),
+export const App_Data = z.object({
+	projects: z.array(z.object({id: Project_Id, name: Project_Name})).default([]),
+	selected_project_id: z.union([Project_Id, z.null()]).default(null),
+	selected_realm_id: z.union([Realm_Id, z.null()]).default(null),
 	show_game_help: z.boolean().default(true),
 });
-export type AppData = z.infer<typeof AppData>;
+export type App_Data = z.infer<typeof App_Data>;
 
 const APP_KEY = Symbol('app');
 export const get_app = (): App => getContext(APP_KEY);
@@ -46,62 +46,62 @@ export class App {
 	// TODO wheres the source of truth?
 	// currently manually syncing the same changes to both `app_data` `projects` --
 	// mixing serialization concerns with runtime representations
-	app_data: Signal<AppData>;
+	app_data: Signal<App_Data>;
 
 	show_game_help: ReadonlySignal<boolean> = computed(() => this.app_data.value.show_game_help);
 	toggle_game_help = (): void => {
 		this.app_data.value = {...this.app_data.peek(), show_game_help: !this.show_game_help.peek()};
 	};
 
-	project_datas: Signal<ProjectData[]> = signal([]);
+	project_datas: Signal<Project_Data[]> = signal([]);
 
-	selected_project_id: Signal<ProjectId | null> = signal(null);
-	selected_project_data: ReadonlySignal<ProjectData | null> = computed(() => {
+	selected_project_id: Signal<Project_Id | null> = signal(null);
+	selected_project_data: ReadonlySignal<Project_Data | null> = computed(() => {
 		const id = this.selected_project_id.value;
 		return this.project_datas.value.find((p) => p.id === id) || null;
 	});
-	realms: ReadonlySignal<RealmData[] | null> = computed(
+	realms: ReadonlySignal<Realm_Data[] | null> = computed(
 		() => this.selected_project_data.value?.realms || null,
 	);
 	editing_project: Signal<boolean> = signal(false);
 	editing_project_draft: Signal<boolean> = signal(false);
-	draft_project_data: Signal<ProjectData | null> = signal(null);
-	editing_project_id: ReadonlySignal<ProjectId | null> = computed(() =>
+	draft_project_data: Signal<Project_Data | null> = signal(null);
+	editing_project_id: ReadonlySignal<Project_Id | null> = computed(() =>
 		this.editing_project_draft.value
 			? this.draft_project_data.value?.id || null
 			: this.selected_project_data.value?.id || null,
 	); // this may be `selected_project_data`, or a new project def draft that hasn't been created yet
-	editing_project_data: ReadonlySignal<ProjectData | null> = computed(() =>
+	editing_project_data: ReadonlySignal<Project_Data | null> = computed(() =>
 		this.editing_project_draft.value
 			? this.draft_project_data.value
 			: this.selected_project_data.value,
 	);
 
-	selected_realm_id: Signal<RealmId | null> = signal(null);
-	selected_realm_data: ReadonlySignal<RealmData | null> = computed(() => {
+	selected_realm_id: Signal<Realm_Id | null> = signal(null);
+	selected_realm_data: ReadonlySignal<Realm_Data | null> = computed(() => {
 		const id = this.selected_realm_id.value;
 		return this.realms.value?.find((p) => p.id === id) || null;
 	});
 	editing_realm: Signal<boolean> = signal(false);
 	editing_realm_draft: Signal<boolean> = signal(false);
-	draft_realm_data: Signal<RealmData | null> = signal(null);
-	editing_realm_id: ReadonlySignal<RealmId | null> = computed(() =>
+	draft_realm_data: Signal<Realm_Data | null> = signal(null);
+	editing_realm_id: ReadonlySignal<Realm_Id | null> = computed(() =>
 		this.editing_realm_draft.value
 			? this.draft_realm_data.value?.id || null
 			: this.selected_realm_data.value?.id || null,
 	); // this may be `selected_realm_data`, or a new realm def draft that hasn't been created yet
-	editing_realm_data: ReadonlySignal<RealmData | null> = computed(() =>
+	editing_realm_data: ReadonlySignal<Realm_Data | null> = computed(() =>
 		this.editing_realm_draft.value ? this.draft_realm_data.value : this.selected_realm_data.value,
 	);
 
 	level: Signal<Level | null> = signal(null); // TODO set hackily
 
-	levels: ReadonlySignal<LevelData[] | null> = computed(
+	levels: ReadonlySignal<Level_Data[] | null> = computed(
 		() => this.selected_realm_data.value?.levels || null,
 	);
-	active_level_data: Signal<LevelData | null> = signal(null);
+	active_level_data: Signal<Level_Data | null> = signal(null);
 	editing_level: Signal<boolean> = signal(false);
-	draft_level_data: Signal<LevelData | null> = signal(null);
+	draft_level_data: Signal<Level_Data | null> = signal(null);
 
 	constructor(
 		public readonly get_ac: () => AudioContext,
@@ -139,13 +139,13 @@ export class App {
 	}
 
 	// returns a stable reference to data that's immutable by convention
-	toJSON(): AppData {
+	toJSON(): App_Data {
 		return this.app_data.value;
 	}
 
-	load(): AppData {
-		const loaded = load_from_storage(this.storage_key, () => AppData.parse({}), AppData.parse);
-		let ids_to_delete: ProjectId[] | null = null;
+	load(): App_Data {
+		const loaded = load_from_storage(this.storage_key, () => App_Data.parse({}), App_Data.parse);
+		let ids_to_delete: Project_Id[] | null = null;
 		for (const p of loaded.projects) {
 			if (localStorage.getItem(p.id) === null) {
 				console.warn('deleting unknown id', p);
@@ -158,7 +158,7 @@ export class App {
 		return loaded;
 	}
 
-	private saved: AppData; // immutable, used to avoid waste
+	private saved: App_Data; // immutable, used to avoid waste
 
 	save(): void {
 		const data = this.toJSON();
@@ -168,7 +168,7 @@ export class App {
 		this.saved = data;
 	}
 
-	save_project = (id: ProjectId): void => {
+	save_project = (id: Project_Id): void => {
 		log.debug('save_project', id);
 		const project_data = this.project_datas.peek().find((p) => p.id === id);
 		set_in_storage(id, project_data); // correctly deletes the storage key if `undefined`
@@ -188,9 +188,9 @@ export class App {
 		}
 	};
 
-	load_project = (id: ProjectId | null): ProjectData | null => {
+	load_project = (id: Project_Id | null): Project_Data | null => {
 		log.debug('load_project', id);
-		const loaded = id ? load_from_storage(id, null, ProjectData.parse) : null;
+		const loaded = id ? load_from_storage(id, null, Project_Data.parse) : null;
 		log.debug(`loaded`, loaded);
 		if (loaded) {
 			// TODO batch if this code stays imperative like this
@@ -198,13 +198,13 @@ export class App {
 			return loaded;
 		} else {
 			log.debug(`load_project failed, creating new`, id);
-			const project_data = ProjectData.parse({});
+			const project_data = Project_Data.parse({});
 			this.create_project(project_data);
 			return project_data;
 		}
 	};
 
-	select_project = (id: ProjectId | null): void => {
+	select_project = (id: Project_Id | null): void => {
 		log.debug('select_project', id);
 		if (!id) {
 			this.selected_project_id.value = null;
@@ -219,7 +219,7 @@ export class App {
 		});
 	};
 
-	edit_project = (project_data: ProjectData | null): void => {
+	edit_project = (project_data: Project_Data | null): void => {
 		log.debug('edit_project', project_data);
 		batch(() => {
 			if (!project_data) {
@@ -242,7 +242,7 @@ export class App {
 		});
 	};
 
-	remove_project = (id: ProjectId): void => {
+	remove_project = (id: Project_Id): void => {
 		log.debug('remove_project', id);
 		const {projects} = this.app_data.peek();
 		const existing = projects.find((d) => d.id === id);
@@ -264,7 +264,7 @@ export class App {
 		});
 	};
 
-	create_project = (project_data: ProjectData): ProjectData => {
+	create_project = (project_data: Project_Data): Project_Data => {
 		log.debug('create_project', project_data);
 		const projects = this.project_datas.peek();
 		const {id} = project_data;
@@ -290,7 +290,7 @@ export class App {
 		return project_data;
 	};
 
-	duplicate_project = (id: ProjectId): void => {
+	duplicate_project = (id: Project_Id): void => {
 		log.debug('duplicate_project_data', id);
 		const projects = this.project_datas.peek();
 		const project_data = projects.find((d) => d.id === id);
@@ -300,7 +300,7 @@ export class App {
 		}
 		batch(() => {
 			const {id: _, name, ...rest} = project_data;
-			const new_project_data = ProjectData.parse({
+			const new_project_data = Project_Data.parse({
 				...rest,
 				name: to_next_name(name, projects),
 			});
@@ -312,7 +312,7 @@ export class App {
 		});
 	};
 
-	update_project = (project_data: ProjectData): void => {
+	update_project = (project_data: Project_Data): void => {
 		log.debug('update_project', project_data);
 		const projects = this.project_datas.peek();
 		const {id} = project_data;
@@ -338,7 +338,7 @@ export class App {
 		this.save_project(id);
 	};
 
-	select_realm = (id: RealmId | null): void => {
+	select_realm = (id: Realm_Id | null): void => {
 		log.debug('select_realm', id);
 		if (!id) {
 			this.selected_realm_id.value = null;
@@ -359,7 +359,7 @@ export class App {
 		});
 	};
 
-	edit_realm = (realm_data: RealmData | null): void => {
+	edit_realm = (realm_data: Realm_Data | null): void => {
 		log.debug('edit_realm', realm_data);
 		batch(() => {
 			if (!realm_data) {
@@ -382,7 +382,7 @@ export class App {
 		});
 	};
 
-	remove_realm = (id: RealmId): void => {
+	remove_realm = (id: Realm_Id): void => {
 		log.debug('remove_realm_data', id);
 		const project_data = this.selected_project_data.peek();
 		if (!project_data) {
@@ -407,7 +407,7 @@ export class App {
 		});
 	};
 
-	duplicate_realm = (id: RealmId): void => {
+	duplicate_realm = (id: Realm_Id): void => {
 		log.debug('duplicate_realm_data', id);
 		const project_data = this.selected_project_data.peek();
 		if (!project_data) {
@@ -422,14 +422,14 @@ export class App {
 		}
 		batch(() => {
 			const {id: _, name, ...rest} = realm_data;
-			const new_realm_data = RealmData.parse({...rest, name: to_next_name(name, realms)});
+			const new_realm_data = Realm_Data.parse({...rest, name: to_next_name(name, realms)});
 			this.create_realm(new_realm_data);
 			this.draft_realm_data.value = new_realm_data; // TODO move to component?
 			this.selected_realm_id.value = new_realm_data.id;
 		});
 	};
 
-	create_realm = (realm_data: RealmData): void => {
+	create_realm = (realm_data: Realm_Data): void => {
 		log.debug('create_realm', realm_data);
 		const project_data = this.selected_project_data.peek();
 		if (!project_data) {
@@ -455,7 +455,7 @@ export class App {
 		});
 	};
 
-	update_realm = (realm_data: RealmData): void => {
+	update_realm = (realm_data: Realm_Data): void => {
 		log.debug('update_realm_data', realm_data);
 		const project_data = this.selected_project_data.peek();
 		if (!project_data) {
@@ -477,7 +477,7 @@ export class App {
 		});
 	};
 
-	play_level = async (id: LevelId): Promise<void> => {
+	play_level = async (id: Level_Id): Promise<void> => {
 		log.debug('play_level', id);
 		const level_data = this.levels.peek()?.find((d) => d.id === id);
 		if (!level_data) {
@@ -489,7 +489,7 @@ export class App {
 		await goto(to_play_level_url(level_data));
 	};
 
-	edit_level = (level_data: LevelData | null): void => {
+	edit_level = (level_data: Level_Data | null): void => {
 		log.debug('edit_level', level_data);
 		batch(() => {
 			this.editing_level.value = !!level_data;
@@ -497,7 +497,7 @@ export class App {
 		});
 	};
 
-	remove_level = (id: LevelId): void => {
+	remove_level = (id: Level_Id): void => {
 		log.debug('remove_level', id);
 		const project_data = this.selected_project_data.peek();
 		if (!project_data) {
@@ -526,7 +526,7 @@ export class App {
 	};
 
 	// TODO inconsistent naming with `realm` having the `_def` prefix here
-	create_level = (level_data: LevelData): void => {
+	create_level = (level_data: Level_Data): void => {
 		log.debug('create_level', level_data);
 		const project_data = this.selected_project_data.peek();
 		if (!project_data) {
@@ -567,7 +567,7 @@ export class App {
 		return;
 	};
 
-	duplicate_level = (id: LevelId): void => {
+	duplicate_level = (id: Level_Id): void => {
 		log.debug('duplicate_level_data', id);
 		const realm_data = this.selected_realm_data.peek();
 		if (!realm_data) {
@@ -582,14 +582,14 @@ export class App {
 		}
 		batch(() => {
 			const {id: _, name, ...rest} = level_data;
-			const new_level_data = LevelData.parse({...rest, name: to_next_name(name, levels)});
+			const new_level_data = Level_Data.parse({...rest, name: to_next_name(name, levels)});
 			this.create_level(new_level_data);
 			this.editing_level.value = true;
 			this.draft_level_data.value = new_level_data; // TODO move to component?
 		});
 	};
 
-	update_level = (level_data: LevelData): void => {
+	update_level = (level_data: Level_Data): void => {
 		log.debug('update_level', level_data);
 		const project_data = this.selected_project_data.peek();
 		if (!project_data) {
@@ -616,7 +616,7 @@ export class App {
 		console.error('cannot find level_data with id', id);
 	};
 
-	register_success = (id: LevelId, mistakes: number): void => {
+	register_success = (id: Level_Id, mistakes: number): void => {
 		const project_data = this.selected_project_data.peek();
 		if (!project_data) return;
 		this.update_project({

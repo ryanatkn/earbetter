@@ -96,10 +96,10 @@
       "default": "./dist/earbetter/app.js",
       "types": "./dist/earbetter/app.d.ts"
     },
-    "./earbetter/ControlsInstructions.svelte": {
-      "svelte": "./dist/earbetter/ControlsInstructions.svelte",
-      "default": "./dist/earbetter/ControlsInstructions.svelte",
-      "types": "./dist/earbetter/ControlsInstructions.svelte.d.ts"
+    "./earbetter/Controls_Instructions.svelte": {
+      "svelte": "./dist/earbetter/Controls_Instructions.svelte",
+      "default": "./dist/earbetter/Controls_Instructions.svelte",
+      "types": "./dist/earbetter/Controls_Instructions.svelte.d.ts"
     },
     "./earbetter/Earbetter.svelte": {
       "svelte": "./dist/earbetter/Earbetter.svelte",
@@ -135,15 +135,15 @@
       "default": "./dist/earbetter/LevelMapItems.svelte",
       "types": "./dist/earbetter/LevelMapItems.svelte.d.ts"
     },
-    "./earbetter/LevelProgressIndicator.svelte": {
-      "svelte": "./dist/earbetter/LevelProgressIndicator.svelte",
-      "default": "./dist/earbetter/LevelProgressIndicator.svelte",
-      "types": "./dist/earbetter/LevelProgressIndicator.svelte.d.ts"
+    "./earbetter/Level_Progress_Indicator.svelte": {
+      "svelte": "./dist/earbetter/Level_Progress_Indicator.svelte",
+      "default": "./dist/earbetter/Level_Progress_Indicator.svelte",
+      "types": "./dist/earbetter/Level_Progress_Indicator.svelte.d.ts"
     },
-    "./earbetter/LevelStatsSummary.svelte": {
-      "svelte": "./dist/earbetter/LevelStatsSummary.svelte",
-      "default": "./dist/earbetter/LevelStatsSummary.svelte",
-      "types": "./dist/earbetter/LevelStatsSummary.svelte.d.ts"
+    "./earbetter/Level_Stats_Summary.svelte": {
+      "svelte": "./dist/earbetter/Level_Stats_Summary.svelte",
+      "default": "./dist/earbetter/Level_Stats_Summary.svelte",
+      "types": "./dist/earbetter/Level_Stats_Summary.svelte.d.ts"
     },
     "./earbetter/project.js": {
       "default": "./dist/earbetter/project.js",
@@ -212,10 +212,10 @@
       "default": "./dist/earbetter/RealmStatsSummary.svelte",
       "types": "./dist/earbetter/RealmStatsSummary.svelte.d.ts"
     },
-    "./earbetter/TrialProgressIndicator.svelte": {
-      "svelte": "./dist/earbetter/TrialProgressIndicator.svelte",
-      "default": "./dist/earbetter/TrialProgressIndicator.svelte",
-      "types": "./dist/earbetter/TrialProgressIndicator.svelte.d.ts"
+    "./earbetter/Trial_Progress_Indicator.svelte": {
+      "svelte": "./dist/earbetter/Trial_Progress_Indicator.svelte",
+      "default": "./dist/earbetter/Trial_Progress_Indicator.svelte",
+      "types": "./dist/earbetter/Trial_Progress_Indicator.svelte.d.ts"
     },
     "./emoji.js": {
       "default": "./dist/emoji.js",
@@ -309,10 +309,10 @@
     "./style.css": {
       "default": "./dist/style.css"
     },
-    "./TextBurst.svelte": {
-      "svelte": "./dist/TextBurst.svelte",
-      "default": "./dist/TextBurst.svelte",
-      "types": "./dist/TextBurst.svelte.d.ts"
+    "./Text_Burst.svelte": {
+      "svelte": "./dist/Text_Burst.svelte",
+      "default": "./dist/Text_Burst.svelte",
+      "types": "./dist/Text_Burst.svelte.d.ts"
     },
     "./url.js": {
       "default": "./dist/url.js",

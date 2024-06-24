@@ -138,11 +138,11 @@
 				max_height={300}
 				{pressed_keys}
 				highlighted_keys={notes}
-				on:press={(e) => {
+				onpress={(e) => {
 					toggle_note(e.detail);
 					play(e.detail);
 				}}
-				on:release={(e) => {
+				onrelease={(e) => {
 					stop_playing(e.detail);
 				}}
 			/>

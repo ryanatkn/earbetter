@@ -12,8 +12,8 @@
 		DEFAULT_MIN_NOTE,
 		DEFAULT_SEQUENCE_LENGTH,
 		DEFAULT_TRIAL_COUNT,
-		LevelData,
-		type LevelId,
+		Level_Data,
+		type Level_Id,
 		DEFAULT_TONICS,
 	} from '$lib/earbetter/level.js';
 	import {
@@ -33,13 +33,13 @@
 	import Piano from '$lib/Piano.svelte';
 
 	const dispatch = createEventDispatcher<{
-		submit: LevelData;
-		remove: LevelId;
-		duplicate: LevelId;
+		submit: Level_Data;
+		remove: Level_Id;
+		duplicate: Level_Id;
 	}>();
 
-	export let level_data: LevelData | null = null;
-	export let id: LevelId = create_level_id();
+	export let level_data: Level_Data | null = null;
+	export let id: Level_Id = create_level_id();
 	export let name = DEFAULT_LEVEL_NAME;
 	export let intervals: Intervals = DEFAULT_INTERVALS;
 	export let tonics: Midi[] | null = DEFAULT_TONICS;
@@ -51,7 +51,7 @@
 
 	let removing = false;
 
-	const to_data = (): LevelData => ({
+	const to_data = (): Level_Data => ({
 		id,
 		name,
 		intervals, // TODO filter out the invalid intervals
@@ -63,7 +63,7 @@
 	});
 
 	$: set_level_data(level_data);
-	const set_level_data = (level_data: LevelData | null): void => {
+	const set_level_data = (level_data: Level_Data | null): void => {
 		if (level_data) {
 			id = level_data.id;
 			name = level_data.name;
@@ -117,7 +117,7 @@
 			const json = JSON.parse(updated);
 			// add an `id` if there is none
 			if (json && !json.id) json.id = create_level_id();
-			const parsed = LevelData.parse(json);
+			const parsed = Level_Data.parse(json);
 			dispatch('submit', parsed);
 		} catch (err) {
 			console.error('failed to import data', err);
