@@ -1,7 +1,6 @@
 <script lang="ts">
 	import {plural} from '@ryanatkn/belt/string.js';
 	import {swallow} from '@ryanatkn/belt/dom.js';
-	import {createEventDispatcher} from 'svelte';
 
 	import Piano from '$lib/Piano.svelte';
 	import {get_ac} from '$lib/ac.js';

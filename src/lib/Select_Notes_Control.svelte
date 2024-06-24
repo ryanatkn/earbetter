@@ -12,17 +12,19 @@
 
 	// TODO naming convention between `Intervals_Input` and `Select_Notes_Control`?
 
-	export let scale: Signal<Scale>;
-	export let key: Signal<PitchClass>;
+	interface Props {
+		scale: Signal<Scale>;
+		key: Signal<PitchClass>;
+	}
+
+	const {scale, key}: Props = $props();
 
 	const input_key = (e: Event & {currentTarget: HTMLSelectElement}) =>
 		(key.value = e.currentTarget.value as PitchClass);
 </script>
 
 <label>
-	<div class="title">
-		<slot>scale</slot>
-	</div>
+	<div class="title">scale</div>
 	<!-- TODO use `bind:value={$scale}` when this PR is in: https://github.com/preactjs/signals/pull/325  -->
 	<select value={$scale.name} onchange={(e) => (scale.value = lookup_scale(e.currentTarget.value))}>
 		{#each scales as s (s)}
@@ -31,9 +33,7 @@
 	</select>
 </label>
 <label>
-	<div class="title">
-		<slot>key</slot>
-	</div>
+	<div class="title">key</div>
 	<!-- TODO use `bind:value={$key}` when this PR is in: https://github.com/preactjs/signals/pull/325  -->
 	<select value={$key} oninput={input_key}>
 		{#each pitch_classes as p (p)}

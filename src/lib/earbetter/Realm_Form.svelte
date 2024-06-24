@@ -1,5 +1,4 @@
 <script lang="ts">
-	import {createEventDispatcher} from 'svelte';
 	import {slide} from 'svelte/transition';
 	import {swallow} from '@ryanatkn/belt/dom.js';
 	import Dialog from '@ryanatkn/fuz/Dialog.svelte';

@@ -1,5 +1,5 @@
 <script lang="ts">
-	import {createEventDispatcher, onDestroy} from 'svelte';
+	import {onDestroy} from 'svelte';
 	import type {Signal} from '@preact/signals-core';
 
 	import {type MIDIMessageEvent, MIDICommand, type MIDIAccess} from '$lib/WebMIDI.js';

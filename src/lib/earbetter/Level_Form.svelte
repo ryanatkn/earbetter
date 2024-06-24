@@ -1,5 +1,4 @@
 <script lang="ts">
-	import {createEventDispatcher} from 'svelte';
 	import {slide} from 'svelte/transition';
 	import Dialog from '@ryanatkn/fuz/Dialog.svelte';
 	import Alert from '@ryanatkn/fuz/Alert.svelte';

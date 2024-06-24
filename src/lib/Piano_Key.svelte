@@ -1,25 +1,43 @@
 <script lang="ts">
-	import {createEventDispatcher} from 'svelte';
 	import {swallow} from '@ryanatkn/belt/dom.js';
 
 	import {type Midi, midi_naturals} from '$lib/music.js';
 	import {find_next_sibling, find_previous_sibling} from '$lib/dom.js';
 
-	const dispatch = createEventDispatcher<{press: Midi; release: Midi}>();
+	interface Props {
+		midi: Midi;
+		left_offset: number;
+		clickable?: boolean;
+		enabled?: boolean;
+		pressed?: boolean;
+		/**
+		 * Piano-wide state to enable dragging with the pointer.
+		 */
+		pressing?: boolean;
+		highlighted?: boolean;
+		emphasized?: boolean;
+		show_middle_c?: boolean;
+		onpress?: (midi: Midi) => void;
+		onrelease?: (midi: Midi) => void;
+	}
 
-	export let midi: Midi;
-	export let left_offset: number;
-	export let clickable = true;
-	export let enabled = true;
-	export let pressed = false;
-	export let pressing = false; // piano-wide state to enable dragging with the pointer
-	export let highlighted = false;
-	export let emphasized = false;
-	export let show_middle_c = true;
+	let {
+		midi, // eslint-disable-line prefer-const
+		left_offset, // eslint-disable-line prefer-const
+		clickable = true, // eslint-disable-line prefer-const
+		enabled = true, // eslint-disable-line prefer-const
+		pressed = false, // eslint-disable-line prefer-const
+		pressing = $bindable(false), // TODO BLOCK rewrite this to not be bindable - let consumers use the `onpress` event instead - the parent uses it, but it could proxy the `onpress` callback
+		highlighted = false, // eslint-disable-line prefer-const
+		emphasized = false, // eslint-disable-line prefer-const
+		show_middle_c = true, // eslint-disable-line prefer-const
+		onpress, // eslint-disable-line prefer-const
+		onrelease, // eslint-disable-line prefer-const
+	}: Props = $props();
 
-	$: natural = midi_naturals.has(midi);
-	$: accidental = !natural;
-	$: middle_c = midi === 60;
+	const natural = $derived(midi_naturals.has(midi));
+	const accidental = $derived(!natural);
+	const middle_c = $derived(midi === 60);
 
 	const focus_previous_button = (node: ChildNode): void => {
 		const s = find_previous_sibling<HTMLButtonElement>(node, (n) => n instanceof HTMLButtonElement);
@@ -40,7 +58,7 @@
 			case ' ':
 			case 'Enter': {
 				swallow(e);
-				dispatch('press', midi);
+				onpress?.(midi);
 				e.currentTarget.focus();
 				break;
 			}
@@ -64,13 +82,13 @@
 			case ' ':
 			case 'Enter': {
 				swallow(e);
-				dispatch('release', midi);
+				onrelease?.(midi);
 				break;
 			}
 		}
 	};
 
-	$: clickable_and_enabled = clickable && enabled;
+	const clickable_and_enabled = $derived(clickable && enabled);
 </script>
 
 <button
@@ -89,7 +107,7 @@
 	onmousedown={clickable_and_enabled
 		? (e) => {
 				swallow(e);
-				dispatch('press', midi);
+				onpress?.(midi);
 				pressing = true;
 				e.currentTarget.focus();
 			}
@@ -97,21 +115,21 @@
 	onmouseup={clickable_and_enabled
 		? (e) => {
 				swallow(e);
-				dispatch('release', midi);
+				onrelease?.(midi);
 				pressing = false;
 			}
 		: undefined}
 	onmouseenter={clickable_and_enabled && pressing
 		? (e) => {
 				swallow(e);
-				dispatch('press', midi);
+				onpress?.(midi);
 				e.currentTarget.focus();
 			}
 		: undefined}
 	onmouseleave={clickable_and_enabled
 		? (e) => {
 				swallow(e);
-				dispatch('release', midi);
+				onrelease?.(midi);
 			}
 		: undefined}
 	aria-label="piano key for midi {midi}"
