@@ -1,5 +1,5 @@
 <script lang="ts">
-	import type {RealmData} from '$lib/earbetter/realm';
+	import type {RealmData} from '$lib/earbetter/realm.js';
 	import {MISTAKE_HISTORY_LENGTH, type LevelStats} from '$lib/earbetter/level.js';
 
 	export let realm_data: RealmData;

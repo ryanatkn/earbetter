@@ -1,7 +1,7 @@
 <script lang="ts">
-	import type {RealmData, RealmId} from '$lib/earbetter/realm';
+	import type {RealmData, RealmId} from '$lib/earbetter/realm.js';
 	import RealmItem from '$lib/earbetter/RealmItem.svelte';
-	import type {ProjectData} from '$lib/earbetter/project';
+	import type {ProjectData} from '$lib/earbetter/project.js';
 
 	export let selected_realm_data: RealmData | null = null;
 	export let editing_realm_id: RealmId | null = null;

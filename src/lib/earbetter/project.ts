@@ -4,7 +4,7 @@ import type {Flavored} from '@ryanatkn/belt/types.js';
 
 import {DEFAULT_LEVEL_STATS, LevelStats} from '$lib/earbetter/level.js';
 import {emojis} from '$lib/emoji';
-import {RealmData} from '$lib/earbetter/realm';
+import {RealmData} from '$lib/earbetter/realm.js';
 import {to_random_id} from '$lib/id';
 
 export const ProjectId = z.string();

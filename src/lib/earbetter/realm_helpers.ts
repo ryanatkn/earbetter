@@ -1,5 +1,5 @@
 import {interval_names, lookup_scale, to_scale_notes, type ScaleName} from '$lib/music.js';
-import {RealmData, RealmName} from '$lib/earbetter/realm';
+import {RealmData, RealmName} from '$lib/earbetter/realm.js';
 import type {LevelData} from '$lib/earbetter/level.js';
 
 export const to_default_scale_realm = (

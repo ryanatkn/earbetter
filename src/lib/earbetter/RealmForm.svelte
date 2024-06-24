@@ -5,8 +5,8 @@
 	import Dialog from '@ryanatkn/fuz/Dialog.svelte';
 	import Alert from '@ryanatkn/fuz/Alert.svelte';
 
-	import {create_realm_id, RealmData, type RealmId} from '$lib/earbetter/realm';
-	import default_project_data from '$lib/projects/default_project';
+	import {create_realm_id, RealmData, type RealmId} from '$lib/earbetter/realm.js';
+	import default_project_data from '$lib/projects/default_project.js';
 
 	const dispatch = createEventDispatcher<{
 		submit: RealmData;

@@ -4,30 +4,32 @@
 	>
 </aside>
 <table>
-	<tr>
-		<td><code>Spacebar</code></td>
-		<td>replay trial</td>
-	</tr>
-	<tr>
-		<td><code>r</code></td>
-		<td>restart level</td>
-	</tr>
-	<tr>
-		<td><code>Escape</code></td>
-		<td>exit level or open main menu</td>
-	</tr>
-	<tr>
-		<td><code>1 to 4</code></td>
-		<td>set instrument</td>
-	</tr>
-	<tr>
-		<td><code>c</code></td>
-		<td>connect MIDI</td>
-	</tr>
-	<tr>
-		<td><code>up/down arrows</code></td>
-		<td>adjust volume</td>
-	</tr>
+	<tbody>
+		<tr>
+			<td><code>Spacebar</code></td>
+			<td>replay trial</td>
+		</tr>
+		<tr>
+			<td><code>r</code></td>
+			<td>restart level</td>
+		</tr>
+		<tr>
+			<td><code>Escape</code></td>
+			<td>exit level or open main menu</td>
+		</tr>
+		<tr>
+			<td><code>1 to 4</code></td>
+			<td>set instrument</td>
+		</tr>
+		<tr>
+			<td><code>c</code></td>
+			<td>connect MIDI</td>
+		</tr>
+		<tr>
+			<td><code>up/down arrows</code></td>
+			<td>adjust volume</td>
+		</tr>
+	</tbody>
 </table>
 
 <style>

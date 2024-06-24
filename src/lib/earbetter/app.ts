@@ -18,11 +18,11 @@ import {
 	LevelData,
 	type LevelId,
 } from '$lib/earbetter/level.js';
-import {ProjectData, ProjectId, ProjectName} from '$lib/earbetter/project';
+import {ProjectData, ProjectId, ProjectName} from '$lib/earbetter/project.js';
 import {load_from_storage, set_in_storage} from '$lib/storage.js';
-import {RealmId, RealmData} from '$lib/earbetter/realm';
-import default_project_data from '$lib/projects/default_project';
-import {to_next_name} from '$lib/entity';
+import {RealmId, RealmData} from '$lib/earbetter/realm.js';
+import default_project_data from '$lib/projects/default_project.js';
+import {to_next_name} from '$lib/entity.js';
 
 const log = new Logger('[app]');
 

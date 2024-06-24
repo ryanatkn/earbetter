@@ -5,7 +5,7 @@
 	import Dialog from '@ryanatkn/fuz/Dialog.svelte';
 	import Alert from '@ryanatkn/fuz/Alert.svelte';
 
-	import {create_project_id, ProjectData, type ProjectId} from '$lib/earbetter/project';
+	import {create_project_id, ProjectData, type ProjectId} from '$lib/earbetter/project.js';
 
 	const dispatch = createEventDispatcher<{
 		submit: ProjectData;

@@ -1,7 +1,7 @@
 <script lang="ts">
 	import {slide} from 'svelte/transition';
 
-	import type {ProjectData, ProjectId, ProjectMetadata} from '$lib/earbetter/project';
+	import type {ProjectData, ProjectId, ProjectMetadata} from '$lib/earbetter/project.js';
 
 	export let project: ProjectMetadata;
 	export let project_data: ProjectData | undefined; // may not be loaded

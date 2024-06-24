@@ -1,7 +1,7 @@
 <script lang="ts">
 	import {slide} from 'svelte/transition';
 
-	import {RealmData} from '$lib/earbetter/realm';
+	import {RealmData} from '$lib/earbetter/realm.js';
 	import RealmItems from '$lib/earbetter/RealmItems.svelte';
 	import type {App} from '$lib/earbetter/app.js';
 

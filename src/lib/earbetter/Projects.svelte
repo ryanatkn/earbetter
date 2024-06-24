@@ -1,5 +1,5 @@
 <script lang="ts">
-	import {ProjectData} from '$lib/earbetter/project';
+	import {ProjectData} from '$lib/earbetter/project.js';
 	import ProjectItems from '$lib/earbetter/ProjectItems.svelte';
 	import type {App} from '$lib/earbetter/app.js';
 

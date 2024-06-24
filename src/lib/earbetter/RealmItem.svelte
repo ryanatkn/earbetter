@@ -1,9 +1,9 @@
 <script lang="ts">
 	import {slide} from 'svelte/transition';
 
-	import type {RealmData, RealmId} from '$lib/earbetter/realm';
+	import type {RealmData, RealmId} from '$lib/earbetter/realm.js';
 	import RealmStatsSummary from '$lib/earbetter/RealmStatsSummary.svelte';
-	import type {ProjectData} from '$lib/earbetter/project';
+	import type {ProjectData} from '$lib/earbetter/project.js';
 
 	export let realm_data: RealmData;
 	export let project_data: ProjectData;

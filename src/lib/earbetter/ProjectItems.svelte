@@ -1,5 +1,5 @@
 <script lang="ts">
-	import type {ProjectData, ProjectId, ProjectMetadata} from '$lib/earbetter/project';
+	import type {ProjectData, ProjectId, ProjectMetadata} from '$lib/earbetter/project.js';
 	import ProjectItem from '$lib/earbetter/ProjectItem.svelte';
 
 	export let selected_project_id: ProjectId | null = null;
