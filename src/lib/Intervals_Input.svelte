@@ -3,13 +3,15 @@
 
 	// TODO naming convention between `Intervals_Input` and `Select_Notes_Control`?
 
-	const dispatch = createEventDispatcher<{input: Intervals}>();
+	interface Props {
+		selected_scale?: Scale;
+		octaves?: number;
+		oninput?: (intervals: Intervals) => void;
+	}
 
-	export let selected_scale: Scale = scales[0];
-	export let octaves = 1;
+	let {selected_scale = $bindable(scales[0]), octaves = $bindable(1), oninput}: Props = $props(); // eslint-disable-line prefer-const
 
-	let intervals: Intervals;
-	$: intervals = to_scale_notes(selected_scale, octaves);
+	const intervals: Intervals = $derived(to_scale_notes(selected_scale, octaves));
 </script>
 
 <label>
@@ -26,7 +28,7 @@
 	<input type="range" min={1} max={6} bind:value={octaves} />
 </label>
 <small class="preview width_sm panel">{intervals.join(', ')}</small>
-<button type="button" onclick={() => dispatch('input', intervals)}> use these intervals </button>
+<button type="button" onclick={() => oninput?.(intervals)}> use these intervals </button>
 
 <style>
 	/* TODO this is hacky, extract or reuse something? */

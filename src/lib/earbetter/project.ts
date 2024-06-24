@@ -8,11 +8,11 @@ import {Realm_Data} from '$lib/earbetter/realm.js';
 import {to_random_id} from '$lib/id.js';
 
 export const Project_Id = z.string();
-export type Project_Id = Flavored<z.infer<typeof Project_Id>, 'Project_Id'>;
+export type Project_Id = Flavored<z.infer<typeof Project_Id>, 'Project_Id'>; // TODO @multiple this doesn't work when used as a schema, use z.brand() instead? or are the egonomics too bad?
 export const create_project_id = (): Project_Id => to_random_id();
 
 export const Project_Name = z.string().min(1).max(1000);
-export type Project_Name = Flavored<z.infer<typeof Project_Name>, 'Project_Name'>;
+export type Project_Name = Flavored<z.infer<typeof Project_Name>, 'Project_Name'>; // TODO @multiple this doesn't work when used as a schema, use z.brand() instead? or are the egonomics too bad?
 const random_project_name = (): Project_Name => random_item(emojis).icon + random_item(emojis).icon;
 
 // Like `Project_Data` but just the stuff needed for display.

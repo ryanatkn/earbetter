@@ -29,10 +29,10 @@ export type Chroma = (typeof chromas)[number]; // corresponds to indices of `pit
 export type Octave = -1 | 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9;
 
 export const Semitones = z.number().int();
-export type Semitones = Flavored<z.infer<typeof Semitones>, 'Semitones'>;
+export type Semitones = Flavored<z.infer<typeof Semitones>, 'Semitones'>; // TODO @multiple this doesn't work when used as a schema, use z.brand() instead? or are the egonomics too bad?
 
 export const Intervals = z.array(Semitones);
-export type Intervals = z.infer<typeof Intervals>;
+export type Intervals = Flavored<z.infer<typeof Intervals>, 'Intervals'>; // TODO @multiple this doesn't work when used as a schema, use z.brand() instead? or are the egonomics too bad?
 // TODO replace with zod
 export const serialize_intervals = (intervals: Intervals): string => intervals.join(', ');
 export const parse_intervals = (value: string): Intervals =>
@@ -98,7 +98,7 @@ export const set_enabled_notes = (
 ): Signal<Set<Midi> | null> => setContext(ENABLED_NOTES_KEY, store);
 
 export const ScaleName = z.string();
-export type ScaleName = Flavored<z.infer<typeof ScaleName>, 'ScaleName'>;
+export type ScaleName = Flavored<z.infer<typeof ScaleName>, 'ScaleName'>; // TODO @multiple this doesn't work when used as a schema, use z.brand() instead? or are the egonomics too bad?
 
 export const Scale = z.object({
 	name: ScaleName,
@@ -198,7 +198,7 @@ export const to_notes_in_scale = (
 // TODO how to do this type? trying to avoid zod's `brand` but maybe the ergonomic tradeoff is ok
 // export type Midi = Flavored<number, 'Midi'>;
 export const Midi = z.number().int().min(0).max(127);
-export type Midi = Flavored<z.infer<typeof Midi>, 'Midi'>;
+export type Midi = Flavored<z.infer<typeof Midi>, 'Midi'>; // TODO @multiple this doesn't work when used as a schema, use z.brand() instead? or are the egonomics too bad?
 
 export const MIDI_MIN = 0;
 export const MIDI_MAX = 127;
