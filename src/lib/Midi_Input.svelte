@@ -8,17 +8,18 @@
 
 	const log = console.log.bind(console);
 
-	const dispatch = createEventDispatcher<{
-		note_start: {note: Midi; velocity: number};
-		note_stop: {note: Midi; velocity: number};
-		pad_start: {note: Midi; velocity: number};
-		pad_stop: {note: Midi; velocity: number};
-		mod_wheel: number; // velocity
-	}>();
+	interface Props {
+		midi_access: Signal<MIDIAccess | null>;
+		onnotestart?: (note: Midi, velocity: number) => void;
+		onnotestop?: (note: Midi, velocity: number) => void;
+		onpadstart?: (note: Midi, velocity: number) => void;
+		onpadstop?: (note: Midi, velocity: number) => void;
+		onmodwheel?: (velocity: number) => void;
+	}
 
-	export let midi_access: Signal<MIDIAccess | null>;
+	const {midi_access, onnotestart, onnotestop, onpadstart, onpadstop, onmodwheel}: Props = $props();
 
-	$: console.log('midi_access', midi_access);
+	$inspect('midi_access', midi_access);
 
 	const midimessage = (event: MIDIMessageEvent): void => {
 		const message = parse_midi_message(event);
@@ -28,9 +29,9 @@
 		switch (command) {
 			case MIDICommand.Stop: {
 				if (channel === 0) {
-					dispatch('note_stop', {note, velocity});
+					onnotestop?.(note, velocity);
 				} else if (channel === 9) {
-					dispatch('pad_stop', {note, velocity});
+					onpadstop?.(note, velocity);
 				} else {
 					log('unknown MIDI stop command', message);
 				}
@@ -40,16 +41,16 @@
 				if (channel === 0) {
 					if (velocity === 0) {
 						// this is weird but seems to be correct
-						dispatch('note_stop', {note, velocity});
+						onnotestop?.(note, velocity);
 					} else {
-						dispatch('note_start', {note, velocity});
+						onnotestart?.(note, velocity);
 					}
 				} else if (channel === 9) {
 					if (velocity === 0) {
 						// this is weird but seems to be correct
-						dispatch('pad_stop', {note, velocity});
+						onpadstop?.(note, velocity);
 					} else {
-						dispatch('pad_start', {note, velocity});
+						onpadstart?.(note, velocity);
 					}
 				} else {
 					log('unknown MIDI start command', message);
@@ -58,7 +59,7 @@
 			}
 			case MIDICommand.Knob: {
 				if (note === 1) {
-					dispatch('mod_wheel', velocity);
+					onmodwheel?.(velocity);
 				} else {
 					log('unknown MIDI knob command', message);
 				}
@@ -92,5 +93,6 @@
 		}
 	};
 
-	$: subscribe($midi_access);
+	// TODO BLOCK this seems ok because it's not writing state?
+	$effect(() => subscribe($midi_access));
 </script>

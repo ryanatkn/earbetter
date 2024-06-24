@@ -31,7 +31,7 @@ export interface Piano {
 }
 
 export interface Piano_Key {
-	midi: Midi;
+	midi: Midi; // TODO in some places we have `midi: Midi` and others `note: Midi`, make it consistent
 	left_offset: number;
 	width: number;
 	height: number;

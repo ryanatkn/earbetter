@@ -23,25 +23,26 @@
 		to_notes_in_scale,
 	} from '$lib/music.js';
 
-	const dispatch = createEventDispatcher<{
-		input: Notes | null;
-	}>();
+	interface Props {
+		notes: Set<Midi> | null;
+		min_note: Midi;
+		max_note: Midi;
+		oninput?: (notes: Notes | null) => void;
+	}
 
-	export let notes: Set<Midi> | null;
-	export let min_note: Midi;
-	export let max_note: Midi;
+	let {notes = $bindable(), min_note, max_note, oninput}: Props = $props(); // eslint-disable-line prefer-const
 
 	// TODO this is hacky, does a double conversion with the parent component, see the comment at the usage site
-	let notes_array: Notes | null = notes ? Array.from(notes).sort((a, b) => a - b) : null;
-	$: notes_array = notes ? Array.from(notes).sort((a, b) => a - b) : null;
+	const notes_array = $derived(notes ? Array.from(notes).sort((a, b) => a - b) : null);
 
-	$: notes_str = serialize_notes(notes_array);
+	// TODO BLOCK this use to be a "writable derived", needs to be refactored
+	const notes_str = $derived(serialize_notes(notes_array));
 	const update_notes_str = (s: string): void => {
 		// TODO the way we're doing this doesn't allow the user to type
 		notes = new Set(parse_notes(s));
 	};
 
-	$: notes_count = notes_array ? notes_array.length : 0;
+	const notes_count = $derived(notes_array ? notes_array.length : 0);
 
 	const toggle_note = (note: Midi): void => {
 		if (notes?.has(note)) {
@@ -53,20 +54,18 @@
 		}
 	};
 
-	$: console.log(`notes`, notes);
+	$inspect(`notes`, notes);
 
 	// TODO lots of copypasta below
 
-	let key = DEFAULT_PITCH_CLASS;
+	let key = $state(DEFAULT_PITCH_CLASS);
 
 	const ac = get_ac();
 	const volume = get_volume();
 	const instrument = get_instrument();
 
-	$: pressed_keys = $playing_notes;
-
 	// TODO hacky
-	let innerWidth: number; // `undefined` on first render
+	let innerWidth: number | undefined = $state();
 
 	const piano_padding = 20;
 
@@ -100,8 +99,8 @@
 
 <Midi_Input
 	{midi_access}
-	onnote_start={(e) => play(e.detail.note, e.detail.velocity)}
-	onnote_stop={(e) => stop_playing(e.detail.note)}
+	onnotestart={(note, velocity) => play(note, velocity)}
+	onnotestop={(note) => stop_playing(note)}
 />
 
 <div class="notes_input">
@@ -123,7 +122,7 @@
 			class="accent"
 			onclick={(e) => {
 				swallow(e);
-				dispatch('input', notes_array);
+				oninput?.(notes_array);
 			}}
 			>select {#if notes_count === 0}all{:else}{notes_count}{/if} tonic{plural(notes_count)}</button
 		>
@@ -135,14 +134,14 @@
 				{min_note}
 				{max_note}
 				max_height={300}
-				{pressed_keys}
+				pressed_keys={$playing_notes}
 				highlighted_keys={notes}
-				onpress={(e) => {
-					toggle_note(e.detail);
-					play(e.detail);
+				onpress={(midi) => {
+					toggle_note(midi);
+					play(midi);
 				}}
-				onrelease={(e) => {
-					stop_playing(e.detail);
+				onrelease={(midi) => {
+					stop_playing(midi);
 				}}
 			/>
 		{/if}
