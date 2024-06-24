@@ -81,7 +81,7 @@
 
 {#if importing}
 	<Dialog
-		on:close={() => {
+		onclose={() => {
 			importing = false;
 			start_importing_el.focus();
 		}}
@@ -120,7 +120,7 @@
 			<div class="title">name</div>
 			<input
 				bind:value={name}
-				on:keydown={(e) => {
+				onkeydown={(e) => {
 					if (e.key === 'Enter') {
 						swallow(e);
 						dispatch('submit', to_data());

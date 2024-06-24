@@ -23,11 +23,11 @@
 		{editing}
 		bind:id
 		project_data={$editing_project_data}
-		on:submit={(editing ? update_project : create_project)
+		onsubmit={(editing ? update_project : create_project)
 			? (e) => (editing ? update_project : create_project)?.(e.detail)
 			: undefined}
-		on:remove={remove_project ? (e) => remove_project?.(e.detail) : undefined}
-		on:duplicate={duplicate_project ? (e) => duplicate_project?.(e.detail) : undefined}
+		onremove={remove_project ? (e) => remove_project?.(e.detail) : undefined}
+		onduplicate={duplicate_project ? (e) => duplicate_project?.(e.detail) : undefined}
 	>
 		<svelte:fragment slot="footer" let:changed>
 			{#if editing}

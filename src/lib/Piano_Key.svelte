@@ -84,9 +84,9 @@
 	class:highlighted
 	class:emphasized
 	tabindex={clickable_and_enabled ? undefined : -1}
-	on:keydown={clickable_and_enabled ? keydown : undefined}
-	on:keyup={clickable_and_enabled ? keyup : undefined}
-	on:mousedown={clickable_and_enabled
+	onkeydown={clickable_and_enabled ? keydown : undefined}
+	onkeyup={clickable_and_enabled ? keyup : undefined}
+	onmousedown={clickable_and_enabled
 		? (e) => {
 				swallow(e);
 				dispatch('press', midi);
@@ -94,21 +94,21 @@
 				e.currentTarget.focus();
 			}
 		: undefined}
-	on:mouseup={clickable_and_enabled
+	onmouseup={clickable_and_enabled
 		? (e) => {
 				swallow(e);
 				dispatch('release', midi);
 				pressing = false;
 			}
 		: undefined}
-	on:mouseenter={clickable_and_enabled && pressing
+	onmouseenter={clickable_and_enabled && pressing
 		? (e) => {
 				swallow(e);
 				dispatch('press', midi);
 				e.currentTarget.focus();
 			}
 		: undefined}
-	on:mouseleave={clickable_and_enabled
+	onmouseleave={clickable_and_enabled
 		? (e) => {
 				swallow(e);
 				dispatch('release', midi);

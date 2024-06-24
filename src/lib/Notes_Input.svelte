@@ -101,15 +101,15 @@
 
 <Midi_Input
 	{midi_access}
-	on:note_start={(e) => play(e.detail.note, e.detail.velocity)}
-	on:note_stop={(e) => stop_playing(e.detail.note)}
+	onnote_start={(e) => play(e.detail.note, e.detail.velocity)}
+	onnote_stop={(e) => stop_playing(e.detail.note)}
 />
 
 <div class="notes_input">
 	<div class="notes width_sm">
 		<!-- TODO copy button -->
 		<blockquote class="panel" style:margin="var(--space_lg) 0">
-			<textarea bind:value={notes_str} on:input={(e) => update_notes_str(e.currentTarget.value)} />
+			<textarea bind:value={notes_str} oninput={(e) => update_notes_str(e.currentTarget.value)} />
 		</blockquote>
 		<button
 			type="button"

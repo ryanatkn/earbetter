@@ -24,7 +24,7 @@
 			<input
 				type="range"
 				value={$min_note}
-				on:input={input_min_note}
+				oninput={input_min_note}
 				step={1}
 				min={MIDI_MIN}
 				max={MIDI_MAX}
@@ -32,7 +32,7 @@
 			<input
 				type="number"
 				value={$min_note}
-				on:input={input_min_note}
+				oninput={input_min_note}
 				step={1}
 				min={MIDI_MIN}
 				max={MIDI_MAX}
@@ -44,7 +44,7 @@
 			<input
 				type="range"
 				value={$max_note}
-				on:input={input_max_note}
+				oninput={input_max_note}
 				step={1}
 				min={MIDI_MIN}
 				max={MIDI_MAX}
@@ -52,7 +52,7 @@
 			<input
 				type="number"
 				value={$max_note}
-				on:input={input_max_note}
+				oninput={input_max_note}
 				step={1}
 				min={MIDI_MIN}
 				max={MIDI_MAX}

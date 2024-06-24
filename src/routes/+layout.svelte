@@ -132,13 +132,13 @@
 	<link rel="icon" href="{base}/favicon.png" />
 </svelte:head>
 
-<svelte:window on:keydown={keydown} />
+<svelte:window onkeydown={keydown} />
 
 <Themed {selected_color_scheme} color_scheme_fallback={$selected_color_scheme}>
 	{@render children()}
 
 	{#if show_main_menu}
-		<Dialog on:close={() => (show_main_menu = false)}>
+		<Dialog onclose={() => (show_main_menu = false)}>
 			<div class="bg">
 				<section>
 					<h1 class="section_title box">

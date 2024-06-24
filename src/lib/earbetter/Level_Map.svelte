@@ -59,10 +59,10 @@
 
 <Midi_Input
 	{midi_access}
-	on:note_start={(e) => {
+	onnote_start={(e) => {
 		start_playing(ac, e.detail.note, with_velocity($volume, e.detail.velocity), $instrument);
 	}}
-	on:note_stop={(e) => {
+	onnote_stop={(e) => {
 		stop_playing(e.detail.note);
 	}}
 />
@@ -145,11 +145,11 @@
 							{editing}
 							bind:id
 							level_data={$draft_level_data}
-							on:submit={(editing ? update_level : create_level)
+							onsubmit={(editing ? update_level : create_level)
 								? (e) => (editing ? update_level : create_level)(e.detail)
 								: undefined}
-							on:remove={(e) => remove_level(e.detail)}
-							on:duplicate={(e) => duplicate_level(e.detail)}
+							onremove={(e) => remove_level(e.detail)}
+							onduplicate={(e) => duplicate_level(e.detail)}
 						>
 							<svelte:fragment slot="footer" let:changed let:to_data>
 								{#if editing}

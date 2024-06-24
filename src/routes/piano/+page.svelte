@@ -67,8 +67,8 @@
 
 <Midi_Input
 	{midi_access}
-	on:note_start={(e) => play(e.detail.note, e.detail.velocity)}
-	on:note_stop={(e) => stop_playing(e.detail.note)}
+	onnote_start={(e) => play(e.detail.note, e.detail.velocity)}
+	onnote_stop={(e) => stop_playing(e.detail.note)}
 />
 <main bind:clientWidth>
 	<Header />

@@ -27,11 +27,11 @@
 		{editing}
 		bind:id
 		realm_data={$editing_realm_data}
-		on:submit={(editing ? update_realm : create_realm)
+		onsubmit={(editing ? update_realm : create_realm)
 			? (e) => (editing ? update_realm : create_realm)?.(e.detail)
 			: undefined}
-		on:remove={remove_realm ? (e) => remove_realm?.(e.detail) : undefined}
-		on:duplicate={duplicate_realm ? (e) => duplicate_realm?.(e.detail) : undefined}
+		onremove={remove_realm ? (e) => remove_realm?.(e.detail) : undefined}
+		onduplicate={duplicate_realm ? (e) => duplicate_realm?.(e.detail) : undefined}
 	>
 		<svelte:fragment slot="footer" let:changed>
 			{#if editing}

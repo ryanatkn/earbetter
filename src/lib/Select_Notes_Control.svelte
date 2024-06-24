@@ -24,10 +24,7 @@
 		<slot>scale</slot>
 	</div>
 	<!-- TODO use `bind:value={$scale}` when this PR is in: https://github.com/preactjs/signals/pull/325  -->
-	<select
-		value={$scale.name}
-		on:change={(e) => (scale.value = lookup_scale(e.currentTarget.value))}
-	>
+	<select value={$scale.name} onchange={(e) => (scale.value = lookup_scale(e.currentTarget.value))}>
 		{#each scales as s (s)}
 			<option value={s.name}>{s.name}</option>
 		{/each}
@@ -38,7 +35,7 @@
 		<slot>key</slot>
 	</div>
 	<!-- TODO use `bind:value={$key}` when this PR is in: https://github.com/preactjs/signals/pull/325  -->
-	<select value={$key} on:input={input_key}>
+	<select value={$key} oninput={input_key}>
 		{#each pitch_classes as p (p)}
 			<option value={p}>
 				{p}{#if p in pitch_class_aliases}/{pitch_class_aliases[p]}{/if}

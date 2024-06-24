@@ -3,7 +3,11 @@
 
 	import type {Volume} from '$lib/helpers.js';
 
-	export let volume: Signal<Volume>;
+	interface Props {
+		volume: Signal<Volume>;
+	}
+
+	const {volume}: Props = $props();
 
 	// TODO use bind:value when signals adds `set`
 </script>
@@ -12,7 +16,7 @@
 	<div class="title">volume</div>
 	<input
 		type="number"
-		on:input={(e) => (volume.value = Number(e.currentTarget.value))}
+		oninput={(e) => (volume.value = Number(e.currentTarget.value))}
 		step={0.01}
 		min={0}
 		max={1}
@@ -20,7 +24,7 @@
 	/>
 	<input
 		type="range"
-		on:input={(e) => (volume.value = Number(e.currentTarget.value))}
+		oninput={(e) => (volume.value = Number(e.currentTarget.value))}
 		step={0.01}
 		min={0}
 		max={1}

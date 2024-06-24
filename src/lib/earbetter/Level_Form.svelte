@@ -161,7 +161,7 @@
 				<input
 					bind:this={intervals_el}
 					value={serialize_intervals(intervals)}
-					on:input={(e) => (intervals = parse_intervals(e.currentTarget.value))}
+					oninput={(e) => (intervals = parse_intervals(e.currentTarget.value))}
 				/>
 			</label>
 			<button type="button" onclick={() => (picking_intervals = true)}> pick intervals </button>
@@ -233,7 +233,7 @@
 				<input
 					bind:this={tonics_el}
 					value={serialize_notes(tonics)}
-					on:input={(e) => (tonics = parse_notes(e.currentTarget.value))}
+					oninput={(e) => (tonics = parse_notes(e.currentTarget.value))}
 					placeholder="all"
 				/>
 			</label>
@@ -295,7 +295,7 @@
 </form>
 {#if importing}
 	<Dialog
-		on:close={() => {
+		onclose={() => {
 			importing = false;
 			start_importing_el.focus();
 		}}
@@ -324,7 +324,7 @@
 {#if picking_intervals}
 	<Dialog
 		let:close
-		on:close={() => {
+		onclose={() => {
 			picking_intervals = false;
 			intervals_el.focus();
 		}}
@@ -334,7 +334,7 @@
 			<Intervals_Input
 				bind:selected_scale={intervals_input_selected_scale}
 				bind:octaves={intervals_input_octaves}
-				on:input={(e) => {
+				oninput={(e) => {
 					intervals = e.detail;
 					close();
 				}}
@@ -345,7 +345,7 @@
 {#if picking_tonics}
 	<Dialog
 		let:close
-		on:close={() => {
+		onclose={() => {
 			picking_tonics = false;
 			tonics_el.focus();
 		}}
@@ -357,7 +357,7 @@
 				notes={new Set(tonics)}
 				{min_note}
 				{max_note}
-				on:input={(e) => {
+				oninput={(e) => {
 					tonics = e.detail;
 					close();
 				}}

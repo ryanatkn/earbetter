@@ -139,10 +139,10 @@
 	};
 </script>
 
-<svelte:window on:keydown|capture={keydown} />
+<svelte:window onkeydown|capture={keydown} />
 <Midi_Input
 	{midi_access}
-	on:note_start={(e) => {
+	onnote_start={(e) => {
 		// TODO should this be ignored if it's not an enabled key? should the level itself ignore the guess?
 		if ($status === 'complete') {
 			start_playing(ac, e.detail.note, with_velocity($volume, e.detail.velocity), $instrument);
@@ -152,7 +152,7 @@
 			level.guess(e.detail.note);
 		}
 	}}
-	on:note_stop={(e) => {
+	onnote_stop={(e) => {
 		stop_playing(e.detail.note);
 	}}
 />
