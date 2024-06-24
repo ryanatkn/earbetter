@@ -23,7 +23,7 @@
 	{#each {length: $def.trial_count} as _, index}
 		<div class="level" style="background-color: {to_bg_color($status, $trial, $trials, index)}" />
 	{/each}
-	<div class="progress-bar" />
+	<div class="progress_bar" />
 </div>
 
 <style>

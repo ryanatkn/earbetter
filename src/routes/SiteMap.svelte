@@ -8,7 +8,7 @@
 	$: selected_slug = strip_start($page.url.pathname, base);
 </script>
 
-<header class="section-title"><h2>site map</h2></header>
+<header class="section_title"><h2>site map</h2></header>
 <nav>
 	<menu>
 		{#each pages as p (p.slug)}

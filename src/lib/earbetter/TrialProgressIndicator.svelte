@@ -45,7 +45,7 @@
 		{#each {length: $trial.sequence.length} as _, index}
 			<div class="trial" style="background-color: {to_bg_color($status, index, current_index)}" />
 		{/each}
-		<div class="progress-bar" />
+		<div class="progress_bar" />
 	</div>
 {/if}
 
@@ -61,7 +61,7 @@
 		background-color: transparent;
 		transition: background-color linear var(--duration_3);
 	}
-	.progress-bar {
+	.progress_bar {
 		--progress_bar_duration: var(--duration_2);
 		--progress_bar_height: var(--space_xs2);
 		--progress_bar_bg: var(--lighten_3);

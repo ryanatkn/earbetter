@@ -8,7 +8,7 @@
 	<div class="panel p_md width_sm">
 		<a href="https://github.com/ryanatkn/earbetter">source code</a>
 		<div>public domain</div>
-		<div class="breadcrumbs-wrapper">
+		<div class="size_xl2">
 			<SiteBreadcrumb />
 		</div>
 	</div>
@@ -34,8 +34,5 @@
 		display: flex;
 		flex-direction: column;
 		align-items: center;
-	}
-	.breadcrumbs-wrapper {
-		font-size: var(--size_xl2);
 	}
 </style>

@@ -42,7 +42,7 @@
 		{level_data.name}
 	</button>
 	<button
-		class="icon-button plain-button"
+		class="icon_button plain_button"
 		class:selected={!removing && editing}
 		title={removing ? 'remove level' : editing ? 'stop editing level' : 'edit level'}
 		onclick={() =>
@@ -51,7 +51,7 @@
 		{#if removing}✖{:else}✎{/if}
 	</button>
 	<button
-		class="icon-button plain-button"
+		class="icon_button plain_button"
 		onclick={() => (removing = !removing)}
 		title={removing ? 'cancel removing' : 'remove level'}
 	>
@@ -63,17 +63,17 @@
 	.level_map_item {
 		display: flex;
 	}
-	.plain-button:not(.selected) {
+	.plain_button:not(.selected) {
 		visibility: hidden;
 	}
-	.level_map_item:hover .plain-button,
-	li.selected .plain-button {
+	.level_map_item:hover .plain_button,
+	li.selected .plain_button {
 		visibility: visible;
 	}
 	.level_button {
 		flex: 1;
 	}
-	.icon-button {
+	.icon_button {
 		font-size: var(--size_xl);
 		width: var(--icon_button_width, 60px);
 	}

@@ -29,7 +29,7 @@
 </svelte:head>
 
 <main>
-	<button class="go-back icon-button plain-button" onclick={go_back}>←</button>
+	<button class="go-back icon_button plain_button" onclick={go_back}>←</button>
 	<Earbetter {app}>
 		<svelte:fragment slot="header"><Header /></svelte:fragment>
 		<svelte:fragment slot="footer"><Footer /></svelte:fragment>

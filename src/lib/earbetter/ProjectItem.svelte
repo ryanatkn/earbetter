@@ -23,7 +23,7 @@
 	{/if}
 	{#if (removing && remove) || (!removing && edit)}
 		<button
-			class="icon-button plain-button deselectable"
+			class="icon_button plain_button deselectable"
 			title={removing ? 'remove project' : 'edit project'}
 			class:selected={selected && !removing && editing}
 			onclick={() => (removing ? remove?.(project.id) : edit?.(project_data || load(project.id)))}
@@ -33,7 +33,7 @@
 	{/if}
 	{#if remove}
 		<button
-			class="icon-button plain-button"
+			class="icon_button plain_button"
 			onclick={() => (removing = !removing)}
 			title={removing ? 'cancel removing' : 'remove project'}
 		>
@@ -47,17 +47,17 @@
 		display: flex;
 		width: 100%;
 	}
-	.plain-button:not(.selected) {
+	.plain_button:not(.selected) {
 		visibility: hidden;
 	}
-	.project_item:hover .plain-button,
-	li.selected .plain-button {
+	.project_item:hover .plain_button,
+	li.selected .plain_button {
 		visibility: visible;
 	}
 	.project-button {
 		flex: 1;
 	}
-	.icon-button {
+	.icon_button {
 		font-size: var(--size_xl);
 	}
 </style>

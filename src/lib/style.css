@@ -97,7 +97,7 @@ button.big {
 }
 
 /* TODO fix this class upstream so this is controlled by a variable */
-.plain-button {
+.plain_button {
 	--button_color_hover: var(--darken_3);
 	--button_color_active: var(--darken_5);
 }
@@ -152,7 +152,7 @@ button {
 	width: 100%;
 }
 
-.section-title {
+.section_title {
 	padding: var(--space_lg);
 	display: flex;
 	align-items: center;
@@ -176,7 +176,7 @@ button {
 	--border_color: var(--accent_border_color_darker);
 }
 
-.progress-bar {
+.progress_bar {
 	position: var(--progress_bar_position, absolute);
 	left: var(--progress_bar_left, 0);
 	top: var(--progress_bar_top, calc(50% - var(--progress_bar_height, var(--space_md)) / 2));

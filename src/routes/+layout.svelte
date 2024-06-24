@@ -141,10 +141,10 @@
 		<Dialog on:close={() => (show_main_menu = false)}>
 			<div class="bg">
 				<section>
-					<h1 class="section-title box">
-						earbetter <div class="breadcrumbs-wrapper"><SiteBreadcrumb /></div>
+					<h1 class="section_title box">
+						earbetter <div class="size_md"><SiteBreadcrumb /></div>
 					</h1>
-					<h2 class="section-title">settings</h2>
+					<h2 class="section_title">settings</h2>
 					<form class="width_sm box px_md">
 						<VolumeControl {volume} />
 						<InstrumentControl {instrument} />
@@ -156,7 +156,7 @@
 					<SiteMap />
 				</section>
 				<section class="box width_sm">
-					<h2 class="section-title">data</h2>
+					<h2 class="section_title">data</h2>
 					<div class="px_md">
 						<aside>
 							<a href="https://developer.mozilla.org/en-US/docs/Web/API/Window/localStorage"
@@ -179,7 +179,7 @@
 					{/if}
 				</section>
 				<section class="box width_sm">
-					<h2 class="section-title">privacy</h2>
+					<h2 class="section_title">privacy</h2>
 					<p class="p_md">
 						this website collects no data - the only server it talks to is <a
 							href="https://pages.github.com/">GitHub Pages</a
@@ -193,9 +193,3 @@
 		</Dialog>
 	{/if}
 </Themed>
-
-<style>
-	.breadcrumbs-wrapper {
-		font-size: var(--size_md);
-	}
-</style>

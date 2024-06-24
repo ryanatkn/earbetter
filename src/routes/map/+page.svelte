@@ -26,7 +26,7 @@
 		margin-top: var(--space_xl3);
 	}
 	/* TODO hacky */
-	.width_sm :global(.section-title) {
+	.width_sm :global(.section_title) {
 		border-top-left-radius: var(--radius_sm);
 		border-top-right-radius: var(--radius_sm);
 	}

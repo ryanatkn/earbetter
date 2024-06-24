@@ -29,7 +29,7 @@
 	{/if}
 	{#if (removing && remove) || (!removing && edit)}
 		<button
-			class="icon-button plain-button deselectable"
+			class="icon_button plain_button deselectable"
 			class:selected={selected && !removing && editing}
 			title={removing ? 'remove realm' : editing ? 'stop editing realm' : 'edit realm'}
 			onclick={() => (removing ? remove?.(realm_data.id) : edit?.(realm_data))}
@@ -39,7 +39,7 @@
 	{/if}
 	{#if remove}
 		<button
-			class="icon-button plain-button"
+			class="icon_button plain_button"
 			onclick={() => (removing = !removing)}
 			title={removing ? 'cancel removing' : 'remove realm'}
 		>
@@ -53,17 +53,17 @@
 		display: flex;
 		width: 100%;
 	}
-	.plain-button:not(.selected) {
+	.plain_button:not(.selected) {
 		visibility: hidden;
 	}
-	.realm_item:hover .plain-button,
-	li.selected .plain-button {
+	.realm_item:hover .plain_button,
+	li.selected .plain_button {
 		visibility: visible;
 	}
 	.realm-button {
 		flex: 1;
 	}
-	.icon-button {
+	.icon_button {
 		font-size: var(--size_xl);
 		width: var(--icon_button_width, 60px);
 	}
