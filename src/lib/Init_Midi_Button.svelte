@@ -21,7 +21,8 @@
 
 	let request_status: Async_Status = $state('initial');
 
-	const disabled = $derived(!!$midi_access || request_status === 'pending');
+	// eslint-disable-next-line @typescript-eslint/no-unnecessary-type-assertion
+	const disabled = $derived(!!$midi_access || (request_status as Async_Status) === 'pending'); // TODO the cast is due to a typechecking bug (likely `svelte-check`)
 
 	const midi_inputs = $derived($midi_access && Array.from($midi_access.inputs.values()));
 
