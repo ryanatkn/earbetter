@@ -41,7 +41,7 @@
 		accidental_key_height,
 	} = $derived(compute_piano(width, min_note, max_note, max_height));
 
-	const pressing: Set<Midi> = new Set();
+	const pressing: Set<Midi> = new Set(); // TODO BLOCK need to unify with `pressed_keys` and fix the bug where click isn't needed
 
 	const drag_to_press = $derived(pressing.size > 0);
 	$inspect('drag_to_press', drag_to_press);
