@@ -1,9 +1,13 @@
 <script lang="ts">
 	import type {Level, Status, Trial} from '$lib/earbetter/level.js';
 
-	export let level: Level;
+	interface Props {
+		level: Level;
+	}
 
-	$: ({def, trial, status, trials} = level);
+	const {level}: Props = $props();
+
+	const {def, trial, status, trials} = $derived(level);
 
 	const to_bg_color = (s: Status, t: Trial | null, ts: Trial[], index: number) => {
 		return s === 'complete'
@@ -15,15 +19,16 @@
 				: 'transparent';
 	};
 
-	$: percent_complete =
-		$status === 'complete' ? 1 : $trial ? ($trial.index + 0.5) / $def.trial_count : 0;
+	const percent_complete = $derived(
+		$status === 'complete' ? 1 : $trial ? ($trial.index + 0.5) / $def.trial_count : 0,
+	);
 </script>
 
-<div class="level-progress-indicator" style:--progress_bar_percent={percent_complete}>
+<div class="level_progress_indicator" style:--progress_bar_percent={percent_complete}>
 	{#each {length: $def.trial_count} as _, index}
 		<div
 			class="level"
-			style="background-color: {to_bg_color($status, $trial, $trials, index)}"
+			style:background-color={to_bg_color($status, $trial, $trials, index)}
 			aria-hidden="true"
 		></div>
 	{/each}
@@ -37,7 +42,7 @@
 </div>
 
 <style>
-	.level-progress-indicator {
+	.level_progress_indicator {
 		display: flex;
 		width: 100%;
 		height: 100%;

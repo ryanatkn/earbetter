@@ -3,20 +3,32 @@
 	import Realm_Item from '$lib/earbetter/Realm_Item.svelte';
 	import type {Project_Data} from '$lib/earbetter/project.js';
 
-	export let selected_realm_data: Realm_Data | null = null;
-	export let editing_realm_id: Realm_Id | null = null;
-	export let realms: Realm_Data[] = [];
-	export let project_data: Project_Data;
-	export let select_realm: (id: Realm_Id) => void;
-	export let edit_realm: (realm_data: Realm_Data | null) => void;
-	export let remove_realm: (id: Realm_Id) => void;
+	interface Props {
+		selected_realm_data?: Realm_Data | null;
+		editing_realm_id?: Realm_Id | null;
+		realms?: Realm_Data[];
+		project_data: Project_Data;
+		select_realm: (id: Realm_Id) => void;
+		edit_realm: (realm_data: Realm_Data | null) => void;
+		remove_realm: (id: Realm_Id) => void;
+	}
+
+	const {
+		selected_realm_data = null,
+		editing_realm_id = null,
+		realms = [],
+		project_data,
+		select_realm,
+		edit_realm,
+		remove_realm,
+	}: Props = $props();
 
 	// TODO refactor
-	$: realms_by_id = new Map(realms.map((r) => [r.id, r]));
+	const realms_by_id = $derived(new Map(realms.map((r) => [r.id, r])));
 	const lookup_realm_data = (id: Realm_Id): Realm_Data => realms_by_id.get(id)!;
 </script>
 
-<menu class="realms-list width_sm">
+<menu class="width_sm">
 	{#each realms as realm (realm.id)}
 		<Realm_Item
 			realm_data={lookup_realm_data(realm.id)}

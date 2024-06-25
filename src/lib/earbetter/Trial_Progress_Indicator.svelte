@@ -45,14 +45,14 @@
 
 {#if $trial}
 	<div
-		class="trial-progress-indicator"
+		class="trial_progress_indicator"
 		style:--progress_bar_percent={percent_complete}
 		transition:fade|local
 	>
 		{#each {length: $trial.sequence.length} as _, index}
 			<div
 				class="trial"
-				style="background-color: {to_bg_color($status, index, current_index)}"
+				style:background-color={to_bg_color($status, index, current_index)}
 				aria-hidden="true"
 			></div>
 		{/each}
@@ -67,7 +67,7 @@
 {/if}
 
 <style>
-	.trial-progress-indicator {
+	.trial_progress_indicator {
 		display: flex;
 		width: 100%;
 		height: 100%;
