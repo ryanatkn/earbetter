@@ -4,15 +4,19 @@
 	import type {Level_Data} from '$lib/earbetter/level.js';
 	import {MISTAKE_HISTORY_LENGTH, type Level_Stats} from '$lib/earbetter/level.js';
 
-	export let level_data: Level_Data;
-	export let level_stats: Level_Stats;
+	interface Props {
+		level_data: Level_Data;
+		level_stats: Level_Stats;
+	}
 
-	$: mistakes = level_stats.mistakes[level_data.id] || [];
-	$: ({length} = mistakes);
-	$: remainder = Math.max(0, MISTAKE_HISTORY_LENGTH - length);
-	$: full_history = length >= MISTAKE_HISTORY_LENGTH;
-	$: sum = full_history ? mistakes.reduce((s, v) => s + v, 0) : undefined;
-	$: perfect = sum === 0;
+	const {level_data, level_stats}: Props = $props();
+
+	const mistakes = $derived(level_stats.mistakes[level_data.id] || []);
+	const {length} = $derived(mistakes);
+	const remainder = $derived(Math.max(0, MISTAKE_HISTORY_LENGTH - length));
+	const full_history = $derived(length >= MISTAKE_HISTORY_LENGTH);
+	const sum = $derived(full_history ? mistakes.reduce((s, v) => s + v, 0) : undefined);
+	const perfect = $derived(sum === 0);
 </script>
 
 <div

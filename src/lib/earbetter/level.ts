@@ -62,7 +62,7 @@ export type Status =
 // TODO ambiguity with `Level.svelte` -- consider combining the two? or renaming the component, maybe it's the `LevelScene`
 // (hm not sure about that, but the ergnomics of components may be worth it)
 export interface Level {
-	def: Signal<Level_Data>;
+	def: Signal<Level_Data>; // TODO rename to `data` or `level_data`?
 	status: Signal<Status>;
 	mistakes: Signal<number>;
 	trial: Signal<Trial | null>;

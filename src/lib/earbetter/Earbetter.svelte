@@ -3,10 +3,11 @@
 
 	import Level_Map from '$lib/earbetter/Level_Map.svelte';
 	import Level from '$lib/earbetter/Level.svelte';
-	import type {Level as LevelType} from '$lib/earbetter/level.js';
 	import {get_ac} from '$lib/ac.js';
 	import {midi_access} from '$lib/midi_access.js';
 	import type {App} from '$lib/earbetter/app.js';
+	import {create_level} from '$lib/earbetter/level.js';
+	import {get_instrument, get_volume} from '$lib/helpers.js';
 
 	interface Props {
 		app: App;
@@ -22,8 +23,13 @@
 	const ac = get_ac();
 	(window as any).audio = ac;
 
+	const volume = get_volume();
+	const instrument = get_instrument();
+
 	// TODO this is hacky because of how `Level.svelte` instantiates the `level` instance, see in multiple places
-	let level: LevelType | undefined = $state(); // TODO resolve ambiguity
+	const level = $derived(
+		$active_level_data ? create_level($active_level_data, ac, volume, instrument) : null,
+	);
 	// TODO BLOCK @multiple misusing effect setting state
 	$effect(() => {
 		if (level) app.level.value = level;
@@ -35,15 +41,9 @@
 	const level_stats = $derived($selected_project_data?.level_stats);
 </script>
 
-{#if $active_level_data && level_stats}
+{#if level && level_stats}
 	<div class="level">
-		<Level
-			level_data={$active_level_data}
-			{level_stats}
-			{exit_level_to_map}
-			{register_success}
-			bind:level
-		/>
+		<Level {level} {level_stats} {exit_level_to_map} {register_success} />
 	</div>
 {:else}
 	{#if header}{@render header()}{/if}

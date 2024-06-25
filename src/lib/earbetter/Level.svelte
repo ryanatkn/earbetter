@@ -4,13 +4,7 @@
 	import {scale, fly} from 'svelte/transition';
 	import {plural} from '@ryanatkn/belt/string.js';
 
-	import {
-		create_level,
-		Level_Id,
-		Level_Stats,
-		type Level,
-		type Level_Data,
-	} from '$lib/earbetter/level.js';
+	import {Level_Id, Level_Stats, type Level} from '$lib/earbetter/level.js';
 	import Piano from '$lib/Piano.svelte';
 	import Level_Progress_Indicator from '$lib/earbetter/Level_Progress_Indicator.svelte';
 	import Trial_Progress_Indicator from '$lib/earbetter/Trial_Progress_Indicator.svelte';
@@ -23,25 +17,18 @@
 	import Level_Stats_Summary from '$lib/earbetter/Level_Stats_Summary.svelte';
 	import Text_Burst from '$lib/Text_Burst.svelte';
 
-	const ac = get_ac();
-	const volume = get_volume();
-	const instrument = get_instrument();
-
 	interface Props {
-		level?: Level;
-		level_data: Level_Data; // TODO currently is not reactive, see below
+		level: Level;
 		level_stats: Level_Stats;
 		exit_level_to_map: () => void;
 		register_success: (id: Level_Id, mistake_count: number) => void; // TODO naming this param `mistakes` breaks svelte-check, should be fixed in next release
 	}
 
-	const {
-		level_data,
-		level_stats,
-		exit_level_to_map,
-		register_success,
-		level = create_level(level_data, ac, volume, instrument),
-	}: Props = $props();
+	const {level, level_stats, exit_level_to_map, register_success}: Props = $props();
+
+	const ac = get_ac();
+	const volume = get_volume();
+	const instrument = get_instrument();
 
 	let clientWidth: number | undefined = $state();
 
@@ -108,7 +95,7 @@
 	// TODO BLOCK @multiple misusing effect setting state
 	$effect(() => {
 		if (complete) {
-			register_success(level_data.id, level.mistakes.peek());
+			register_success($def.id, level.mistakes.peek());
 		}
 	});
 
@@ -227,7 +214,7 @@
 								{/if}
 							</div>
 							<div class="panel p_md">
-								<Level_Stats_Summary {level_data} {level_stats} />
+								<Level_Stats_Summary level_data={$def} {level_stats} />
 							</div>
 						</div>
 						<button
