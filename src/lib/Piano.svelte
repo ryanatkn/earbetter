@@ -52,18 +52,18 @@
 	style:--piano_accidental_key_height="{accidental_key_height}px"
 >
 	<div class="piano-keys">
-		{#each piano_keys as { midi, left_offset } (midi)}
+		{#each piano_keys as { note, left_offset } (note)}
 			<Piano_Key
 				{onpress}
 				{onrelease}
-				note={midi}
+				{note}
 				{left_offset}
 				bind:pressing
 				{clickable}
-				enabled={!enabled_notes || enabled_notes.has(midi)}
-				pressed={pressed_keys?.has(midi)}
-				highlighted={highlighted_keys?.has(midi)}
-				emphasized={emphasized_keys?.has(midi)}
+				enabled={!enabled_notes || enabled_notes.has(note)}
+				pressed={pressed_keys?.has(note)}
+				highlighted={highlighted_keys?.has(note)}
+				emphasized={emphasized_keys?.has(note)}
 			/>
 		{/each}
 	</div>

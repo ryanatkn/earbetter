@@ -31,7 +31,7 @@ export interface Piano {
 }
 
 export interface Piano_Key {
-	midi: Midi; // TODO BLOCK in some places we have `midi: Midi` and others `note: Midi`, make it consistent
+	note: Midi;
 	left_offset: number;
 	width: number;
 	height: number;
@@ -57,11 +57,11 @@ export const compute_piano = (
 	let natural_index = 0;
 	const piano_keys: Piano_Key[] = [];
 	for (let i = 0; i < note_count; i++) {
-		const midi = (i + min_note) as Midi;
+		const note = (i + min_note) as Midi;
 		let key_width: number;
 		let key_height: number;
 		let left_offset: number;
-		if (midi_naturals.has(midi)) {
+		if (midi_naturals.has(note)) {
 			key_width = natural_key_width;
 			key_height = natural_key_height;
 			left_offset = natural_index * natural_key_width + min_note_offset * accidental_key_width;
@@ -72,12 +72,12 @@ export const compute_piano = (
 			// this could be improved but it's kinda close
 			left_offset =
 				natural_index * natural_key_width +
-				key_left_offset_pct[midi_chromas[midi]] * accidental_key_width +
+				key_left_offset_pct[midi_chromas[note]] * accidental_key_width +
 				min_note_offset * accidental_key_width;
 		}
 
 		piano_keys.push({
-			midi,
+			note,
 			left_offset,
 			width: key_width,
 			height: key_height,
