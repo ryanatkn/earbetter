@@ -3,7 +3,7 @@
 	import {swallow} from '@ryanatkn/belt/dom.js';
 
 	import Piano from '$lib/Piano.svelte';
-	import {get_ac} from '$lib/ac.js';
+	import {get_audio_context} from '$lib/audio_context.js';
 	import {midi_access} from '$lib/midi_access.js';
 	import Midi_Input from '$lib/Midi_Input.svelte';
 	import {playing_notes, start_playing, stop_playing} from '$lib/play_note.js';
@@ -58,7 +58,7 @@
 
 	let key = $state(DEFAULT_PITCH_CLASS);
 
-	const ac = get_ac();
+	const ac = get_audio_context();
 	const volume = get_volume();
 	const instrument = get_instrument();
 

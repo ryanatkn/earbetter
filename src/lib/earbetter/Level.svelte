@@ -8,7 +8,7 @@
 	import Piano from '$lib/Piano.svelte';
 	import Level_Progress_Indicator from '$lib/earbetter/Level_Progress_Indicator.svelte';
 	import Trial_Progress_Indicator from '$lib/earbetter/Trial_Progress_Indicator.svelte';
-	import {get_ac} from '$lib/ac.js';
+	import {get_audio_context} from '$lib/audio_context.js';
 	import Midi_Input from '$lib/Midi_Input.svelte';
 	import type {Midi} from '$lib/music.js';
 	import {playing_notes, start_playing, stop_playing} from '$lib/play_note.js';
@@ -26,7 +26,7 @@
 
 	const {level, level_stats, exit_level_to_map, register_success}: Props = $props();
 
-	const ac = get_ac();
+	const ac = get_audio_context();
 	const volume = get_volume();
 	const instrument = get_instrument();
 

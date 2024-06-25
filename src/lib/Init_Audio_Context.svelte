@@ -1,5 +1,5 @@
 <script lang="ts">
-	import {get_ac} from './ac.js';
+	import {get_audio_context} from '$lib/audio_context.js';
 
 	/**
 	 * This component transparently initializes the audio context to work around
@@ -9,7 +9,7 @@
 	 * it could be changed to create the audio context instead of resuming.
 	 */
 
-	const ac = get_ac();
+	const ac = get_audio_context();
 
 	let inited = $state(false);
 

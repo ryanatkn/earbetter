@@ -15,7 +15,7 @@
 	import {writable} from 'svelte/store';
 	import type {Snippet} from 'svelte';
 
-	import {set_ac} from '$lib/ac.js';
+	import {set_audio_context} from '$lib/audio_context.js';
 	import {adjust_volume, set_instrument, set_volume} from '$lib/helpers.js';
 	import {request_access} from '$lib/midi_access.js';
 	import {App, set_app} from '$lib/earbetter/app.js';
@@ -47,7 +47,7 @@
 		Site_Data.parse,
 	);
 
-	const get_ac = set_ac();
+	const get_audio_context = set_audio_context();
 	const volume = set_volume(signal(initial_site_data.volume));
 	const instrument = set_instrument(signal(initial_site_data.instrument));
 	const scale = set_scale(signal(initial_site_data.scale));
@@ -69,7 +69,7 @@
 	const save_site_data = () => set_in_storage(SITE_DATA_STORAGE_KEY, to_site_data());
 	effect(save_site_data);
 
-	const app = set_app(new App(get_ac));
+	const app = set_app(new App(get_audio_context));
 	if (browser) (window as any).app = app;
 
 	// TODO add to app? context? global store?

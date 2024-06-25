@@ -3,7 +3,7 @@
 	import {slide} from 'svelte/transition';
 
 	import type {MIDIAccess} from '$lib/WebMIDI.js';
-	import {get_ac} from '$lib/ac.js';
+	import {get_audio_context} from '$lib/audio_context.js';
 	import Init_Midi_Button from '$lib/Init_Midi_Button.svelte';
 	import Level_Form from '$lib/earbetter/Level_Form.svelte';
 	import Projects from '$lib/earbetter/Projects.svelte';
@@ -49,7 +49,7 @@
 		update_level,
 	} = $derived(app);
 
-	const ac = get_ac();
+	const ac = get_audio_context();
 	(window as any).ac = ac;
 
 	const volume = get_volume();

@@ -3,7 +3,7 @@
 
 	import Level_Map from '$lib/earbetter/Level_Map.svelte';
 	import Level from '$lib/earbetter/Level.svelte';
-	import {get_ac} from '$lib/ac.js';
+	import {get_audio_context} from '$lib/audio_context.js';
 	import {midi_access} from '$lib/midi_access.js';
 	import type {App} from '$lib/earbetter/app.js';
 	import {create_level} from '$lib/earbetter/level.js';
@@ -20,7 +20,7 @@
 	const {active_level_data, exit_level_to_map, register_success, selected_project_data} =
 		$derived(app);
 
-	const ac = get_ac();
+	const ac = get_audio_context();
 	(window as any).ac = ac;
 
 	const volume = get_volume();

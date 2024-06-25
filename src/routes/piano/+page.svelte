@@ -3,7 +3,7 @@
 	import {effect, signal} from '@preact/signals-core';
 
 	import Piano from '$lib/Piano.svelte';
-	import {get_ac} from '$lib/ac.js';
+	import {get_audio_context} from '$lib/audio_context.js';
 	import {midi_access} from '$lib/midi_access.js';
 	import Midi_Input from '$lib/Midi_Input.svelte';
 	import {playing_notes, start_playing, stop_playing} from '$lib/play_note.js';
@@ -41,7 +41,7 @@
 	const save_piano_data = () => set_in_storage(SITE_DATA_STORAGE_KEY, to_piano_data());
 	effect(save_piano_data);
 
-	const ac = get_ac();
+	const ac = get_audio_context();
 	const volume = get_volume();
 	const instrument = get_instrument();
 	const scale = get_scale();

@@ -10,7 +10,7 @@ import {play_note} from '$lib/play_note.js';
 import type {Instrument, Milliseconds, Volume} from '$lib/helpers.js';
 import {serialize_to_hash} from '$lib/url.js';
 import {to_random_id} from '$lib/id.js';
-import type {Get_Audio_Context} from '$lib/ac.js';
+import type {Get_Audio_Context} from '$lib/audio_context.js';
 
 // TODO this isn't idiomatic signals code yet, uses `peek` too much
 

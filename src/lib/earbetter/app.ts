@@ -104,7 +104,7 @@ export class App {
 	draft_level_data: Signal<Level_Data | null> = signal(null);
 
 	constructor(
-		public readonly get_ac: () => AudioContext,
+		public readonly get_audio_context: () => AudioContext,
 		public readonly storage_key = 'app',
 	) {
 		// TODO maybe `new App(App.load())` ?

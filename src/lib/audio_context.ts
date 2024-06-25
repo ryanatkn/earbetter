@@ -14,24 +14,24 @@ export interface Get_Audio_Context {
 }
 
 /**
- * Components can do `const ac = get_ac();` and then use it with `ac()`.
+ * Components can do `const ac = get_audio_context();` and then use it with `ac()`.
  */
-export const get_ac = (): Get_Audio_Context => getContext(KEY);
+export const get_audio_context = (): Get_Audio_Context => getContext(KEY);
 
 /**
  * Puts a lazy getter for `AudioContext` into the component's context.
  */
-export const set_ac = (): Get_Audio_Context => {
+export const set_audio_context = (): Get_Audio_Context => {
 	let ac: AudioContext | undefined;
-	const get_ac: Get_Audio_Context = () => (ac ??= create_ac());
-	return setContext(KEY, get_ac);
+	const get_audio_context: Get_Audio_Context = () => (ac ??= create_audio_context());
+	return setContext(KEY, get_audio_context);
 };
 
 /**
  * This should be called during a user input action like a click,
  * or it needs `resume` called for some browsers.
  */
-export const create_ac = (): AudioContext => {
+export const create_audio_context = (): AudioContext => {
 	if (!browser) return new Audio_Context_Stub() as any;
 	const ac = new AudioContext();
 	return ac;
