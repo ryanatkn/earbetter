@@ -41,13 +41,24 @@ export const compute_piano = (
 	width: number,
 	min_note: Midi,
 	max_note: Midi,
-	max_height = 600,
+	max_height = 500,
 ): Piano => {
 	const min_note_offset = Math.abs(key_left_offset_pct[midi_chromas[min_note]]);
 	let max_note_offset = Math.abs(key_left_offset_pct[midi_chromas[max_note]]);
 	if (max_note_offset) max_note_offset = 1 - max_note_offset;
 
 	const note_count = max_note - min_note + 1;
+
+	if (note_count <= 0) {
+		return {
+			piano_keys: [],
+			natural_key_height: max_height,
+			natural_key_width: 0,
+			accidental_key_height: 0,
+			accidental_key_width: 0,
+		};
+	}
+
 	const naturals = compute_naturals(min_note, max_note);
 	const natural_key_width = (width / (naturals.length + (min_note_offset + max_note_offset))) | 0;
 	const accidental_key_width = (natural_key_width * ACCIDENTAL_KEY_WIDTH_MULT) | 0;

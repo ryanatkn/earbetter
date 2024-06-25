@@ -21,8 +21,10 @@ export const set_ac = (): (() => AudioContext) => {
 	return get_ac;
 };
 
-// This should be called during a user input action like a click,
-// or it needs `resume` called for some browsers.
+/**
+ * This should be called during a user input action like a click,
+ * or it needs `resume` called for some browsers.
+ */
 export const create_ac = (): AudioContext => {
 	const w: any = window;
 	const ac = new (w.AudioContext || w.webkitAudioContext)();

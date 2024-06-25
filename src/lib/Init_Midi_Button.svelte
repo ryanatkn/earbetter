@@ -8,6 +8,7 @@
 		midi_access as default_midi_access,
 		request_access as default_request_access,
 	} from '$lib/midi_access.js';
+	import {get_ac} from '$lib/ac.js';
 
 	interface Props {
 		midi_access?: Signal<MIDIAccess | null>;
@@ -16,6 +17,8 @@
 
 	const {midi_access = default_midi_access, request_access = default_request_access}: Props =
 		$props();
+
+	const ac = get_ac();
 
 	// TODO move MIDI initialization to some other action, like the button to start a level
 
@@ -34,6 +37,7 @@
 	class="big"
 	onclick={async () => {
 		if (!midi_access) return;
+		await ac.resume(); // TODO BLOCK @multiple where's the best place for this? needs to be synchronous with a click or similar
 		request_status = 'pending';
 		try {
 			await request_access();
@@ -50,7 +54,7 @@
 	{#if $midi_access}
 		{#if midi_inputs?.length}
 			<div>
-				<div>🎶</div>
+				<div>MIDI devices</div>
 				<ul>
 					{#each midi_inputs as midi_input}
 						<li><small>{midi_input.name}</small></li>

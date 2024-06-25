@@ -21,7 +21,7 @@
 		$derived(app);
 
 	const ac = get_ac();
-	(window as any).audio = ac;
+	(window as any).ac = ac;
 
 	const volume = get_volume();
 	const instrument = get_instrument();

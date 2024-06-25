@@ -24,7 +24,7 @@
 <div class="midi-range-control" class:error={!!error_message}>
 	<div class="box row">
 		<label>
-			<div class="title">lowest MIDI key</div>
+			<div class="title">lowest note</div>
 			{midi_names[$min_note]}
 			<input
 				type="range"
@@ -44,7 +44,7 @@
 			/>
 		</label>
 		<label>
-			<div class="title">highest MIDI key</div>
+			<div class="title">highest note</div>
 			{midi_names[$max_note]}
 			<input
 				type="range"

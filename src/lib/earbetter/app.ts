@@ -484,7 +484,7 @@ export class App {
 			console.error('cannot find level_data with id', id);
 			return;
 		}
-		void this.get_ac().resume(); // TODO where's the best place for this? needs to be synchronous with a click or similar, so this breaks if `play_level` is called without a user action
+		void this.get_ac().resume(); // TODO BLOCK @multiple where's the best place for this? needs to be synchronous with a click or similar, so this breaks if `play_level` is called without a user action
 		this.draft_level_data.value = level_data; // for better UX, so when the user navigates back it's still being edited
 		await goto(to_play_level_url(level_data));
 	};

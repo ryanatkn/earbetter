@@ -46,34 +46,30 @@
 	class="piano"
 	aria-disabled={!clickable}
 	style:width="{width}px"
+	style:height="{natural_key_height}px"
 	style:--piano_natural_key_width="{natural_key_width}px"
 	style:--piano_natural_key_height="{natural_key_height}px"
 	style:--piano_accidental_key_width="{accidental_key_width}px"
 	style:--piano_accidental_key_height="{accidental_key_height}px"
 >
-	<div class="piano-keys">
-		{#each piano_keys as { note, left_offset } (note)}
-			<Piano_Key
-				{onpress}
-				{onrelease}
-				{note}
-				{left_offset}
-				bind:pressing
-				{clickable}
-				enabled={!enabled_notes || enabled_notes.has(note)}
-				pressed={pressed_keys?.has(note)}
-				highlighted={highlighted_keys?.has(note)}
-				emphasized={emphasized_keys?.has(note)}
-			/>
-		{/each}
-	</div>
+	{#each piano_keys as { note, left_offset } (note)}
+		<Piano_Key
+			{onpress}
+			{onrelease}
+			{note}
+			{left_offset}
+			bind:pressing
+			{clickable}
+			enabled={!enabled_notes || enabled_notes.has(note)}
+			pressed={pressed_keys?.has(note)}
+			highlighted={highlighted_keys?.has(note)}
+			emphasized={emphasized_keys?.has(note)}
+		/>
+	{/each}
 </div>
 
 <style>
 	.piano {
 		position: relative;
-	}
-	.piano-keys {
-		height: var(--piano_natural_key_height);
 	}
 </style>

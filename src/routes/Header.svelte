@@ -1,6 +1,6 @@
 <header>
 	<div class="box panel p_md">
-		<h1>earbetter</h1>
+		<h1 class="mb_md">earbetter</h1>
 		<div class="icons">🎶🦜</div>
 	</div>
 </header>
