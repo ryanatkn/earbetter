@@ -3,9 +3,13 @@
 	import Project_Items from '$lib/earbetter/Project_Items.svelte';
 	import type {App} from '$lib/earbetter/app.js';
 
-	export let app: App; // TODO maybe change to be more granular objects?
+	interface Props {
+		app: App; // TODO maybe change to be more granular objects?
+	}
 
-	$: ({
+	const {app}: Props = $props();
+
+	const {
 		app_data,
 		project_datas,
 		selected_project_id,
@@ -16,11 +20,11 @@
 		select_project,
 		edit_project,
 		remove_project,
-	} = app);
+	} = $derived(app);
 
-	$: creating = $editing_project && $selected_project_id !== $editing_project_id;
+	const creating = $derived($editing_project && $selected_project_id !== $editing_project_id);
 
-	$: ({projects} = $app_data);
+	const {projects} = $derived($app_data);
 </script>
 
 <div class="panel p_md">

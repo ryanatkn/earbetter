@@ -3,16 +3,32 @@
 
 	import type {Project_Data, Project_Id, Project_Metadata} from '$lib/earbetter/project.js';
 
-	export let project: Project_Metadata;
-	export let project_data: Project_Data | undefined; // may not be loaded
-	export let load: (id: Project_Id) => Project_Data | null;
-	export let select: ((id: Project_Id) => void) | null = null; // TODO event? or is the ability to have a return value for ephemeral state desired?
-	export let edit: ((project_data: Project_Data | null) => void) | null = null; // TODO event? or is the ability to have a return value for ephemeral state desired?
-	export let remove: ((id: Project_Id) => void) | null = null; // TODO event? or is the ability to have a return value for ephemeral state desired?
-	export let selected: boolean;
-	export let editing: boolean;
+	interface Props {
+		project: Project_Metadata;
+		/**
+		 * May not be loaded.
+		 */
+		project_data: Project_Data | undefined;
+		load: (id: Project_Id) => Project_Data | null;
+		select?: ((id: Project_Id) => void) | null; // TODO event? or is the ability to have a return value for ephemeral state desired?
+		edit?: ((project_data: Project_Data | null) => void) | null; // TODO event? or is the ability to have a return value for ephemeral state desired?
+		remove?: ((id: Project_Id) => void) | null; // TODO event? or is the ability to have a return value for ephemeral state desired?
+		selected: boolean;
+		editing: boolean;
+	}
 
-	let removing = false;
+	const {
+		project,
+		project_data,
+		load,
+		select = null,
+		edit = null,
+		remove = null,
+		selected,
+		editing,
+	}: Props = $props();
+
+	let removing = $state(false);
 </script>
 
 <li class="project_item" transition:slide|local class:selected>

@@ -2,9 +2,13 @@
 	import Realm_Form from '$lib/earbetter/Realm_Form.svelte';
 	import type {App} from '$lib/earbetter/app.js';
 
-	export let app: App; // TODO maybe change to be more granular objects?
+	interface Props {
+		app: App; // TODO maybe change to be more granular objects?
+	}
 
-	$: ({
+	const {app}: Props = $props();
+
+	const {
 		realms,
 		selected_realm_data,
 		editing_realm,
@@ -13,13 +17,13 @@
 		duplicate_realm,
 		update_realm,
 		create_realm,
-	} = app);
+	} = $derived(app);
 
-	let id: string;
-	$: editing = $realms ? $realms.some((d) => d.id === id) : false;
+	let id: string | undefined = $state();
+	const editing = $derived($realms ? $realms.some((d) => d.id === id) : false);
 
-	$: console.log(`$selected_realm_data`, $selected_realm_data);
-	$: console.log(`$realms`, $realms);
+	$inspect(`$selected_realm_data`, $selected_realm_data);
+	$inspect(`$realms`, $realms);
 </script>
 
 <div class="panel p_md">
@@ -28,17 +32,17 @@
 		bind:id
 		realm_data={$editing_realm_data}
 		onsubmit={(editing ? update_realm : create_realm)
-			? (e) => (editing ? update_realm : create_realm)?.(e.detail)
+			? (realm_data) => (editing ? update_realm : create_realm)?.(realm_data)
 			: undefined}
-		onremove={remove_realm ? (e) => remove_realm?.(e.detail) : undefined}
-		onduplicate={duplicate_realm ? (e) => duplicate_realm?.(e.detail) : undefined}
+		onremove={remove_realm ? (realm_id) => remove_realm?.(realm_id) : undefined}
+		onduplicate={duplicate_realm ? (realm_id) => duplicate_realm?.(realm_id) : undefined}
 	>
-		<svelte:fragment slot="footer" let:changed>
+		{#snippet footer(changed)}
 			{#if editing}
 				<button type="button" onclick={() => (editing_realm.value = false)}>
 					{#if changed}discard changes and stop editing{:else}stop editing this realm{/if}
 				</button>
 			{/if}
-		</svelte:fragment>
+		{/snippet}
 	</Realm_Form>
 </div>

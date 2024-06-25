@@ -2,14 +2,27 @@
 	import type {Project_Data, Project_Id, Project_Metadata} from '$lib/earbetter/project.js';
 	import Project_Item from '$lib/earbetter/Project_Item.svelte';
 
-	export let selected_project_id: Project_Id | null = null;
-	export let editing_project_id: Project_Id | null = null;
-	export let projects: Project_Metadata[] = [];
-	export let project_datas: Project_Data[] = [];
-	export let load_project: (id: Project_Id) => Project_Data | null;
-	export let select_project: (id: Project_Id) => void;
-	export let edit_project: (project_data: Project_Data | null) => void;
-	export let remove_project: (id: Project_Id) => void;
+	interface Props {
+		selected_project_id?: Project_Id | null;
+		editing_project_id?: Project_Id | null;
+		projects?: Project_Metadata[];
+		project_datas?: Project_Data[];
+		load_project: (id: Project_Id) => Project_Data | null;
+		select_project: (id: Project_Id) => void;
+		edit_project: (project_data: Project_Data | null) => void;
+		remove_project: (id: Project_Id) => void;
+	}
+
+	const {
+		selected_project_id = null,
+		editing_project_id = null,
+		projects = [],
+		project_datas = [],
+		load_project,
+		select_project,
+		edit_project,
+		remove_project,
+	}: Props = $props();
 </script>
 
 <menu class="projects width_sm">
