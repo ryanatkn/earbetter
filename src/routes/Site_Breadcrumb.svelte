@@ -5,9 +5,8 @@
 
 	const pathname = $derived($page.url.pathname);
 	const home = $derived(pathname === base + '/');
+
+	// TODO BLOCK on home, instead show a button that opens the main menu, `show_main_menu` in layout needs to be in context or something
 </script>
 
-<!-- TODO this awkwardly nests a link -->
-<Breadcrumb
-	>{#if home}<a href="{base}/map">🎶🦜</a>{:else}🎶🦜{/if}</Breadcrumb
->
+{#if !home}<Breadcrumb>🎶🦜</Breadcrumb>{/if}
