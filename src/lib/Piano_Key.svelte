@@ -5,7 +5,7 @@
 	import {find_next_sibling, find_previous_sibling} from '$lib/dom.js';
 
 	interface Props {
-		midi: Midi;
+		midi: Midi; // TODO BLOCK rename to `note`
 		left_offset: number;
 		clickable?: boolean;
 		enabled?: boolean;

@@ -23,24 +23,34 @@
 	import Level_Stats_Summary from '$lib/earbetter/Level_Stats_Summary.svelte';
 	import Text_Burst from '$lib/Text_Burst.svelte';
 
-	export let level_data: Level_Data; // TODO currently is not reactive, see below
-	export let level_stats: Level_Stats;
-	export let exit_level_to_map: () => void;
-	export let register_success: (id: Level_Id, mistake_count: number) => void; // TODO naming this param `mistakes` breaks svelte-check, should be fixed in next release
-
-	let clientWidth: number | undefined;
-
 	const ac = get_ac();
 	const volume = get_volume();
 	const instrument = get_instrument();
 
-	export let level: Level = create_level(level_data, ac, volume, instrument);
-	// $: level.setData(level_data); // TODO update if level_data prop changes
-	$: ({def, mistakes, status, trial, last_guess} = level);
-	$: guessing_index = $trial?.guessing_index;
+	interface Props {
+		level?: Level;
+		level_data: Level_Data; // TODO currently is not reactive, see below
+		level_stats: Level_Stats;
+		exit_level_to_map: () => void;
+		register_success: (id: Level_Id, mistake_count: number) => void; // TODO naming this param `mistakes` breaks svelte-check, should be fixed in next release
+	}
 
-	$: pressed_keys = $status === 'presenting_prompt' ? null : $playing_notes;
-	$: highlighted_keys = $trial && new Set([$trial.sequence[0]]);
+	const {
+		level_data,
+		level_stats,
+		exit_level_to_map,
+		register_success,
+		level = create_level(level_data, ac, volume, instrument),
+	}: Props = $props();
+
+	let clientWidth: number | undefined = $state();
+
+	// $: level.setData(level_data); // TODO update if level_data prop changes
+	const {def, mistakes, status, trial, last_guess} = $derived(level);
+	const guessing_index = $derived($trial?.guessing_index);
+
+	const pressed_keys = $derived($status === 'presenting_prompt' ? null : $playing_notes);
+	const highlighted_keys = $derived($trial && new Set([$trial.sequence[0]]));
 
 	onMount(() => {
 		level.start();
@@ -54,29 +64,34 @@
 		level.guess(note);
 	};
 
-	let success: boolean; // TODO why is this needed? appears to be a bug in the Svelte language tools
-	$: success = $status === 'showing_success_feedback';
-	$: failure = $status === 'showing_failure_feedback';
-	$: complete = $status === 'complete';
-	$: waiting = $status === 'waiting_for_input';
+	const success = $derived($status === 'showing_success_feedback');
+	const failure = $derived($status === 'showing_failure_feedback');
+	const complete = $derived($status === 'complete');
+	const waiting = $derived($status === 'waiting_for_input');
 
-	let feedback_count = 0;
+	let feedback_count = $state(0);
 
-	let last_feedback_status: null | 'success' | 'failure' = null;
-	$: if (success) {
-		feedback_count++;
-		last_feedback_status = 'success';
-		update_text_burst_position();
-	}
-	$: if (failure) {
-		feedback_count++;
-		last_feedback_status = 'failure';
-		update_text_burst_position();
-	}
+	let last_feedback_status: null | 'success' | 'failure' = $state(null);
+	// TODO BLOCK @multiple misusing effect setting state
+	$effect(() => {
+		if (success) {
+			feedback_count++;
+			last_feedback_status = 'success';
+			update_text_burst_position();
+		}
+	});
+	// TODO BLOCK @multiple misusing effect setting state
+	$effect(() => {
+		if (failure) {
+			feedback_count++;
+			last_feedback_status = 'failure';
+			update_text_burst_position();
+		}
+	});
 
-	let piano_wrapper_el: HTMLElement | undefined;
-	let text_burst_offset_x = 0;
-	let text_burst_offset_y = 0;
+	let piano_wrapper_el: HTMLElement | undefined = $state();
+	let text_burst_offset_x = $state(0);
+	let text_burst_offset_y = $state(0);
 	const update_text_burst_position = () => {
 		if (!piano_wrapper_el) return;
 		const guessed = $last_guess;
@@ -88,15 +103,18 @@
 		text_burst_offset_y = rect.y + rect.height / 2;
 	};
 
-	$: initial = waiting && guessing_index === 0; // the initial user-prompting trial state before any inputs have been entered by the player (related, "prompting")
+	const initial = $derived(waiting && guessing_index === 0); // the initial user-prompting trial state before any inputs have been entered by the player (related, "prompting")
 
-	$: if (complete) {
-		register_success(level_data.id, level.mistakes.peek());
-	}
+	// TODO BLOCK @multiple misusing effect setting state
+	$effect(() => {
+		if (complete) {
+			register_success(level_data.id, level.mistakes.peek());
+		}
+	});
 
 	const piano_padding = 20;
 
-	let el: HTMLElement | undefined;
+	let el: HTMLElement | undefined = $state();
 
 	const click = (e: MouseEvent) => {
 		if (e.target === el) {
@@ -139,21 +157,21 @@
 	};
 </script>
 
-<svelte:window onkeydown|capture={keydown} />
+<svelte:window onkeydowncapture={keydown} />
 <Midi_Input
 	{midi_access}
-	onnotestart={(e) => {
+	onnotestart={(note, velocity) => {
 		// TODO should this be ignored if it's not an enabled key? should the level itself ignore the guess?
 		if ($status === 'complete') {
-			start_playing(ac, e.detail.note, with_velocity($volume, e.detail.velocity), $instrument);
+			start_playing(ac, note, with_velocity($volume, velocity), $instrument);
 		} else {
 			console.log(`guessing $status`, $status);
 			// TODO should we intercept here if disabled, and just play the blip with no penalty? or should that be a param to `guess`?
-			level.guess(e.detail.note);
+			level.guess(note);
 		}
 	}}
-	onnotestop={(e) => {
-		stop_playing(e.detail.note);
+	onnotestop={(note) => {
+		stop_playing(note);
 	}}
 />
 <!-- hide from screen readers, see keyboard commands -->
@@ -174,11 +192,11 @@
 				{pressed_keys}
 				{highlighted_keys}
 				onpress={$status === 'waiting_for_input'
-					? (e) => on_press_key(e.detail)
+					? (note) => on_press_key(note)
 					: $status === 'complete'
-						? (e) => start_playing(ac, e.detail, with_velocity($volume, null), $instrument)
+						? (note) => start_playing(ac, note, with_velocity($volume, null), $instrument)
 						: undefined}
-				onrelease={$status === 'complete' ? (e) => stop_playing(e.detail) : undefined}
+				onrelease={$status === 'complete' ? (note) => stop_playing(note) : undefined}
 			/>
 		{/if}
 	</div>
