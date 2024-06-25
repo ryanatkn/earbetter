@@ -336,9 +336,9 @@ export const create_level = (
 		},
 		guess_correctly: () => {
 			if (status.peek() !== 'waiting_for_input') return;
-			const midi = get_correct_guess(trial.peek());
-			if (midi === null) return;
-			guess(midi);
+			const note = get_correct_guess(trial.peek());
+			if (note === null) return;
+			guess(note);
 		},
 		get_correct_guess: () => get_correct_guess(trial.peek()),
 	};

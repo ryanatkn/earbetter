@@ -137,12 +137,12 @@
 				max_height={300}
 				pressed_keys={$playing_notes}
 				highlighted_keys={notes}
-				onpress={(midi) => {
-					toggle_note(midi);
-					play(midi);
+				onpress={(note) => {
+					toggle_note(note);
+					play(note);
 				}}
-				onrelease={(midi) => {
-					stop_playing(midi);
+				onrelease={(note) => {
+					stop_playing(note);
 				}}
 			/>
 		{/if}
