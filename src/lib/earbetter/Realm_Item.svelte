@@ -5,17 +5,29 @@
 	import Realm_Stats_Summary from '$lib/earbetter/Realm_Stats_Summary.svelte';
 	import type {Project_Data} from '$lib/earbetter/project.js';
 
-	export let realm_data: Realm_Data;
-	export let project_data: Project_Data;
-	export let select: ((id: Realm_Id) => void) | null = null; // TODO event? or is the ability to have a return value for ephemeral state desired?
-	export let edit: ((realm_data: Realm_Data | null) => void) | null = null; // TODO event? or is the ability to have a return value for ephemeral state desired?
-	export let remove: ((id: Realm_Id) => void) | null = null; // TODO event? or is the ability to have a return value for ephemeral state desired?
-	export let selected: boolean;
-	export let editing: boolean;
+	interface Props {
+		realm_data: Realm_Data;
+		project_data: Project_Data;
+		select?: ((id: Realm_Id) => void) | null; // TODO event? or is the ability to have a return value for ephemeral state desired?
+		edit?: ((realm_data: Realm_Data | null) => void) | null; // TODO event? or is the ability to have a return value for ephemeral state desired?
+		remove?: ((id: Realm_Id) => void) | null; // TODO event? or is the ability to have a return value for ephemeral state desired?
+		selected: boolean;
+		editing: boolean;
+	}
 
-	let removing = false;
+	const {
+		realm_data,
+		project_data,
+		select = null,
+		edit = null,
+		remove = null,
+		selected,
+		editing,
+	}: Props = $props();
 
-	$: level_stats = project_data?.level_stats;
+	let removing = $state(false);
+
+	const level_stats = $derived(project_data?.level_stats);
 </script>
 
 <li class="realm_item" transition:slide|local class:selected>
@@ -23,7 +35,7 @@
 		<Realm_Stats_Summary {realm_data} {level_stats} />
 	{/if}
 	{#if select}
-		<button class="realm-button" onclick={() => select?.(realm_data.id)} class:selected>
+		<button class="realm_button" onclick={() => select?.(realm_data.id)} class:selected>
 			{realm_data.name}
 		</button>
 	{/if}
@@ -60,7 +72,7 @@
 	li.selected .plain_button {
 		visibility: visible;
 	}
-	.realm-button {
+	.realm_button {
 		flex: 1;
 	}
 	.icon_button {
