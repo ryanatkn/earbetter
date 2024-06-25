@@ -5,28 +5,32 @@
 	import type {App} from '$lib/earbetter/app.js';
 	import Level_Stats_Summary from '$lib/earbetter/Level_Stats_Summary.svelte';
 
-	export let app: App;
-	export let level_data: Level_Data;
+	interface Props {
+		app: App;
+		level_data: Level_Data;
+	}
 
-	$: ({
+	const {app, level_data}: Props = $props();
+
+	const {
 		editing_level,
 		draft_level_data,
 		selected_project_data,
 		play_level,
 		edit_level,
 		remove_level,
-	} = app);
+	} = $derived(app);
 
 	// TODO hacky - the `editing_this_level` is needed when clicking into a level and going back,
 	// the `draft_level_data` is set but `editing_level` may be false,
 	// and we need to show it selected but not the edit button (needs restructuring for a proper fix)
-	$: editing_this_level = $draft_level_data === level_data;
-	$: editing = $editing_level && editing_this_level;
-	$: level_stats = $selected_project_data?.level_stats;
+	const editing_this_level = $derived($draft_level_data === level_data);
+	const editing = $derived($editing_level && editing_this_level);
+	const level_stats = $derived($selected_project_data?.level_stats);
 
-	let removing = false;
+	let removing = $state(false);
 
-	$: selected = editing || editing_this_level;
+	const selected = $derived(editing || editing_this_level);
 </script>
 
 <li class="level_map_item" transition:slide|local class:selected>
