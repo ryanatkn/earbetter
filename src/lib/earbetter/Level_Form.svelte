@@ -166,7 +166,8 @@
 	const lowest_note_error = $derived(min_note >= max_note);
 </script>
 
-<form class="w_100">
+<!-- TODO this class `.level_def_form` is used to focus from another component -->
+<form class="level_def_form w_100">
 	<header>
 		<h2>
 			{#if editing}editing level{:else}create a new level{/if}

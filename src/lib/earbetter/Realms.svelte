@@ -31,9 +31,9 @@
 
 	const click_create_new = () => {
 		if (no_realms) {
-			// eslint bug
+			// TODO eslint bug
 			// eslint-disable-next-line @typescript-eslint/no-unnecessary-type-assertion
-			(document.querySelector('.realm-def-form input') as HTMLInputElement | null)?.focus?.();
+			(document.querySelector('.realm_def_form input') as HTMLInputElement | null)?.focus?.(); // TODO BLOCK hacky
 		} else if (creating) {
 			editing_realm.value = false;
 		} else {
@@ -47,7 +47,7 @@
 		<h2>realms</h2>
 	</header>
 	{#if $realms && $selected_project_data}
-		<div class="realm-items-wrapper" transition:slide|local>
+		<div class="pb_md" transition:slide|local>
 			<Realm_Items
 				project_data={$selected_project_data}
 				selected_realm_data={$selected_realm_data}
@@ -71,8 +71,5 @@
 <style>
 	button {
 		width: 100%;
-	}
-	.realm-items-wrapper {
-		padding-bottom: var(--space_md);
 	}
 </style>

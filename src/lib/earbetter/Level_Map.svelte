@@ -20,10 +20,14 @@
 	import Level_Map_Items from '$lib/earbetter/Level_Map_Items.svelte';
 	import Project_Editor from '$lib/earbetter/Project_Editor.svelte';
 
-	export let app: App;
-	export let midi_access: Signal<MIDIAccess | null>;
+	interface Props {
+		app: App;
+		midi_access: Signal<MIDIAccess | null>;
+	}
 
-	$: ({
+	const {app, midi_access}: Props = $props();
+
+	const {
 		project_datas: projects,
 		editing_project,
 		editing_project_data,
@@ -43,7 +47,7 @@
 		duplicate_level,
 		create_level,
 		update_level,
-	} = app);
+	} = $derived(app);
 
 	const ac = get_ac();
 	(window as any).audio = ac;
@@ -51,19 +55,19 @@
 	const volume = get_volume();
 	const instrument = get_instrument();
 
-	let id: string;
-	$: editing = $levels ? $levels.some((d) => d.id === id) : false;
+	let id: string | undefined = $state();
+	const editing = $derived($levels ? $levels.some((d) => d.id === id) : false);
 
-	$: no_realms = !$realms?.length;
+	const no_realms = $derived(!$realms?.length);
 </script>
 
 <Midi_Input
 	{midi_access}
-	onnotestart={(e) => {
-		start_playing(ac, e.detail.note, with_velocity($volume, e.detail.velocity), $instrument);
+	onnotestart={(note, velocity) => {
+		start_playing(ac, note, with_velocity($volume, velocity), $instrument);
 	}}
-	onnotestop={(e) => {
-		stop_playing(e.detail.note);
+	onnotestop={(note) => {
+		stop_playing(note);
 	}}
 />
 <div class="map">
@@ -146,16 +150,17 @@
 							bind:id
 							level_data={$draft_level_data}
 							onsubmit={(editing ? update_level : create_level)
-								? (e) => (editing ? update_level : create_level)(e.detail)
+								? (level_data) => (editing ? update_level : create_level)(level_data)
 								: undefined}
-							onremove={(e) => remove_level(e.detail)}
-							onduplicate={(e) => duplicate_level(e.detail)}
+							onremove={(level_id) => remove_level(level_id)}
+							onduplicate={(level_id) => duplicate_level(level_id)}
 						>
-							<svelte:fragment slot="footer" let:changed let:to_data>
+							{#snippet footer(changed, to_data)}
 								{#if editing}
 									<button
 										type="button"
 										onclick={async () => {
+											if (!id) return;
 											if (changed) update_level(to_data());
 											await play_level(id);
 										}}
@@ -166,7 +171,7 @@
 										{#if changed}discard changes and stop editing{:else}stop editing this level{/if}
 									</button>
 								{/if}
-							</svelte:fragment>
+							{/snippet}
 						</Level_Form>
 					</div>
 				</section>

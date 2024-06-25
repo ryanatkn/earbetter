@@ -33,7 +33,7 @@
 
 <li class="project_item" transition:slide|local class:selected>
 	{#if select}
-		<button class="project-button" onclick={() => select?.(project.id)} class:selected>
+		<button class="flex_1" onclick={() => select?.(project.id)} class:selected>
 			{project.name}
 		</button>
 	{/if}
@@ -69,9 +69,6 @@
 	.project_item:hover .plain_button,
 	li.selected .plain_button {
 		visibility: visible;
-	}
-	.project-button {
-		flex: 1;
 	}
 	.icon_button {
 		font-size: var(--size_xl);

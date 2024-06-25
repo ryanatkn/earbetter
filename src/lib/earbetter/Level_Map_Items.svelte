@@ -20,9 +20,9 @@
 
 	const click_create_new = () => {
 		if (no_levels) {
-			// eslint bug
+			// TODO eslint bug
 			// eslint-disable-next-line @typescript-eslint/no-unnecessary-type-assertion
-			(document.querySelector('.level-def-form input') as HTMLInputElement | null)?.focus?.();
+			(document.querySelector('.level_def_form input') as HTMLInputElement | null)?.focus?.(); // TODO BLOCK hacky
 		} else {
 			edit_level(editing_draft ? null : Level_Data.parse({}));
 		}

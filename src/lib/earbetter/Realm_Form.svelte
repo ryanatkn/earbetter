@@ -128,7 +128,8 @@
 		</div>
 	</Dialog>
 {/if}
-<form class="realm-def-form">
+<!-- TODO this class `.realm_def_form` is used to focus from another component -->
+<form class="realm_def_form">
 	<header>
 		<h2>
 			{#if editing}editing realm{:else}create a new realm{/if}

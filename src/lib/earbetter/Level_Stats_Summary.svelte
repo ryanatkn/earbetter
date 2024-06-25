@@ -20,7 +20,7 @@
 </script>
 
 <div
-	class="level-stats-summary"
+	class="level_stats_summary"
 	title={perfect
 		? `you performed flawlessly in your best ${MISTAKE_HISTORY_LENGTH} runs!`
 		: full_history
@@ -44,7 +44,7 @@
 </div>
 
 <style>
-	.level-stats-summary {
+	.level_stats_summary {
 		display: flex;
 		align-items: center;
 		justify-content: center;

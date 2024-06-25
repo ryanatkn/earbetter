@@ -42,7 +42,7 @@
 		{remove_project}
 	/>
 	<button
-		class="create-new-project deselectable"
+		class="w_100 mt_md deselectable"
 		class:selected={creating}
 		onclick={() => {
 			if (creating) {
@@ -55,10 +55,3 @@
 		create a new project
 	</button>
 </div>
-
-<style>
-	.create-new-project {
-		margin-top: var(--space_md);
-		width: 100%;
-	}
-</style>
