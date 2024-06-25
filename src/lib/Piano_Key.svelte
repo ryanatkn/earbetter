@@ -5,7 +5,7 @@
 	import {find_next_sibling, find_previous_sibling} from '$lib/dom.js';
 
 	interface Props {
-		midi: Midi; // TODO BLOCK rename to `note`
+		note: Midi;
 		left_offset: number;
 		clickable?: boolean;
 		enabled?: boolean;
@@ -22,7 +22,7 @@
 	}
 
 	let {
-		midi, // eslint-disable-line prefer-const
+		note, // eslint-disable-line prefer-const
 		left_offset, // eslint-disable-line prefer-const
 		clickable = true, // eslint-disable-line prefer-const
 		enabled = true, // eslint-disable-line prefer-const
@@ -35,9 +35,9 @@
 		onrelease, // eslint-disable-line prefer-const
 	}: Props = $props();
 
-	const natural = $derived(midi_naturals.has(midi));
+	const natural = $derived(midi_naturals.has(note));
 	const accidental = $derived(!natural);
-	const middle_c = $derived(midi === 60);
+	const is_middle_c = $derived(note === 60);
 
 	const focus_previous_button = (node: ChildNode): void => {
 		const s = find_previous_sibling<HTMLButtonElement>(node, (n) => n instanceof HTMLButtonElement);
@@ -58,7 +58,7 @@
 			case ' ':
 			case 'Enter': {
 				swallow(e);
-				onpress?.(midi);
+				onpress?.(note);
 				e.currentTarget.focus();
 				break;
 			}
@@ -82,7 +82,7 @@
 			case ' ':
 			case 'Enter': {
 				swallow(e);
-				onrelease?.(midi);
+				onrelease?.(note);
 				break;
 			}
 		}
@@ -93,7 +93,7 @@
 
 <button
 	type="button"
-	class="piano-key"
+	class="piano_key"
 	class:natural
 	class:accidental
 	class:disabled={!enabled}
@@ -107,7 +107,7 @@
 	onmousedown={clickable_and_enabled
 		? (e) => {
 				swallow(e);
-				onpress?.(midi);
+				onpress?.(note);
 				pressing = true;
 				e.currentTarget.focus();
 			}
@@ -115,34 +115,34 @@
 	onmouseup={clickable_and_enabled
 		? (e) => {
 				swallow(e);
-				onrelease?.(midi);
+				onrelease?.(note);
 				pressing = false;
 			}
 		: undefined}
 	onmouseenter={clickable_and_enabled && pressing
 		? (e) => {
 				swallow(e);
-				onpress?.(midi);
+				onpress?.(note);
 				e.currentTarget.focus();
 			}
 		: undefined}
 	onmouseleave={clickable_and_enabled
 		? (e) => {
 				swallow(e);
-				onrelease?.(midi);
+				onrelease?.(note);
 			}
 		: undefined}
-	aria-label="piano key for midi {midi}"
-	data-note={midi}
+	aria-label="piano key for midi {note}"
+	data-note={note}
 	style:left="{left_offset}px"
 >
-	{#if middle_c && show_middle_c}
-		<span class="middle-c">C4</span>
+	{#if is_middle_c && show_middle_c}
+		<span class="middle_c">C4</span>
 	{/if}
 </button>
 
 <style>
-	.piano-key {
+	.piano_key {
 		/* custom */
 		--natural_width: var(--piano_natural_key_width, 60px);
 		--natural_height: var(--piano_natural_key_height, 175px);
@@ -162,15 +162,15 @@
 		cursor: default;
 	}
 
-	.piano-key:focus {
+	.piano_key:focus {
 		--z_index_offset: 1;
 		outline-width: var(--border_width_4);
 	}
-	.piano-key:focus {
+	.piano_key:focus {
 		outline-width: var(--border_width_3);
 	}
 
-	.piano-key:last-child {
+	.piano_key:last-child {
 		border-right: 1px solid var(--border_color);
 	}
 
@@ -216,7 +216,7 @@
 
 	/* this is order-sensitive, makes the MIDI input override any disabled state */
 	.clickable:active,
-	.piano-key.active {
+	.piano_key.active {
 		background-color: var(--primary_color_dark, #007700);
 	}
 
@@ -232,7 +232,7 @@
 		background-color: rgb(243, 211, 159);
 	}
 
-	.middle-c {
+	.middle_c {
 		color: var(--text_color_dark);
 		text-shadow: var(--text_shadow);
 		position: absolute;

@@ -56,7 +56,7 @@
 			<Piano_Key
 				{onpress}
 				{onrelease}
-				{midi}
+				note={midi}
 				{left_offset}
 				bind:pressing
 				{clickable}
