@@ -12,9 +12,9 @@
 		id?: Project_Id;
 		name?: string;
 		editing?: boolean;
-		onsubmit: (project_data: Project_Data) => void;
-		onremove: (project_id: Project_Id) => void;
-		onduplicate: (project_id: Project_Id) => void;
+		onsubmit?: (project_data: Project_Data) => void;
+		onremove?: (project_id: Project_Id) => void;
+		onduplicate?: (project_id: Project_Id) => void;
 		footer?: Snippet<[changed: boolean]>;
 	}
 
@@ -119,7 +119,7 @@
 		</div>
 	</Dialog>
 {/if}
-<form class="project-def-form">
+<form>
 	<header>
 		<h2>
 			{#if editing}editing project{:else}create a new project{/if}
@@ -174,7 +174,7 @@
 		{#if editing}import/export data{:else}import data{/if}
 	</button>
 	{#if parse_error_message}
-		<div class="message-wrapper">
+		<div class="overflow_x_auto">
 			<Alert status="error"><pre>{parse_error_message}</pre></Alert>
 		</div>
 	{/if}
@@ -186,8 +186,5 @@
 <style>
 	.importing textarea {
 		height: calc(var(--input_height) * 3);
-	}
-	.message-wrapper {
-		overflow-x: auto;
 	}
 </style>

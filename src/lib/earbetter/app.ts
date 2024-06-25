@@ -53,7 +53,7 @@ export class App {
 		this.app_data.value = {...this.app_data.peek(), show_game_help: !this.show_game_help.peek()};
 	};
 
-	project_datas: Signal<Project_Data[]> = signal([]);
+	project_datas: Signal<Project_Data[]> = signal([]); // TODO weird name
 
 	selected_project_id: Signal<Project_Id | null> = signal(null);
 	selected_project_data: ReadonlySignal<Project_Data | null> = computed(() => {
