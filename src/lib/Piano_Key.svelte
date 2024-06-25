@@ -10,29 +10,28 @@
 		clickable?: boolean;
 		enabled?: boolean;
 		pressed?: boolean;
-		/**
-		 * Piano-wide state to enable dragging with the pointer.
-		 */
-		pressing?: boolean;
 		highlighted?: boolean;
 		emphasized?: boolean;
 		show_middle_c?: boolean;
+		drag_to_press?: boolean;
 		onpress?: (note: Midi) => void;
 		onrelease?: (note: Midi) => void;
+		onleave?: (note: Midi, pressed: boolean) => void;
 	}
 
-	let {
-		note, // eslint-disable-line prefer-const
-		left_offset, // eslint-disable-line prefer-const
-		clickable = true, // eslint-disable-line prefer-const
-		enabled = true, // eslint-disable-line prefer-const
-		pressed = false, // eslint-disable-line prefer-const
-		pressing = $bindable(false), // TODO BLOCK rewrite this to not be bindable - let consumers use the `onpress` event instead - the parent uses it, but it could proxy the `onpress` callback
-		highlighted = false, // eslint-disable-line prefer-const
-		emphasized = false, // eslint-disable-line prefer-const
-		show_middle_c = true, // eslint-disable-line prefer-const
-		onpress, // eslint-disable-line prefer-const
-		onrelease, // eslint-disable-line prefer-const
+	const {
+		note,
+		left_offset,
+		clickable = true,
+		enabled = true,
+		pressed = false,
+		highlighted = false,
+		emphasized = false,
+		show_middle_c = true,
+		drag_to_press = false,
+		onpress,
+		onrelease,
+		onleave,
 	}: Props = $props();
 
 	const natural = $derived(midi_naturals.has(note));
@@ -88,7 +87,7 @@
 		}
 	};
 
-	const clickable_and_enabled = $derived(clickable && enabled);
+	const interactive = $derived(clickable && enabled);
 </script>
 
 <button
@@ -97,39 +96,37 @@
 	class:natural
 	class:accidental
 	class:disabled={!enabled}
-	class:clickable={clickable_and_enabled}
+	class:clickable={interactive}
 	class:active={pressed}
 	class:highlighted
 	class:emphasized
-	tabindex={clickable_and_enabled ? undefined : -1}
-	onkeydown={clickable_and_enabled ? keydown : undefined}
-	onkeyup={clickable_and_enabled ? keyup : undefined}
-	onmousedown={clickable_and_enabled
-		? (e) => {
-				swallow(e);
-				onpress?.(note);
-				pressing = true;
-				e.currentTarget.focus();
-			}
-		: undefined}
-	onmouseup={clickable_and_enabled
-		? (e) => {
-				swallow(e);
-				onrelease?.(note);
-				pressing = false;
-			}
-		: undefined}
-	onmouseenter={clickable_and_enabled && pressing
+	tabindex={interactive ? undefined : -1}
+	onkeydown={interactive ? keydown : undefined}
+	onkeyup={interactive ? keyup : undefined}
+	onmousedown={interactive
 		? (e) => {
 				swallow(e);
 				onpress?.(note);
 				e.currentTarget.focus();
 			}
 		: undefined}
-	onmouseleave={clickable_and_enabled
+	onmouseup={interactive
 		? (e) => {
 				swallow(e);
 				onrelease?.(note);
+			}
+		: undefined}
+	onmouseenter={interactive && drag_to_press
+		? (e) => {
+				swallow(e);
+				onpress?.(note);
+				e.currentTarget.focus();
+			}
+		: undefined}
+	onmouseleave={interactive
+		? (e) => {
+				swallow(e);
+				onleave?.(note, pressed);
 			}
 		: undefined}
 	aria-label="piano key for midi {note}"

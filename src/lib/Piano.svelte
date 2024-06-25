@@ -1,4 +1,6 @@
 <script lang="ts">
+	import {Set} from 'svelte/reactivity';
+
 	import Piano_Key from '$lib/Piano_Key.svelte';
 	import {MIDI_MIN, MIDI_MAX, type Midi} from '$lib/music.js';
 	import {compute_piano} from '$lib/piano.js';
@@ -39,7 +41,24 @@
 		accidental_key_height,
 	} = $derived(compute_piano(width, min_note, max_note, max_height));
 
-	let pressing = $state(false); // piano-wide state to enable dragging with the pointer
+	const pressing: Set<Midi> = new Set();
+
+	const drag_to_press = $derived(pressing.size > 0);
+	$inspect('drag_to_press', drag_to_press);
+
+	// TODO better naming convention than `*_local`?
+	const onpress_local = (note: Midi): void => {
+		pressing.add(note);
+		onpress?.(note);
+	};
+	const onrelease_local = (note: Midi): void => {
+		pressing.delete(note);
+		onrelease?.(note);
+	};
+	const onleave = (note: Midi, pressed: boolean): void => {
+		if (!pressed) return;
+		onrelease?.(note);
+	};
 </script>
 
 <div
@@ -54,16 +73,17 @@
 >
 	{#each piano_keys as { note, left_offset } (note)}
 		<Piano_Key
-			{onpress}
-			{onrelease}
+			onpress={onpress_local}
+			onrelease={onrelease_local}
+			{onleave}
 			{note}
 			{left_offset}
-			bind:pressing
 			{clickable}
 			enabled={!enabled_notes || enabled_notes.has(note)}
 			pressed={pressed_keys?.has(note)}
 			highlighted={highlighted_keys?.has(note)}
 			emphasized={emphasized_keys?.has(note)}
+			{drag_to_press}
 		/>
 	{/each}
 </div>
