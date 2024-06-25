@@ -5,9 +5,13 @@
 	import Realm_Items from '$lib/earbetter/Realm_Items.svelte';
 	import type {App} from '$lib/earbetter/app.js';
 
-	export let app: App; // TODO maybe change to be more granular objects?
+	interface Props {
+		app: App; // TODO maybe change to be more granular objects?
+	}
 
-	$: ({
+	const {app}: Props = $props();
+
+	const {
 		selected_project_data,
 		realms,
 		selected_realm_data,
@@ -17,12 +21,13 @@
 		select_realm,
 		edit_realm,
 		remove_realm,
-	} = app);
+	} = $derived(app);
 
-	$: creating =
-		$editing_realm && !!$editing_realm_data && $selected_realm_data?.id !== $editing_realm_data?.id;
+	const creating = $derived(
+		$editing_realm && !!$editing_realm_data && $selected_realm_data?.id !== $editing_realm_data?.id,
+	);
 
-	$: no_realms = !$realms?.length;
+	const no_realms = $derived(!$realms?.length);
 
 	const click_create_new = () => {
 		if (no_realms) {
