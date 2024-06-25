@@ -35,10 +35,8 @@
 	// TODO this is hacky, does a double conversion with the parent component, see the comment at the usage site
 	const notes_array = $derived(notes ? Array.from(notes).sort((a, b) => a - b) : null);
 
-	// TODO BLOCK this use to be a "writable derived", needs to be refactored
 	const notes_str = $derived(serialize_notes(notes_array));
 	const update_notes_str = (s: string): void => {
-		// TODO the way we're doing this doesn't allow the user to type
 		notes = new Set(parse_notes(s));
 	};
 
@@ -107,7 +105,7 @@
 	<div class="notes width_sm">
 		<!-- TODO copy button -->
 		<blockquote class="panel" style:margin="var(--space_lg) 0">
-			<textarea bind:value={notes_str} oninput={(e) => update_notes_str(e.currentTarget.value)}
+			<textarea value={notes_str} oninput={(e) => update_notes_str(e.currentTarget.value)}
 			></textarea>
 		</blockquote>
 		<button
