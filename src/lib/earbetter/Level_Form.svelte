@@ -166,7 +166,7 @@
 	const lowest_note_error = $derived(min_note >= max_note);
 </script>
 
-<form class="level-def-form">
+<form class="w_100">
 	<header>
 		<h2>
 			{#if editing}editing level{:else}create a new level{/if}
@@ -306,7 +306,7 @@
 			{#if editing}import/export data{:else}import data{/if}
 		</button>
 		{#if parse_error_message}
-			<div class="message-wrapper">
+			<div class="overflow_x_auto">
 				<Alert status="error"><pre>{parse_error_message}</pre></Alert>
 			</div>
 		{/if}
@@ -391,17 +391,11 @@
 {/if}
 
 <style>
-	.level-def-form {
-		width: 100%;
-	}
 	.fields {
 		display: flex;
 		flex-direction: column;
 	}
 	.importing textarea {
 		height: calc(var(--input_height) * 3);
-	}
-	.message-wrapper {
-		overflow-x: auto;
 	}
 </style>

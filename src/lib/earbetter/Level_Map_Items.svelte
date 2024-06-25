@@ -3,16 +3,20 @@
 	import type {App} from '$lib/earbetter/app.js';
 	import {Level_Data} from '$lib/earbetter/level.js';
 
-	export let app: App;
-	export let levels: Level_Data[]; // TODO making this a prop here, but using `app` most places, maybe change it to context?
+	interface Props {
+		app: App;
+		levels: Level_Data[]; // TODO making this a prop here, but using `app` most places, maybe change it to context?
+	}
 
-	$: ({selected_realm_data, editing_level, draft_level_data, edit_level} = app);
+	const {app, levels}: Props = $props();
 
-	$: editing_draft = $editing_level && !levels.some((d) => d === $draft_level_data);
+	const {selected_realm_data, editing_level, draft_level_data, edit_level} = $derived(app);
 
-	$: no_levels = !levels.length;
+	const editing_draft = $derived($editing_level && !levels.some((d) => d === $draft_level_data));
 
-	$: console.log(`levels`, levels);
+	const no_levels = $derived(!levels.length);
+
+	$inspect(`levels`, levels);
 
 	const click_create_new = () => {
 		if (no_levels) {
