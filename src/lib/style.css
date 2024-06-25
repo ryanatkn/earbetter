@@ -162,6 +162,12 @@ button {
 	margin-bottom: var(--space_md);
 }
 
+.section_body {
+	padding: var(--space_md);
+	max-width: var(--width_sm);
+	width: 100%;
+}
+
 .accent {
 	--text_color: var(--accent_text_color);
 	--border_color: var(--accent_border_color);

@@ -21,7 +21,7 @@
 
 	$inspect('midi_access', midi_access);
 
-	const midimessage = (event: MIDIMessageEvent): void => {
+	const onmidimessage = (event: MIDIMessageEvent): void => {
 		const message = parse_midi_message(event);
 		const {command, channel, note, velocity} = message;
 		log('midimessage', command, message);
@@ -86,13 +86,12 @@
 		if (unsubscribers.length) unsubscribe();
 		if (!$ma) return;
 		for (const input of $ma.inputs.values()) {
-			input.addEventListener('midimessage', midimessage as any);
+			input.addEventListener('midimessage', onmidimessage as any);
 			unsubscribers.push(() => {
-				input.removeEventListener('midimessage', midimessage as any);
+				input.removeEventListener('midimessage', onmidimessage as any);
 			});
 		}
 	};
 
-	// TODO BLOCK this seems ok because it's not writing state?
 	$effect(() => subscribe($midi_access));
 </script>

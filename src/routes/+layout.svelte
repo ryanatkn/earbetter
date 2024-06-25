@@ -144,11 +144,19 @@
 		<Dialog onclose={() => (show_main_menu = false)}>
 			<div class="bg">
 				<section>
-					<h1 class="section_title box">
-						earbetter <div class="size_md"><Site_Breadcrumb /></div>
-					</h1>
+					<!-- TODO when `.flex_direction_column` or equivalent is added to Moss, change `.box` to that -->
+					<div class="section_title box">
+						<h1 class="mb_md">earbetter</h1>
+						<!-- TODO switch to `class="size_xl"` when Fuz changes to use vb/vi -->
+						<div style:--size="var(--size_xl)"><Site_Breadcrumb /></div>
+					</div>
+					<div class="section_body text_align_center">
+						<p>ear training tools and JS/Svelte library for audio and music</p>
+					</div>
+				</section>
+				<section class="box">
 					<h2 class="section_title">settings</h2>
-					<form class="width_sm box px_md">
+					<form class="section_body">
 						<Volume_Control {volume} />
 						<Instrument_Control {instrument} />
 						<aside>Earbetter supports MIDI devices like piano keyboards, connect and click:</aside>
@@ -158,40 +166,44 @@
 				<section>
 					<Site_Map />
 				</section>
-				<section class="box width_sm">
+				<section class="box">
 					<h2 class="section_title">data</h2>
-					<div class="px_md">
-						<aside>
-							<a href="https://developer.mozilla.org/en-US/docs/Web/API/Window/localStorage"
+					<div class="section_body">
+						<p>
+							Data is saved locally on your computer using <a
+								href="https://developer.mozilla.org/en-US/docs/Web/API/Window/localStorage"
 								><code>localStorage</code></a
-							> is used to save your data locally on your computer
-						</aside>
+							>.
+						</p>
+						<!-- TODO add an `export saved data` button -->
+						<button class="w_100" onclick={() => (deleting = !deleting)}> clear saved data </button>
+						{#if deleting}
+							<div transition:slide|local>
+								<button
+									onclick={() => {
+										localStorage.clear();
+										location.reload();
+									}}
+								>
+									✕ permanently delete all locally saved data
+								</button>
+							</div>
+						{/if}
 					</div>
-					<button onclick={() => (deleting = !deleting)}> clear saved data </button>
-					{#if deleting}
-						<div transition:slide|local>
-							<button
-								onclick={() => {
-									localStorage.clear();
-									location.reload();
-								}}
-							>
-								✕ permanently delete all locally saved data
-							</button>
-						</div>
-					{/if}
 				</section>
-				<section class="box width_sm">
+				<section class="box">
 					<h2 class="section_title">privacy</h2>
-					<p class="p_md">
-						this website collects no data - the only server it talks to is <a
+					<p class="section_body">
+						This website collects no data - the only server it talks to is <a
 							href="https://pages.github.com/">GitHub Pages</a
 						>
-						to serve static files, see
-						<a href="https://github.com/ryanatkn/earbetter">the source code</a> for more
+						to serve static files. See
+						<a href="https://github.com/ryanatkn/earbetter">the source code</a> for more.
 					</p>
 				</section>
-				<Footer flush={true} />
+				<div class="section_title">
+					<Footer />
+				</div>
 			</div>
 		</Dialog>
 	{/if}

@@ -8,28 +8,29 @@
 	const selected_slug = $derived(strip_start($page.url.pathname, base));
 </script>
 
-<header class="section_title"><h2>site map</h2></header>
+<header class="section_title"><h2 class="my_0">site map</h2></header>
 <nav>
-	<menu>
+	<ul class="unstyled">
 		{#each pages as p (p.slug)}
 			<li>
 				<a class="panel" href="{base}{p.slug}" class:selected={p.slug === selected_slug}>{p.slug}</a
 				>
 			</li>
 		{/each}
-	</menu>
+	</ul>
 </nav>
 
 <style>
-	menu {
+	ul {
 		display: flex;
 		flex-direction: column;
 		align-items: center;
 	}
-	menu li:not(:last-child) {
+	ul li:not(:last-child) {
 		margin-bottom: var(--space_md);
 	}
-	menu a {
+	ul a {
+		display: block;
 		font-size: var(--size_xl);
 		padding: var(--space_xl);
 	}
