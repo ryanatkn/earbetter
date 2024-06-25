@@ -7,24 +7,26 @@ import {noop} from '@ryanatkn/belt/function.js';
 // The "ctx" abbreviation refers to `AudioContext`,
 // and the fully spelled out "context" refers to usage with Svelte.
 
-const KEY = Symbol('ac');
+const KEY = Symbol('audio_context');
 
-// Components can do `const ac = get_ac();`.
-export const get_ac = (): AudioContext => getContext<() => AudioContext>(KEY)();
+export interface Get_Audio_Context {
+	(): AudioContext;
+}
 
-// Puts a lazy getter for `AudioContext` into the component's context.
-export const set_ac = (): (() => AudioContext) => {
+/**
+ * Components can do `const ac = get_ac();` and then use it with `ac()`.
+ */
+export const get_ac = (): Get_Audio_Context => getContext(KEY);
+
+/**
+ * Puts a lazy getter for `AudioContext` into the component's context.
+ */
+export const set_ac = (): Get_Audio_Context => {
 	let ac: AudioContext | undefined;
-	const get_ac = (): AudioContext => {
-		if (!ac) ac = create_ac();
-		return ac;
-	};
-	setContext(KEY, get_ac);
-	return get_ac;
+	const get_ac: Get_Audio_Context = () => (ac ??= create_ac());
+	return setContext(KEY, get_ac);
 };
 
-// TODO BLOCK @multiple where's the best place for this? needs to be synchronous with a click or similar - maybe `onclickcapture` on the main layout, and set context at that point
-// await ac.resume();
 /**
  * This should be called during a user input action like a click,
  * or it needs `resume` called for some browsers.

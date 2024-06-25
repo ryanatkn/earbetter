@@ -64,7 +64,7 @@
 <Midi_Input
 	{midi_access}
 	onnotestart={(note, velocity) => {
-		start_playing(ac, note, with_velocity($volume, velocity), $instrument);
+		start_playing(ac(), note, with_velocity($volume, velocity), $instrument);
 	}}
 	onnotestop={(note) => {
 		stop_playing(note);

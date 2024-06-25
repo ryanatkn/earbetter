@@ -68,7 +68,7 @@
 	const piano_padding = 20;
 
 	const play = (note: Midi, velocity: number | null = null): void => {
-		start_playing(ac, note, with_velocity($volume, velocity), $instrument);
+		start_playing(ac(), note, with_velocity($volume, velocity), $instrument);
 	};
 
 	const toggle_scale = (scale: Scale): void => {

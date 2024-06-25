@@ -150,7 +150,7 @@
 	onnotestart={(note, velocity) => {
 		// TODO should this be ignored if it's not an enabled key? should the level itself ignore the guess?
 		if ($status === 'complete') {
-			start_playing(ac, note, with_velocity($volume, velocity), $instrument);
+			start_playing(ac(), note, with_velocity($volume, velocity), $instrument);
 		} else {
 			console.log(`guessing $status`, $status);
 			// TODO should we intercept here if disabled, and just play the blip with no penalty? or should that be a param to `guess`?
@@ -181,7 +181,7 @@
 				onpress={$status === 'waiting_for_input'
 					? (note) => on_press_key(note)
 					: $status === 'complete'
-						? (note) => start_playing(ac, note, with_velocity($volume, null), $instrument)
+						? (note) => start_playing(ac(), note, with_velocity($volume, null), $instrument)
 						: undefined}
 				onrelease={$status === 'complete' ? (note) => stop_playing(note) : undefined}
 			/>

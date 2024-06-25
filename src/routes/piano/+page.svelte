@@ -56,7 +56,7 @@
 
 	const play = (note: Midi, velocity: number | null = null): void => {
 		if (!$enabled_notes || $enabled_notes.has(note)) {
-			start_playing(ac, note, with_velocity($volume, velocity), $instrument);
+			start_playing(ac(), note, with_velocity($volume, velocity), $instrument);
 		}
 	};
 </script>

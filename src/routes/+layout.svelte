@@ -28,6 +28,7 @@
 	import Init_Midi_Button from '$lib/Init_Midi_Button.svelte';
 	import Footer from '$routes/Footer.svelte';
 	import Site_Breadcrumb from '$routes/Site_Breadcrumb.svelte';
+	import Init_Audio_Context from '$lib/Init_Audio_Context.svelte';
 
 	interface Props {
 		children: Snippet;
@@ -133,6 +134,8 @@
 </svelte:head>
 
 <svelte:window onkeydown={keydown} />
+
+<Init_Audio_Context />
 
 <Themed {selected_color_scheme} color_scheme_fallback={$selected_color_scheme}>
 	{@render children()}
