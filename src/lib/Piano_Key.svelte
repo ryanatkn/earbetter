@@ -13,10 +13,9 @@
 		highlighted?: boolean;
 		emphasized?: boolean;
 		show_middle_c?: boolean;
-		drag_to_press?: boolean;
+		pressing_any?: {value: boolean};
 		onpress?: (note: Midi) => void;
 		onrelease?: (note: Midi) => void;
-		onleave?: (note: Midi, pressed: boolean) => void;
 	}
 
 	const {
@@ -28,10 +27,9 @@
 		highlighted = false,
 		emphasized = false,
 		show_middle_c = true,
-		drag_to_press = false,
+		pressing_any,
 		onpress,
 		onrelease,
-		onleave,
 	}: Props = $props();
 
 	const natural = $derived(midi_naturals.has(note));
@@ -107,6 +105,7 @@
 		? (e) => {
 				swallow(e);
 				onpress?.(note);
+				if (pressing_any) pressing_any.value = true;
 				e.currentTarget.focus();
 			}
 		: undefined}
@@ -114,9 +113,10 @@
 		? (e) => {
 				swallow(e);
 				onrelease?.(note);
+				if (pressing_any) pressing_any.value = false;
 			}
 		: undefined}
-	onmouseenter={interactive && drag_to_press
+	onmouseenter={interactive && pressing_any?.value
 		? (e) => {
 				swallow(e);
 				onpress?.(note);
@@ -126,7 +126,7 @@
 	onmouseleave={interactive
 		? (e) => {
 				swallow(e);
-				onleave?.(note, pressed);
+				onrelease?.(note);
 			}
 		: undefined}
 	aria-label="piano key for midi {note}"

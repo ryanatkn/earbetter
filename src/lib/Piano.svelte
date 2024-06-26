@@ -1,6 +1,4 @@
 <script lang="ts">
-	import {Set} from 'svelte/reactivity';
-
 	import Piano_Key from '$lib/Piano_Key.svelte';
 	import {MIDI_MIN, MIDI_MAX, type Midi} from '$lib/music.js';
 	import {compute_piano} from '$lib/piano.js';
@@ -41,24 +39,10 @@
 		accidental_key_height,
 	} = $derived(compute_piano(width, min_note, max_note, max_height));
 
-	const pressing: Set<Midi> = new Set(); // TODO BLOCK need to unify with `pressed_keys` and fix the bug where click isn't needed
-
-	const drag_to_press = $derived(pressing.size > 0);
-	$inspect('drag_to_press', drag_to_press);
-
-	// TODO better naming convention than `*_local`?
-	const onpress_local = (note: Midi): void => {
-		pressing.add(note);
-		onpress?.(note);
-	};
-	const onrelease_local = (note: Midi): void => {
-		pressing.delete(note);
-		onrelease?.(note);
-	};
-	const onleave = (note: Midi, pressed: boolean): void => {
-		if (!pressed) return;
-		onrelease?.(note);
-	};
+	// TODO remove this when converting from `@preact/signals` to runes and reactive collections
+	// this causes a warning but that's alright because we'll fix it in the followup
+	const pressing_any = $state({value: false});
+	// {drag_to_press}
 </script>
 
 <div
@@ -73,9 +57,6 @@
 >
 	{#each piano_keys as { note, left_offset } (note)}
 		<Piano_Key
-			onpress={onpress_local}
-			onrelease={onrelease_local}
-			{onleave}
 			{note}
 			{left_offset}
 			{clickable}
@@ -83,7 +64,9 @@
 			pressed={pressed_keys?.has(note)}
 			highlighted={highlighted_keys?.has(note)}
 			emphasized={emphasized_keys?.has(note)}
-			{drag_to_press}
+			{pressing_any}
+			{onpress}
+			{onrelease}
 		/>
 	{/each}
 </div>
