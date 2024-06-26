@@ -8,7 +8,8 @@
 	const selected_slug = $derived(strip_start($page.url.pathname, base));
 </script>
 
-<header class="section_title"><h2 class="my_0">site map</h2></header>
+<!-- TODO styling is messed  -->
+<h2 class="section_title">site map</h2>
 <nav>
 	<ul class="unstyled">
 		{#each pages as p (p.slug)}

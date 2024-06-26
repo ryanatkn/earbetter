@@ -163,7 +163,7 @@
 						</p>
 					</div>
 				</section>
-				<section class="box">
+				<section>
 					<h2 class="section_title">settings</h2>
 					<form class="section_body">
 						<Volume_Control {volume} />
@@ -175,7 +175,7 @@
 				<section>
 					<Site_Map />
 				</section>
-				<section class="box">
+				<section>
 					<h2 class="section_title">data</h2>
 					<div class="section_body">
 						<p>
@@ -200,7 +200,7 @@
 						{/if}
 					</div>
 				</section>
-				<section class="box">
+				<section>
 					<h2 class="section_title">privacy</h2>
 					<p class="section_body">
 						This website collects no data - the only server it talks to is <a

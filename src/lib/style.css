@@ -1,9 +1,9 @@
-/* TODO a lot of this can be deleted or cleaned up */
+/* TODO a lot of this can be deleted or cleaned up, especially using the new Moss colors */
 :root:root:root.dark {
-	/* TODO force dark mode and remove these when Felt supports it */
+	/* TODO force dark mode and remove these when Moss supports it */
 	--bg: hsl(var(--primary_hue), 63%, 11%);
 	--text_color: hsl(var(--primary_hue), 8%, 85%);
-	/* TODO "light" and "ligher" are actually getting darker, should they be renamed? */
+	/* TODO "light" and "ligher" are actually getting darker :O */
 	--text_color_light: hsl(var(--primary_hue), 8%, 65%);
 	--text_color_lighter: hsl(var(--primary_hue), 8%, 45%);
 	--text_color_dark: hsl(var(--primary_hue), 8%, 91%);
@@ -23,7 +23,7 @@
 	--accent_hue: 185;
 	--primary_hue: 275;
 	--border_color: hsla(var(--primary_hue), 100%, 98%, 0.2);
-	--primary_text_color: hsl(var(--primary_hue), 90%, 60%);
+	--primary_text_color: hsl(var(--primary_hue), 90%, 70%);
 	--accent_text_color: hsl(var(--accent_hue), 50%, 55%);
 	--light_text_color: hsl(var(--accent_hue), 80%, 60%);
 	/* TODO upstream `accent` stuff */
