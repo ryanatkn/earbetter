@@ -16,8 +16,8 @@ import type {Get_Audio_Context} from '$lib/audio_context.js';
 
 const log = new Logger('[level]');
 
-export const DEFAULT_NOTE_DURATION: Milliseconds = 333; // TODO adjust this to make more challenging games
-export const DEFAULT_NOTE_DURATION_2: Milliseconds = 500; // TODO adjust this to make more challenging games
+export const DEFAULT_NOTE_DURATION: Milliseconds = 333; // TODO adjust this to make more challenging levels
+export const DEFAULT_NOTE_DURATION_2: Milliseconds = 500; // TODO adjust this to make more challenging levels
 export const DEFAULT_NOTE_DURATION_FAILED: Milliseconds = 67;
 export const DEFAULT_FEEDBACK_DURATION: Milliseconds = 1000; // TODO configurable
 export const DEFAULT_SEQUENCE_LENGTH = 2;
@@ -70,7 +70,6 @@ export interface Level {
 	trials: Signal<Trial[]>;
 	last_guess: Signal<Midi | null>;
 	reset: () => void;
-	// game methods
 	start: () => void;
 	dispose: () => void;
 	guess: (note: Midi) => void;

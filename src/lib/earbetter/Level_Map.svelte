@@ -39,8 +39,8 @@
 		editing_level,
 		draft_level_data,
 		selected_realm_id,
-		show_game_help,
-		toggle_game_help,
+		show_trainer_help,
+		toggle_trainer_help,
 		play_level,
 		edit_level,
 		remove_level,
@@ -98,7 +98,7 @@
 		</div>
 	{/if}
 	<div class="width_sm">
-		{#if $show_game_help}
+		{#if $show_trainer_help}
 			<section class="card" transition:slide|local>
 				<div class="panel p_md">
 					<p>
@@ -121,7 +121,7 @@
 						>
 					</aside>
 					<div class="box row">
-						<button style:margin="0" onclick={() => toggle_game_help()}>ok, hide this</button>
+						<button style:margin="0" onclick={() => toggle_trainer_help()}>ok, hide this</button>
 					</div>
 				</div>
 			</section>

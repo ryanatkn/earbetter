@@ -35,7 +35,7 @@ export const App_Data = z.object({
 	projects: z.array(z.object({id: Project_Id, name: Project_Name})).default([]),
 	selected_project_id: z.union([Project_Id, z.null()]).default(null),
 	selected_realm_id: z.union([Realm_Id, z.null()]).default(null),
-	show_game_help: z.boolean().default(true),
+	show_trainer_help: z.boolean().default(true),
 });
 export type App_Data = z.infer<typeof App_Data>;
 
@@ -49,9 +49,14 @@ export class App {
 	// mixing serialization concerns with runtime representations
 	app_data: Signal<App_Data>;
 
-	show_game_help: ReadonlySignal<boolean> = computed(() => this.app_data.value.show_game_help);
-	toggle_game_help = (): void => {
-		this.app_data.value = {...this.app_data.peek(), show_game_help: !this.show_game_help.peek()};
+	show_trainer_help: ReadonlySignal<boolean> = computed(
+		() => this.app_data.value.show_trainer_help,
+	);
+	toggle_trainer_help = (): void => {
+		this.app_data.value = {
+			...this.app_data.peek(),
+			show_trainer_help: !this.show_trainer_help.peek(),
+		};
 	};
 
 	project_datas: Signal<Project_Data[]> = signal([]); // TODO weird name

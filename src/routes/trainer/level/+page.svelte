@@ -27,7 +27,7 @@
 </script>
 
 <svelte:head>
-	<title>Earbetter: play game</title>
+	<title>Earbetter: trainer</title>
 </svelte:head>
 
 <main>
