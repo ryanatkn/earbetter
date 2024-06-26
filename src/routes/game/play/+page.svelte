@@ -17,8 +17,9 @@
 	// TODO add this to the app data so it's persisted when we navigate, and can be saved if it's not in the list
 	const parsed = $derived(Level_Hash_Data.safeParse(parse_from_hash($page.url.hash)));
 	const active_level_data = $derived(parsed.success ? parsed.data : null);
-	// TODO BLOCK @multiple misusing effect setting state
+	// TODO BLOCK @multiple misusing effect setting state - this one seems ok? even if it writes to the url hash
 	$effect(() => {
+		console.log('$effect setting `active_level_data` from URL hash');
 		if (active_level_data === null) {
 			void go_back();
 		} else {
