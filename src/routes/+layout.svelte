@@ -148,7 +148,7 @@
 					<div class="section_title box">
 						<h1 class="mb_md">earbetter</h1>
 						<!-- TODO switch to `class="size_xl"` when Fuz changes to use vb/vi -->
-						<div style:--size="var(--size_xl)"><Site_Breadcrumb /></div>
+						<div style:--size="var(--size_xl)"><Site_Breadcrumb hide_main_menu_button /></div>
 					</div>
 					<div class="section_body">
 						<p>

@@ -7,18 +7,13 @@
 	--link_color: var(--primary_text_color);
 	--button_color: var(--lighten_2);
 	--button_color_dark: var(--lighten_1);
-	--button_color_hover: var(--darken_2);
-	--button_color_active: var(--darken_3);
-	--button_color_disabled: transparent;
 	--input_fill: var(--button_color);
 
 	/* felt overrides */
-	/* TODO hacky */
-	--active_hue: var(--primary_hue);
 
 	/* dealt style vars */
-	--accent_hue: 185;
-	--primary_hue: 275;
+	--accent_hue: 210;
+	--primary_hue: 260;
 	--border_color: hsla(var(--primary_hue), 100%, 98%, 0.2);
 	--primary_text_color: hsl(var(--primary_hue), 90%, 70%);
 	--accent_text_color: hsl(var(--accent_hue), 50%, 55%);
@@ -27,42 +22,12 @@
 	--accent_border_color: hsla(var(--accent_hue), 100%, 58%, 0.5);
 	--accent_border_color_dark: hsla(var(--accent_hue), 100%, 43%, 0.5);
 	--accent_border_color_darker: hsla(var(--accent_hue), 100%, 28%, 0.5);
-	--light_border_color: hsla(var(--accent_hue), 50%, 50%, 0.4);
-	--space_lg: 20px;
-	--size_lg: 20px;
 
 	--primary_color: hsl(var(--primary_hue), 80%, 52%);
 	--primary_color_dark: hsl(var(--primary_hue), 80%, 36%);
 	--accent_color: hsl(var(--accent_hue), 80%, 48%);
 
-	--success_color: hsl(95, 80%, 31%);
-	--failure_color: hsl(5, 80%, 40%);
-
-	--icon: '🔮';
-
 	--text_shadow: 1px 1px 15px #000, 1px 1px 7px #000, 1px 1px #000;
-}
-
-.panel {
-	background-color: var(--lighten_1);
-}
-
-h1,
-h2,
-h3,
-h4,
-h5,
-h6 {
-	color: var(--font_color_heading);
-}
-
-section {
-	/* TODO from Felt */
-	margin-bottom: 60px;
-}
-
-aside {
-	background-color: var(--lighten_1);
 }
 
 a:hover {
@@ -91,12 +56,6 @@ a:active {
 button.big {
 	font-size: var(--size_xl);
 	padding: var(--space_md) var(--space_xl3);
-}
-
-/* TODO fix this class upstream so this is controlled by a variable */
-.plain_button {
-	--button_color_hover: var(--darken_3);
-	--button_color_active: var(--darken_5);
 }
 
 code {
