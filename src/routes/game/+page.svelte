@@ -5,7 +5,7 @@
 	import {get_app} from '$lib/earbetter/app.js';
 
 	const app = get_app();
-	if (app.active_level_data) app.active_level_data.value = null; // TODO hacky
+	app.clear_active_level();
 </script>
 
 <svelte:head>

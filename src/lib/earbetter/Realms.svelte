@@ -44,7 +44,7 @@
 
 <div class="panel p_md">
 	<header>
-		<h2>realms</h2>
+		<h2 class="my_0">realms</h2>
 	</header>
 	{#if $realms && $selected_project_data}
 		<div class="pb_md" transition:slide|local>

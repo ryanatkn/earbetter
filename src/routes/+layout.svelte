@@ -154,7 +154,7 @@
 						<p>
 							Earbetter is an <a href="https://wikipedia.org/wiki/Ear_training">ear trainer</a>. The
 							website also has some other music tools like
-							<a href="{base}/piano">a virtual piano</a>. I have plans for more, stay tuned.
+							<a href="{base}/piano">a virtual piano</a>. More planned, stay tuned.
 						</p>
 						<p>
 							It's made with Svelte and TypeScript. <a href="https://github.com/ryanatkn/earbetter"

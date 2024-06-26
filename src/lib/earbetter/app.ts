@@ -10,6 +10,7 @@ import {
 } from '@preact/signals-core';
 import {getContext, setContext} from 'svelte';
 import {Logger} from '@ryanatkn/belt/log.js';
+import {base} from '$app/paths';
 
 import {
 	add_mistakes_to_level_stats,
@@ -624,11 +625,23 @@ export class App {
 		});
 	};
 
+	/**
+	 * Resets the the active level to its initial `null` state.
+	 * @returns `true` if the active level was cleared or `false` if there was no active level
+	 */
+	clear_active_level = (): boolean => {
+		log.debug('exit_level_to_map');
+		if (!this.active_level_data.peek()) return false;
+		this.active_level_data.value = null;
+		return true;
+	};
+
+	/**
+	 * Clears the active level and exits to the level map.
+	 */
 	exit_level_to_map = async (): Promise<void> => {
 		log.debug('exit_level_to_map');
-		const $active_level_data = this.active_level_data.peek();
-		if (!$active_level_data) return;
-		this.active_level_data.value = null;
-		await goto('#');
+		this.clear_active_level();
+		await goto(`${base}/game`);
 	};
 }

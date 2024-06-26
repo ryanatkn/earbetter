@@ -29,7 +29,7 @@
 
 <div class="panel p_md">
 	<header>
-		<h2>projects</h2>
+		<h2 class="my_0">projects</h2>
 	</header>
 	<Project_Items
 		selected_project_id={$selected_project_id}

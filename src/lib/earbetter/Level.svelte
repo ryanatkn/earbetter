@@ -163,13 +163,13 @@
 />
 <!-- hide from screen readers, see keyboard commands -->
 <div class="level" class:initial bind:clientWidth onclick={click} bind:this={el} aria-hidden="true">
-	<div class="level-progress" title="level progress">
+	<div class="level_progress" title="level progress">
 		<Level_Progress_Indicator {level} />
 	</div>
-	<div class="trial-progress" title="trial progress">
+	<div class="trial_progress" title="trial progress">
 		<Trial_Progress_Indicator {level} />
 	</div>
-	<div class="piano-wrapper" style:padding="{piano_padding}px" bind:this={piano_wrapper_el}>
+	<div class="piano_wrapper" style:padding="{piano_padding}px" bind:this={piano_wrapper_el}>
 		{#if clientWidth}
 			<Piano
 				width={clientWidth - piano_padding * 2}
@@ -189,12 +189,12 @@
 	</div>
 	<div class="feedback" class:success class:failure class:complete>
 		{#if complete}
-			<div class="completed-level-feedback">
+			<div class="completed_level_feedback">
 				<div class="pane" transition:scale|local>
 					<div class="panel box p_md">
 						<div class="box row" in:scale|local={{duration: 3000}}>
-							<div class="completed-header-icon" in:fly|local={{duration: 4000, x: -200}}>🎵</div>
-							<div class="completed-header-icon" in:fly|local={{duration: 4000, x: 200}}>🎶</div>
+							<div class="completed_header_icon" in:fly|local={{duration: 4000, x: -200}}>🎵</div>
+							<div class="completed_header_icon" in:fly|local={{duration: 4000, x: 200}}>🎶</div>
 						</div>
 						<div
 							class="panel p_md box"
@@ -233,7 +233,7 @@
 			</div>
 		{/if}
 		{#if last_feedback_status !== null}
-			<div class="feedback-text-bursts">
+			<div class="feedback_text_bursts">
 				<div style:transform="translate3d({text_burst_offset_x}px, {text_burst_offset_y}px, 0)">
 					{#if last_feedback_status === 'success'}
 						{#key feedback_count}
@@ -281,27 +281,27 @@
 		justify-content: center;
 		flex-direction: column;
 	} */
-	.level-progress {
+	.level_progress {
 		position: absolute;
 		right: 0;
 		bottom: 0;
 		height: var(--level_progress_height);
 		width: 100%;
 	}
-	.trial-progress {
+	.trial_progress {
 		position: absolute;
 		right: 0;
 		top: 0;
 		height: var(--level_progress_height);
 		width: 100%;
 	}
-	.piano-wrapper {
+	.piano_wrapper {
 		position: relative;
 		z-index: 1;
 		width: 100%;
 	}
 
-	.completed-header-icon {
+	.completed_header_icon {
 		font-size: var(--icon_size_xl);
 		word-break: break-all;
 		text-align: center;
@@ -309,7 +309,7 @@
 		padding: var(--space_xs);
 	}
 	@media (max-width: 500px) {
-		.completed-header-icon {
+		.completed_header_icon {
 			font-size: var(--icon_size_lg);
 		}
 	}
@@ -325,7 +325,7 @@
 		flex-direction: column;
 		pointer-events: none;
 	}
-	.feedback-text-bursts {
+	.feedback_text_bursts {
 		font-size: var(--size_xl3);
 		position: fixed;
 		inset: 0;
@@ -333,11 +333,11 @@
 		pointer-events: none;
 		/* overflow: hidden; */
 	}
-	.completed-level-feedback {
+	.completed_level_feedback {
 		padding-top: var(--level_progress_height);
 		pointer-events: initial;
 	}
-	.completed-level-feedback .pane {
+	.completed_level_feedback .pane {
 		overflow: hidden;
 	}
 </style>

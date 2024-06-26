@@ -86,7 +86,7 @@
 			<section class="card" transition:slide|local>
 				<div class="panel p_md">
 					<header>
-						<h2>controls</h2>
+						<h2 class="my_0">controls</h2>
 					</header>
 					<Controls_Instructions />
 					<Volume_Control {volume} />

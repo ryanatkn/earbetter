@@ -69,10 +69,10 @@ aside {
 }
 
 a:hover {
-	color: var(--light_text_color);
+	--text_color: var(--light_text_color);
 }
 a:active {
-	color: var(--primary_text_color);
+	--text_color: var(--primary_text_color);
 }
 
 /* TODO maybe upstream? */

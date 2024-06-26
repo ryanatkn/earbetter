@@ -106,7 +106,7 @@
 		}}
 	>
 		<div class="importing p_xl width_md box">
-			<h2>import realm data</h2>
+			<h2 class="my_0">import realm data</h2>
 			<button
 				type="button"
 				onclick={() => {
@@ -131,7 +131,7 @@
 <!-- TODO this class `.realm_def_form` is used to focus from another component -->
 <form class="realm_def_form">
 	<header>
-		<h2>
+		<h2 class="my_0">
 			{#if editing}editing realm{:else}create a new realm{/if}
 		</h2>
 	</header>

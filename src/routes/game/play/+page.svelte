@@ -46,5 +46,7 @@
 		border-bottom-right-radius: 0;
 		/* TODO same as var(--level_progress_height); */
 		height: 50px;
+		width: 50px;
+		line-height: 1;
 	}
 </style>

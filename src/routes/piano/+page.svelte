@@ -72,7 +72,7 @@
 />
 <main bind:clientWidth>
 	<Header />
-	<div class="piano-wrapper" style:padding="{piano_padding}px">
+	<div class="piano_wrapper" style:padding="{piano_padding}px">
 		{#if clientWidth}
 			<Piano
 				width={clientWidth - piano_padding * 2}
@@ -109,7 +109,7 @@
 		flex-direction: column;
 		align-items: center;
 	}
-	.piano-wrapper {
+	.piano_wrapper {
 		padding: var(--space_md);
 	}
 </style>

@@ -31,8 +31,8 @@
 
 <div class="panel p_md">
 	<header>
-		<h2>levels</h2>
-		<h3>{$selected_realm_data?.name}</h3>
+		<h2 class="my_0">levels</h2>
+		<h3 class="my_0">{$selected_realm_data?.name}</h3>
 	</header>
 	<menu class="levels unstyled">
 		{#each levels as d (d.id)}

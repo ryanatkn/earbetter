@@ -99,7 +99,7 @@
 		}}
 	>
 		<div class="importing p_xl width_md box">
-			<h2>import project data</h2>
+			<h2 class="my_0">import project data</h2>
 			<button
 				onclick={() => {
 					void navigator.clipboard.writeText(updated);
@@ -121,7 +121,7 @@
 {/if}
 <form>
 	<header>
-		<h2>
+		<h2 class="my_0">
 			{#if editing}editing project{:else}create a new project{/if}
 		</h2>
 	</header>

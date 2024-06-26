@@ -169,7 +169,7 @@
 <!-- TODO this class `.level_def_form` is used to focus from another component -->
 <form class="level_def_form w_100">
 	<header>
-		<h2>
+		<h2 class="my_0">
 			{#if editing}editing level{:else}create a new level{/if}
 		</h2>
 	</header>
@@ -324,7 +324,7 @@
 		}}
 	>
 		<div class="importing p_xl width_md box">
-			<h2>import level data</h2>
+			<h2 class="my_0">import level data</h2>
 			<button
 				onclick={() => {
 					void navigator.clipboard.writeText(updated);
@@ -353,7 +353,7 @@
 	>
 		{#snippet children(close)}
 			<div class="p_xl width_md box">
-				<h2>pick intervals</h2>
+				<h2 class="my_0">pick intervals</h2>
 				<Intervals_Input
 					bind:selected_scale={intervals_input_selected_scale}
 					bind:octaves={intervals_input_octaves}
@@ -375,7 +375,7 @@
 	>
 		{#snippet children(close)}
 			<div class="p_xl width_md box">
-				<h2>pick tonics</h2>
+				<h2 class="my_0">pick tonics</h2>
 				<!-- TODO this `new Set` is a hack, probably change the data structure to a set, need serialization for storage -->
 				<Notes_Input
 					notes={new Set(tonics)}
