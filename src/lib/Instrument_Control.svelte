@@ -13,8 +13,8 @@
 	const input = (e: any) => (instrument.value = e.currentTarget.value);
 </script>
 
-<div class="instrument-control mb_lg">
-	<label>
+<div class="mb_lg">
+	<label class="text_align_center">
 		<div class="title">instrument</div>
 		<!-- TODO use `bind:value={$instrument}` when this PR is in: https://github.com/preactjs/signals/pull/325  -->
 		<select value={$instrument} oninput={input}>
@@ -24,7 +24,3 @@
 		</select>
 	</label>
 </div>
-
-<style>
-	/* .instrument-control {} */
-</style>

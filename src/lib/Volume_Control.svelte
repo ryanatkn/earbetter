@@ -12,7 +12,7 @@
 	// TODO use bind:value when signals adds `set`
 </script>
 
-<label>
+<label class="text_align_center">
 	<div class="title">volume</div>
 	<input
 		type="number"

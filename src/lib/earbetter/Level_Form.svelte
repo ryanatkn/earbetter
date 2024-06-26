@@ -226,13 +226,13 @@
 			</label>
 		</fieldset>
 		<fieldset class="row">
-			<label>
+			<label class="text_align_center">
 				<div class="title">lowest note</div>
 				<div>{midi_names[min_note]}</div>
 				<input type="number" bind:value={min_note} step={1} min={MIDI_MIN} max={MIDI_MAX} />
 				<input type="range" bind:value={min_note} step={1} min={MIDI_MIN} max={MIDI_MAX} />
 			</label>
-			<label>
+			<label class="text_align_center">
 				<div class="title">highest note</div>
 				<div>{midi_names[max_note]}</div>
 				<input type="number" bind:value={max_note} step={1} min={MIDI_MIN} max={MIDI_MAX} />

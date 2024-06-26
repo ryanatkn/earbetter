@@ -23,7 +23,7 @@
 		(key.value = e.currentTarget.value as PitchClass);
 </script>
 
-<label>
+<label class="text_align_center">
 	<div class="title">scale</div>
 	<!-- TODO use `bind:value={$scale}` when this PR is in: https://github.com/preactjs/signals/pull/325  -->
 	<select value={$scale.name} onchange={(e) => (scale.value = lookup_scale(e.currentTarget.value))}>
@@ -32,7 +32,7 @@
 		{/each}
 	</select>
 </label>
-<label>
+<label class="text_align_center">
 	<div class="title">key</div>
 	<!-- TODO use `bind:value={$key}` when this PR is in: https://github.com/preactjs/signals/pull/325  -->
 	<select value={$key} oninput={input_key}>

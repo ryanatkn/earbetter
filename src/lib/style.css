@@ -37,7 +37,7 @@ a:active {
 	--text_color: var(--primary_text_color);
 }
 
-/* TODO maybe upstream? */
+/* TODO probably upstream to Moss as `.pressable` */
 .clickable {
 	cursor: pointer;
 	transition: transform var(--duration_1) ease;
