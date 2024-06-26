@@ -22,7 +22,7 @@
 		if (no_levels) {
 			// TODO eslint bug
 			// eslint-disable-next-line @typescript-eslint/no-unnecessary-type-assertion
-			(document.querySelector('.level_def_form input') as HTMLInputElement | null)?.focus?.(); // TODO BLOCK hacky
+			(document.querySelector('.level_def_form input') as HTMLInputElement | null)?.focus?.(); // TODO hacky using the selector
 		} else {
 			edit_level(editing_draft ? null : Level_Data.parse({}));
 		}
