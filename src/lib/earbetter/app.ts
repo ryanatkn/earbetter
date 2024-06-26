@@ -642,6 +642,6 @@ export class App {
 	exit_level_to_map = async (): Promise<void> => {
 		log.debug('exit_level_to_map');
 		this.clear_active_level();
-		await goto(`${base}/game`);
+		await goto(`${base}/trainer`);
 	};
 }

@@ -355,7 +355,7 @@ const get_correct_guess = (trial: Trial | null): Midi | null => {
 
 export const to_play_level_url = (level_data: Level_Data): string => {
 	const data: Level_Hash_Data = {level: level_data};
-	return `${base}/game/play` + serialize_to_hash(data);
+	return `${base}/trainer/level` + serialize_to_hash(data);
 };
 
 export const Mistakes_Level_Stats = z.record(Level_Id, z.array(z.number()));

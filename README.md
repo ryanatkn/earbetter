@@ -3,7 +3,7 @@
 > ear trainer and tools for playing and programming music and audio 🎶🦜
 > [earbetter.ryanatkn.com](https://earbetter.ryanatkn.com/)
 
-- features [a configurable ear trainer](https://earbetter.ryanatkn.com/game)
+- features [a configurable ear trainer](https://earbetter.ryanatkn.com/trainer)
 - also has [a playable piano](https://earbetter.ryanatkn.com/piano)
 - supports MIDI devices like piano keyboards
 

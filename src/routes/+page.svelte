@@ -13,7 +13,7 @@
 	<section>
 		<nav>
 			<ul class="unstyled">
-				<li><a class="panel" href="{base}/game">play the game!</a></li>
+				<li><a class="panel" href="{base}/trainer">train your ear!</a></li>
 				<li><a class="panel" href="{base}/piano">play piano!</a></li>
 			</ul>
 		</nav>

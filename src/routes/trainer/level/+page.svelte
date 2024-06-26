@@ -8,7 +8,7 @@
 	import {parse_from_hash} from '$lib/url.js';
 	import {get_app} from '$lib/earbetter/app.js';
 
-	const go_back = () => goto(`${base}/game`);
+	const go_back = () => goto(`${base}/trainer`);
 
 	const app = get_app();
 
