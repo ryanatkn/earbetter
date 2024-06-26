@@ -108,7 +108,6 @@ export class App {
 		public readonly get_audio_context: () => AudioContext,
 		public readonly storage_key = 'app',
 	) {
-		// TODO maybe `new App(App.load())` ?
 		this.app_data = signal(this.load());
 		const app_data = this.app_data.peek();
 		this.saved = app_data; // hacky, but enables the following effect without waste

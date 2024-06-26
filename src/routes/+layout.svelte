@@ -78,7 +78,9 @@
 
 	// TODO refactor
 	const keydown = (e: KeyboardEvent) => {
-		if (is_editable(e.target)) return;
+		if (is_editable(e.target) || e.ctrlKey || e.shiftKey || e.altKey || e.metaKey) {
+			return;
+		}
 		switch (e.key) {
 			case 'c': {
 				swallow(e);

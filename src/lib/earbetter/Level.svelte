@@ -43,7 +43,7 @@
 		level.start();
 	});
 	onDestroy(() => {
-		level.dispose();
+		level.dispose(); // TODO BLOCK erroring when exiting the level
 	});
 
 	const on_press_key = (note: Midi): void => {
@@ -110,7 +110,9 @@
 		}
 	};
 	const keydown = (e: KeyboardEvent) => {
-		if (is_editable(e.target)) return;
+		if (is_editable(e.target) || e.ctrlKey || e.shiftKey || e.altKey || e.metaKey) {
+			return;
+		}
 		switch (e.key) {
 			case 'r': {
 				swallow(e);
@@ -131,13 +133,14 @@
 					}
 				}
 			}
-			case '`': {
+			case '[': {
 				swallow(e);
-				if (e.ctrlKey) {
-					level.win();
-				} else {
-					level.guess_correctly();
-				}
+				level.guess_correctly();
+				return;
+			}
+			case ']': {
+				swallow(e);
+				level.win();
 				return;
 			}
 		}
