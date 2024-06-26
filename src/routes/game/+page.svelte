@@ -15,6 +15,6 @@
 <main>
 	<Earbetter {app}>
 		{#snippet header()}<Header />{/snippet}
-		{#snippet footer()}<Footer />{/snippet}
+		{#snippet footer()}<div class="box"><Footer /></div>{/snippet}
 	</Earbetter>
 </main>

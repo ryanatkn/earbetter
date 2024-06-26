@@ -13,7 +13,7 @@
 		highlighted?: boolean;
 		emphasized?: boolean;
 		show_middle_c?: boolean;
-		pressing_any?: {value: boolean};
+		pressing_any?: {value: boolean; set: (v: boolean) => void};
 		onpress?: (note: Midi) => void;
 		onrelease?: (note: Midi) => void;
 	}
@@ -105,7 +105,7 @@
 		? (e) => {
 				swallow(e);
 				onpress?.(note);
-				if (pressing_any) pressing_any.value = true;
+				if (pressing_any) pressing_any.set(true);
 				e.currentTarget.focus();
 			}
 		: undefined}
@@ -113,7 +113,7 @@
 		? (e) => {
 				swallow(e);
 				onrelease?.(note);
-				if (pressing_any) pressing_any.value = false;
+				if (pressing_any) pressing_any.set(false);
 			}
 		: undefined}
 	onmouseenter={interactive && pressing_any?.value

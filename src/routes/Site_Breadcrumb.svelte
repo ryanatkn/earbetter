@@ -3,10 +3,24 @@
 	import {page} from '$app/stores';
 	import {base} from '$app/paths';
 
+	import {get_main_menu} from '$routes/main_menu.svelte.js';
+
+	interface Props {
+		hide_main_menu_button?: boolean;
+	}
+
+	const {hide_main_menu_button = false}: Props = $props();
+
 	const pathname = $derived($page.url.pathname);
 	const home = $derived(pathname === base + '/');
 
-	// TODO BLOCK on home, instead show a button that opens the main menu, `show_main_menu` in layout needs to be in context or something
+	const main_menu = get_main_menu();
 </script>
 
-{#if !home}<Breadcrumb>🎶🦜</Breadcrumb>{/if}
+{#if home}
+	{#if !hide_main_menu_button}
+		<button onclick={() => main_menu.open()}>main menu</button>
+	{/if}
+{:else}
+	<Breadcrumb>🎶🦜</Breadcrumb>
+{/if}

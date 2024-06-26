@@ -25,7 +25,7 @@
 	}: Props = $props();
 </script>
 
-<menu class="width_sm">
+<menu class="unstyled width_sm">
 	{#each projects as project (project.id)}
 		<Project_Item
 			{project}

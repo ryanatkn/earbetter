@@ -41,7 +41,13 @@
 
 	// TODO remove this when converting from `@preact/signals` to runes and reactive collections
 	// this causes a warning but that's alright because we'll fix it in the followup
-	const pressing_any = $state({value: false});
+	const pressing_any = $state({
+		value: false,
+		// adding this method to avoid the `ownership_invalid_mutation` warning
+		set(v: boolean) {
+			this.value = v;
+		},
+	});
 	// {drag_to_press}
 </script>
 

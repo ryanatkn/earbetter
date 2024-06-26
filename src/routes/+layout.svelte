@@ -29,6 +29,7 @@
 	import Footer from '$routes/Footer.svelte';
 	import Site_Breadcrumb from '$routes/Site_Breadcrumb.svelte';
 	import Init_Audio_Context from '$lib/Init_Audio_Context.svelte';
+	import {set_main_menu} from '$routes/main_menu.svelte.js';
 
 	interface Props {
 		children: Snippet;
@@ -72,9 +73,8 @@
 	const app = set_app(new App(get_audio_context));
 	if (browser) (window as any).app = app;
 
-	// TODO add to app? context? global store?
-	let show_main_menu = $state(false);
-	afterNavigate(() => (show_main_menu = false));
+	const main_menu = set_main_menu();
+	afterNavigate(() => main_menu.opened && main_menu.close());
 
 	// TODO refactor
 	const keydown = (e: KeyboardEvent) => {
@@ -117,9 +117,9 @@
 			}
 			case 'Escape': {
 				// TODO hacky, maybe change the inner `Dialog` to use `capture`? but that's less flexible
-				if (!show_main_menu && document.getElementsByClassName('dialog').length) return;
+				if (!main_menu.opened && document.getElementsByClassName('dialog').length) return;
 				swallow(e);
-				show_main_menu = !show_main_menu;
+				main_menu.toggle();
 				return;
 			}
 		}
@@ -140,8 +140,8 @@
 <Themed {selected_color_scheme} color_scheme_fallback={$selected_color_scheme}>
 	{@render children()}
 
-	{#if show_main_menu}
-		<Dialog onclose={() => (show_main_menu = false)}>
+	{#if main_menu.opened}
+		<Dialog onclose={() => main_menu.close()}>
 			<div class="bg">
 				<section>
 					<!-- TODO when `.flex_direction_column` or equivalent is added to Moss, change `.box` to that -->
@@ -150,8 +150,17 @@
 						<!-- TODO switch to `class="size_xl"` when Fuz changes to use vb/vi -->
 						<div style:--size="var(--size_xl)"><Site_Breadcrumb /></div>
 					</div>
-					<div class="section_body text_align_center">
-						<p>ear training tools and JS/Svelte library for audio and music</p>
+					<div class="section_body">
+						<p>
+							Earbetter is an <a href="https://wikipedia.org/wiki/Ear_training">ear trainer</a>. The
+							website also has some other music tools like
+							<a href="{base}/piano">a virtual piano</a>. I have plans for more, stay tuned.
+						</p>
+						<p>
+							It's made with Svelte and TypeScript. <a href="https://github.com/ryanatkn/earbetter"
+								>The code</a
+							> is open source and permissively licensed.
+						</p>
 					</div>
 				</section>
 				<section class="box">
@@ -202,7 +211,7 @@
 					</p>
 				</section>
 				<div class="section_title">
-					<Footer />
+					<Footer hide_main_menu_button />
 				</div>
 			</div>
 		</Dialog>

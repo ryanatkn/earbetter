@@ -28,7 +28,7 @@
 	const lookup_realm_data = (id: Realm_Id): Realm_Data => realms_by_id.get(id)!;
 </script>
 
-<menu class="width_sm">
+<menu class="unstyled width_sm">
 	{#each realms as realm (realm.id)}
 		<Realm_Item
 			realm_data={lookup_realm_data(realm.id)}

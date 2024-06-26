@@ -1,14 +1,24 @@
 <script lang="ts">
+	import Github_Logo from '@ryanatkn/fuz/Github_Logo.svelte';
+
 	import Site_Breadcrumb from '$routes/Site_Breadcrumb.svelte';
+
+	interface Props {
+		hide_main_menu_button?: boolean;
+	}
+
+	const {hide_main_menu_button = false}: Props = $props();
 </script>
 
 <footer>
-	<a href="https://github.com/ryanatkn/earbetter">source code</a>
-	<div>public domain</div>
-	<!-- TODO switch to `class="size_xl"` when Fuz changes to use vb/vi -->
-	<div style:--size="var(--size_xl)">
-		<Site_Breadcrumb />
+	<div class="mb_lg" style:--size="var(--size_xl)">
+		<Site_Breadcrumb {hide_main_menu_button} />
 	</div>
+	<a class="box chip p_md" href="https://github.com/ryanatkn/earbetter">
+		<Github_Logo />
+		source code
+	</a>
+	<!-- TODO switch to `class="size_xl"` when Fuz changes to use vb/vi -->
 </footer>
 
 <style>
