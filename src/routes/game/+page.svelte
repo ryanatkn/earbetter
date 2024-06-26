@@ -13,8 +13,7 @@
 </svelte:head>
 
 <main>
-	<Earbetter {app}>
-		{#snippet header()}<Header />{/snippet}
-		{#snippet footer()}<div class="box"><Footer /></div>{/snippet}
-	</Earbetter>
+	<Header />
+	<Earbetter {app} />
+	<div class="box"><Footer /></div>
 </main>

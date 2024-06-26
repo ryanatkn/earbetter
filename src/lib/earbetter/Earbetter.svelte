@@ -1,5 +1,5 @@
 <script lang="ts">
-	import {onDestroy, type Snippet} from 'svelte';
+	import {onDestroy} from 'svelte';
 
 	import Level_Map from '$lib/earbetter/Level_Map.svelte';
 	import Level from '$lib/earbetter/Level.svelte';
@@ -11,11 +11,9 @@
 
 	interface Props {
 		app: App;
-		header?: Snippet;
-		footer?: Snippet;
 	}
 
-	const {app, header, footer}: Props = $props();
+	const {app}: Props = $props();
 
 	const {active_level_data, exit_level_to_map, register_success, selected_project_data} =
 		$derived(app);
@@ -46,9 +44,7 @@
 		<Level {level} {level_stats} {exit_level_to_map} {register_success} />
 	</div>
 {:else}
-	{#if header}{@render header()}{/if}
 	<Level_Map {app} {midi_access} />
-	{#if footer}{@render footer()}{/if}
 {/if}
 
 <style>

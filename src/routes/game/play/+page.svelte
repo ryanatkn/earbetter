@@ -4,8 +4,6 @@
 	import {base} from '$app/paths';
 
 	import Earbetter from '$lib/earbetter/Earbetter.svelte';
-	import Header from '$routes/Header.svelte';
-	import Footer from '$routes/Footer.svelte';
 	import {Level_Hash_Data} from '$lib/earbetter/level.js';
 	import {parse_from_hash} from '$lib/url.js';
 	import {get_app} from '$lib/earbetter/app.js';
@@ -34,10 +32,7 @@
 
 <main>
 	<button title="go back" class="go_back icon_button plain_button" onclick={go_back}>←</button>
-	<Earbetter {app}>
-		{#snippet header()}<Header />{/snippet}
-		{#snippet footer()}<Footer />{/snippet}
-	</Earbetter>
+	<Earbetter {app} />
 </main>
 
 <style>
