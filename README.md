@@ -1,6 +1,6 @@
 # earbetter
 
-> ear training tools and JS/Svelte library for audio and music 🎶🦜
+> ear trainer and tools for playing and programming music and audio 🎶🦜
 > [earbetter.ryanatkn.com](https://earbetter.ryanatkn.com/)
 
 - features [a configurable ear trainer](https://earbetter.ryanatkn.com/game)

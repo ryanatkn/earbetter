@@ -1,7 +1,7 @@
 {
   "name": "@ryanatkn/earbetter",
   "version": "0.0.1",
-  "description": "ear training tools and JS/Svelte library for audio and music",
+  "description": "ear trainer and tools for playing and programming music and audio",
   "icon": "🦜",
   "public": true,
   "homepage": "https://earbetter.ryanatkn.com/",
