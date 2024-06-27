@@ -13,7 +13,8 @@ export const create_project_id = (): Project_Id => to_random_id();
 
 export const Project_Name = z.string().min(1).max(1000);
 export type Project_Name = Flavored<z.infer<typeof Project_Name>, 'Project_Name'>; // TODO @multiple this doesn't work when used as a schema, use z.brand() instead? or are the egonomics too bad?
-const random_project_name = (): Project_Name => random_item(emojis).icon + random_item(emojis).icon;
+const random_project_name = (): Project_Name =>
+	random_item(emojis).glyph + random_item(emojis).glyph;
 
 // Like `Project_Data` but just the stuff needed for display.
 // Used to avoid loading every project into memory at startup.
