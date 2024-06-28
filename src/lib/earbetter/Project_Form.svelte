@@ -5,12 +5,15 @@
 	import Dialog from '@ryanatkn/fuz/Dialog.svelte';
 	import Alert from '@ryanatkn/fuz/Alert.svelte';
 
-	import {create_project_id, Project_Data, type Project_Id} from '$lib/earbetter/project.js';
+	import {
+		create_project_id,
+		Project_Data,
+		Project_Name,
+		type Project_Id,
+	} from '$lib/earbetter/project.js';
 
 	interface Props {
-		project_data?: Project_Data | null;
-		id?: Project_Id;
-		name?: string;
+		project_data: Project_Data;
 		editing?: boolean;
 		onsubmit?: (project_data: Project_Data) => void;
 		onremove?: (project_id: Project_Id) => void;
@@ -18,42 +21,26 @@
 		footer?: Snippet<[changed: boolean]>;
 	}
 
-	const DEFAULT_NAME = 'new project';
-
-	let {
-		project_data = null, // eslint-disable-line prefer-const
-		id = $bindable(create_project_id()), // TODO BLOCK remove bindable
-		name = $bindable(DEFAULT_NAME),
-		editing = false, // eslint-disable-line prefer-const
-		onsubmit, // eslint-disable-line prefer-const
-		onremove, // eslint-disable-line prefer-const
-		onduplicate, // eslint-disable-line prefer-const
-		footer, // eslint-disable-line prefer-const
-	}: Props = $props();
+	let {project_data, editing = false, onsubmit, onremove, onduplicate, footer}: Props = $props();
 
 	let removing = $state(false);
+
+	let updated_name: Project_Name = $state(project_data.name); // TODO name? `changed`?
+	const normalized_updated_name = $derived(updated_name.trim());
 
 	const to_data = (): Project_Data =>
 		Project_Data.parse({
 			...project_data,
-			id,
-			name,
+			name: normalized_updated_name,
 		});
 
 	// TODO BLOCK @multiple misusing effect setting state
-	$effect(() => set_project_data(project_data));
-	const set_project_data = (project_data: Project_Data | null): void => {
+	$effect(() => {
 		console.log(`set_project_data`, project_data);
-		if (project_data) {
-			id = project_data.id;
-			name = project_data.name;
-		} else {
-			id = create_project_id(); // TODO duplicates work on first mount with no project_data, but not sure it's worth fixing, maybe there's a better pattern without this?
-			name = DEFAULT_NAME;
-		}
-	};
+		updated_name = project_data.name;
+	});
 
-	const changed = $derived(!project_data || id !== project_data.id || name !== project_data.name);
+	const changed = $derived(!project_data || normalized_updated_name !== project_data.name);
 
 	// TODO lots of similarity with `Level_Form`
 	let importing = $state(false);
@@ -64,7 +51,6 @@
 	// TODO BLOCK @multiple misusing effect setting state
 	$effect(() => {
 		project_data;
-		id;
 		parse_error_message = '';
 	});
 	let project_data_el: HTMLTextAreaElement | undefined = $state();
@@ -129,7 +115,7 @@
 		<label>
 			<div class="title">name</div>
 			<input
-				bind:value={name}
+				bind:value={updated_name}
 				onkeydown={(e) => {
 					if (e.key === 'Enter') {
 						swallow(e);
@@ -159,14 +145,18 @@
 					style:margin-bottom={0}
 					onclick={() => {
 						removing = false;
-						onremove?.(id);
+						onremove?.(project_data.id);
 					}}
 				>
 					✖ confirm remove
 				</button>
 			</div>
 		{/if}
-		<button type="button" style:margin-top="var(--space_lg)" onclick={() => onduplicate?.(id)}>
+		<button
+			type="button"
+			style:margin-top="var(--space_lg)"
+			onclick={() => onduplicate?.(project_data.id)}
+		>
 			duplicate
 		</button>
 	{/if}

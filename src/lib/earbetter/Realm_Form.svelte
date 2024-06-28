@@ -20,8 +20,8 @@
 
 	let removing = $state(false);
 
-	let updated_name: Realm_Name | undefined = $state(undefined); // TODO name? `changed`?
-	const normalized_updated_name = $derived((updated_name as any)?.trim()); // TODO type is broken with svelte-check inference in 3.8.4
+	let updated_name: Realm_Name = $state(realm_data.name); // TODO name? `changed`?
+	const normalized_updated_name = $derived((updated_name as any)?.trim());
 
 	const to_data = (): Realm_Data =>
 		Realm_Data.parse({
@@ -35,7 +35,7 @@
 		updated_name = realm_data.name;
 	});
 
-	const changed = $derived(!realm_data || normalized_updated_name !== realm_data.name); // TODO BLOCK was `|| id !== realm_data.id`, did we need that functionality?
+	const changed = $derived(!realm_data || normalized_updated_name !== realm_data.name);
 
 	// TODO lots of similarity with `Level_Form`
 	let importing = $state(false);

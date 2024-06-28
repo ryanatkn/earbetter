@@ -1,6 +1,7 @@
 <script lang="ts">
 	import Project_Form from '$lib/earbetter/Project_Form.svelte';
 	import type {App} from '$lib/earbetter/app.js';
+	import {Project_Data} from '$lib/earbetter/project.js';
 
 	interface Props {
 		app: App; // TODO maybe change to be more granular objects?
@@ -18,15 +19,15 @@
 		create_project,
 	} = $derived(app);
 
-	let id: string | undefined = $state();
-	const editing = $derived($projects.some((d) => d.id === id));
+	const project_data = $derived($editing_project_data ?? Project_Data.parse({}));
+
+	const editing = $derived($projects.some((d) => d.id === project_data.id));
 </script>
 
 <div class="panel p_md">
 	<Project_Form
 		{editing}
-		bind:id
-		project_data={$editing_project_data}
+		{project_data}
 		onsubmit={(editing ? update_project : create_project)
 			? (project_data) => (editing ? update_project : create_project)?.(project_data)
 			: undefined}
