@@ -3,7 +3,7 @@
 	import {scale, fly} from 'svelte/transition';
 	import {plural} from '@ryanatkn/belt/string.js';
 
-	import {Level_Id, Level_Stats, type Level} from '$lib/earbetter/level.js';
+	import {Level_Stats, type Level} from '$lib/earbetter/level.js';
 	import Piano from '$lib/Piano.svelte';
 	import Level_Progress_Indicator from '$lib/earbetter/Level_Progress_Indicator.svelte';
 	import Trial_Progress_Indicator from '$lib/earbetter/Trial_Progress_Indicator.svelte';
@@ -15,15 +15,15 @@
 	import {midi_access} from '$lib/midi_access.js';
 	import Level_Stats_Summary from '$lib/earbetter/Level_Stats_Summary.svelte';
 	import Text_Burst from '$lib/Text_Burst.svelte';
+	import {untrack} from 'svelte';
 
 	interface Props {
 		level: Level;
 		level_stats: Level_Stats;
 		exit_level: () => void;
-		register_success: (id: Level_Id, mistake_count: number) => void; // TODO naming this param `mistakes` breaks svelte-check, should be fixed in next release
 	}
 
-	const {level, level_stats, exit_level, register_success}: Props = $props();
+	const {level, level_stats, exit_level}: Props = $props();
 
 	const ac = get_audio_context();
 	const volume = get_volume();
@@ -38,6 +38,7 @@
 	const highlighted_keys = $derived($trial && new Set([$trial.sequence[0]]));
 
 	$effect(() => {
+		console.log('STARTING LEVEL');
 		level.start(); // TODO BLOCK problem here is the audio context needs to be resumed, so if it's not ready maybe have a start button
 	});
 
@@ -50,39 +51,28 @@
 
 	let last_feedback_status: null | 'success' | 'failure' = $state(null);
 
-	const presenting = $derived($status === 'presenting_prompt');
 	const waiting = $derived($status === 'waiting_for_input');
 	const success = $derived($status === 'showing_success_feedback');
 	const failure = $derived($status === 'showing_failure_feedback');
 	const complete = $derived($status === 'complete');
 
-	// TODO BLOCK @multiple misusing effect setting state
+	// TODO better way to do these? callback to `level`?
 	$effect(() => {
-		if (presenting) {
-			void level.present_trial_prompt();
-		}
+		if (success) untrack(update_success);
 	});
-	// TODO BLOCK @multiple misusing effect setting state
 	$effect(() => {
-		if (success) {
-			feedback_count++;
-			last_feedback_status = 'success';
-			update_text_burst_position();
-		}
+		if (failure) untrack(update_failure);
 	});
-	// TODO BLOCK @multiple misusing effect setting state
-	$effect(() => {
-		if (failure) {
-			feedback_count++;
-			last_feedback_status = 'failure';
-			update_text_burst_position();
-		}
-	}); // TODO BLOCK @multiple misusing effect setting state
-	$effect(() => {
-		if (complete) {
-			register_success(level_data.id, level.mistakes.peek());
-		}
-	});
+	const update_success = () => {
+		feedback_count++;
+		last_feedback_status = 'success';
+		update_text_burst_position();
+	};
+	const update_failure = () => {
+		feedback_count++;
+		last_feedback_status = 'failure';
+		update_text_burst_position();
+	};
 
 	let piano_wrapper_el: HTMLElement | undefined = $state();
 	let text_burst_offset_x = $state(0);

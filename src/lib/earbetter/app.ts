@@ -111,6 +111,7 @@ export class App {
 					this.get_audio_context,
 					this.volume,
 					this.instrument,
+					this.register_success,
 				)
 			: null;
 	});

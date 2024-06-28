@@ -78,6 +78,7 @@ export class Level {
 		public readonly ac: Get_Audio_Context,
 		public readonly volume: Signal<Volume>,
 		public readonly instrument: Signal<Instrument>,
+		protected register_success: (id: Level_Id, mistake_count: number) => void,
 	) {}
 
 	status: Signal<Status> = signal(DEFAULT_STATUS);
@@ -88,9 +89,9 @@ export class Level {
 
 	reset = (): void => {
 		batch(() => {
-			this.status.value = DEFAULT_STATUS;
 			this.trial.value = DEFAULT_TRIAL;
 			this.trials.value = [];
+			this.update_status(DEFAULT_STATUS);
 			this.start();
 		});
 	};
@@ -103,6 +104,16 @@ export class Level {
 	dispose = (): void => {
 		this.seq_id++; // cancels anything that's playing
 	};
+
+	update_status(value: Status): void {
+		console.log(`update_status`, value);
+		this.status.value = value;
+		if (value === 'presenting_prompt') {
+			void this.present_trial_prompt();
+		} else if (value === 'complete') {
+			this.register_success(this.level_data.id, this.mistakes.peek());
+		}
+	}
 
 	present_trial_prompt = async (): Promise<void> => {
 		const $trial = this.trial.peek();
@@ -123,11 +134,11 @@ export class Level {
 			if (current_seq_id !== this.seq_id || !this.trial.peek()) return; // cancel
 		}
 		batch(() => {
-			this.status.value = 'waiting_for_input';
 			this.trial.value = {
 				...this.trial.peek()!,
 				presenting_index: null,
 			};
+			this.update_status('waiting_for_input');
 		});
 	};
 
@@ -157,9 +168,9 @@ export class Level {
 					return; // no penalty or delay if this is the first one
 				}
 				// TODO should this be "on enter showing_failure_feedback state" logic?
-				this.status.value = 'showing_failure_feedback';
 				this.mistakes.value = this.mistakes.peek() + 1;
-				setTimeout(() => this.retry_trial(), DEFAULT_FEEDBACK_DURATION); // TODO effects?
+				this.update_status('showing_failure_feedback');
+				setTimeout(() => this.retry_trial(), DEFAULT_FEEDBACK_DURATION);
 				return;
 			}
 
@@ -171,14 +182,14 @@ export class Level {
 
 			if (guessing_index >= sequence_length - 1) {
 				// if more -> update current response index
-				this.status.value = 'showing_success_feedback';
+				this.update_status('showing_success_feedback');
 				// TODO should this be "on enter showing_success_feedback state" logic?
 				if ($trial.index < this.level_data.trial_count - 1) {
 					console.log('guess correct and done with trial');
-					setTimeout(() => this.next_trial(), DEFAULT_FEEDBACK_DURATION); // TODO effects?
+					setTimeout(() => this.next_trial(), DEFAULT_FEEDBACK_DURATION);
 				} else {
 					console.log('guess correct and done with all trials!');
-					setTimeout(() => this.complete_level(), DEFAULT_FEEDBACK_DURATION); // TODO effects?
+					setTimeout(() => this.complete_level(), DEFAULT_FEEDBACK_DURATION); // TODO hacky, the single status mixes completion status and success feedback, seems like this should set complete immediately
 				}
 			} else {
 				// SUCCESS -> no status change because we show no visible positive feedback to users until the end
@@ -203,41 +214,38 @@ export class Level {
 		const $trial = this.trial.peek();
 		if (!$trial) return;
 		batch(() => {
-			// TODO BLOCK probably `update_status`
 			// TODO should this be "on enter presenting_prompt state" logic?
-			this.status.value = 'presenting_prompt';
 			this.trial.value = {
 				...$trial,
 				retry_count: $trial.retry_count + 1,
 			};
+			this.update_status('presenting_prompt');
 		});
 	};
 
 	next_trial = (): void => {
-		const $status = this.status.peek();
-		if ($status === 'complete') {
+		if (this.status.peek() === 'complete') {
 			return;
 		}
 		batch(() => {
 			const next_trial = create_next_trial(this.level_data, this.trial.peek());
 			console.log('next trial', next_trial);
 			// TODO should this be "on enter presenting_prompt state" logic?
-			this.status.value = 'presenting_prompt';
 			const $trials = this.trials.peek();
 			if ($trials.length === 0) this.mistakes.value = 0;
 			this.trial.value = next_trial;
 			this.trials.value = [...$trials, next_trial];
+			this.update_status('presenting_prompt');
 		});
 	};
 
 	complete_level = (): void => {
-		const $status = this.status.peek();
-		if ($status === 'complete') {
+		if (this.status.peek() === 'complete') {
 			return;
 		}
 		batch(() => {
-			this.status.value = 'complete';
 			this.trial.value = null;
+			this.update_status('complete');
 		});
 	};
 

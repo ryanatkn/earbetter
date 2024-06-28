@@ -4,7 +4,7 @@
 
 	const app = get_app();
 
-	const {level, exit_level, register_success, selected_project_data} = $derived(app);
+	const {level, exit_level, selected_project_data} = $derived(app);
 
 	const level_stats = $derived($selected_project_data?.level_stats);
 </script>
@@ -19,7 +19,7 @@
 	>
 	{#if $level && level_stats}
 		<div class="level">
-			<Level_Scene level={$level} {level_stats} {exit_level} {register_success} />
+			<Level_Scene level={$level} {level_stats} {exit_level} />
 		</div>
 	{:else}
 		<div class="box h_100">
