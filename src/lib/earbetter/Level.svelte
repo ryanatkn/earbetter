@@ -31,7 +31,6 @@
 
 	let clientWidth: number | undefined = $state();
 
-	// $: level.setData(level_data); // TODO update if level_data prop changes
 	const {def, mistakes, status, trial, last_guess} = $derived(level);
 	const guessing_index = $derived($trial?.guessing_index);
 
