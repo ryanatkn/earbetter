@@ -108,6 +108,7 @@ export class Level {
 	update_status(value: Status): void {
 		console.log(`update_status`, value);
 		this.status.value = value;
+		// TODO maybe a wait a tick here or refactor? is dependent on being called after changes to e.g. `this.trial`
 		if (value === 'presenting_prompt') {
 			void this.present_trial_prompt();
 		} else if (value === 'complete') {
