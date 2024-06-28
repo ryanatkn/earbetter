@@ -31,7 +31,7 @@
 
 	let clientWidth: number | undefined = $state();
 
-	const {def, mistakes, status, trial, last_guess} = $derived(level);
+	const {level_data, mistakes, status, trial, last_guess} = $derived(level);
 	const guessing_index = $derived($trial?.guessing_index);
 
 	const pressed_keys = $derived($status === 'presenting_prompt' ? null : $playing_notes);
@@ -90,7 +90,7 @@
 	// TODO BLOCK @multiple misusing effect setting state
 	$effect(() => {
 		if (complete) {
-			register_success($def.id, level.mistakes.peek());
+			register_success(level_data.id, level.mistakes.peek());
 		}
 	});
 
@@ -171,8 +171,8 @@
 		{#if clientWidth}
 			<Piano
 				width={clientWidth - piano_padding * 2}
-				min_note={$def.min_note}
-				max_note={$def.max_note}
+				min_note={level_data.min_note}
+				max_note={level_data.max_note}
 				enabled_notes={$trial?.valid_notes}
 				{pressed_keys}
 				{highlighted_keys}
@@ -212,7 +212,7 @@
 								{/if}
 							</div>
 							<div class="panel p_md">
-								<Level_Stats_Summary level_data={$def} {level_stats} />
+								<Level_Stats_Summary {level_data} {level_stats} />
 							</div>
 						</div>
 						<button

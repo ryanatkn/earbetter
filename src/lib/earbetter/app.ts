@@ -13,12 +13,10 @@ import {base} from '$app/paths';
 
 import {
 	add_mistakes_to_level_stats,
-	to_play_level_url,
-	type Level,
+	to_level_url,
+	Level,
 	Level_Data,
 	type Level_Id,
-	Level_Hash_Data,
-	create_level,
 } from '$lib/earbetter/level.js';
 import {Project_Data, Project_Id, Project_Name} from '$lib/earbetter/project.js';
 import {load_from_storage, set_in_storage} from '$lib/storage.js';
@@ -108,7 +106,7 @@ export class App {
 	level: ReadonlySignal<Level | null> = computed(() => {
 		console.log('computing level', this.active_level_data.value);
 		return this.active_level_data.value
-			? create_level(
+			? new Level(
 					this.active_level_data.value,
 					this.get_audio_context,
 					this.volume,
@@ -507,7 +505,7 @@ export class App {
 			return;
 		}
 		this.draft_level_data.value = level_data; // for better UX, so when the user navigates back it's still being edited
-		await goto(to_play_level_url(level_data));
+		await goto(to_level_url(level_data));
 	};
 
 	edit_level = (level_data: Level_Data | null): void => {
@@ -653,7 +651,7 @@ export class App {
 		if (this.active_level_data.peek() === value) {
 			return;
 		}
-		console.log('setting `level_hash_data`', value);
+		console.log('setting `active_level_data`', value);
 		this.level.peek()?.dispose(); // TODO better way to do this? doing it in the `this.level` derived is hacky
 		this.active_level_data.value = value;
 	}

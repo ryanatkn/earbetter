@@ -57,28 +57,6 @@ export type Status =
 	| 'showing_failure_feedback'
 	| 'complete';
 
-// TODO ambiguity with `Level.svelte` -- consider combining the two? or renaming the component, maybe it's the `LevelScene`
-// (hm not sure about that, but the ergnomics of components may be worth it)
-export interface Level {
-	def: Signal<Level_Data>; // TODO rename to `data` or `level_data`?
-	status: Signal<Status>;
-	mistakes: Signal<number>;
-	trial: Signal<Trial | null>;
-	trials: Signal<Trial[]>;
-	last_guess: Signal<Midi | null>;
-	reset: () => void;
-	start: () => void;
-	dispose: () => void;
-	guess: (note: Midi) => void;
-	retry_trial: () => void;
-	next_trial: () => void;
-	complete_level: () => void;
-	// dev and debug methods
-	win: () => void;
-	guess_correctly: () => void;
-	get_correct_guess: () => number | null;
-}
-
 // TODO extract into its own module? decompose into signals?
 export interface Trial {
 	index: number;
@@ -88,6 +66,209 @@ export interface Trial {
 	guessing_index: number | null; // index of interval being guessed
 	retry_count: number;
 }
+
+const DEFAULT_STATUS: Status = 'initial';
+const DEFAULT_TRIAL: Trial | null = null;
+
+// TODO BLOCK ambiguity with `Level.svelte` -- maybe `LevelScene`
+export class Level {
+	seq_id = 0; // used to track the async note playing sequence for cancellation
+
+	constructor(
+		public readonly level_data: Level_Data, // TODO maybe make optional?
+		public readonly ac: Get_Audio_Context,
+		public readonly volume: Signal<Volume>,
+		public readonly instrument: Signal<Instrument>,
+	) {
+		// TODO BLOCK effect?
+		effect(() => {
+			if (this.status.value === 'presenting_prompt') {
+				void this.present_trial_prompt();
+			}
+		});
+	}
+
+	status: Signal<Status> = signal(DEFAULT_STATUS);
+	mistakes: Signal<number> = signal(0);
+	trial: Signal<Trial | null> = signal(DEFAULT_TRIAL);
+	trials: Signal<Trial[]> = signal([]);
+	last_guess: Signal<Midi | null> = signal(null);
+
+	reset = (): void => {
+		batch(() => {
+			this.status.value = DEFAULT_STATUS;
+			this.trial.value = DEFAULT_TRIAL;
+			this.trials.value = [];
+			this.start();
+		});
+	};
+
+	start = (): void => {
+		if (this.status.peek() !== 'initial') return;
+		this.next_trial();
+	};
+
+	dispose = (): void => {
+		this.seq_id++; // cancels anything that's playing
+	};
+
+	present_trial_prompt = async (): Promise<void> => {
+		const $trial = this.trial.peek();
+		if (!$trial) return;
+		console.log('present_trial_prompt', $trial.sequence);
+		this.trial.value = {...$trial, guessing_index: 0};
+		const current_seq_id = ++this.seq_id;
+		const sequence_length = $trial.sequence.length;
+		for (let i = 0; i < sequence_length; i++) {
+			const note = $trial.sequence[i];
+			this.trial.value = {
+				...this.trial.peek()!,
+				presenting_index: i,
+			};
+			const duration =
+				sequence_length < DEFAULT_SEQUENCE_LENGTH ? DEFAULT_NOTE_DURATION_2 : DEFAULT_NOTE_DURATION; // TODO refactor, see elsewhere
+			await play_note(this.ac(), note, this.volume.peek(), duration, this.instrument.peek()); // eslint-disable-line no-await-in-loop
+			if (current_seq_id !== this.seq_id || !this.trial.peek()) return; // cancel
+		}
+		batch(() => {
+			this.status.value = 'waiting_for_input';
+			this.trial.value = {
+				...this.trial.peek()!,
+				presenting_index: null,
+			};
+		});
+	};
+
+	// TODO helpful to have a return value?
+	guess = (note: Midi): void => {
+		if (this.status.peek() !== 'waiting_for_input') return;
+		const $trial = this.trial.peek();
+		const guessing_index = $trial?.guessing_index;
+		if (!$trial || guessing_index == null) return;
+		batch(() => {
+			const actual = get_correct_guess_for_trial($trial);
+			console.log('guess', guessing_index, note, actual);
+
+			this.last_guess.value = note;
+
+			// if incorrect -> FAILURE -> showing_failure_feedback -> REPROMPT
+			if (actual !== note) {
+				console.log('guess incorrect');
+				void play_note(
+					this.ac(),
+					note,
+					this.volume.peek(),
+					DEFAULT_NOTE_DURATION_FAILED,
+					this.instrument.peek(),
+				);
+				if (guessing_index === 0 || !$trial.valid_notes.has(note)) {
+					return; // no penalty or delay if this is the first one
+				}
+				// TODO should this be "on enter showing_failure_feedback state" logic?
+				this.status.value = 'showing_failure_feedback';
+				this.mistakes.value = this.mistakes.peek() + 1;
+				setTimeout(() => this.retry_trial(), DEFAULT_FEEDBACK_DURATION); // TODO effects?
+				return;
+			}
+
+			// guess is correct
+			const sequence_length = $trial.sequence.length;
+			const duration =
+				sequence_length < DEFAULT_SEQUENCE_LENGTH ? DEFAULT_NOTE_DURATION_2 : DEFAULT_NOTE_DURATION; // TODO refactor, see elsewhere
+			void play_note(this.ac(), note, this.volume.peek(), duration, this.instrument.peek());
+
+			if (guessing_index >= sequence_length - 1) {
+				// if more -> update current response index
+				this.status.value = 'showing_success_feedback';
+				// TODO should this be "on enter showing_success_feedback state" logic?
+				if ($trial.index < this.level_data.trial_count - 1) {
+					console.log('guess correct and done with trial');
+					setTimeout(() => this.next_trial(), DEFAULT_FEEDBACK_DURATION); // TODO effects?
+				} else {
+					console.log('guess correct and done with all trials!');
+					setTimeout(() => this.complete_level(), DEFAULT_FEEDBACK_DURATION); // TODO effects?
+				}
+			} else {
+				// SUCCESS -> no status change because we show no visible positive feedback to users until the end
+				console.log('guess correct but not done');
+				this.trial.value = {
+					...$trial,
+					guessing_index: guessing_index + 1,
+				};
+			}
+		});
+	};
+
+	retry_trial = (): void => {
+		const $status = this.status.peek();
+		if (
+			$status !== 'waiting_for_input' &&
+			$status !== 'showing_success_feedback' &&
+			$status !== 'showing_failure_feedback'
+		) {
+			return;
+		}
+		const $trial = this.trial.peek();
+		if (!$trial) return;
+		batch(() => {
+			// TODO should this be "on enter presenting_prompt state" logic?
+			this.status.value = 'presenting_prompt';
+			this.trial.value = {
+				...$trial,
+				retry_count: $trial.retry_count + 1,
+			};
+		});
+	};
+
+	next_trial = (): void => {
+		const $status = this.status.peek();
+		if ($status === 'complete') {
+			return;
+		}
+		batch(() => {
+			const next_trial = create_next_trial(this.level_data, this.trial.peek());
+			console.log('next trial', next_trial);
+			// TODO should this be "on enter presenting_prompt state" logic?
+			this.status.value = 'presenting_prompt';
+			const $trials = this.trials.peek();
+			if ($trials.length === 0) this.mistakes.value = 0;
+			this.trial.value = next_trial;
+			this.trials.value = [...$trials, next_trial];
+		});
+	};
+
+	complete_level = (): void => {
+		const $status = this.status.peek();
+		if ($status === 'complete') {
+			return;
+		}
+		batch(() => {
+			this.status.value = 'complete';
+			this.trial.value = null;
+		});
+	};
+
+	// dev and debug methods
+	win = (): void => {
+		this.complete_level();
+	};
+
+	guess_correctly = (): void => {
+		if (this.status.peek() !== 'waiting_for_input') return;
+		const note = get_correct_guess_for_trial(this.trial.peek());
+		if (note === null) return;
+		this.guess(note);
+	};
+
+	get_correct_guess = (): void => {
+		get_correct_guess_for_trial(this.trial.peek());
+	};
+}
+
+const get_correct_guess_for_trial = (trial: Trial | null): Midi | null => {
+	if (trial?.guessing_index == null) return null;
+	return trial.sequence[trial.guessing_index];
+};
 
 const create_next_trial = (def: Level_Data, current_trial: Trial | null): Trial => {
 	const {min_note, max_note} = def;
@@ -145,212 +326,7 @@ const to_fallback_tonic = (min_note: Midi, max_note: Midi): Midi => {
 	return random_int(min_note + offset, max_note - offset);
 };
 
-const DEFAULT_STATUS: Status = 'initial';
-const DEFAULT_TRIAL: Trial | null = null;
-const DEFAULT_TRIALS: Trial[] = [];
-
-// TODO BLOCK maybe convert this to a class? will be a better comparison with runes (maybe as a followup to the Svelte 5 PR)
-export const create_level = (
-	level_data: Level_Data, // TODO maybe make optional?
-	ac: Get_Audio_Context,
-	volume: Signal<Volume>,
-	instrument: Signal<Instrument>,
-): Level => {
-	const def: Signal<Level_Data> = signal(level_data);
-	const status: Signal<Status> = signal(DEFAULT_STATUS);
-	const mistakes: Signal<number> = signal(0);
-	const trial: Signal<Trial | null> = signal(DEFAULT_TRIAL);
-	const trials: Signal<Trial[]> = signal(DEFAULT_TRIALS);
-	const last_guess: Signal<Midi | null> = signal(null);
-
-	const start = (): void => {
-		if (status.peek() !== 'initial') return;
-		next_trial();
-	};
-
-	effect(() => {
-		if (status.value === 'presenting_prompt') {
-			void present_trial_prompt();
-		}
-	});
-	let seq_id = 0; // used to track the async note playing sequence for cancellation
-	const present_trial_prompt = async (): Promise<void> => {
-		const $trial = trial.peek();
-		if (!$trial) return;
-		console.log('present_trial_prompt', $trial.sequence);
-		trial.value = {...$trial, guessing_index: 0};
-		const current_seq_id = ++seq_id;
-		const sequence_length = $trial.sequence.length;
-		for (let i = 0; i < sequence_length; i++) {
-			const note = $trial.sequence[i];
-			trial.value = {
-				...trial.peek()!,
-				presenting_index: i,
-			};
-			const duration =
-				sequence_length < DEFAULT_SEQUENCE_LENGTH ? DEFAULT_NOTE_DURATION_2 : DEFAULT_NOTE_DURATION; // TODO refactor, see elsewhere
-			await play_note(ac(), note, volume.peek(), duration, instrument.peek()); // eslint-disable-line no-await-in-loop
-			if (current_seq_id !== seq_id || !trial.peek()) return; // cancel
-		}
-		batch(() => {
-			status.value = 'waiting_for_input';
-			trial.value = {
-				...trial.peek()!,
-				presenting_index: null,
-			};
-		});
-	};
-
-	// TODO helpful to have a return value?
-	const guess = (note: Midi): void => {
-		if (status.peek() !== 'waiting_for_input') return;
-		const $trial = trial.peek();
-		const guessing_index = $trial?.guessing_index;
-		if (!$trial || guessing_index == null) return;
-		batch(() => {
-			const actual = get_correct_guess($trial);
-			console.log('guess', guessing_index, note, actual);
-
-			last_guess.value = note;
-
-			// if incorrect -> FAILURE -> showing_failure_feedback -> REPROMPT
-			if (actual !== note) {
-				console.log('guess incorrect');
-				void play_note(ac(), note, volume.peek(), DEFAULT_NOTE_DURATION_FAILED, instrument.peek());
-				if (guessing_index === 0 || !$trial.valid_notes.has(note)) {
-					return; // no penalty or delay if this is the first one
-				}
-				// TODO should this be "on enter showing_failure_feedback state" logic?
-				status.value = 'showing_failure_feedback';
-				mistakes.value = mistakes.peek() + 1;
-				setTimeout(() => retry_trial(), DEFAULT_FEEDBACK_DURATION); // TODO effects?
-				return;
-			}
-
-			// guess is correct
-			const sequence_length = $trial.sequence.length;
-			const duration =
-				sequence_length < DEFAULT_SEQUENCE_LENGTH ? DEFAULT_NOTE_DURATION_2 : DEFAULT_NOTE_DURATION; // TODO refactor, see elsewhere
-			void play_note(ac(), note, volume.peek(), duration, instrument.peek());
-
-			if (guessing_index >= sequence_length - 1) {
-				// if more -> update current response index
-				status.value = 'showing_success_feedback';
-				// TODO should this be "on enter showing_success_feedback state" logic?
-				if ($trial.index < def.peek().trial_count - 1) {
-					console.log('guess correct and done with trial');
-					setTimeout(() => next_trial(), DEFAULT_FEEDBACK_DURATION); // TODO effects?
-				} else {
-					console.log('guess correct and done with all trials!');
-					setTimeout(() => complete_level(), DEFAULT_FEEDBACK_DURATION); // TODO effects?
-				}
-			} else {
-				// SUCCESS -> no status change because we show no visible positive feedback to users until the end
-				console.log('guess correct but not done');
-				trial.value = {
-					...$trial,
-					guessing_index: guessing_index + 1,
-				};
-			}
-		});
-	};
-
-	const retry_trial = (): void => {
-		const $status = status.peek();
-		if (
-			$status !== 'waiting_for_input' &&
-			$status !== 'showing_success_feedback' &&
-			$status !== 'showing_failure_feedback'
-		) {
-			return;
-		}
-		const $trial = trial.peek();
-		if (!$trial) return;
-		batch(() => {
-			// TODO should this be "on enter presenting_prompt state" logic?
-			status.value = 'presenting_prompt';
-			trial.value = {
-				...$trial,
-				retry_count: $trial.retry_count + 1,
-			};
-		});
-	};
-
-	const next_trial = (): void => {
-		const $status = status.peek();
-		if ($status === 'complete') {
-			return;
-		}
-		batch(() => {
-			const next_trial = create_next_trial(def.peek(), trial.peek());
-			console.log('next trial', next_trial);
-			// TODO should this be "on enter presenting_prompt state" logic?
-			status.value = 'presenting_prompt';
-			const $trials = trials.peek();
-			if ($trials.length === 0) mistakes.value = 0;
-			trial.value = next_trial;
-			trials.value = [...$trials, next_trial];
-		});
-	};
-
-	const complete_level = (): void => {
-		const $status = status.peek();
-		if ($status === 'complete') {
-			return;
-		}
-		batch(() => {
-			status.value = 'complete';
-			trial.value = null;
-		});
-	};
-
-	const level: Level = {
-		def,
-		status,
-		mistakes,
-		trial,
-		trials,
-		last_guess,
-		reset: () => {
-			batch(() => {
-				def.value = level_data;
-				status.value = DEFAULT_STATUS;
-				trial.value = DEFAULT_TRIAL;
-				trials.value = DEFAULT_TRIALS;
-				start();
-			});
-		},
-		start,
-		dispose: () => {
-			seq_id++; // cancels anything that's playing
-		},
-		guess,
-		retry_trial,
-		next_trial,
-		complete_level,
-		// dev and debug methods
-		win: () => {
-			complete_level();
-		},
-		guess_correctly: () => {
-			if (status.peek() !== 'waiting_for_input') return;
-			const note = get_correct_guess(trial.peek());
-			if (note === null) return;
-			guess(note);
-		},
-		get_correct_guess: () => get_correct_guess(trial.peek()),
-	};
-	return level;
-};
-
-const get_correct_guess = (trial: Trial | null): Midi | null => {
-	// eslint bug
-	// eslint-disable-next-line @typescript-eslint/prefer-optional-chain
-	if (!trial || trial.guessing_index === null) return null;
-	return trial.sequence[trial.guessing_index];
-};
-
-export const to_play_level_url = (level_data: Level_Data): string => {
+export const to_level_url = (level_data: Level_Data): string => {
 	const data: Level_Hash_Data = {level: level_data};
 	return `${base}/trainer/level` + serialize_to_hash(data);
 };
