@@ -203,6 +203,7 @@ export class Level {
 		const $trial = this.trial.peek();
 		if (!$trial) return;
 		batch(() => {
+			// TODO BLOCK probably `update_status`
 			// TODO should this be "on enter presenting_prompt state" logic?
 			this.status.value = 'presenting_prompt';
 			this.trial.value = {
