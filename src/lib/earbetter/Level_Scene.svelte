@@ -2,6 +2,7 @@
 	import {is_editable, swallow} from '@ryanatkn/belt/dom.js';
 	import {scale, fly} from 'svelte/transition';
 	import {plural} from '@ryanatkn/belt/string.js';
+	import {untrack} from 'svelte';
 
 	import {Level_Stats, type Level} from '$lib/earbetter/level.js';
 	import Piano from '$lib/Piano.svelte';
@@ -15,7 +16,6 @@
 	import {midi_access} from '$lib/midi_access.js';
 	import Level_Stats_Summary from '$lib/earbetter/Level_Stats_Summary.svelte';
 	import Text_Burst from '$lib/Text_Burst.svelte';
-	import {untrack} from 'svelte';
 
 	interface Props {
 		level: Level;

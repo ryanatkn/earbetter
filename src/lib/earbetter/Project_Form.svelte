@@ -1,9 +1,9 @@
 <script lang="ts">
+	import type {Snippet} from 'svelte';
 	import {slide} from 'svelte/transition';
 	import {swallow} from '@ryanatkn/belt/dom.js';
 	import Dialog from '@ryanatkn/fuz/Dialog.svelte';
 	import Alert from '@ryanatkn/fuz/Alert.svelte';
-	import type {Snippet} from 'svelte';
 
 	import {create_project_id, Project_Data, type Project_Id} from '$lib/earbetter/project.js';
 
@@ -22,7 +22,7 @@
 
 	let {
 		project_data = null, // eslint-disable-line prefer-const
-		id = $bindable(create_project_id()),
+		id = $bindable(create_project_id()), // TODO BLOCK remove bindable
 		name = $bindable(DEFAULT_NAME),
 		editing = false, // eslint-disable-line prefer-const
 		onsubmit, // eslint-disable-line prefer-const

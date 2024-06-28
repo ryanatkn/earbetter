@@ -1,4 +1,5 @@
 <script lang="ts">
+	import type {Snippet} from 'svelte';
 	import {slide} from 'svelte/transition';
 	import Dialog from '@ryanatkn/fuz/Dialog.svelte';
 	import Alert from '@ryanatkn/fuz/Alert.svelte';
@@ -30,7 +31,6 @@
 	import Intervals_Input from '$lib/Intervals_Input.svelte';
 	import Notes_Input from '$lib/Notes_Input.svelte';
 	import Piano from '$lib/Piano.svelte';
-	import type {Snippet} from 'svelte';
 
 	interface Props {
 		level_data?: Level_Data | null;

@@ -1,4 +1,5 @@
 <script lang="ts">
+	import type {Snippet} from 'svelte';
 	import {slide} from 'svelte/transition';
 	import {swallow} from '@ryanatkn/belt/dom.js';
 	import Dialog from '@ryanatkn/fuz/Dialog.svelte';
@@ -6,7 +7,6 @@
 
 	import {create_realm_id, Realm_Data, type Realm_Id} from '$lib/earbetter/realm.js';
 	import default_project_data from '$lib/projects/default_project.js';
-	import type {Snippet} from 'svelte';
 
 	interface Props {
 		realm_data?: Realm_Data | null;
