@@ -1,41 +1,47 @@
 <script lang="ts">
-	import {page} from '$app/stores';
-	import {goto} from '$app/navigation';
-	import {base} from '$app/paths';
-
-	import Earbetter from '$lib/earbetter/Earbetter.svelte';
-	import {Level_Hash_Data} from '$lib/earbetter/level.js';
-	import {parse_from_hash} from '$lib/url.js';
+	import Level from '$lib/earbetter/Level.svelte';
 	import {get_app} from '$lib/earbetter/app.js';
-
-	const go_back = () => goto(`${base}/trainer`);
 
 	const app = get_app();
 
-	// TODO add this to the app data so it's persisted when we navigate, and can be saved if it's not in the list
-	const parsed = $derived(Level_Hash_Data.safeParse(parse_from_hash($page.url.hash)));
-	const active_level_data = $derived(parsed.success ? parsed.data : null);
-	// TODO BLOCK @multiple misusing effect setting state - this one seems ok? even if it writes to the url hash
-	$effect(() => {
-		console.log('$effect setting `active_level_data` from URL hash');
-		if (active_level_data === null) {
-			void go_back();
-		} else {
-			app.active_level_data.value = active_level_data.level;
-		}
-	});
+	const {level, exit_level, register_success, selected_project_data} = $derived(app);
+
+	const level_stats = $derived($selected_project_data?.level_stats);
 </script>
 
 <svelte:head>
-	<title>Earbetter: trainer</title>
+	<title>Earbetter trainer level</title>
 </svelte:head>
 
 <main>
-	<button title="go back" class="go_back icon_button plain_button" onclick={go_back}>←</button>
-	<Earbetter {app} />
+	<button title="go back" class="go_back icon_button plain_button" onclick={app.exit_level}
+		>←</button
+	>
+	{#if $level && level_stats}
+		<div class="level">
+			<Level level={$level} {level_stats} {exit_level} {register_success} />
+		</div>
+	{:else}
+		<div class="box h_100">
+			<p>
+				No level found, <button onclick={app.exit_level}>go back</button> to the map.
+			</p>
+		</div>
+	{/if}
 </main>
 
 <style>
+	main,
+	:global(html, body) {
+		width: 100%;
+		height: 100%;
+	}
+
+	.level {
+		width: 100%;
+		height: 100%;
+	}
+
 	.go_back {
 		position: absolute;
 		top: 0;

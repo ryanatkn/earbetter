@@ -9,11 +9,12 @@
 	import Dialog from '@ryanatkn/fuz/Dialog.svelte';
 	import {slide} from 'svelte/transition';
 	import {browser} from '$app/environment';
-	import {computed, effect, signal} from '@preact/signals-core';
+	import {computed, effect as preact_effect, signal} from '@preact/signals-core';
 	import {afterNavigate} from '$app/navigation';
 	import {sync_color_scheme} from '@ryanatkn/fuz/theme.js';
 	import {writable} from 'svelte/store';
 	import type {Snippet} from 'svelte';
+	import {page} from '$app/stores';
 
 	import {set_audio_context} from '$lib/audio_context.js';
 	import {adjust_volume, set_instrument, set_volume} from '$lib/helpers.js';
@@ -30,6 +31,8 @@
 	import Site_Breadcrumb from '$routes/Site_Breadcrumb.svelte';
 	import Init_Audio_Context from '$lib/Init_Audio_Context.svelte';
 	import {set_main_menu} from '$routes/main_menu.svelte.js';
+	import {Level_Hash_Data} from '$lib/earbetter/level.js';
+	import {parse_from_hash} from '$lib/url.js';
 
 	interface Props {
 		children: Snippet;
@@ -68,13 +71,21 @@
 		key: key.value,
 	});
 	const save_site_data = () => set_in_storage(SITE_DATA_STORAGE_KEY, to_site_data());
-	effect(save_site_data);
+	preact_effect(save_site_data);
 
-	const app = set_app(new App(get_audio_context));
+	const app = set_app(new App(get_audio_context, volume, instrument));
 	if (browser) (window as any).app = app;
 
 	const main_menu = set_main_menu();
 	afterNavigate(() => main_menu.opened && main_menu.close());
+
+	const current_level_hash_data = $derived.by(() => {
+		const parsed = Level_Hash_Data.safeParse(parse_from_hash($page.url.hash));
+		return parsed.success ? parsed.data : null;
+	});
+	$effect(() => {
+		app.set_active_level_data(current_level_hash_data?.level ?? null);
+	});
 
 	// TODO refactor
 	const keydown = (e: KeyboardEvent) => {

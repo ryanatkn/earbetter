@@ -1,5 +1,4 @@
 <script lang="ts">
-	import {onDestroy, onMount} from 'svelte';
 	import {is_editable, swallow} from '@ryanatkn/belt/dom.js';
 	import {scale, fly} from 'svelte/transition';
 	import {plural} from '@ryanatkn/belt/string.js';
@@ -20,11 +19,11 @@
 	interface Props {
 		level: Level;
 		level_stats: Level_Stats;
-		exit_level_to_map: () => void;
+		exit_level: () => void;
 		register_success: (id: Level_Id, mistake_count: number) => void; // TODO naming this param `mistakes` breaks svelte-check, should be fixed in next release
 	}
 
-	const {level, level_stats, exit_level_to_map, register_success}: Props = $props();
+	const {level, level_stats, exit_level, register_success}: Props = $props();
 
 	const ac = get_audio_context();
 	const volume = get_volume();
@@ -39,12 +38,13 @@
 	const pressed_keys = $derived($status === 'presenting_prompt' ? null : $playing_notes);
 	const highlighted_keys = $derived($trial && new Set([$trial.sequence[0]]));
 
-	onMount(() => {
+	$effect(() => {
 		level.start();
 	});
-	onDestroy(() => {
-		level.dispose(); // TODO BLOCK erroring when exiting the level
-	});
+	// TODO BLOCK erroring when exiting the level
+	// onDestroy(() => {
+	// 	level.dispose();
+	// });
 
 	const on_press_key = (note: Midi): void => {
 		console.log('press note key', note);
@@ -123,7 +123,7 @@
 				switch ($status) {
 					case 'complete': {
 						swallow(e);
-						exit_level_to_map();
+						exit_level();
 						return;
 					}
 					default: {
@@ -222,7 +222,7 @@
 						</div>
 						<button
 							class="big"
-							onclick={() => exit_level_to_map()}
+							onclick={() => exit_level()}
 							in:scale|local={{delay: 500}}
 							style:margin-bottom="var(--space_md)"
 						>

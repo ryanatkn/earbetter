@@ -1,19 +1,19 @@
 <script lang="ts">
-	import Earbetter from '$lib/earbetter/Earbetter.svelte';
 	import Header from '$routes/Header.svelte';
 	import Footer from '$routes/Footer.svelte';
 	import {get_app} from '$lib/earbetter/app.js';
+	import {midi_access} from '$lib/midi_access.js';
+	import Level_Map from '$lib/earbetter/Level_Map.svelte';
 
 	const app = get_app();
-	app.clear_active_level();
 </script>
 
 <svelte:head>
-	<title>Earbetter: trainer</title>
+	<title>Earbetter trainer</title>
 </svelte:head>
 
 <main>
 	<Header />
-	<Earbetter {app} />
+	<Level_Map {app} {midi_access} />
 	<div class="box"><Footer /></div>
 </main>

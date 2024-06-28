@@ -1,7 +1,6 @@
 import {random_item, random_int} from '@ryanatkn/belt/random.js';
 import {z} from 'zod';
 import type {Flavored} from '@ryanatkn/belt/types.js';
-import {Logger} from '@ryanatkn/belt/log.js';
 import {signal, batch, Signal, effect} from '@preact/signals-core';
 import {base} from '$app/paths';
 
@@ -13,8 +12,6 @@ import {to_random_id} from '$lib/id.js';
 import type {Get_Audio_Context} from '$lib/audio_context.js';
 
 // TODO this isn't idiomatic signals code yet, uses `peek` too much
-
-const log = new Logger('[level]');
 
 export const DEFAULT_NOTE_DURATION: Milliseconds = 333; // TODO adjust this to make more challenging levels
 export const DEFAULT_NOTE_DURATION_2: Milliseconds = 500; // TODO adjust this to make more challenging levels
@@ -152,6 +149,7 @@ const DEFAULT_STATUS: Status = 'initial';
 const DEFAULT_TRIAL: Trial | null = null;
 const DEFAULT_TRIALS: Trial[] = [];
 
+// TODO BLOCK maybe convert this to a class? will be a better comparison with runes (maybe as a followup to the Svelte 5 PR)
 export const create_level = (
 	level_data: Level_Data, // TODO maybe make optional?
 	ac: Get_Audio_Context,
@@ -179,7 +177,7 @@ export const create_level = (
 	const present_trial_prompt = async (): Promise<void> => {
 		const $trial = trial.peek();
 		if (!$trial) return;
-		log.debug('present_trial_prompt', $trial.sequence);
+		console.log('present_trial_prompt', $trial.sequence);
 		trial.value = {...$trial, guessing_index: 0};
 		const current_seq_id = ++seq_id;
 		const sequence_length = $trial.sequence.length;
@@ -211,13 +209,13 @@ export const create_level = (
 		if (!$trial || guessing_index == null) return;
 		batch(() => {
 			const actual = get_correct_guess($trial);
-			log.debug('guess', guessing_index, note, actual);
+			console.log('guess', guessing_index, note, actual);
 
 			last_guess.value = note;
 
 			// if incorrect -> FAILURE -> showing_failure_feedback -> REPROMPT
 			if (actual !== note) {
-				log.debug('guess incorrect');
+				console.log('guess incorrect');
 				void play_note(ac(), note, volume.peek(), DEFAULT_NOTE_DURATION_FAILED, instrument.peek());
 				if (guessing_index === 0 || !$trial.valid_notes.has(note)) {
 					return; // no penalty or delay if this is the first one
@@ -240,15 +238,15 @@ export const create_level = (
 				status.value = 'showing_success_feedback';
 				// TODO should this be "on enter showing_success_feedback state" logic?
 				if ($trial.index < def.peek().trial_count - 1) {
-					log.debug('guess correct and done with trial');
+					console.log('guess correct and done with trial');
 					setTimeout(() => next_trial(), DEFAULT_FEEDBACK_DURATION); // TODO effects?
 				} else {
-					log.debug('guess correct and done with all trials!');
+					console.log('guess correct and done with all trials!');
 					setTimeout(() => complete_level(), DEFAULT_FEEDBACK_DURATION); // TODO effects?
 				}
 			} else {
 				// SUCCESS -> no status change because we show no visible positive feedback to users until the end
-				log.debug('guess correct but not done');
+				console.log('guess correct but not done');
 				trial.value = {
 					...$trial,
 					guessing_index: guessing_index + 1,
@@ -285,7 +283,7 @@ export const create_level = (
 		}
 		batch(() => {
 			const next_trial = create_next_trial(def.peek(), trial.peek());
-			log.debug('next trial', next_trial);
+			console.log('next trial', next_trial);
 			// TODO should this be "on enter presenting_prompt state" logic?
 			status.value = 'presenting_prompt';
 			const $trials = trials.peek();
