@@ -50,11 +50,11 @@
 
 	let last_feedback_status: null | 'success' | 'failure' = $state(null);
 
+	const presenting = $derived($status === 'presenting_prompt');
+	const waiting = $derived($status === 'waiting_for_input');
 	const success = $derived($status === 'showing_success_feedback');
 	const failure = $derived($status === 'showing_failure_feedback');
 	const complete = $derived($status === 'complete');
-	const waiting = $derived($status === 'waiting_for_input');
-	const presenting = $derived($status === 'presenting_prompt');
 
 	// TODO BLOCK @multiple misusing effect setting state
 	$effect(() => {
