@@ -39,12 +39,8 @@
 	const highlighted_keys = $derived($trial && new Set([$trial.sequence[0]]));
 
 	$effect(() => {
-		level.start();
+		level.start(); // TODO BLOCK problem here is the audio context needs to be resumed, so if it's not ready maybe have a start button
 	});
-	// TODO BLOCK erroring when exiting the level
-	// onDestroy(() => {
-	// 	level.dispose();
-	// });
 
 	const on_press_key = (note: Midi): void => {
 		console.log('press note key', note);
