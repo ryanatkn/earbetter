@@ -1,5 +1,5 @@
 <script lang="ts">
-	import Level from '$lib/earbetter/Level.svelte';
+	import Level_Scene from '$lib/earbetter/Level_Scene.svelte';
 	import {get_app} from '$lib/earbetter/app.js';
 
 	const app = get_app();
@@ -19,7 +19,7 @@
 	>
 	{#if $level && level_stats}
 		<div class="level">
-			<Level level={$level} {level_stats} {exit_level} {register_success} />
+			<Level_Scene level={$level} {level_stats} {exit_level} {register_success} />
 		</div>
 	{:else}
 		<div class="box h_100">

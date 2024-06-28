@@ -70,7 +70,6 @@ export interface Trial {
 const DEFAULT_STATUS: Status = 'initial';
 const DEFAULT_TRIAL: Trial | null = null;
 
-// TODO BLOCK ambiguity with `Level.svelte` -- maybe `LevelScene`
 export class Level {
 	seq_id = 0; // used to track the async note playing sequence for cancellation
 
