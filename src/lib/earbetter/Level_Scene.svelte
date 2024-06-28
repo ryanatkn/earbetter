@@ -46,21 +46,22 @@
 		level.guess(note);
 	};
 
+	let feedback_count = $state(0);
+
+	let last_feedback_status: null | 'success' | 'failure' = $state(null);
+
 	const success = $derived($status === 'showing_success_feedback');
 	const failure = $derived($status === 'showing_failure_feedback');
 	const complete = $derived($status === 'complete');
 	const waiting = $derived($status === 'waiting_for_input');
 	const presenting = $derived($status === 'presenting_prompt');
 
+	// TODO BLOCK @multiple misusing effect setting state
 	$effect(() => {
 		if (presenting) {
 			void level.present_trial_prompt();
 		}
 	});
-
-	let feedback_count = $state(0);
-
-	let last_feedback_status: null | 'success' | 'failure' = $state(null);
 	// TODO BLOCK @multiple misusing effect setting state
 	$effect(() => {
 		if (success) {
@@ -75,6 +76,11 @@
 			feedback_count++;
 			last_feedback_status = 'failure';
 			update_text_burst_position();
+		}
+	}); // TODO BLOCK @multiple misusing effect setting state
+	$effect(() => {
+		if (complete) {
+			register_success(level_data.id, level.mistakes.peek());
 		}
 	});
 
@@ -93,13 +99,6 @@
 	};
 
 	const initial = $derived(waiting && guessing_index === 0); // the initial user-prompting trial state before any inputs have been entered by the player (related, "prompting")
-
-	// TODO BLOCK @multiple misusing effect setting state
-	$effect(() => {
-		if (complete) {
-			register_success(level_data.id, level.mistakes.peek());
-		}
-	});
 
 	const piano_padding = 20;
 
