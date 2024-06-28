@@ -21,7 +21,7 @@
 	let removing = $state(false);
 
 	let updated_name: Realm_Name | undefined = $state(undefined); // TODO name? `changed`?
-	const normalized_updated_name = $derived((updated_name as any)?.trim()); // TODO type is broken with svelte-check inference
+	const normalized_updated_name = $derived((updated_name as any)?.trim()); // TODO type is broken with svelte-check inference in 3.8.4
 
 	const to_data = (): Realm_Data =>
 		Realm_Data.parse({
