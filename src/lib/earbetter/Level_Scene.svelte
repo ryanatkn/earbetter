@@ -38,7 +38,6 @@
 	const highlighted_keys = $derived($trial && new Set([$trial.sequence[0]]));
 
 	$effect(() => {
-		console.log('STARTING LEVEL');
 		level.start(); // TODO BLOCK problem here is the audio context needs to be resumed, so if it's not ready maybe have a start button
 	});
 
