@@ -1,7 +1,7 @@
 import {random_item, random_int} from '@ryanatkn/belt/random.js';
 import {z} from 'zod';
 import type {Flavored} from '@ryanatkn/belt/types.js';
-import {signal, batch, Signal, effect} from '@preact/signals-core';
+import {signal, batch, Signal} from '@preact/signals-core';
 import {base} from '$app/paths';
 
 import {Midi, Intervals, Notes} from '$lib/music.js';
@@ -78,14 +78,7 @@ export class Level {
 		public readonly ac: Get_Audio_Context,
 		public readonly volume: Signal<Volume>,
 		public readonly instrument: Signal<Instrument>,
-	) {
-		// TODO BLOCK effect?
-		effect(() => {
-			if (this.status.value === 'presenting_prompt') {
-				void this.present_trial_prompt();
-			}
-		});
-	}
+	) {}
 
 	status: Signal<Status> = signal(DEFAULT_STATUS);
 	mistakes: Signal<number> = signal(0);

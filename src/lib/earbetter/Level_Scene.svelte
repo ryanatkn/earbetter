@@ -50,6 +50,13 @@
 	const failure = $derived($status === 'showing_failure_feedback');
 	const complete = $derived($status === 'complete');
 	const waiting = $derived($status === 'waiting_for_input');
+	const presenting = $derived($status === 'presenting_prompt');
+
+	$effect(() => {
+		if (presenting) {
+			void level.present_trial_prompt();
+		}
+	});
 
 	let feedback_count = $state(0);
 
