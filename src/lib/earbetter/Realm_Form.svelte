@@ -1,62 +1,41 @@
 <script lang="ts">
-	import type {Snippet} from 'svelte';
 	import {slide} from 'svelte/transition';
 	import {swallow} from '@ryanatkn/belt/dom.js';
 	import Dialog from '@ryanatkn/fuz/Dialog.svelte';
 	import Alert from '@ryanatkn/fuz/Alert.svelte';
 
-	import {create_realm_id, Realm_Data, type Realm_Id} from '$lib/earbetter/realm.js';
+	import {create_realm_id, Realm_Data, Realm_Name, type Realm_Id} from '$lib/earbetter/realm.js';
 	import default_project_data from '$lib/projects/default_project.js';
 
 	interface Props {
-		realm_data?: Realm_Data | null;
-		id?: Realm_Id;
-		name?: string;
+		realm_data: Realm_Data;
 		editing?: boolean;
 		onsubmit?: (realm_data: Realm_Data) => void;
 		onremove?: (realm_id: Realm_Id) => void;
 		onduplicate?: (realm_id: Realm_Id) => void;
-		footer?: Snippet<[changed: boolean]>;
+		onclose?: () => void;
 	}
 
-	const DEFAULT_NAME = 'new realm';
-
-	let {
-		realm_data = null, // eslint-disable-line prefer-const
-		id = $bindable(create_realm_id()),
-		name = $bindable(DEFAULT_NAME),
-		editing = false, // eslint-disable-line prefer-const
-		onsubmit, // eslint-disable-line prefer-const
-		onremove, // eslint-disable-line prefer-const
-		onduplicate, // eslint-disable-line prefer-const
-		footer, // eslint-disable-line prefer-const
-	}: Props = $props();
+	const {realm_data, editing = false, onsubmit, onremove, onduplicate, onclose}: Props = $props();
 
 	let removing = $state(false);
+
+	let updated_name: Realm_Name | undefined = $state(undefined); // TODO name? `changed`?
+	const normalized_updated_name = $derived((updated_name as any)?.trim()); // TODO type is broken with svelte-check inference
 
 	const to_data = (): Realm_Data =>
 		Realm_Data.parse({
 			...realm_data,
-			id,
-			name,
+			name: normalized_updated_name,
 		});
 
 	// TODO BLOCK @multiple misusing effect setting state
 	$effect(() => {
-		set_realm_data(realm_data);
-	});
-	const set_realm_data = (realm_data: Realm_Data | null): void => {
 		console.log(`set_realm_data`, realm_data);
-		if (realm_data) {
-			id = realm_data.id;
-			name = realm_data.name;
-		} else {
-			id = create_realm_id(); // TODO duplicates work on first mount with no realm_data, but not sure it's worth fixing, maybe there's a better pattern without this?
-			name = DEFAULT_NAME;
-		}
-	};
+		updated_name = realm_data.name;
+	});
 
-	const changed = $derived(!realm_data || id !== realm_data.id || name !== realm_data.name);
+	const changed = $derived(!realm_data || normalized_updated_name !== realm_data.name); // TODO BLOCK was `|| id !== realm_data.id`, did we need that functionality?
 
 	// TODO lots of similarity with `Level_Form`
 	let importing = $state(false);
@@ -67,7 +46,6 @@
 	// TODO BLOCK @multiple misusing effect setting state
 	$effect(() => {
 		realm_data;
-		id;
 		parse_error_message = '';
 	});
 	let realm_data_el: HTMLTextAreaElement | undefined = $state();
@@ -105,7 +83,7 @@
 			start_importing_el?.focus();
 		}}
 	>
-		<div class="importing p_xl width_md box">
+		<div class="importing bg p_xl width_md box">
 			<h2 class="my_0">import realm data</h2>
 			<button
 				type="button"
@@ -139,7 +117,7 @@
 		<label>
 			<div class="title">name</div>
 			<input
-				bind:value={name}
+				bind:value={updated_name}
 				onkeydown={(e) => {
 					if (e.key === 'Enter') {
 						swallow(e);
@@ -169,15 +147,19 @@
 					style:margin-bottom={0}
 					onclick={() => {
 						removing = false;
-						onremove?.(id);
+						onremove?.(realm_data.id);
 					}}
 				>
 					✖ confirm remove
 				</button>
 			</div>
 		{/if}
-		<button type="button" style:margin-top="var(--space_lg)" onclick={() => onduplicate?.(id)}>
-			duplicate
+		<button
+			type="button"
+			style:margin-top="var(--space_lg)"
+			onclick={() => onduplicate?.(realm_data.id)}
+		>
+			duplicate realm
 		</button>
 	{/if}
 	<button type="button" onclick={start_importing_data} bind:this={start_importing_el}>
@@ -213,8 +195,10 @@
 			<Alert status="error"><pre>{parse_error_message}</pre></Alert>
 		</div>
 	{/if}
-	{#if footer}
-		{@render footer(changed)}
+	{#if editing}
+		<button class="w_100" type="button" onclick={onclose}>
+			{#if changed}discard changes{:else}close editor{/if}
+		</button>
 	{/if}
 </form>
 
@@ -224,5 +208,9 @@
 	}
 	.message-wrapper {
 		overflow-x: auto;
+	}
+
+	button {
+		width: 100%;
 	}
 </style>

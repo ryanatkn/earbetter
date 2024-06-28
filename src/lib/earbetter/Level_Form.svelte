@@ -323,7 +323,7 @@
 			start_importing_el?.focus();
 		}}
 	>
-		<div class="importing p_xl width_md box">
+		<div class="importing bg p_xl width_md box">
 			<h2 class="my_0">import level data</h2>
 			<button
 				onclick={() => {

@@ -131,7 +131,6 @@ export class App {
 		this.app_data = signal(this.load());
 		const app_data = this.app_data.peek();
 		this.saved = app_data; // hacky, but enables the following effect without waste
-		effect(() => this.save()); // TODO do effects like this need to be cleaned up or is calling dispose only for special cases?
 		console.log(`app_data`, app_data);
 
 		// TODO refactor

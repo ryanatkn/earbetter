@@ -62,17 +62,6 @@
 		),
 	);
 
-	// save site data
-	const to_site_data = (): Site_Data => ({
-		// note these have to use `.value`, the `$`-prefix doesn't work for reactivity
-		volume: volume.value,
-		instrument: instrument.value,
-		scale: scale.value,
-		key: key.value,
-	});
-	const save_site_data = () => set_in_storage(SITE_DATA_STORAGE_KEY, to_site_data());
-	preact_effect(save_site_data);
-
 	const app = set_app(new App(get_audio_context, volume, instrument));
 	if (browser) (window as any).app = app;
 
@@ -86,6 +75,20 @@
 	$effect(() => {
 		app.set_active_level_data(current_level_hash_data?.level ?? null);
 	});
+
+	// save site data
+	const to_site_data = (): Site_Data => ({
+		// note these have to use `.value`, the `$`-prefix doesn't work for reactivity
+		volume: volume.value,
+		instrument: instrument.value,
+		scale: scale.value,
+		key: key.value,
+	});
+
+	preact_effect(() => set_in_storage(SITE_DATA_STORAGE_KEY, to_site_data()));
+
+	// TODO this is causing some false positives, like every time we click "edit realm"
+	preact_effect(() => app.save()); // TODO do effects like this need to be cleaned up or is calling dispose only for special cases?
 
 	// TODO refactor
 	const keydown = (e: KeyboardEvent) => {
