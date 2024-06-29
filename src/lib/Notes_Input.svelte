@@ -112,17 +112,8 @@
 	onnotestop={(note) => stop_playing(note)}
 />
 
-<div class="notes_input">
-	<div class="notes width_sm">
-		<!-- TODO copy button -->
-		<blockquote class="panel" style:margin="var(--space_lg) 0">
-			<textarea
-				value={serialized_updated_notes}
-				onchange={(e) => update_serialized_updated_notes(e.currentTarget.value)}
-			></textarea>
-		</blockquote>
-		{@render buttons()}
-	</div>
+<div class="notes_input pt_lg">
+	{@render buttons()}
 	<div class="piano_wrapper" style:padding="{piano_padding}px">
 		{#if innerWidth}
 			<!-- TODO @multiple hacky width -->
@@ -144,8 +135,9 @@
 		{/if}
 	</div>
 	<section class="box">
-		<label style:margin-bottom="var(--space_lg)"
-			>key <select bind:value={key}>
+		<label class="mb_lg">
+			<div class="title text_align_center">key</div>
+			<select bind:value={key}>
 				{#each pitch_classes as pc (pc)}
 					<option value={pc}>{pc}</option>
 				{/each}
@@ -157,6 +149,15 @@
 			{/each}
 		</div>
 		{@render buttons()}
+		<div class="notes width_sm">
+			<!-- TODO copy button -->
+			<blockquote class="panel my_lg">
+				<textarea
+					value={serialized_updated_notes}
+					onchange={(e) => update_serialized_updated_notes(e.currentTarget.value)}
+				></textarea>
+			</blockquote>
+		</div>
 	</section>
 	<form class="width_sm panel p_md">
 		<fieldset>
