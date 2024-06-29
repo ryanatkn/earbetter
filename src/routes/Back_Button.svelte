@@ -7,7 +7,7 @@
 	const {title = 'go back', onclick}: Props = $props();
 </script>
 
-<button {title} class="icon_button plain_button" {onclick}>←</button>
+<button {title} class="icon_button plain_button" {onclick}> ← </button>
 
 <style>
 	button {
