@@ -122,7 +122,7 @@
 
 	// this persists form values across UI states but not across page nav,
 	// would use SvelteKit snapshots for that - https://kit.svelte.dev/docs/snapshots
-	let intervals_input_selected_scale: Scale | undefined = $state();
+	let intervals_input_scale: Scale | undefined = $state();
 	let intervals_input_octaves: number | undefined = $state();
 
 	// TODO helper component for measuring? with `let:width` - first look at Svelte's new box bindings
@@ -324,7 +324,7 @@
 			<div class="p_xl width_md box">
 				<h2 class="my_0">pick intervals</h2>
 				<Intervals_Input
-					bind:selected_scale={intervals_input_selected_scale}
+					bind:scale={intervals_input_scale}
 					bind:octaves={intervals_input_octaves}
 					oninput={(intervals) => {
 						updated_intervals = intervals;

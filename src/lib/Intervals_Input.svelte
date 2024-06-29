@@ -4,21 +4,21 @@
 	// TODO naming convention between `Intervals_Input` and `Select_Notes_Control`?
 
 	interface Props {
-		selected_scale?: Scale;
+		scale?: Scale;
 		octaves?: number;
 		oninput?: (intervals: Intervals) => void;
 	}
 
-	let {selected_scale = $bindable(scales[0]), octaves = $bindable(1), oninput}: Props = $props(); // eslint-disable-line prefer-const
+	let {scale = $bindable(scales[0]), octaves = $bindable(1), oninput}: Props = $props(); // eslint-disable-line prefer-const
 
-	const intervals: Intervals = $derived(to_scale_notes(selected_scale, octaves));
+	const intervals: Intervals = $derived(to_scale_notes(scale, octaves));
 </script>
 
 <label>
 	<div class="title">scale</div>
-	<select bind:value={selected_scale}>
-		{#each scales as scale (scale)}
-			<option value={scale}>{scale.name}</option>
+	<select bind:value={scale}>
+		{#each scales as s (s)}
+			<option value={s}>{s.name}</option>
 		{/each}
 	</select>
 </label>
