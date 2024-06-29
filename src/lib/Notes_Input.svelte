@@ -197,7 +197,7 @@
 <style>
 	.notes_input {
 		width: var(--notes_input_width, auto); /* TODO @multiple hacky width */
-		max-width: calc(100vw - 100px); /* TODO @multiple hacky width */
+		max-width: calc(100vw - 120px); /* TODO @multiple hacky width */
 		display: flex;
 		align-items: center;
 		flex-direction: column;
