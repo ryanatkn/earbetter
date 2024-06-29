@@ -53,6 +53,7 @@
 
 <div
 	class="piano"
+	class:disabled={!clickable}
 	aria-disabled={!clickable}
 	style:width="{width}px"
 	style:height="{natural_key_height}px"
@@ -80,5 +81,8 @@
 <style>
 	.piano {
 		position: relative;
+	}
+	.disabled {
+		pointer-events: none;
 	}
 </style>

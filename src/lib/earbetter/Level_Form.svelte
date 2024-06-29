@@ -155,7 +155,7 @@
 				<input
 					bind:this={intervals_el}
 					value={serialize_intervals(updated_intervals)}
-					oninput={(e) => (updated_intervals = parse_intervals(e.currentTarget.value))}
+					onchange={(e) => (updated_intervals = parse_intervals(e.currentTarget.value))}
 				/>
 			</label>
 			<button type="button" onclick={() => (picking_intervals = true)}> pick intervals </button>
@@ -223,11 +223,11 @@
 		{/if}
 		<fieldset bind:clientWidth={piano_width}>
 			<label style:margin-bottom={0}>
-				<div class="title text_align_center">tonics</div>
+				<div class="title">tonics</div>
 				<input
 					bind:this={tonics_el}
 					value={serialize_notes(updated_tonics)}
-					oninput={(e) => (updated_tonics = parse_notes(e.currentTarget.value))}
+					onchange={(e) => (updated_tonics = parse_notes(e.currentTarget.value))}
 					placeholder="all"
 				/>
 			</label>

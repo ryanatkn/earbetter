@@ -31,26 +31,26 @@
 		oninput?: (notes: Midi[] | null) => void; // TODO @multiple set reactivity - API is strange returning an array but taking a set (maybe return both?)
 	}
 
-	const {notes: notes2, min_note, max_note, oninput}: Props = $props();
+	const {notes, min_note, max_note, oninput}: Props = $props();
 
 	// TODO @multiple set reactivity - refactor these collections to use `svelte/reactivity` sets instead of cloning, upstream and downstream where appropriate
 
 	let updated_notes: Set<Midi> | undefined = $state();
 	const updated_notes_array: Midi[] | undefined = $derived(
-		updated_notes && Array.from(updated_notes),
+		updated_notes && Array.from(updated_notes).sort((a, b) => a - b),
 	);
 
-	const current_notes = $derived(updated_notes ?? notes2);
+	const current_notes = $derived(updated_notes ?? notes);
 	const notes_count = $derived(current_notes.size);
 
 	const serialized_updated_notes = $derived(
 		updated_notes_array && serialize_notes(updated_notes_array),
 	);
-	const update_serialized_notes = (s: string): void => {
+	const update_serialized_updated_notes = (s: string): void => {
 		updated_notes = new Set(parse_notes(s)); // de-dupes
 	};
 
-	const serialized_notes = $derived(serialize_notes(Array.from(notes2)));
+	const serialized_notes = $derived(serialize_notes(Array.from(notes).sort((a, b) => a - b)));
 	const changed = $derived(!!updated_notes_array && serialized_updated_notes !== serialized_notes);
 
 	const toggle_note = (note: Midi): void => {
@@ -117,8 +117,8 @@
 		<!-- TODO copy button -->
 		<blockquote class="panel" style:margin="var(--space_lg) 0">
 			<textarea
-				value={serialized_notes}
-				oninput={(e) => update_serialized_notes(e.currentTarget.value)}
+				value={serialized_updated_notes}
+				onchange={(e) => update_serialized_updated_notes(e.currentTarget.value)}
 			></textarea>
 		</blockquote>
 		{@render buttons()}
