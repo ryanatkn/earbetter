@@ -30,7 +30,7 @@
 	const level_stats = $derived(project_data?.level_stats);
 </script>
 
-<li class="realm_item" transition:slide|local class:selected>
+<li class="realm_item" transition:slide class:selected>
 	{#if level_stats}
 		<Realm_Stats_Summary {realm_data} {level_stats} />
 	{/if}

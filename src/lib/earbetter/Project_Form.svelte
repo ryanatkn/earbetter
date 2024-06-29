@@ -138,7 +138,7 @@
 			remove project
 		</button>
 		{#if removing}
-			<div transition:slide|local>
+			<div transition:slide>
 				<button
 					type="button"
 					class="w_100"

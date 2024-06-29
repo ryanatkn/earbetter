@@ -47,7 +47,7 @@
 	<div
 		class="trial_progress_indicator"
 		style:--progress_bar_percent={percent_complete}
-		transition:fade|local
+		transition:fade
 	>
 		{#each {length: $trial.sequence.length} as _, index}
 			<div

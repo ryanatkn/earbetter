@@ -76,16 +76,16 @@
 	{#if $projects.length}
 		<div class="width_sm">
 			{#if $selected_project_data}
-				<section class="card" transition:slide|local>
+				<section class="card" transition:slide>
 					<Projects {app} />
 				</section>
 			{/if}
 			{#if ($editing_project && $editing_project_data) || !$selected_project_data}
-				<section class="card" transition:slide|local>
+				<section class="card" transition:slide>
 					<Project_Editor {app} />
 				</section>
 			{/if}
-			<section class="card" transition:slide|local>
+			<section class="card" transition:slide>
 				<div class="panel p_md">
 					<header>
 						<h2 class="my_0">controls</h2>
@@ -101,7 +101,7 @@
 	{/if}
 	<div class="width_sm">
 		{#if $show_trainer_help}
-			<section class="card" transition:slide|local>
+			<section class="card" transition:slide>
 				<div class="panel p_md">
 					<p>
 						Earbetter is an <a href="https://wikipedia.org/wiki/Ear_training">ear training</a> tool:
@@ -134,7 +134,7 @@
 			<Realms {app} />
 		</section>
 		{#if ($editing_realm && $editing_realm_data) || no_realms}
-			<section class="card" transition:slide|local>
+			<section class="card" transition:slide>
 				<Realm_Editor {app} />
 			</section>
 		{/if}
@@ -142,12 +142,12 @@
 	{#if $projects.length}
 		<div class="width_sm">
 			{#if $levels}
-				<section class="card" transition:slide|local>
+				<section class="card" transition:slide>
 					<Level_Map_Items {app} levels={$levels} />
 				</section>
 			{/if}
 			{#if $selected_realm_id && (($editing_level && $levels) || $levels?.length === 0)}
-				<section class="card" transition:slide|local>
+				<section class="card" transition:slide>
 					<div class="panel p_md">
 						<Level_Form
 							{editing}

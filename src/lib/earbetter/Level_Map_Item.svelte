@@ -33,7 +33,7 @@
 	const selected = $derived(editing || editing_this_level);
 </script>
 
-<li class="level_map_item" transition:slide|local class:selected>
+<li class="level_map_item" transition:slide class:selected>
 	{#if level_stats}
 		<Level_Stats_Summary {level_data} {level_stats} />
 	{/if}

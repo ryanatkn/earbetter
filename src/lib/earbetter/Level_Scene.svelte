@@ -183,13 +183,13 @@
 	<div class="feedback" class:success class:failure class:complete>
 		{#if complete}
 			<div class="completed_level_feedback">
-				<div class="pane" transition:scale|local>
+				<div class="pane" transition:scale>
 					<div class="panel box p_md">
-						<div class="box row" in:scale|local={{duration: 3000}}>
-							<div class="completed_header_icon" in:fly|local={{duration: 4000, x: -200}}>🎵</div>
-							<div class="completed_header_icon" in:fly|local={{duration: 4000, x: 200}}>🎶</div>
+						<div class="box row" in:scale={{duration: 3000}}>
+							<div class="completed_header_icon" in:fly={{duration: 4000, x: -200}}>🎵</div>
+							<div class="completed_header_icon" in:fly={{duration: 4000, x: 200}}>🎶</div>
 						</div>
-						<div class="panel p_md mb_md box w_100" in:scale|local={{delay: 250}}>
+						<div class="panel p_md mb_md box w_100" in:scale={{delay: 250}}>
 							<div class="panel p_md mb_md box">
 								{#if $mistakes === 0}
 									<div class="size_xl3">flawless run!</div>
@@ -206,10 +206,10 @@
 								<Level_Stats_Summary {level_data} {level_stats} />
 							</div>
 						</div>
-						<button class="big mb_md" onclick={() => exit_level()} in:scale|local={{delay: 500}}>
+						<button class="big mb_md" onclick={() => exit_level()} in:scale={{delay: 500}}>
 							go back to the map &nbsp;<code>Space</code></button
 						>
-						<button class="big" onclick={() => level.reset()} in:scale|local={{delay: 750}}>
+						<button class="big" onclick={() => level.reset()} in:scale={{delay: 750}}>
 							replay level &nbsp;<code>r</code>
 						</button>
 					</div>

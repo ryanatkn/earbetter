@@ -261,7 +261,7 @@
 		{#if onremove && editing}
 			<button type="button" onclick={() => (removing = !removing)}> remove level </button>
 			{#if removing}
-				<div transition:slide|local>
+				<div transition:slide>
 					<button
 						type="button"
 						class="w_100"

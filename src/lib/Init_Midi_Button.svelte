@@ -64,12 +64,12 @@
 				</ul>
 			</div>
 		{:else}
-			<span in:fade|local>no MIDI devices found, try again?</span>
+			<span in:fade>no MIDI devices found, try again?</span>
 		{/if}
 	{:else if request_status === 'pending'}
-		<span in:fade|local>requesting MIDI access</span>
+		<span in:fade>requesting MIDI access</span>
 	{:else if request_status === 'failure'}
-		<span in:fade|local
+		<span in:fade
 			>failed to request MIDI access{#if request_error}: {request_error}{/if}</span
 		>
 	{:else}

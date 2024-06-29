@@ -65,7 +65,7 @@
 		</label>
 	</div>
 	{#if error_message}
-		<div transition:slide|local>
+		<div transition:slide>
 			<Alert status="error">{error_message}</Alert>
 		</div>
 	{/if}

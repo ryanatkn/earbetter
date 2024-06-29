@@ -137,7 +137,7 @@
 	{#if onremove && editing}
 		<button type="button" onclick={() => (removing = !removing)}> remove realm </button>
 		{#if removing}
-			<div transition:slide|local>
+			<div transition:slide>
 				<button
 					type="button"
 					class="w_100"
@@ -167,7 +167,7 @@
 			create default realms
 		</button>
 		{#if toggle_create_default_realms}
-			<div transition:slide|local>
+			<div transition:slide>
 				<button
 					type="button"
 					class="w_100"

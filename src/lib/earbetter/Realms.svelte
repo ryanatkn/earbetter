@@ -47,7 +47,7 @@
 		<h2 class="my_0">realms</h2>
 	</header>
 	{#if $realms && $selected_project_data}
-		<div class="pb_md" transition:slide|local>
+		<div class="pb_md" transition:slide>
 			<Realm_Items
 				project_data={$selected_project_data}
 				selected_realm_data={$selected_realm_data}

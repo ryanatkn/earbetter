@@ -31,7 +31,7 @@
 	let removing = $state(false);
 </script>
 
-<li class="project_item" transition:slide|local class:selected>
+<li class="project_item" transition:slide class:selected>
 	{#if select}
 		<button class="flex_1" onclick={() => select?.(project.id)} class:selected>
 			{project.name}

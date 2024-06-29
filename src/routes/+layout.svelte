@@ -206,7 +206,7 @@
 							clear saved data
 						</button>
 						{#if deleting}
-							<div transition:slide|local>
+							<div transition:slide>
 								<!-- TODO `color_c_5` shouldn't be needed, something in `style.css` -->
 								<button
 									type="button"
