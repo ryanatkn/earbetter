@@ -125,8 +125,9 @@
 	</div>
 	<div class="piano_wrapper" style:padding="{piano_padding}px">
 		{#if innerWidth}
+			<!-- TODO @multiple hacky width -->
 			<Piano
-				width={innerWidth - piano_padding * 2}
+				width={innerWidth - piano_padding * 5}
 				{min_note}
 				{max_note}
 				max_height={300}
@@ -195,7 +196,8 @@
 
 <style>
 	.notes_input {
-		width: var(--notes_input_width, auto);
+		width: var(--notes_input_width, auto); /* TODO @multiple hacky width */
+		max-width: calc(100vw - 100px); /* TODO @multiple hacky width */
 		display: flex;
 		align-items: center;
 		flex-direction: column;

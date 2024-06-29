@@ -83,7 +83,7 @@
 			start_importing_el?.focus();
 		}}
 	>
-		<div class="importing bg p_xl width_md box">
+		<div class="importing bg shadow_d_xl p_xl width_md box">
 			<h2 class="my_0">import realm data</h2>
 			<button
 				type="button"

@@ -223,7 +223,7 @@
 		{/if}
 		<fieldset bind:clientWidth={piano_width}>
 			<label style:margin-bottom={0}>
-				<div class="title">tonics</div>
+				<div class="title text_align_center">tonics</div>
 				<input
 					bind:this={tonics_el}
 					value={serialize_notes(updated_tonics)}
@@ -235,9 +235,9 @@
 			<details>
 				<summary>more about <code>tonics</code></summary>
 				<p>
-					the <a href="https://wikipedia.org/wiki/Tonic_(music)">tonic</a> is like the "base" or "home"
+					The <a href="https://wikipedia.org/wiki/Tonic_(music)">tonic</a> is like the "base" or "home"
 					note, and for our purposes it's always the first note played in a trial, and other notes in
-					the trial are calculated from the tonic and intervals (see above)
+					the trial are calculated from the tonic and intervals. (see above)
 				</p>
 			</details>
 		</fieldset>
@@ -296,7 +296,7 @@
 			start_importing_el?.focus();
 		}}
 	>
-		<div class="importing bg p_xl width_md box">
+		<div class="importing bg shadow_d_xl p_xl width_md box">
 			<h2 class="my_0">import level data</h2>
 			<button
 				onclick={() => {
@@ -325,7 +325,7 @@
 		}}
 	>
 		{#snippet children(close)}
-			<div class="bg shadow_sm p_xl width_md box">
+			<div class="bg shadow_d_xl p_xl width_md box">
 				<h2 class="my_0">pick intervals</h2>
 				<Intervals_Input
 					scale={persisted.scale}
@@ -349,7 +349,7 @@
 		}}
 	>
 		{#snippet children(close)}
-			<div class="bg p_xl width_md box">
+			<div class="bg shadow_d_xl py_xl box">
 				<h2 class="my_0">pick tonics</h2>
 				<!-- TODO @multiple set reactivity - this `new Set` is a hack, probably change the data structure to a set, need serialization for storage -->
 				<Notes_Input

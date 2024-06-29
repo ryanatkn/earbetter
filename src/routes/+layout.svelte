@@ -158,7 +158,7 @@
 
 	{#if main_menu.opened}
 		<Dialog onclose={() => main_menu.close()}>
-			<div class="bg">
+			<div class="bg shadow_d_xl">
 				<section>
 					<!-- TODO when `.flex_direction_column` or equivalent is added to Moss, change `.box` to that -->
 					<div class="section_title box">
@@ -177,6 +177,7 @@
 								>The code</a
 							> is open source and permissively licensed.
 						</p>
+						<p>Press <code>Escape</code> to toggle this menu.</p>
 					</div>
 				</section>
 				<section>

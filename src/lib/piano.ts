@@ -37,6 +37,12 @@ export interface Piano_Key {
 	height: number;
 }
 
+// TODO piano keys should be centered instead of left aligned, currently the right edge is not flush like the left.
+// The correct calculation will be to add a fixed amount to each key's `left_offset` OR
+// have a separate `right_offset` piano-level property.
+// This amount is half of the remainder between the `width` and the keys' total width.
+// It needs to handle any trailing accidental and subtract the correct overflow from the natural.
+
 export const compute_piano = (
 	width: number,
 	min_note: Midi,

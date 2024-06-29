@@ -7,8 +7,8 @@
 
 <main>
 	<Header />
-	<section class="tagline panel">
-		<p>ear trainer and tools for playing and programming music and audio</p>
+	<section class="tagline panel text_align_center">
+		<p>ear trainer and tools for<br />playing and programming music and audio</p>
 	</section>
 	<section>
 		<nav>
