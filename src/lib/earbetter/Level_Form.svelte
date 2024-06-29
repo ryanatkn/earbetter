@@ -160,7 +160,7 @@
 			</label>
 			<button type="button" onclick={() => (picking_intervals = true)}> pick intervals </button>
 			<details>
-				<summary>more about <code>intervals</code></summary>
+				<summary>about <code>intervals</code></summary>
 				<p>
 					<code>intervals</code> is a comma-separated list of numbers representing the
 					<a href="https://wikipedia.org/wiki/Interval_(music)">musical intervals</a> used in the
@@ -233,7 +233,7 @@
 			</label>
 			<button type="button" onclick={() => (picking_tonics = true)}> pick tonics </button>
 			<details>
-				<summary>more about <code>tonics</code></summary>
+				<summary>about <code>tonics</code></summary>
 				<p>
 					The <a href="https://wikipedia.org/wiki/Tonic_(music)">tonic</a> is like the "base" or "home"
 					note, and for our purposes it's always the first note played in a trial, and other notes in
