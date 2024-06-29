@@ -120,10 +120,14 @@
 		importing = true;
 	};
 
-	// this persists form values across UI states but not across page nav,
-	// would use SvelteKit snapshots for that - https://kit.svelte.dev/docs/snapshots
-	let intervals_input_scale: Scale | undefined = $state();
-	let intervals_input_octaves: number | undefined = $state();
+	// TODO Putting these values here persists form values across UI states but not across page nav,
+	// use SvelteKit snapshots for that - https://kit.svelte.dev/docs/snapshots
+	// This is an object instead of as plain values because
+	// Svelte errors on the non-$state `let` updates, and that'll work well with snapshots.
+	const persisted: {scale: Scale | undefined; octaves: number | undefined} = {
+		scale: undefined,
+		octaves: undefined,
+	};
 
 	// TODO helper component for measuring? with `let:width` - first look at Svelte's new box bindings
 	let piano_width: number | undefined = $state();
@@ -321,11 +325,13 @@
 		}}
 	>
 		{#snippet children(close)}
-			<div class="bg p_xl width_md box">
+			<div class="bg shadow_sm p_xl width_md box">
 				<h2 class="my_0">pick intervals</h2>
 				<Intervals_Input
-					bind:scale={intervals_input_scale}
-					bind:octaves={intervals_input_octaves}
+					scale={persisted.scale}
+					octaves={persisted.octaves}
+					onscale={(scale) => (persisted.scale = scale)}
+					onoctaves={(octaves) => (persisted.octaves = octaves)}
 					oninput={(intervals) => {
 						updated_intervals = intervals;
 						close();

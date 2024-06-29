@@ -22,6 +22,8 @@
 		to_notes_in_scale,
 	} from '$lib/music.js';
 
+	// TODO @multiple naming convention between `Intervals_Input`/`Notes_Input`/`Select_Notes_Control`?
+
 	interface Props {
 		notes: Set<Midi>;
 		min_note: Midi;

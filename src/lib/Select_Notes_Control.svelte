@@ -10,7 +10,7 @@
 		lookup_scale,
 	} from '$lib/music.js';
 
-	// TODO naming convention between `Intervals_Input` and `Select_Notes_Control`?
+	// TODO @multiple naming convention between `Intervals_Input`/`Notes_Input`/`Select_Notes_Control`?
 
 	interface Props {
 		scale: Signal<Scale>;
