@@ -1,13 +1,22 @@
 <script lang="ts">
+	import type {Snippet} from 'svelte';
+
 	interface Props {
 		title?: string;
 		onclick: () => void;
+		children?: Snippet;
 	}
 
-	const {title = 'go back', onclick}: Props = $props();
+	const {title = 'go back', onclick, children}: Props = $props();
 </script>
 
-<button {title} class="icon_button plain_button" {onclick}> ← </button>
+<button {title} class="icon_button plain_button" {onclick}>
+	{#if children}
+		{@render children()}
+	{:else}
+		←
+	{/if}
+</button>
 
 <style>
 	button {
