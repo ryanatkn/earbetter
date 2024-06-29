@@ -36,14 +36,16 @@ export type Note_Name =
 export const chromas = Object.freeze([1,  2,  3,  4,  5,  6,  7,  8,  9,  10,  11, 12] as const); // prettier-ignore
 /**
  * The numerical equivalent to `Pitch_Class`.
+ * Corresponds to indices of `pitch_classes` + 1.
  *
  * @see https://wikipedia.org/wiki/Pitch_class
  */
 export const Chroma = z.union([z.literal(1),  z.literal(2),  z.literal(3),  z.literal(4),  z.literal(5),  z.literal(6),  z.literal(7),  z.literal(8),  z.literal(9),  z.literal(10),  z.literal(11), z.literal(12)]); // prettier-ignore
-export type Chroma = Flavored<z.infer<typeof Chroma>, 'Chroma'>; // corresponds to indices of `pitch_classes` + 1
+export type Chroma = z.infer<typeof Chroma>; // TODO doesn't use `Flavored` because it's incompatible with indexing elsewhere
 
 /**
  * The text equivalent to `Chroma`.
+ * Each index corresponds to `chromas` - 1.
  *
  * @see https://wikipedia.org/wiki/Pitch_class
  */
