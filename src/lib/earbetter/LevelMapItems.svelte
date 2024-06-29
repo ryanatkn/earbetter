@@ -25,7 +25,7 @@
 	};
 </script>
 
-<div class="panel padded_md">
+<div class="panel p_md">
 	<div class="prose">
 		<header>
 			<h2>levels</h2>
@@ -51,7 +51,7 @@
 		display: flex;
 		flex-direction: column;
 		align-items: stretch;
-		margin-bottom: var(--spacing_md);
+		margin-bottom: var(--space_md);
 	}
 	button {
 		width: 100%;

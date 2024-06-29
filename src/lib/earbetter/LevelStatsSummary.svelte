@@ -47,6 +47,6 @@
 		font-weight: 600;
 	}
 	.remainder {
-		opacity: var(--faded_3);
+		opacity: var(--fade_3);
 	}
 </style>

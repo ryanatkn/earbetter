@@ -23,7 +23,7 @@
 	$: ({projects} = $app_data);
 </script>
 
-<div class="panel padded_md">
+<div class="panel p_md">
 	<div class="prose">
 		<header>
 			<h2>projects</h2>
@@ -56,7 +56,7 @@
 
 <style>
 	.create-new-project {
-		margin-top: var(--spacing_md);
+		margin-top: var(--space_md);
 		width: 100%;
 	}
 </style>

@@ -37,7 +37,7 @@
 	};
 </script>
 
-<div class="panel padded_md">
+<div class="panel p_md">
 	<div class="prose">
 		<header>
 			<h2>realms</h2>
@@ -70,6 +70,6 @@
 		width: 100%;
 	}
 	.realm-items-wrapper {
-		padding-bottom: var(--spacing_md);
+		padding-bottom: var(--space_md);
 	}
 </style>

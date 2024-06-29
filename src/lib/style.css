@@ -31,7 +31,7 @@
 	--accent_border_color_dark: hsla(var(--accent_hue), 100%, 43%, 0.5);
 	--accent_border_color_darker: hsla(var(--accent_hue), 100%, 28%, 0.5);
 	--light_border_color: hsla(var(--accent_hue), 50%, 50%, 0.4);
-	--spacing_lg: 20px;
+	--space_lg: 20px;
 	--size_lg: 20px;
 
 	--primary_color: hsl(var(--primary_hue), 80%, 52%);
@@ -92,8 +92,8 @@ a:active {
 }
 
 button.big {
-	font-size: var(--size_1);
-	padding: var(--spacing_md) var(--spacing_3);
+	font-size: var(--size_xl);
+	padding: var(--space_md) var(--space_xl3);
 }
 
 /* TODO fix this class upstream so this is controlled by a variable */
@@ -111,12 +111,12 @@ code {
 	margin-bottom: 0 !important;
 }
 .prose .row:not(:last-child) {
-	margin-bottom: var(--spacing_lg);
+	margin-bottom: var(--space_lg);
 }
 
 th,
 td {
-	padding: 0 var(--spacing_sm);
+	padding: 0 var(--space_sm);
 }
 
 @keyframes highlighting {
@@ -129,9 +129,9 @@ td {
 }
 
 header {
-	font-size: var(--size_1);
+	font-size: var(--size_xl);
 	text-align: center;
-	margin-bottom: var(--spacing_md);
+	margin-bottom: var(--space_md);
 }
 
 .error {
@@ -146,7 +146,7 @@ button {
 
 /* cards include padding for layout so they can be seamlessly animated in/out (is janky with margin) */
 .card {
-	padding: var(--spacing_3) 0;
+	padding: var(--space_xl3) 0;
 	margin: 0;
 }
 
@@ -156,13 +156,13 @@ button {
 }
 
 .section-title {
-	padding: var(--spacing_lg);
+	padding: var(--space_lg);
 	display: flex;
 	align-items: center;
 	justify-content: center;
 	background: var(--lighten_1);
 	width: 100%;
-	margin-bottom: var(--spacing_md);
+	margin-bottom: var(--space_md);
 }
 
 .accent {
@@ -179,17 +179,12 @@ button {
 	--border_color: var(--accent_border_color_darker);
 }
 
-/* TODO hacky, just being lazy */
-.padded_md-x {
-	padding: 0 var(--spacing_md);
-}
-
 .progress-bar {
 	position: var(--progress_bar_position, absolute);
 	left: var(--progress_bar_left, 0);
-	top: var(--progress_bar_top, calc(50% - var(--progress_bar_height, var(--spacing_md)) / 2));
+	top: var(--progress_bar_top, calc(50% - var(--progress_bar_height, var(--space_md)) / 2));
 	width: calc(var(--progress_bar_percent, 0) * 100%);
-	height: var(--progress_bar_height, var(--spacing_md));
+	height: var(--progress_bar_height, var(--space_md));
 	background-color: var(--progress_bar_bg, var(--lighten_4));
 	border-radius: var(--border_radius);
 	transition: var(

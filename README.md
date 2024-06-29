@@ -6,10 +6,6 @@
 - features [a configurable ear trainer](https://earbetter.ryanatkn.com/game)
 - also has [a playable piano](https://earbetter.ryanatkn.com/piano)
 - supports MIDI devices like piano keyboards
-- published to npm as
-  [`@ryanatkn/earbetter`](https://www.npmjs.com/package/@ryanatkn/earbetter)
-  with utilities, types, and Svelte components for audio and music
-  (see [`package.json`](/package.json))
 
 to help see [contributing.md](contributing.md)
 

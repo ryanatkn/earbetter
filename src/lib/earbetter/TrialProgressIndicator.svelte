@@ -63,7 +63,7 @@
 	}
 	.progress-bar {
 		--progress_bar_duration: var(--duration_2);
-		--progress_bar_height: var(--spacing_xs2);
+		--progress_bar_height: var(--space_xs2);
 		--progress_bar_bg: var(--lighten_3);
 	}
 </style>

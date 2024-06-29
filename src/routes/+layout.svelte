@@ -1,6 +1,10 @@
 <script lang="ts">
 	import '@ryanatkn/fuz/style.css';
 	import '@ryanatkn/fuz/theme.css';
+	import '@ryanatkn/fuz/semantic_classes.css';
+	import '@ryanatkn/fuz/utility_classes.css';
+	import '@ryanatkn/fuz/variable_classes.css';
+	import '@ryanatkn/fuz/animations.css';
 	import '$lib/style.css';
 
 	import Themed from '@ryanatkn/fuz/Themed.svelte';
@@ -132,57 +136,59 @@
 
 	{#if show_main_menu}
 		<Dialog on:close={() => (show_main_menu = false)}>
-			<section class="prose">
-				<h1 class="section-title box">
-					earbetter <div class="breadcrumbs-wrapper"><SiteBreadcrumb /></div>
-				</h1>
-				<h2 class="section-title">settings</h2>
-				<form class="width_sm box padded_md-x">
-					<VolumeControl {volume} />
-					<InstrumentControl {instrument} />
-					<aside>Earbetter supports MIDI devices like piano keyboards, connect and click:</aside>
-					<InitMidiButton />
-				</form>
-			</section>
-			<section>
-				<SiteMap />
-			</section>
-			<section class="box width_sm">
-				<div class="prose">
-					<h2 class="section-title">data</h2>
-					<div class="padded_md-x">
-						<aside>
-							<a href="https://developer.mozilla.org/en-US/docs/Web/API/Window/localStorage"
-								><code>localStorage</code></a
-							> is used to save your data locally on your computer
-						</aside>
+			<div class="bg">
+				<section class="prose">
+					<h1 class="section-title box">
+						earbetter <div class="breadcrumbs-wrapper"><SiteBreadcrumb /></div>
+					</h1>
+					<h2 class="section-title">settings</h2>
+					<form class="width_sm box px_md">
+						<VolumeControl {volume} />
+						<InstrumentControl {instrument} />
+						<aside>Earbetter supports MIDI devices like piano keyboards, connect and click:</aside>
+						<InitMidiButton />
+					</form>
+				</section>
+				<section>
+					<SiteMap />
+				</section>
+				<section class="box width_sm">
+					<div class="prose">
+						<h2 class="section-title">data</h2>
+						<div class="px_md">
+							<aside>
+								<a href="https://developer.mozilla.org/en-US/docs/Web/API/Window/localStorage"
+									><code>localStorage</code></a
+								> is used to save your data locally on your computer
+							</aside>
+						</div>
 					</div>
-				</div>
-				<button on:click={() => (deleting = !deleting)}> clear saved data </button>
-				{#if deleting}
-					<div transition:slide|local>
-						<button
-							on:click={() => {
-								localStorage.clear();
-								location.reload();
-							}}
+					<button on:click={() => (deleting = !deleting)}> clear saved data </button>
+					{#if deleting}
+						<div transition:slide|local>
+							<button
+								on:click={() => {
+									localStorage.clear();
+									location.reload();
+								}}
+							>
+								✕ permanently delete all locally saved data
+							</button>
+						</div>
+					{/if}
+				</section>
+				<section class="box prose width_sm">
+					<h2 class="section-title">privacy</h2>
+					<p class="p_md">
+						this website collects no data - the only server it talks to is <a
+							href="https://pages.github.com/">GitHub Pages</a
 						>
-							✕ permanently delete all locally saved data
-						</button>
-					</div>
-				{/if}
-			</section>
-			<section class="box prose width_sm">
-				<h2 class="section-title">privacy</h2>
-				<p class="padded_md">
-					this website collects no data - the only server it talks to is <a
-						href="https://pages.github.com/">GitHub Pages</a
-					>
-					to serve static files, see
-					<a href="https://github.com/ryanatkn/earbetter">the source code</a> for more
-				</p>
-			</section>
-			<Footer flush={true} />
+						to serve static files, see
+						<a href="https://github.com/ryanatkn/earbetter">the source code</a> for more
+					</p>
+				</section>
+				<Footer flush={true} />
+			</div>
 		</Dialog>
 	{/if}
 </Themed>

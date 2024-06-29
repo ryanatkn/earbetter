@@ -5,7 +5,7 @@
 </script>
 
 <footer class:flush>
-	<div class="panel padded_md width_sm">
+	<div class="panel p_md width_sm">
 		<a href="https://github.com/ryanatkn/earbetter">source code</a>
 		<div>public domain</div>
 		<div class="breadcrumbs-wrapper">
@@ -16,12 +16,12 @@
 
 <style>
 	footer {
-		margin: var(--spacing_3) auto;
+		margin: var(--space_xl3) auto;
 		text-align: center;
 		display: flex;
 		flex-direction: column;
 		align-items: center;
-		padding-bottom: var(--spacing_3);
+		padding-bottom: var(--space_xl3);
 	}
 	.flush {
 		padding-bottom: 0;
@@ -36,6 +36,6 @@
 		align-items: center;
 	}
 	.breadcrumbs-wrapper {
-		font-size: var(--size_2);
+		font-size: var(--size_xl2);
 	}
 </style>

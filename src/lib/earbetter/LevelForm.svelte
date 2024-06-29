@@ -262,7 +262,7 @@
 			{#if removing}
 				<div transition:slide|local>
 					<button
-						class="width_full"
+						class="w_100"
 						type="button"
 						style:margin-bottom={0}
 						on:click={() => {
@@ -276,7 +276,7 @@
 			{/if}
 			<button
 				type="button"
-				style:margin-top="var(--spacing_lg)"
+				style:margin-top="var(--space_lg)"
 				on:click={() => dispatch('duplicate', id)}
 			>
 				duplicate
@@ -300,7 +300,7 @@
 			start_importing_el.focus();
 		}}
 	>
-		<div class="importing prose padded_1 width_md box">
+		<div class="importing prose p_xl width_md box">
 			<h2>import level data</h2>
 			<button
 				on:click={() => {
@@ -329,7 +329,7 @@
 			intervals_el.focus();
 		}}
 	>
-		<div class="prose padded_1 width_md box">
+		<div class="prose p_xl width_md box">
 			<h2>pick intervals</h2>
 			<IntervalsInput
 				bind:selected_scale={intervals_input_selected_scale}
@@ -350,7 +350,7 @@
 			tonics_el.focus();
 		}}
 	>
-		<div class="padded_1 width_md box">
+		<div class="p_xl width_md box">
 			<div class="prose">
 				<h2>pick tonics</h2>
 			</div>
