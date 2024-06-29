@@ -321,7 +321,7 @@
 		}}
 	>
 		{#snippet children(close)}
-			<div class="p_xl width_md box">
+			<div class="bg p_xl width_md box">
 				<h2 class="my_0">pick intervals</h2>
 				<Intervals_Input
 					bind:scale={intervals_input_scale}
@@ -343,7 +343,7 @@
 		}}
 	>
 		{#snippet children(close)}
-			<div class="p_xl width_md box">
+			<div class="bg p_xl width_md box">
 				<h2 class="my_0">pick tonics</h2>
 				<!-- TODO this `new Set` is a hack, probably change the data structure to a set, need serialization for storage -->
 				<Notes_Input

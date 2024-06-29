@@ -339,13 +339,12 @@ export const midi_naturals: Set<Midi> = new Set(
 	midis.filter((m) => midi_pitch_classes[m][1] !== NOTE_SHARP_SYMBOL),
 );
 
-export const Notes = z.array(Midi);
-export type Notes = Flavored<z.infer<typeof Notes>, 'Notes'>; // TODO @multiple this doesn't work when used as a schema, use z.brand() instead? or are the egonomics too bad?
 // TODO replace with zod
-export const serialize_notes = (notes: Notes | null): string => (notes ? notes.join(', ') : '');
-export const parse_notes = (value: string): Notes =>
+export const serialize_notes = (notes: Midi[] | null): string => (notes ? notes.join(', ') : '');
+export const parse_notes = (value: string): Midi[] =>
 	value
 		.split(',')
 		.map((v) => Number(v.trim()) | 0)
+		// TODO this is way less efficient that it could be because of `safeParse`'s overhead
 		.filter((v) => !!v && Midi.safeParse(v).success) // exclude 0 intentionally because it's not a MIDI value
 		.sort((a, b) => a - b);

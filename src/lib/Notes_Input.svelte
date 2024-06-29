@@ -14,7 +14,6 @@
 	import {
 		Midi,
 		serialize_notes,
-		Notes,
 		scales,
 		Scale,
 		parse_notes,
@@ -24,35 +23,45 @@
 	} from '$lib/music.js';
 
 	interface Props {
-		notes: Set<Midi> | null;
+		notes: Set<Midi>;
 		min_note: Midi;
 		max_note: Midi;
-		oninput?: (notes: Notes | null) => void;
+		oninput?: (notes: Midi[] | null) => void; // TODO BLOCK API is strange returning an array but taking a set (maybe return both?)
 	}
 
-	let {notes = $bindable(), min_note, max_note, oninput}: Props = $props(); // eslint-disable-line prefer-const
+	const {notes: notes2, min_note, max_note, oninput}: Props = $props();
 
-	// TODO this is hacky, does a double conversion with the parent component, see the comment at the usage site
-	const notes_array = $derived(notes ? Array.from(notes).sort((a, b) => a - b) : null);
+	// TODO refactor these collections to use `svelte/reactivity` sets instead of cloning, upstream and downstream where appropriate
 
-	const notes_str = $derived(serialize_notes(notes_array));
-	const update_notes_str = (s: string): void => {
-		notes = new Set(parse_notes(s));
+	let updated_notes: Set<Midi> | undefined = $state();
+	const updated_notes_array: Midi[] | undefined = $derived(
+		updated_notes && Array.from(updated_notes),
+	);
+
+	const current_notes = $derived(updated_notes ?? notes2);
+	const notes_count = $derived(current_notes.size);
+
+	const serialized_updated_notes = $derived(
+		updated_notes_array && serialize_notes(updated_notes_array),
+	);
+	const update_serialized_notes = (s: string): void => {
+		updated_notes = new Set(parse_notes(s)); // de-dupes
 	};
 
-	const notes_count = $derived(notes_array ? notes_array.length : 0);
+	const serialized_notes = $derived(serialize_notes(Array.from(notes2)));
+	const changed = $derived(!!updated_notes_array && serialized_updated_notes !== serialized_notes);
 
 	const toggle_note = (note: Midi): void => {
-		if (notes?.has(note)) {
-			notes = new Set(notes);
-			notes.delete(note);
+		const updated = new Set(current_notes);
+		if (updated.has(note)) {
+			updated.delete(note);
 		} else {
-			notes = notes ? new Set(notes) : new Set();
-			notes.add(note);
+			updated.add(note);
 		}
+		updated_notes = updated;
 	};
 
-	$inspect(`notes`, notes);
+	$inspect(`notes`, current_notes);
 
 	// TODO lots of copypasta below
 
@@ -75,21 +84,21 @@
 		const scale_notes = to_notes_in_scale(scale, key, min_note, max_note);
 		// TODO this is a hacky and slow but it approximates the desired UX, is not ideal,
 		// I think the best UX would be to detect if each scale is currently fully active
-		if (!notes || !notes_array) {
-			notes = scale_notes;
+		if (!updated_notes || !updated_notes_array) {
+			updated_notes = scale_notes;
 			return;
 		}
 		let fully_included = true;
 		for (const n of scale_notes) {
-			if (!notes.has(n)) {
+			if (!updated_notes.has(n)) {
 				fully_included = false;
 				break;
 			}
 		}
 		const next_notes = fully_included
-			? notes_array.filter((n) => !scale_notes.has(n))
-			: notes_array.concat(Array.from(scale_notes));
-		notes = new Set(next_notes);
+			? updated_notes_array.filter((n) => !scale_notes.has(n))
+			: updated_notes_array.concat(Array.from(scale_notes));
+		updated_notes = new Set(next_notes);
 	};
 </script>
 
@@ -105,26 +114,12 @@
 	<div class="notes width_sm">
 		<!-- TODO copy button -->
 		<blockquote class="panel" style:margin="var(--space_lg) 0">
-			<textarea value={notes_str} oninput={(e) => update_notes_str(e.currentTarget.value)}
+			<textarea
+				value={serialized_notes}
+				oninput={(e) => update_serialized_notes(e.currentTarget.value)}
 			></textarea>
 		</blockquote>
-		<button
-			type="button"
-			onclick={(e) => {
-				swallow(e);
-				notes = null;
-			}}
-			disabled={!notes?.size}>clear selection</button
-		>
-		<button
-			type="button"
-			class="accent"
-			onclick={(e) => {
-				swallow(e);
-				oninput?.(notes_array);
-			}}
-			>select {#if notes_count === 0}all{:else}{notes_count}{/if} tonic{plural(notes_count)}</button
-		>
+		{@render buttons()}
 	</div>
 	<div class="piano_wrapper" style:padding="{piano_padding}px">
 		{#if innerWidth}
@@ -134,7 +129,7 @@
 				{max_note}
 				max_height={300}
 				pressed_keys={$playing_notes}
-				highlighted_keys={notes}
+				highlighted_keys={current_notes}
 				onpress={(note) => {
 					toggle_note(note);
 					play(note);
@@ -153,11 +148,12 @@
 				{/each}
 			</select></label
 		>
-		<div class="scales">
+		<div class="scales mb_lg">
 			{#each scales as scale (scale.name)}
 				<button onclick={() => toggle_scale(scale)}>{scale.name}</button>
 			{/each}
 		</div>
+		{@render buttons()}
 	</section>
 	<form class="width_sm panel p_md">
 		<fieldset>
@@ -169,6 +165,31 @@
 		</fieldset>
 	</form>
 </div>
+
+{#snippet buttons()}
+	<button
+		class="mb_lg"
+		type="button"
+		onclick={(e) => {
+			swallow(e);
+			updated_notes = new Set();
+		}}
+		disabled={notes_count === 0}
+	>
+		clear selection
+	</button>
+	<button
+		type="button"
+		class="accent"
+		disabled={!changed}
+		onclick={(e) => {
+			swallow(e);
+			oninput?.(updated_notes_array!);
+		}}
+	>
+		select {#if notes_count === 0}all{:else}{notes_count}{/if} tonic{plural(notes_count)}
+	</button>
+{/snippet}
 
 <style>
 	.notes_input {

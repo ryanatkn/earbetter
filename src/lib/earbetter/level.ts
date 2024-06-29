@@ -4,7 +4,7 @@ import type {Flavored} from '@ryanatkn/belt/types.js';
 import {signal, batch, Signal} from '@preact/signals-core';
 import {base} from '$app/paths';
 
-import {Midi, Intervals, Notes} from '$lib/music.js';
+import {Midi, Intervals} from '$lib/music.js';
 import {play_note} from '$lib/play_note.js';
 import type {Instrument, Milliseconds, Volume} from '$lib/helpers.js';
 import {serialize_to_hash} from '$lib/url.js';
@@ -21,7 +21,7 @@ export const DEFAULT_SEQUENCE_LENGTH = 2;
 export const DEFAULT_TRIAL_COUNT = 5;
 export const DEFAULT_LEVEL_NAME = 'new level';
 export const DEFAULT_INTERVALS: Intervals = [5, 7];
-export const DEFAULT_TONICS: Notes | null = null;
+export const DEFAULT_TONICS: Midi[] | null = null;
 export const DEFAULT_MIN_NOTE: Midi = 48;
 export const DEFAULT_MAX_NOTE: Midi = 84;
 
@@ -36,7 +36,7 @@ export const Level_Data = z.object({
 	id: Level_Id.default(create_level_id),
 	name: Level_Name.default(DEFAULT_LEVEL_NAME),
 	intervals: Intervals.default(DEFAULT_INTERVALS),
-	tonics: Notes.nullable().default(DEFAULT_TONICS),
+	tonics: z.array(Midi).nullable().default(DEFAULT_TONICS),
 	trial_count: z.number().default(DEFAULT_TRIAL_COUNT),
 	sequence_length: z.number().default(DEFAULT_SEQUENCE_LENGTH),
 	min_note: Midi.default(DEFAULT_MIN_NOTE),

@@ -6,9 +6,10 @@
 	interface Props {
 		scale?: Scale;
 		octaves?: number;
-		oninput?: (intervals: Intervals) => void;
+		oninput?: (intervals: Intervals) => void; // TODO BLOCK should include scale/octaves?
 	}
 
+	// TODO BLOCK remove the bindables
 	let {scale = $bindable(scales[0]), octaves = $bindable(1), oninput}: Props = $props(); // eslint-disable-line prefer-const
 
 	const intervals: Intervals = $derived(to_scale_notes(scale, octaves));
