@@ -202,16 +202,24 @@
 							>.
 						</p>
 						<!-- TODO add an `export saved data` button -->
-						<button class="w_100" onclick={() => (deleting = !deleting)}> clear saved data </button>
+						<button type="button" class="w_100" onclick={() => (deleting = !deleting)}>
+							clear saved data
+						</button>
 						{#if deleting}
 							<div transition:slide|local>
+								<!-- TODO `color_c_5` shouldn't be needed, something in `style.css` -->
 								<button
+									type="button"
+									class="w_100 color_c color_c_5"
 									onclick={() => {
 										localStorage.clear();
 										location.reload();
 									}}
 								>
-									✕ permanently delete all locally saved data
+									<div class="size_xl3">✕</div>
+									<div class="ml_lg text_align_left">
+										permanently delete<br />all locally saved data
+									</div>
 								</button>
 							</div>
 						{/if}

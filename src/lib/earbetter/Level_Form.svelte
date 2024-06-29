@@ -274,11 +274,7 @@
 				</div>
 			{/if}
 			{#if onduplicate}
-				<button
-					type="button"
-					style:margin-top="var(--space_lg)"
-					onclick={() => onduplicate(level_data.id)}
-				>
+				<button type="button" class="mt_lg" onclick={() => onduplicate(level_data.id)}>
 					duplicate level
 				</button>
 			{/if}

@@ -123,7 +123,9 @@
 						>
 					</aside>
 					<div class="box row">
-						<button style:margin="0" onclick={() => toggle_trainer_help()}>ok, hide this</button>
+						<button type="button" style:margin="0" onclick={() => toggle_trainer_help()}
+							>ok, hide this</button
+						>
 					</div>
 				</div>
 			</section>
