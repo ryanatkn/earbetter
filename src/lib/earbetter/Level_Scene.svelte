@@ -190,15 +190,15 @@
 							<div class="completed_header_icon" in:fly|local={{duration: 4000, x: 200}}>🎶</div>
 						</div>
 						<div
-							class="panel p_md box"
+							class="panel p_md box w_100"
 							in:scale|local={{delay: 250}}
 							style:margin-bottom="var(--space_md)"
 						>
-							<div class="panel p_md box box-text" style:margin-bottom="var(--space_md)">
+							<div class="panel p_md box" style:margin-bottom="var(--space_md)">
 								{#if $mistakes === 0}
-									<div style:font-size="var(--size_xl3)">flawless run!</div>
+									<div class="size_xl3">flawless run!</div>
 								{:else}
-									<div style:font-size="var(--size_xl3)">
+									<div class="size_xl3">
 										{$mistakes}
 									</div>
 									<div>
