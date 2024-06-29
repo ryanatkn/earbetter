@@ -6,10 +6,17 @@ import {type Hsl, hsl_to_string, type Hue} from '@ryanatkn/belt/colors.js';
 
 import type {Frequency} from '$lib/helpers.js';
 
-export const DEFAULT_TUNING = 440; // https://wikipedia.org/wiki/A440_(pitch_standard)
+/**
+ * @see https://wikipedia.org/wiki/Musical_tuning
+ * @see https://wikipedia.org/wiki/A440_(pitch_standard)
+ */
+export const DEFAULT_TUNING = 440;
 
 export const NOTE_FLAT_SYMBOL = '♭';
 export const NOTE_SHARP_SYMBOL = '♯';
+/**
+ * @see https://wikipedia.org/wiki/Musical_note
+ */
 export type Note_Name =
   | 'C-1' | 'C♯-1' | 'D-1' | 'D♯-1' | 'E-1' | 'F-1' | 'F♯-1' | 'G-1' | 'G♯-1' | 'A-1' | 'A♯-1' | 'B-1'
   | 'C0'  | 'C♯0'  | 'D0'  | 'D♯0'  | 'E0'  | 'F0'  | 'F♯0'  | 'G0'  | 'G♯0'  | 'A0'  | 'A♯0'  | 'B0'
@@ -23,15 +30,63 @@ export type Note_Name =
   | 'C8'  | 'C♯8'  | 'D8'  | 'D♯8'  | 'E8'  | 'F8'  | 'F♯8'  | 'G8'  | 'G♯8'  | 'A8'  | 'A♯8'  | 'B8'
   | 'C9'  | 'C♯9'  | 'D9'  | 'D♯9'  | 'E9'  | 'F9'  | 'F♯9'  | 'G9'; // prettier-ignore
 
+/**
+ * @see https://wikipedia.org/wiki/Pitch_class
+ */
 export const chromas = Object.freeze([1,  2,  3,  4,  5,  6,  7,  8,  9,  10,  11, 12] as const); // prettier-ignore
+/**
+ * The numerical equivalent to `Pitch_Class`.
+ *
+ * @see https://wikipedia.org/wiki/Pitch_class
+ */
 export const Chroma = z.union([z.literal(1),  z.literal(2),  z.literal(3),  z.literal(4),  z.literal(5),  z.literal(6),  z.literal(7),  z.literal(8),  z.literal(9),  z.literal(10),  z.literal(11), z.literal(12)]); // prettier-ignore
 export type Chroma = Flavored<z.infer<typeof Chroma>, 'Chroma'>; // corresponds to indices of `pitch_classes` + 1
 
-export type Octave = -1 | 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9;
+/**
+ * The text equivalent to `Chroma`.
+ *
+ * @see https://wikipedia.org/wiki/Pitch_class
+ */
+export const Pitch_Class = z.enum([
+	'C',
+	'C♯',
+	'D',
+	'D♯',
+	'E',
+	'F',
+	'F♯',
+	'G',
+	'G♯',
+	'A',
+	'A♯',
+	'B',
+]);
+export type Pitch_Class = z.infer<typeof Pitch_Class>;
+export const pitch_classes = Pitch_Class.options;
+export const DEFAULT_PITCH_CLASS = pitch_classes[0];
+export const pitch_class_aliases: Record<Pitch_Class, string> = {
+	'C♯': 'D♭',
+	'D♯': 'E♭',
+	'F♯': 'G♭',
+	'G♯': 'A♭',
+	'A♯': 'B♭',
+} as Record<Pitch_Class, string>; // TODO the `♯` appear to cause TS to bug out? try to remove this later
 
+/**
+ * @see https://wikipedia.org/wiki/Octave
+ */
+export const Octave = z.union([z.literal(-1), z.literal(0), z.literal(1),  z.literal(2),  z.literal(3),  z.literal(4),  z.literal(5),  z.literal(6),  z.literal(7),  z.literal(8),  z.literal(9)]); // prettier-ignore
+export type Octave = Flavored<z.infer<typeof Octave>, 'Octave'>;
+
+/**
+ * @see https://wikipedia.org/wiki/Semitone
+ */
 export const Semitones = z.number().int();
 export type Semitones = Flavored<z.infer<typeof Semitones>, 'Semitones'>; // TODO @multiple this doesn't work when used as a schema, use z.brand() instead? or are the egonomics too bad?
 
+/**
+ * @see https://wikipedia.org/wiki/Interval_(music)
+ */
 export const Intervals = z.array(Semitones);
 export type Intervals = Flavored<z.infer<typeof Intervals>, 'Intervals'>; // TODO @multiple this doesn't work when used as a schema, use z.brand() instead? or are the egonomics too bad?
 // TODO replace with zod
@@ -42,6 +97,9 @@ export const parse_intervals = (value: string): Intervals =>
 		.map((v) => Number(v.trim()) | 0)
 		.filter(Boolean); // exclude 0 intentionally
 
+/**
+ * @see https://wikipedia.org/wiki/Natural_(music)
+ */
 export const compute_naturals = (min: Midi, max: Midi): Midi[] => {
 	const naturals: Midi[] = [];
 	for (let i = min; i <= max; i++) {
@@ -50,30 +108,51 @@ export const compute_naturals = (min: Midi, max: Midi): Midi[] => {
 	return naturals;
 };
 
-export const transpose = (note: Midi, semitones: Semitones): Midi => {
+/**
+ * @see https://wikipedia.org/wiki/Transpose_music
+ */
+export const transpose = (note: Midi, semitones: Semitones): Midi | null => {
 	const transposed = note + semitones;
 	if (!is_midi(transposed)) {
-		throw Error(`Failed to transpose midi ${note} by ${semitones}`);
+		return null;
 	}
 	return transposed;
 };
 
 // TODO the hue shouldn't be hardcoded from the chroma - this relationship should be user-customizable (`app.colors` or `app.audio.colors` or something)
+/**
+ * @see https://wikipedia.org/wiki/Pitch_class
+ */
 export const chroma_to_hue: Map<Chroma, Hue> = new Map(
 	chromas.map((chroma) => [chroma, (chroma - 1) / 12]),
 );
 // TODO consider changing to a memoized helper function with optional saturation+lightness
+/**
+ * @see https://wikipedia.org/wiki/Pitch_class
+ */
 export const chroma_to_hsl: Map<Chroma, Hsl> = new Map(
 	chromas.map((chroma) => [chroma, [chroma_to_hue.get(chroma)!, 0.5, 0.5] as const]),
 );
+/**
+ * @see https://wikipedia.org/wiki/Pitch_class
+ */
 export const chroma_to_hsl_string: Map<Chroma, string> = new Map(
 	chromas.map((chroma) => [chroma, hsl_to_string(...chroma_to_hsl.get(chroma)!)]),
 );
 
+/**
+ * @see https://wikipedia.org/wiki/Interval_(music)
+ */
 export const interval_short_names = Object.freeze(['P1', 'm2', 'M2', 'm3', 'M3', 'P4', 'd5', 'P5', 'm6', 'M6', 'm7', 'M7', 'P8'] as const); // prettier-ignore
+/**
+ * @see https://wikipedia.org/wiki/Interval_(music)
+ */
 export const Interval_Short_Names = z.enum(interval_short_names);
 export type Interval_Short_Names = z.infer<typeof Interval_Short_Names>;
 
+/**
+ * @see https://wikipedia.org/wiki/Interval_(music)
+ */
 export const interval_names = Object.freeze([
 	'perfect unison',
 	'minor second',
@@ -89,6 +168,9 @@ export const interval_names = Object.freeze([
 	'major seventh',
 	'perfect octave',
 ] as const);
+/**
+ * @see https://wikipedia.org/wiki/Interval_(music)
+ */
 export const Interval_Names = z.enum(interval_names);
 export type Interval_Names = z.infer<typeof Interval_Names>;
 
@@ -98,17 +180,25 @@ export const set_enabled_notes = (
 	store: Signal<Set<Midi> | null> = signal(null),
 ): Signal<Set<Midi> | null> => setContext(ENABLED_NOTES_KEY, store);
 
+/**
+ * @see https://wikipedia.org/wiki/Scale_(music)
+ */
 export const Scale_Name = z.string();
 export type Scale_Name = Flavored<z.infer<typeof Scale_Name>, 'Scale_Name'>; // TODO @multiple this doesn't work when used as a schema, use z.brand() instead? or are the egonomics too bad?
 
+/**
+ * @see https://wikipedia.org/wiki/Scale_(music)
+ */
 export const Scale = z.object({
 	name: Scale_Name,
 	notes: z.array(Semitones),
 });
 export type Scale = z.infer<typeof Scale>;
 
-// https://wikipedia.org/wiki/Scale_(music)
-// https://wikipedia.org/wiki/Mode_(music)
+/**
+ * @see https://wikipedia.org/wiki/Scale_(music)
+ * @see https://wikipedia.org/wiki/Mode_(music)
+ */
 export const scales: Scale[] = [
 	{name: 'chromatic', notes: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11]},
 	{name: 'major', notes: [2, 4, 5, 7, 9, 11]},
@@ -150,26 +240,15 @@ export const get_scale = (): Signal<Scale> => getContext(SCALE_KEY);
 export const set_scale = (store: Signal<Scale> = signal(DEFAULT_SCALE)): Signal<Scale> =>
 	setContext(SCALE_KEY, store);
 
-export const PitchClass = z.enum(['C', 'C♯', 'D', 'D♯', 'E', 'F', 'F♯', 'G', 'G♯', 'A', 'A♯', 'B']);
-export type PitchClass = z.infer<typeof PitchClass>;
-export const pitch_classes = PitchClass.options;
-export const DEFAULT_PITCH_CLASS = pitch_classes[0];
-export const pitch_class_aliases: Record<PitchClass, string> = {
-	'C♯': 'D♭',
-	'D♯': 'E♭',
-	'F♯': 'G♭',
-	'G♯': 'A♭',
-	'A♯': 'B♭',
-} as Record<PitchClass, string>; // TODO the `♯` appear to cause TS to bug out? try to remove this later
-
 const KEY_KEY = Symbol('key');
-export const get_key = (): Signal<PitchClass> => getContext(KEY_KEY);
-export const set_key = (store: Signal<PitchClass> = signal(pitch_classes[0])): Signal<PitchClass> =>
-	setContext(KEY_KEY, store);
+export const get_key = (): Signal<Pitch_Class> => getContext(KEY_KEY);
+export const set_key = (
+	store: Signal<Pitch_Class> = signal(pitch_classes[0]),
+): Signal<Pitch_Class> => setContext(KEY_KEY, store);
 
 export const to_notes_in_scale = (
 	scale: Scale,
-	key: PitchClass = 'C',
+	key: Pitch_Class = 'C',
 	min_note: Midi = MIDI_MIN,
 	max_note: Midi = MIDI_MAX,
 ): Set<Midi> => {
@@ -194,10 +273,9 @@ export const to_notes_in_scale = (
  * but for our purposes the benefits seem to outweight the downsides.
  * The midi index is unambiguous, efficient,
  * and easy to work with both programmatically and mathematically.
+ *
+ * @see https://wikipedia.org/wiki/MIDI
  */
-
-// TODO how to do this type? trying to avoid zod's `brand` but maybe the ergonomic tradeoff is ok
-// export type Midi = Flavored<number, 'Midi'>;
 export const Midi = z.number().int().min(0).max(127);
 export type Midi = Flavored<z.infer<typeof Midi>, 'Midi'>; // TODO @multiple this doesn't work when used as a schema, use z.brand() instead? or are the egonomics too bad?
 
@@ -211,13 +289,22 @@ export const midis: Midi[] = Object.freeze(
 export const is_midi = (n: number): n is Midi =>
 	n >= MIDI_MIN && n <= MIDI_MAX && Number.isInteger(n);
 
-// note/midi/frequency formulas: https://newt.phys.unsw.edu.au/jw/notes.html
+/**
+ * @see https://newt.phys.unsw.edu.au/jw/notes.html
+ */
 export const midi_to_freq = (note: Midi, tuning: Frequency = DEFAULT_TUNING): Frequency =>
 	2 ** ((note - 69) / 12) * tuning;
 
+/**
+ * @see https://newt.phys.unsw.edu.au/jw/notes.html
+ */
 export const freq_to_midi = (freq: Frequency, tuning: Frequency): Midi =>
 	Math.round(12 * Math.log2(freq / tuning) + 69);
 
+/**
+ * Like `freq_to_midi`, but returns `null` if the result is not a valid MIDI value.
+ * @see https://newt.phys.unsw.edu.au/jw/notes.html
+ */
 export const freq_to_midi_safe = (freq: Frequency, tuning: Frequency): Midi | null => {
 	const midi = freq_to_midi(freq, tuning);
 	if (!is_midi(midi)) return null;
@@ -225,15 +312,15 @@ export const freq_to_midi_safe = (freq: Frequency, tuning: Frequency): Midi | nu
 };
 
 // TODO consider converting all of these to `Map`s
-// TODO do we want to remove the `midi` part of these data array names, or otherwise rename them?
-// maybe instead of `midiFoos`, rename to `noteFoos`?
+// TODO do we want to remove the `midi` part of these data array names, or otherwise rename them? maybe instead of `midi_*`, rename to `note_*`?
+
 export const midi_chromas: Chroma[] & Record<Midi, Chroma> = Object.freeze(
 	midis.map((m) => (m % 12) + 1),
 ) as Chroma[];
 
-export const midi_pitch_classes: PitchClass[] & Record<Midi, PitchClass> = Object.freeze(
+export const midi_pitch_classes: Pitch_Class[] & Record<Midi, Pitch_Class> = Object.freeze(
 	midis.map((m) => pitch_classes[midi_chromas[m] - 1]),
-) as PitchClass[];
+) as Pitch_Class[];
 
 export const midi_octaves: Octave[] & Record<Midi, Octave> = Object.freeze(
 	midis.map((m) => Math.floor(m / 12) - 1),
@@ -243,6 +330,9 @@ export const midi_names: Note_Name[] & Record<Midi, Note_Name> = Object.freeze(
 	midis.map((m) => midi_pitch_classes[m] + midi_octaves[m]),
 ) as Note_Name[];
 
+/**
+ * @see https://wikipedia.org/wiki/Natural_(music)
+ */
 export const midi_naturals: Set<Midi> = new Set(
 	midis.filter((m) => midi_pitch_classes[m][1] !== NOTE_SHARP_SYMBOL),
 );

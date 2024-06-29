@@ -6,7 +6,7 @@
 		type Scale,
 		pitch_classes,
 		pitch_class_aliases,
-		type PitchClass,
+		type Pitch_Class,
 		lookup_scale,
 	} from '$lib/music.js';
 
@@ -14,13 +14,13 @@
 
 	interface Props {
 		scale: Signal<Scale>;
-		key: Signal<PitchClass>;
+		key: Signal<Pitch_Class>;
 	}
 
 	const {scale, key}: Props = $props();
 
 	const input_key = (e: Event & {currentTarget: HTMLSelectElement}) =>
-		(key.value = e.currentTarget.value as PitchClass);
+		(key.value = e.currentTarget.value as Pitch_Class);
 </script>
 
 <label class="text_align_center">
