@@ -6,6 +6,7 @@
 
 	import {create_realm_id, Realm_Data, Realm_Name, type Realm_Id} from '$lib/earbetter/realm.js';
 	import default_project_data from '$lib/projects/default_project.js';
+	import Copy_To_Clipboard from '$lib/earbetter/Copy_To_Clipboard.svelte';
 
 	interface Props {
 		realm_data: Realm_Data;
@@ -86,15 +87,12 @@
 	>
 		<div class="importing bg shadow_d_xl p_xl width_md box">
 			<h2 class="my_0">import realm data</h2>
-			<button
-				type="button"
-				onclick={() => {
-					void navigator.clipboard.writeText(updated);
+			<Copy_To_Clipboard
+				text={updated}
+				oncopy={() => {
 					realm_data_el?.select();
 				}}
-			>
-				copy to clipboard
-			</button>
+			/>
 			<textarea bind:value={updated} bind:this={realm_data_el}></textarea>
 			<button
 				type="button"

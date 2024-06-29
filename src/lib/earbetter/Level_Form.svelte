@@ -19,6 +19,7 @@
 	import Intervals_Input from '$lib/Intervals_Input.svelte';
 	import Notes_Input from '$lib/Notes_Input.svelte';
 	import Piano from '$lib/Piano.svelte';
+	import Copy_To_Clipboard from '$lib/earbetter/Copy_To_Clipboard.svelte';
 
 	interface Props {
 		level_data: Level_Data;
@@ -308,15 +309,12 @@
 	>
 		<div class="importing bg shadow_d_xl p_xl width_md box">
 			<h2 class="my_0">import level data</h2>
-			<button
-				type="button"
-				onclick={() => {
-					void navigator.clipboard.writeText(updated);
+			<Copy_To_Clipboard
+				text={updated}
+				oncopy={() => {
 					level_data_el?.select();
 				}}
-			>
-				copy to clipboard
-			</button>
+			/>
 			<textarea bind:value={updated} bind:this={level_data_el}></textarea>
 			<button
 				type="button"

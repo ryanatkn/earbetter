@@ -10,6 +10,7 @@
 		Project_Name,
 		type Project_Id,
 	} from '$lib/earbetter/project.js';
+	import Copy_To_Clipboard from '$lib/earbetter/Copy_To_Clipboard.svelte';
 
 	interface Props {
 		project_data: Project_Data;
@@ -87,14 +88,12 @@
 	>
 		<div class="importing bg shadow_d_xl p_xl width_md box">
 			<h2 class="my_0">import project data</h2>
-			<button
-				onclick={() => {
-					void navigator.clipboard.writeText(updated);
+			<Copy_To_Clipboard
+				text={updated}
+				oncopy={() => {
 					project_data_el?.select();
 				}}
-			>
-				copy to clipboard
-			</button>
+			/>
 			<textarea bind:value={updated} bind:this={project_data_el}></textarea>
 			<button
 				onclick={import_data}
