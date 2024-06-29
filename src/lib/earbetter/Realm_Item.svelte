@@ -41,7 +41,7 @@
 	{/if}
 	{#if (removing && remove) || (!removing && edit)}
 		<button
-			class="icon_button plain_button deselectable"
+			class="icon_button plain_button size_xl deselectable"
 			class:selected={selected && !removing && editing}
 			title={removing ? 'remove realm' : editing ? 'stop editing realm' : 'edit realm'}
 			onclick={() => (removing ? remove?.(realm_data.id) : edit?.(realm_data))}
@@ -51,7 +51,7 @@
 	{/if}
 	{#if remove}
 		<button
-			class="icon_button plain_button"
+			class="icon_button plain_button size_xl"
 			onclick={() => (removing = !removing)}
 			title={removing ? 'cancel removing' : 'remove realm'}
 		>
@@ -74,9 +74,5 @@
 	}
 	.realm_button {
 		flex: 1;
-	}
-	.icon_button {
-		font-size: var(--size_xl);
-		width: var(--icon_button_width, 60px);
 	}
 </style>

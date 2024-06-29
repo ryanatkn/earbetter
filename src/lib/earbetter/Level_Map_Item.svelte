@@ -46,7 +46,7 @@
 		{level_data.name}
 	</button>
 	<button
-		class="icon_button plain_button"
+		class="icon_button plain_button size_xl"
 		class:selected={!removing && editing}
 		title={removing ? 'remove level' : editing ? 'stop editing level' : 'edit level'}
 		onclick={() =>
@@ -55,7 +55,7 @@
 		{#if removing}✖{:else}✎{/if}
 	</button>
 	<button
-		class="icon_button plain_button"
+		class="icon_button plain_button size_xl"
 		onclick={() => (removing = !removing)}
 		title={removing ? 'cancel removing' : 'remove level'}
 	>
@@ -76,9 +76,5 @@
 	}
 	.level_button {
 		flex: 1;
-	}
-	.icon_button {
-		font-size: var(--size_xl);
-		width: var(--icon_button_width, 60px);
 	}
 </style>

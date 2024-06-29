@@ -13,7 +13,7 @@
 
 	const {scale = scales[0], octaves = 1, onscale, onoctaves, oninput}: Props = $props();
 
-	let updated_scale: Scale = $state(scale);
+	let updated_scale: Scale = $state.frozen(scale);
 
 	let updated_octaves: number = $state(octaves);
 

@@ -279,7 +279,7 @@
 					style:margin-top="var(--space_lg)"
 					onclick={() => onduplicate(level_data.id)}
 				>
-					duplicate
+					duplicate level
 				</button>
 			{/if}
 		{/if}

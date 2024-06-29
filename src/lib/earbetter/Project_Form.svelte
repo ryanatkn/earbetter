@@ -154,7 +154,7 @@
 		{/if}
 		{#if onduplicate}
 			<button type="button" class="w_100" onclick={() => onduplicate(project_data.id)}>
-				duplicate
+				duplicate project
 			</button>
 		{/if}
 	{/if}
@@ -167,7 +167,7 @@
 		</div>
 	{/if}
 	{#if onclose && editing}
-		<button type="button" onclick={() => onclose(project_data.id)}>
+		<button type="button" class="w_100" onclick={() => onclose(project_data.id)}>
 			{#if changed}discard changes and stop editing{:else}close project editor{/if}
 		</button>
 	{/if}
