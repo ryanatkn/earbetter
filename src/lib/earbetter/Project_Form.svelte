@@ -1,5 +1,4 @@
 <script lang="ts">
-	import type {Snippet} from 'svelte';
 	import {slide} from 'svelte/transition';
 	import {swallow} from '@ryanatkn/belt/dom.js';
 	import Dialog from '@ryanatkn/fuz/Dialog.svelte';
@@ -15,13 +14,20 @@
 	interface Props {
 		project_data: Project_Data;
 		editing?: boolean;
-		onsubmit?: (project_data: Project_Data) => void;
+		onsubmit: (project_data: Project_Data) => void;
 		onremove?: (project_id: Project_Id) => void;
 		onduplicate?: (project_id: Project_Id) => void;
-		footer?: Snippet<[changed: boolean]>;
+		oncancel?: (project_id: Project_Id) => void;
 	}
 
-	const {project_data, editing = false, onsubmit, onremove, onduplicate, footer}: Props = $props();
+	const {
+		project_data,
+		editing = false,
+		onsubmit,
+		onremove,
+		onduplicate,
+		oncancel,
+	}: Props = $props();
 
 	let removing = $state(false);
 
@@ -63,7 +69,7 @@
 			// add an `id` if there is none
 			if (json && !json.id) json.id = create_project_id();
 			const parsed = Project_Data.parse(json);
-			onsubmit?.(parsed);
+			onsubmit(parsed);
 		} catch (err) {
 			console.error('failed to import data', err);
 			parse_error_message = err.message || 'unknown error';
@@ -119,48 +125,45 @@
 				onkeydown={(e) => {
 					if (e.key === 'Enter') {
 						swallow(e);
-						onsubmit?.(to_data());
+						onsubmit(to_data());
 					}
 				}}
 			/>
 		</label>
 	</fieldset>
 	<button
-		class="accent"
 		type="button"
-		onclick={() => onsubmit?.(to_data())}
+		class="accent w_100"
+		onclick={() => onsubmit(to_data())}
 		disabled={editing && !changed}
 	>
 		{#if editing}save changes to project{:else}create project{/if}
 	</button>
-	{#if editing}
-		<button type="button" style:margin-bottom={0} onclick={() => (removing = !removing)}>
+	{#if onremove && editing}
+		<button class="w_100" type="button" onclick={() => (removing = !removing)}>
 			remove project
 		</button>
 		{#if removing}
 			<div transition:slide|local>
 				<button
-					class="w_100"
 					type="button"
-					style:margin-bottom={0}
+					class="w_100"
 					onclick={() => {
 						removing = false;
-						onremove?.(project_data.id);
+						onremove(project_data.id);
 					}}
 				>
 					✖ confirm remove
 				</button>
 			</div>
 		{/if}
-		<button
-			type="button"
-			style:margin-top="var(--space_lg)"
-			onclick={() => onduplicate?.(project_data.id)}
-		>
-			duplicate
-		</button>
+		{#if onduplicate}
+			<button type="button" class="w_100" onclick={() => onduplicate(project_data.id)}>
+				duplicate
+			</button>
+		{/if}
 	{/if}
-	<button type="button" onclick={start_importing_data} bind:this={start_importing_el}>
+	<button type="button" class="w_100" onclick={start_importing_data} bind:this={start_importing_el}>
 		{#if editing}import/export data{:else}import data{/if}
 	</button>
 	{#if parse_error_message}
@@ -168,8 +171,10 @@
 			<Alert status="error"><pre>{parse_error_message}</pre></Alert>
 		</div>
 	{/if}
-	{#if footer}
-		{@render footer(changed)}
+	{#if oncancel && editing}
+		<button type="button" onclick={() => oncancel(project_data.id)}>
+			{#if changed}discard changes and stop editing{:else}close project editor{/if}
+		</button>
 	{/if}
 </form>
 

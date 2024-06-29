@@ -12,7 +12,7 @@
 	const {
 		project_datas: projects,
 		editing_project,
-		editing_project_data,
+		editing_project_data, // TODO review this and with `project_data` below
 		remove_project,
 		duplicate_project,
 		update_project,
@@ -28,18 +28,9 @@
 	<Project_Form
 		{editing}
 		{project_data}
-		onsubmit={(editing ? update_project : create_project)
-			? (project_data) => (editing ? update_project : create_project)?.(project_data)
-			: undefined}
-		onremove={remove_project ? (project_id) => remove_project?.(project_id) : undefined}
-		onduplicate={duplicate_project ? (project_id) => duplicate_project?.(project_id) : undefined}
-	>
-		{#snippet footer(changed)}
-			{#if editing}
-				<button type="button" onclick={() => (editing_project.value = false)}>
-					{#if changed}discard changes and stop editing{:else}stop editing this project{/if}
-				</button>
-			{/if}
-		{/snippet}
-	</Project_Form>
+		onsubmit={editing ? update_project : create_project}
+		onremove={remove_project}
+		onduplicate={duplicate_project}
+		oncancel={() => (editing_project.value = false)}
+	/>
 </div>

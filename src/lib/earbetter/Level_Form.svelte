@@ -150,7 +150,7 @@
 			</label>
 		</fieldset>
 		<fieldset>
-			<label style:margin-bottom={0}>
+			<label class="mb_0">
 				<div class="title">intervals</div>
 				<input
 					bind:this={intervals_el}
@@ -222,7 +222,7 @@
 			<br />
 		{/if}
 		<fieldset bind:clientWidth={piano_width}>
-			<label style:margin-bottom={0}>
+			<label class="mb_0">
 				<div class="title">tonics</div>
 				<input
 					bind:this={tonics_el}
@@ -242,23 +242,20 @@
 			</details>
 		</fieldset>
 		<button
-			class="accent"
 			type="button"
+			class="accent"
 			onclick={() => onsubmit?.(to_data())}
 			disabled={(editing && !changed) || lowest_note_error}
 		>
 			{#if editing}save changes to level{:else}create level{/if}
 		</button>
 		{#if editing}
-			<button type="button" style:margin-bottom={0} onclick={() => (removing = !removing)}>
-				remove level
-			</button>
+			<button type="button" onclick={() => (removing = !removing)}> remove level </button>
 			{#if removing}
 				<div transition:slide|local>
 					<button
-						class="w_100"
 						type="button"
-						style:margin-bottom={0}
+						class="w_100"
 						onclick={() => {
 							removing = false;
 							onremove?.(level_data.id);
@@ -299,6 +296,7 @@
 		<div class="importing bg shadow_d_xl p_xl width_md box">
 			<h2 class="my_0">import level data</h2>
 			<button
+				type="button"
 				onclick={() => {
 					void navigator.clipboard.writeText(updated);
 					level_data_el?.select();
@@ -308,6 +306,7 @@
 			</button>
 			<textarea bind:value={updated} bind:this={level_data_el}></textarea>
 			<button
+				type="button"
 				onclick={import_data}
 				disabled={!changed_serialized}
 				title={changed_serialized ? undefined : 'data has not changed'}

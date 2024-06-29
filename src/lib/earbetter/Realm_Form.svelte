@@ -96,9 +96,9 @@
 			</button>
 			<textarea bind:value={updated} bind:this={realm_data_el}></textarea>
 			<button
+				type="button"
 				onclick={import_data}
 				disabled={!changed_serialized}
-				type="button"
 				title={changed_serialized ? undefined : 'data has not changed'}
 			>
 				import realm data
@@ -128,23 +128,20 @@
 		</label>
 	</fieldset>
 	<button
-		class="accent"
 		type="button"
+		class="accent"
 		onclick={() => onsubmit?.(to_data())}
 		disabled={editing && !changed}
 	>
 		{#if editing}save changes to realm{:else}create realm{/if}
 	</button>
 	{#if editing}
-		<button type="button" style:margin-bottom={0} onclick={() => (removing = !removing)}>
-			remove realm
-		</button>
+		<button type="button" onclick={() => (removing = !removing)}> remove realm </button>
 		{#if removing}
 			<div transition:slide|local>
 				<button
-					class="w_100"
 					type="button"
-					style:margin-bottom={0}
+					class="w_100"
 					onclick={() => {
 						removing = false;
 						onremove?.(realm_data.id);
@@ -169,7 +166,6 @@
 		<button
 			type="button"
 			onclick={() => (toggle_create_default_realms = !toggle_create_default_realms)}
-			style:margin-bottom={0}
 		>
 			create default realms
 		</button>
@@ -197,7 +193,7 @@
 	{/if}
 	{#if editing}
 		<button class="w_100" type="button" onclick={onclose}>
-			{#if changed}discard changes{:else}close editor{/if}
+			{#if changed}discard changes{:else}close realm editor{/if}
 		</button>
 	{/if}
 </form>

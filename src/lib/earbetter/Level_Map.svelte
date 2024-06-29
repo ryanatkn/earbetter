@@ -169,7 +169,7 @@
 										play!
 									</button>
 									<button type="button" onclick={() => edit_level(null)}>
-										{#if changed}discard changes and stop editing{:else}stop editing this level{/if}
+										{#if changed}discard changes and stop editing{:else}close level editor{/if}
 									</button>
 								{/if}
 							{/snippet}
