@@ -5,6 +5,7 @@
 
 	import type {MIDIAccess} from '$lib/WebMIDI.js';
 	import {
+		reset_midi_access,
 		midi_access as default_midi_access,
 		request_access as default_request_access,
 	} from '$lib/midi_access.js';
@@ -21,21 +22,26 @@
 
 	let request_status: Async_Status = $state('initial');
 
-	// eslint-disable-next-line @typescript-eslint/no-unnecessary-type-assertion
-	const disabled = $derived(!!$midi_access || (request_status as Async_Status) === 'pending'); // TODO the cast is due to a typechecking bug (likely `svelte-check`)
-
 	const midi_inputs = $derived($midi_access && Array.from($midi_access.inputs.values()));
+	const midi_input_count = $derived(midi_inputs?.length ?? 0);
+
+	// eslint-disable-next-line @typescript-eslint/no-unnecessary-type-assertion
+	const disabled = $derived(midi_input_count > 0 || (request_status as Async_Status) === 'pending'); // TODO the cast is due to a typechecking bug (likely `svelte-check`)
 
 	let request_error: string | undefined = $state();
+
+	$inspect('$midi_access', $midi_access);
 </script>
 
 <button
 	type="button"
 	class="big"
 	onclick={async () => {
-		if (!midi_access) return;
+		console.log('requesting midi access');
 		request_status = 'pending';
 		try {
+			// TODO @multiple source from `audio` in context, makes this convoluted
+			reset_midi_access();
 			await request_access();
 			request_status = 'success';
 		} catch (err) {
@@ -58,7 +64,7 @@
 				</ul>
 			</div>
 		{:else}
-			<span in:fade|local>no MIDI devices found</span>
+			<span in:fade|local>no MIDI devices found, try again?</span>
 		{/if}
 	{:else if request_status === 'pending'}
 		<span in:fade|local>requesting MIDI access</span>

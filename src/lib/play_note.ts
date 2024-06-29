@@ -45,6 +45,7 @@ export interface Stop_Playing {
 }
 
 // TODO is redundant with `playing` and manually updated
+// TODO @multiple source from `audio` in context
 export const playing_notes: Signal<Set<Midi>> = signal(new Set());
 
 export const start_playing_note = (
