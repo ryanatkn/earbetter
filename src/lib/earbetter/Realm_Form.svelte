@@ -10,7 +10,7 @@
 	interface Props {
 		realm_data: Realm_Data;
 		editing?: boolean;
-		onsubmit?: (realm_data: Realm_Data) => void;
+		onsubmit: (realm_data: Realm_Data) => void;
 		onremove?: (realm_id: Realm_Id) => void;
 		onduplicate?: (realm_id: Realm_Id) => void;
 		onclose?: () => void;
@@ -58,7 +58,7 @@
 			// add an `id` if there is none
 			if (json && !json.id) json.id = create_realm_id();
 			const parsed = Realm_Data.parse(json);
-			onsubmit?.(parsed);
+			onsubmit(parsed);
 		} catch (err) {
 			console.error('failed to import data', err);
 			parse_error_message = err.message || 'unknown error';
@@ -121,7 +121,7 @@
 				onkeydown={(e) => {
 					if (e.key === 'Enter') {
 						swallow(e);
-						onsubmit?.(to_data());
+						onsubmit(to_data());
 					}
 				}}
 			/>
@@ -130,12 +130,12 @@
 	<button
 		type="button"
 		class="accent"
-		onclick={() => onsubmit?.(to_data())}
+		onclick={() => onsubmit(to_data())}
 		disabled={editing && !changed}
 	>
 		{#if editing}save changes to realm{:else}create realm{/if}
 	</button>
-	{#if editing}
+	{#if onremove && editing}
 		<button type="button" onclick={() => (removing = !removing)}> remove realm </button>
 		{#if removing}
 			<div transition:slide|local>
@@ -144,20 +144,22 @@
 					class="w_100"
 					onclick={() => {
 						removing = false;
-						onremove?.(realm_data.id);
+						onremove(realm_data.id);
 					}}
 				>
 					✖ confirm remove
 				</button>
 			</div>
 		{/if}
-		<button
-			type="button"
-			style:margin-top="var(--space_lg)"
-			onclick={() => onduplicate?.(realm_data.id)}
-		>
-			duplicate realm
-		</button>
+		{#if onduplicate}
+			<button
+				type="button"
+				style:margin-top="var(--space_lg)"
+				onclick={() => onduplicate(realm_data.id)}
+			>
+				duplicate realm
+			</button>
+		{/if}
 	{/if}
 	<button type="button" onclick={start_importing_data} bind:this={start_importing_el}>
 		{#if editing}import/export data{:else}import data{/if}
@@ -177,7 +179,7 @@
 					onclick={() => {
 						toggle_create_default_realms = false;
 						for (const realm_data of default_project_data().realms) {
-							onsubmit?.(realm_data);
+							onsubmit(realm_data);
 						}
 					}}
 				>
@@ -191,7 +193,7 @@
 			<Alert status="error"><pre>{parse_error_message}</pre></Alert>
 		</div>
 	{/if}
-	{#if editing}
+	{#if onclose && editing}
 		<button class="w_100" type="button" onclick={onclose}>
 			{#if changed}discard changes{:else}close realm editor{/if}
 		</button>

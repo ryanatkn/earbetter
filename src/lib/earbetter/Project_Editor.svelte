@@ -31,6 +31,6 @@
 		onsubmit={editing ? update_project : create_project}
 		onremove={remove_project}
 		onduplicate={duplicate_project}
-		oncancel={() => (editing_project.value = false)}
+		onclose={() => (editing_project.value = false)}
 	/>
 </div>

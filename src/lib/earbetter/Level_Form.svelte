@@ -24,7 +24,7 @@
 	interface Props {
 		level_data: Level_Data;
 		editing?: boolean;
-		onsubmit?: (level_data: Level_Data) => void;
+		onsubmit: (level_data: Level_Data) => void;
 		onremove?: (level_id: Level_Id) => void;
 		onduplicate?: (level_id: Level_Id) => void;
 		footer?: Snippet<[changed: boolean, to_data: () => Level_Data]>;

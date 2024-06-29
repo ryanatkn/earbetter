@@ -150,11 +150,9 @@
 						<Level_Form
 							{editing}
 							{level_data}
-							onsubmit={(editing ? update_level : create_level)
-								? (level_data) => (editing ? update_level : create_level)(level_data)
-								: undefined}
-							onremove={(level_id) => remove_level(level_id)}
-							onduplicate={(level_id) => duplicate_level(level_id)}
+							onsubmit={editing ? update_level : create_level}
+							onremove={remove_level}
+							onduplicate={duplicate_level}
 						>
 							{#snippet footer(changed, to_data)}
 								{#if editing}

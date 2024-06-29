@@ -17,17 +17,10 @@
 		onsubmit: (project_data: Project_Data) => void;
 		onremove?: (project_id: Project_Id) => void;
 		onduplicate?: (project_id: Project_Id) => void;
-		oncancel?: (project_id: Project_Id) => void;
+		onclose?: (project_id: Project_Id) => void;
 	}
 
-	const {
-		project_data,
-		editing = false,
-		onsubmit,
-		onremove,
-		onduplicate,
-		oncancel,
-	}: Props = $props();
+	const {project_data, editing = false, onsubmit, onremove, onduplicate, onclose}: Props = $props();
 
 	let removing = $state(false);
 
@@ -171,8 +164,8 @@
 			<Alert status="error"><pre>{parse_error_message}</pre></Alert>
 		</div>
 	{/if}
-	{#if oncancel && editing}
-		<button type="button" onclick={() => oncancel(project_data.id)}>
+	{#if onclose && editing}
+		<button type="button" onclick={() => onclose(project_data.id)}>
 			{#if changed}discard changes and stop editing{:else}close project editor{/if}
 		</button>
 	{/if}
