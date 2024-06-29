@@ -1,6 +1,7 @@
 <script lang="ts">
 	import Level_Scene from '$lib/earbetter/Level_Scene.svelte';
 	import {get_app} from '$lib/earbetter/app.js';
+	import Back_Button from '$routes/Back_Button.svelte';
 
 	const app = get_app();
 
@@ -14,9 +15,7 @@
 </svelte:head>
 
 <main>
-	<button title="go back" class="go_back icon_button plain_button" onclick={app.exit_level}
-		>←</button
-	>
+	<Back_Button onclick={app.exit_level} />
 	{#if $level && level_stats}
 		<div class="level">
 			<Level_Scene level={$level} {level_stats} {exit_level} />
@@ -40,19 +39,5 @@
 	.level {
 		width: 100%;
 		height: 100%;
-	}
-
-	.go_back {
-		position: absolute;
-		top: 0;
-		right: 0;
-		z-index: 10;
-		font-size: var(--size_xl3);
-		border-top-right-radius: 0;
-		border-bottom-right-radius: 0;
-		/* TODO same as var(--level_progress_height); */
-		height: 50px;
-		width: 50px;
-		line-height: 1;
 	}
 </style>

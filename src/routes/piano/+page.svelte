@@ -1,6 +1,8 @@
 <script lang="ts">
 	import {z} from 'zod';
 	import {effect, signal} from '@preact/signals-core';
+	import {goto} from '$app/navigation';
+	import {base} from '$app/paths';
 
 	import Piano from '$lib/Piano.svelte';
 	import {get_audio_context} from '$lib/audio_context.js';
@@ -17,6 +19,7 @@
 	import {get_scale, get_key, get_enabled_notes, Midi} from '$lib/music.js';
 	import Select_Notes_Control from '$lib/Select_Notes_Control.svelte';
 	import {load_from_storage, set_in_storage} from '$lib/storage.js';
+	import Back_Button from '$routes/Back_Button.svelte';
 
 	// TODO extract? is pretty specific
 	const Piano_Settings = z.object({
@@ -71,6 +74,7 @@
 	onnotestop={(note) => stop_playing(note)}
 />
 <main bind:clientWidth>
+	<Back_Button onclick={() => goto(base + '/')} />
 	<Header />
 	<div class="piano_wrapper" style:padding="{piano_padding}px">
 		{#if clientWidth}
