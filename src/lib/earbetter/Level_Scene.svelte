@@ -189,12 +189,8 @@
 							<div class="completed_header_icon" in:fly|local={{duration: 4000, x: -200}}>🎵</div>
 							<div class="completed_header_icon" in:fly|local={{duration: 4000, x: 200}}>🎶</div>
 						</div>
-						<div
-							class="panel p_md box w_100"
-							in:scale|local={{delay: 250}}
-							style:margin-bottom="var(--space_md)"
-						>
-							<div class="panel p_md box" style:margin-bottom="var(--space_md)">
+						<div class="panel p_md mb_md box w_100" in:scale|local={{delay: 250}}>
+							<div class="panel p_md mb_md box">
 								{#if $mistakes === 0}
 									<div class="size_xl3">flawless run!</div>
 								{:else}
@@ -210,12 +206,7 @@
 								<Level_Stats_Summary {level_data} {level_stats} />
 							</div>
 						</div>
-						<button
-							class="big"
-							onclick={() => exit_level()}
-							in:scale|local={{delay: 500}}
-							style:margin-bottom="var(--space_md)"
-						>
+						<button class="big mb_md" onclick={() => exit_level()} in:scale|local={{delay: 500}}>
 							go back to the map &nbsp;<code>Space</code></button
 						>
 						<button class="big" onclick={() => level.reset()} in:scale|local={{delay: 750}}>
