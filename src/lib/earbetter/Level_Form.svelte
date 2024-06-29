@@ -1,5 +1,4 @@
 <script lang="ts">
-	import type {Snippet} from 'svelte';
 	import {slide} from 'svelte/transition';
 	import Dialog from '@ryanatkn/fuz/Dialog.svelte';
 	import Alert from '@ryanatkn/fuz/Alert.svelte';
@@ -27,10 +26,19 @@
 		onsubmit: (level_data: Level_Data) => void;
 		onremove?: (level_id: Level_Id) => void;
 		onduplicate?: (level_id: Level_Id) => void;
-		footer?: Snippet<[changed: boolean, to_data: () => Level_Data]>;
+		onplay?: (level_data: Level_Data, changed: boolean) => void;
+		onclose?: (level_id: Level_Id) => void;
 	}
 
-	const {level_data, editing = false, onsubmit, onremove, onduplicate, footer}: Props = $props();
+	const {
+		level_data,
+		editing = false,
+		onsubmit,
+		onremove,
+		onduplicate,
+		onplay,
+		onclose,
+	}: Props = $props();
 
 	let removing = $state(false);
 
@@ -50,7 +58,7 @@
 
 	const to_data = (): Level_Data =>
 		Level_Data.parse({
-			...level_data,
+			id: level_data.id,
 			name: normalized_updated_name,
 			intervals: updated_intervals, // TODO filter out the invalid intervals
 			tonics: normalized_updated_tonics, // select only the valid tonics
@@ -107,7 +115,7 @@
 			// add an `id` if there is none
 			if (json && !json.id) json.id = create_level_id();
 			const parsed = Level_Data.parse(json);
-			onsubmit?.(parsed);
+			onsubmit(parsed);
 		} catch (err) {
 			console.error('failed to import data', err);
 			parse_error_message = err.message || 'unknown error';
@@ -244,12 +252,12 @@
 		<button
 			type="button"
 			class="accent"
-			onclick={() => onsubmit?.(to_data())}
+			onclick={() => onsubmit(to_data())}
 			disabled={(editing && !changed) || lowest_note_error}
 		>
 			{#if editing}save changes to level{:else}create level{/if}
 		</button>
-		{#if editing}
+		{#if onremove && editing}
 			<button type="button" onclick={() => (removing = !removing)}> remove level </button>
 			{#if removing}
 				<div transition:slide|local>
@@ -258,20 +266,22 @@
 						class="w_100"
 						onclick={() => {
 							removing = false;
-							onremove?.(level_data.id);
+							onremove(level_data.id);
 						}}
 					>
 						✖ confirm remove
 					</button>
 				</div>
 			{/if}
-			<button
-				type="button"
-				style:margin-top="var(--space_lg)"
-				onclick={() => onduplicate?.(level_data.id)}
-			>
-				duplicate
-			</button>
+			{#if onduplicate}
+				<button
+					type="button"
+					style:margin-top="var(--space_lg)"
+					onclick={() => onduplicate(level_data.id)}
+				>
+					duplicate
+				</button>
+			{/if}
 		{/if}
 		<button type="button" onclick={start_importing_data} bind:this={start_importing_el}>
 			{#if editing}import/export data{:else}import data{/if}
@@ -281,8 +291,15 @@
 				<Alert status="error"><pre>{parse_error_message}</pre></Alert>
 			</div>
 		{/if}
-		{#if footer}
-			{@render footer(changed, to_data)}
+		{#if onplay && editing}
+			<button type="button" onclick={() => onplay(changed ? to_data() : level_data, changed)}>
+				play!
+			</button>
+		{/if}
+		{#if onclose && editing}
+			<button type="button" onclick={() => onclose(level_data.id)}>
+				{#if changed}discard changes and stop editing{:else}close level editor{/if}
+			</button>
 		{/if}
 	</div>
 </form>

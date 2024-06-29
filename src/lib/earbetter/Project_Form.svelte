@@ -29,8 +29,10 @@
 
 	const to_data = (): Project_Data =>
 		Project_Data.parse({
-			...project_data,
+			id: project_data.id,
 			name: normalized_updated_name,
+			realms: project_data.realms,
+			level_stats: project_data.level_stats,
 		});
 
 	// TODO review this effect to try to remove it

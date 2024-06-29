@@ -153,25 +153,12 @@
 							onsubmit={editing ? update_level : create_level}
 							onremove={remove_level}
 							onduplicate={duplicate_level}
-						>
-							{#snippet footer(changed, to_data)}
-								{#if editing}
-									<button
-										type="button"
-										onclick={async () => {
-											if (!level_data.id) return;
-											if (changed) update_level(to_data());
-											await play_level(level_data.id);
-										}}
-									>
-										play!
-									</button>
-									<button type="button" onclick={() => edit_level(null)}>
-										{#if changed}discard changes and stop editing{:else}close level editor{/if}
-									</button>
-								{/if}
-							{/snippet}
-						</Level_Form>
+							onplay={async (level_data, changed) => {
+								if (changed) update_level(level_data);
+								await play_level(level_data.id);
+							}}
+							onclose={() => edit_level(null)}
+						/>
 					</div>
 				</section>
 			{/if}

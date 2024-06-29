@@ -13,7 +13,7 @@
 		onsubmit: (realm_data: Realm_Data) => void;
 		onremove?: (realm_id: Realm_Id) => void;
 		onduplicate?: (realm_id: Realm_Id) => void;
-		onclose?: () => void;
+		onclose?: (realm_id: Realm_Id) => void;
 	}
 
 	const {realm_data, editing = false, onsubmit, onremove, onduplicate, onclose}: Props = $props();
@@ -25,8 +25,9 @@
 
 	const to_data = (): Realm_Data =>
 		Realm_Data.parse({
-			...realm_data,
+			id: realm_data.id,
 			name: normalized_updated_name,
+			levels: realm_data.levels,
 		});
 
 	// TODO review this effect to try to remove it
@@ -194,7 +195,7 @@
 		</div>
 	{/if}
 	{#if onclose && editing}
-		<button class="w_100" type="button" onclick={onclose}>
+		<button class="w_100" type="button" onclick={() => onclose(realm_data.id)}>
 			{#if changed}discard changes{:else}close realm editor{/if}
 		</button>
 	{/if}
