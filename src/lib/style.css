@@ -87,12 +87,13 @@ header {
 	margin-bottom: var(--space_md);
 }
 
+/* TODO use Moss instead */
 .error {
 	--border_color: var(--red);
 	--border_color_dark: hsl(var(--red_hue), 60%, 61%);
 }
 
-/* TODO consider upstreaming this */
+/* TODO upstream this somehow, maybe as a variable */
 button {
 	background: linear-gradient(var(--button_color), var(--button_color_dark));
 }
@@ -124,6 +125,7 @@ button {
 	width: 100%;
 }
 
+/* TODO replace with Moss */
 .accent {
 	--text_color: var(--accent_text_color);
 	--border_color: var(--accent_border_color);

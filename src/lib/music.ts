@@ -71,8 +71,8 @@ export const chroma_to_hsl_string: Map<Chroma, string> = new Map(
 );
 
 export const interval_short_names = Object.freeze(['P1', 'm2', 'M2', 'm3', 'M3', 'P4', 'd5', 'P5', 'm6', 'M6', 'm7', 'M7', 'P8'] as const); // prettier-ignore
-
-export type Interval_Short_Names = (typeof interval_short_names)[number];
+export const Interval_Short_Names = z.enum(interval_short_names);
+export type Interval_Short_Names = z.infer<typeof Interval_Short_Names>;
 
 export const interval_names = Object.freeze([
 	'perfect unison',
@@ -89,8 +89,8 @@ export const interval_names = Object.freeze([
 	'major seventh',
 	'perfect octave',
 ] as const);
-
-export type Interval_Names = (typeof interval_names)[number];
+export const Interval_Names = z.enum(interval_names);
+export type Interval_Names = z.infer<typeof Interval_Names>;
 
 const ENABLED_NOTES_KEY = Symbol('enabled_notes');
 export const get_enabled_notes = (): Signal<Set<Midi> | null> => getContext(ENABLED_NOTES_KEY);
