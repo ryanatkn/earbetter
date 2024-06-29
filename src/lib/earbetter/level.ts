@@ -361,13 +361,19 @@ export const MistakesLevelStats = z.record(LevelId, z.array(z.number()));
 export type MistakesLevelStats = z.infer<typeof MistakesLevelStats>;
 
 export const LevelStats = z.object({
-	// TODO BLOCK or should `run_count` be a map like `mistakes`?
-	run_count: z.number(),
+	// TODO BLOCK implement these
+	run_count_total: z.number(),
+	run_count_by_level: z.record(LevelId, z.array(z.number())),
 	mistakes: MistakesLevelStats,
 });
 export type LevelStats = z.infer<typeof LevelStats>;
 
-export const DEFAULT_LEVEL_STATS: LevelStats = {run_count: 0, mistakes: {}};
+// TODO BLOCK use `LevelStats.parse({})` for this instead
+export const DEFAULT_LEVEL_STATS: LevelStats = {
+	run_count_total: 0,
+	run_count_by_level: {},
+	mistakes: {},
+};
 
 export const add_mistakes_to_level_stats = (
 	level_stats: LevelStats,
