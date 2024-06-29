@@ -36,7 +36,7 @@ export const Level_Data = z.object({
 	id: Level_Id.default(create_level_id),
 	name: Level_Name.default(DEFAULT_LEVEL_NAME),
 	intervals: Intervals.default(DEFAULT_INTERVALS),
-	tonics: Notes.nullable().default(null),
+	tonics: Notes.nullable().default(DEFAULT_TONICS),
 	trial_count: z.number().default(DEFAULT_TRIAL_COUNT),
 	sequence_length: z.number().default(DEFAULT_SEQUENCE_LENGTH),
 	min_note: Midi.default(DEFAULT_MIN_NOTE),

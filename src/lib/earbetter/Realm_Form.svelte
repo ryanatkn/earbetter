@@ -29,13 +29,13 @@
 			name: normalized_updated_name,
 		});
 
-	// TODO BLOCK @multiple misusing effect setting state
+	// TODO review this effect to try to remove it
 	$effect(() => {
 		console.log(`set_realm_data`, realm_data);
 		updated_name = realm_data.name;
 	});
 
-	const changed = $derived(!realm_data || normalized_updated_name !== realm_data.name);
+	const changed = $derived(normalized_updated_name !== realm_data.name);
 
 	// TODO lots of similarity with `Level_Form`
 	let importing = $state(false);
@@ -43,7 +43,7 @@
 	let updated = $state('');
 	const changed_serialized = $derived(serialized !== updated);
 	let parse_error_message = $state('');
-	// TODO BLOCK @multiple misusing effect setting state
+	// TODO review this effect to try to remove it
 	$effect(() => {
 		realm_data;
 		parse_error_message = '';

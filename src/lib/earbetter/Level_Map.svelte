@@ -15,7 +15,7 @@
 	import Midi_Input from '$lib/Midi_Input.svelte';
 	import {start_playing, stop_playing} from '$lib/play_note.js';
 	import Realms from '$lib/earbetter/Realms.svelte';
-	import {MISTAKE_HISTORY_LENGTH} from '$lib/earbetter/level.js';
+	import {Level_Data, MISTAKE_HISTORY_LENGTH} from '$lib/earbetter/level.js';
 	import Realm_Editor from '$lib/earbetter/Realm_Editor.svelte';
 	import Level_Map_Items from '$lib/earbetter/Level_Map_Items.svelte';
 	import Project_Editor from '$lib/earbetter/Project_Editor.svelte';
@@ -55,8 +55,10 @@
 	const volume = get_volume();
 	const instrument = get_instrument();
 
-	let id: string | undefined = $state();
-	const editing = $derived($levels ? $levels.some((d) => d.id === id) : false);
+	// TODO review the draft/editing data properties of `app`, some inconsistencies between levels/realms/projects
+	const level_data = $derived($draft_level_data ?? Level_Data.parse({}));
+
+	const editing = $derived($levels ? $levels.some((d) => d.id === level_data.id) : false);
 
 	const no_realms = $derived(!$realms?.length);
 </script>
@@ -147,8 +149,7 @@
 					<div class="panel p_md">
 						<Level_Form
 							{editing}
-							bind:id
-							level_data={$draft_level_data}
+							{level_data}
 							onsubmit={(editing ? update_level : create_level)
 								? (level_data) => (editing ? update_level : create_level)(level_data)
 								: undefined}
@@ -160,9 +161,9 @@
 									<button
 										type="button"
 										onclick={async () => {
-											if (!id) return;
+											if (!level_data.id) return;
 											if (changed) update_level(to_data());
-											await play_level(id);
+											await play_level(level_data.id);
 										}}
 									>
 										play!

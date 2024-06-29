@@ -21,7 +21,7 @@
 		footer?: Snippet<[changed: boolean]>;
 	}
 
-	let {project_data, editing = false, onsubmit, onremove, onduplicate, footer}: Props = $props();
+	const {project_data, editing = false, onsubmit, onremove, onduplicate, footer}: Props = $props();
 
 	let removing = $state(false);
 
@@ -34,13 +34,13 @@
 			name: normalized_updated_name,
 		});
 
-	// TODO BLOCK @multiple misusing effect setting state
+	// TODO review this effect to try to remove it
 	$effect(() => {
 		console.log(`set_project_data`, project_data);
 		updated_name = project_data.name;
 	});
 
-	const changed = $derived(!project_data || normalized_updated_name !== project_data.name);
+	const changed = $derived(normalized_updated_name !== project_data.name);
 
 	// TODO lots of similarity with `Level_Form`
 	let importing = $state(false);
@@ -48,7 +48,7 @@
 	let updated = $state('');
 	const changed_serialized = $derived(serialized !== updated);
 	let parse_error_message = $state('');
-	// TODO BLOCK @multiple misusing effect setting state
+	// TODO review this effect to try to remove it
 	$effect(() => {
 		project_data;
 		parse_error_message = '';

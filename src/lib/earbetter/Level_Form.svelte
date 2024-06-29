@@ -4,18 +4,7 @@
 	import Dialog from '@ryanatkn/fuz/Dialog.svelte';
 	import Alert from '@ryanatkn/fuz/Alert.svelte';
 
-	import {
-		create_level_id,
-		DEFAULT_LEVEL_NAME,
-		DEFAULT_INTERVALS,
-		DEFAULT_MAX_NOTE,
-		DEFAULT_MIN_NOTE,
-		DEFAULT_SEQUENCE_LENGTH,
-		DEFAULT_TRIAL_COUNT,
-		Level_Data,
-		type Level_Id,
-		DEFAULT_TONICS,
-	} from '$lib/earbetter/level.js';
+	import {create_level_id, Level_Data, type Level_Id} from '$lib/earbetter/level.js';
 	import {
 		parse_intervals,
 		serialize_intervals,
@@ -33,15 +22,7 @@
 	import Piano from '$lib/Piano.svelte';
 
 	interface Props {
-		level_data?: Level_Data | null;
-		id?: Level_Id;
-		name?: string;
-		intervals?: Intervals;
-		tonics?: Midi[] | null;
-		trial_count?: number;
-		sequence_length?: number;
-		min_note?: Midi;
-		max_note?: Midi;
+		level_data: Level_Data;
 		editing?: boolean;
 		onsubmit?: (level_data: Level_Data) => void;
 		onremove?: (level_id: Level_Id) => void;
@@ -49,70 +30,56 @@
 		footer?: Snippet<[changed: boolean, to_data: () => Level_Data]>;
 	}
 
-	let {
-		level_data = null, // eslint-disable-line prefer-const
-		id = $bindable(create_level_id()),
-		name = $bindable(DEFAULT_LEVEL_NAME),
-		intervals = $bindable(DEFAULT_INTERVALS),
-		tonics = $bindable(DEFAULT_TONICS),
-		trial_count = $bindable(DEFAULT_TRIAL_COUNT),
-		sequence_length = $bindable(DEFAULT_SEQUENCE_LENGTH),
-		min_note = $bindable(DEFAULT_MIN_NOTE),
-		max_note = $bindable(DEFAULT_MAX_NOTE),
-		editing = false, // eslint-disable-line prefer-const
-		onsubmit, // eslint-disable-line prefer-const
-		onremove, // eslint-disable-line prefer-const
-		onduplicate, // eslint-disable-line prefer-const
-		footer, // eslint-disable-line prefer-const
-	}: Props = $props();
+	const {level_data, editing = false, onsubmit, onremove, onduplicate, footer}: Props = $props();
 
 	let removing = $state(false);
 
-	const to_data = (): Level_Data => ({
-		id,
-		name,
-		intervals, // TODO filter out the invalid intervals
-		tonics: tonics ? tonics.filter((t) => t >= min_note && t <= max_note) : tonics, // select only the valid tonics
-		trial_count,
-		sequence_length,
-		min_note,
-		max_note,
+	let updated_name: string = $state(level_data.name);
+	const normalized_updated_name = $derived((updated_name as any)?.trim());
+	// TODO BLOCK normalized versions?
+	let updated_intervals: Intervals = $state(level_data.intervals);
+	let updated_tonics: Midi[] | null = $state(level_data.tonics);
+	const normalized_updated_tonics = $derived(
+		updated_tonics
+			? updated_tonics.filter((t) => t >= updated_min_note && t <= updated_max_note)
+			: updated_tonics,
+	);
+	let updated_trial_count: number = $state(level_data.trial_count);
+	let updated_sequence_length: number = $state(level_data.sequence_length);
+	let updated_min_note: Midi = $state(level_data.min_note);
+	let updated_max_note: Midi = $state(level_data.max_note);
+
+	const to_data = (): Level_Data =>
+		Level_Data.parse({
+			...level_data,
+			name: normalized_updated_name,
+			intervals: updated_intervals, // TODO filter out the invalid intervals
+			tonics: normalized_updated_tonics, // select only the valid tonics
+			trial_count: updated_trial_count,
+			sequence_length: updated_sequence_length,
+			min_note: updated_min_note,
+			max_note: updated_max_note,
+		});
+
+	// TODO review this effect to try to remove it
+	$effect(() => {
+		updated_name = level_data.name;
+		updated_intervals = level_data.intervals;
+		updated_tonics = level_data.tonics;
+		updated_trial_count = level_data.trial_count;
+		updated_sequence_length = level_data.sequence_length;
+		updated_min_note = level_data.min_note;
+		updated_max_note = level_data.max_note;
 	});
 
-	// TODO BLOCK @multiple misusing effect setting state
-	$effect(() => set_level_data(level_data));
-	const set_level_data = (level_data: Level_Data | null): void => {
-		if (level_data) {
-			id = level_data.id;
-			name = level_data.name;
-			intervals = level_data.intervals;
-			tonics = level_data.tonics;
-			trial_count = level_data.trial_count;
-			sequence_length = level_data.sequence_length;
-			min_note = level_data.min_note;
-			max_note = level_data.max_note;
-		} else {
-			id = create_level_id();
-			name = DEFAULT_LEVEL_NAME;
-			intervals = DEFAULT_INTERVALS;
-			tonics = DEFAULT_TONICS;
-			trial_count = DEFAULT_TRIAL_COUNT;
-			sequence_length = DEFAULT_SEQUENCE_LENGTH;
-			min_note = DEFAULT_MIN_NOTE;
-			max_note = DEFAULT_MAX_NOTE;
-		}
-	};
-
 	const changed = $derived(
-		!level_data ||
-			id !== level_data.id ||
-			name !== level_data.name ||
-			trial_count !== level_data.trial_count ||
-			sequence_length !== level_data.sequence_length ||
-			min_note !== level_data.min_note ||
-			max_note !== level_data.max_note ||
-			intervals.toString() !== level_data.intervals.toString() ||
-			tonics?.toString() !== level_data.tonics?.toString(),
+		normalized_updated_name !== level_data.name ||
+			updated_trial_count !== level_data.trial_count ||
+			updated_sequence_length !== level_data.sequence_length ||
+			updated_min_note !== level_data.min_note ||
+			updated_max_note !== level_data.max_note ||
+			updated_intervals.toString() !== level_data.intervals.toString() ||
+			normalized_updated_tonics?.toString() !== level_data.tonics?.toString(),
 	); // TODO speed these comparisons up
 
 	// TODO lots of similarity with `Project_Form`
@@ -123,17 +90,16 @@
 	let updated = $state('');
 	const changed_serialized = $derived(serialized !== updated);
 	let parse_error_message = $state('');
-	// TODO BLOCK @multiple misusing effect setting state
+	// TODO review this effect to try to remove it
 	$effect(() => {
 		level_data;
-		id;
 		parse_error_message = '';
 	});
 	let level_data_el: HTMLTextAreaElement | undefined = $state();
 	let start_importing_el: HTMLButtonElement | undefined = $state();
 	let intervals_el: HTMLInputElement | undefined = $state();
 	let tonics_el: HTMLInputElement | undefined = $state();
-	const tonics_set = $derived(tonics && new Set(tonics));
+	const tonics_set = $derived(updated_tonics && new Set(updated_tonics));
 
 	const import_data = async (): Promise<void> => {
 		parse_error_message = '';
@@ -163,7 +129,7 @@
 	// TODO helper component for measuring? with `let:width` - first look at Svelte's new box bindings
 	let piano_width: number | undefined = $state();
 
-	const lowest_note_error = $derived(min_note >= max_note);
+	const lowest_note_error = $derived(updated_min_note >= updated_max_note);
 </script>
 
 <!-- TODO this class `.level_def_form` is used to focus from another component -->
@@ -177,7 +143,7 @@
 		<fieldset>
 			<label>
 				<div class="title">name</div>
-				<input bind:value={name} />
+				<input bind:value={updated_name} />
 			</label>
 		</fieldset>
 		<fieldset>
@@ -185,8 +151,8 @@
 				<div class="title">intervals</div>
 				<input
 					bind:this={intervals_el}
-					value={serialize_intervals(intervals)}
-					oninput={(e) => (intervals = parse_intervals(e.currentTarget.value))}
+					value={serialize_intervals(updated_intervals)}
+					oninput={(e) => (updated_intervals = parse_intervals(e.currentTarget.value))}
 				/>
 			</label>
 			<button type="button" onclick={() => (picking_intervals = true)}> pick intervals </button>
@@ -214,29 +180,29 @@
 		<fieldset>
 			<label>
 				<div class="title">trial count</div>
-				<input type="number" bind:value={trial_count} min={1} />
-				<input type="range" bind:value={trial_count} min={1} max={20} />
+				<input type="number" bind:value={updated_trial_count} min={1} />
+				<input type="range" bind:value={updated_trial_count} min={1} max={20} />
 			</label>
 		</fieldset>
 		<fieldset>
 			<label>
 				<div class="title">sequence length</div>
-				<input bind:value={sequence_length} min={2} />
-				<input type="range" bind:value={sequence_length} min={2} max={16} />
+				<input bind:value={updated_sequence_length} min={2} />
+				<input type="range" bind:value={updated_sequence_length} min={2} max={16} />
 			</label>
 		</fieldset>
 		<fieldset class="row">
 			<label class="text_align_center">
 				<div class="title">lowest note</div>
-				<div>{midi_names[min_note]}</div>
-				<input type="number" bind:value={min_note} step={1} min={MIDI_MIN} max={MIDI_MAX} />
-				<input type="range" bind:value={min_note} step={1} min={MIDI_MIN} max={MIDI_MAX} />
+				<div>{midi_names[updated_min_note]}</div>
+				<input type="number" bind:value={updated_min_note} step={1} min={MIDI_MIN} max={MIDI_MAX} />
+				<input type="range" bind:value={updated_min_note} step={1} min={MIDI_MIN} max={MIDI_MAX} />
 			</label>
 			<label class="text_align_center">
 				<div class="title">highest note</div>
-				<div>{midi_names[max_note]}</div>
-				<input type="number" bind:value={max_note} step={1} min={MIDI_MIN} max={MIDI_MAX} />
-				<input type="range" bind:value={max_note} step={1} min={MIDI_MIN} max={MIDI_MAX} />
+				<div>{midi_names[updated_max_note]}</div>
+				<input type="number" bind:value={updated_max_note} step={1} min={MIDI_MIN} max={MIDI_MAX} />
+				<input type="range" bind:value={updated_max_note} step={1} min={MIDI_MIN} max={MIDI_MAX} />
 			</label>
 		</fieldset>
 		{#if lowest_note_error}
@@ -245,8 +211,8 @@
 			<Piano
 				width={piano_width || 0}
 				max_height={50}
-				{min_note}
-				{max_note}
+				min_note={updated_min_note}
+				max_note={updated_max_note}
 				highlighted_keys={tonics_set}
 				clickable={false}
 			/>
@@ -257,8 +223,8 @@
 				<div class="title">tonics</div>
 				<input
 					bind:this={tonics_el}
-					value={serialize_notes(tonics)}
-					oninput={(e) => (tonics = parse_notes(e.currentTarget.value))}
+					value={serialize_notes(updated_tonics)}
+					oninput={(e) => (updated_tonics = parse_notes(e.currentTarget.value))}
 					placeholder="all"
 				/>
 			</label>
@@ -292,14 +258,18 @@
 						style:margin-bottom={0}
 						onclick={() => {
 							removing = false;
-							onremove?.(id);
+							onremove?.(level_data.id);
 						}}
 					>
 						✖ confirm remove
 					</button>
 				</div>
 			{/if}
-			<button type="button" style:margin-top="var(--space_lg)" onclick={() => onduplicate?.(id)}>
+			<button
+				type="button"
+				style:margin-top="var(--space_lg)"
+				onclick={() => onduplicate?.(level_data.id)}
+			>
 				duplicate
 			</button>
 		{/if}
@@ -357,8 +327,8 @@
 				<Intervals_Input
 					bind:selected_scale={intervals_input_selected_scale}
 					bind:octaves={intervals_input_octaves}
-					oninput={(_intervals) => {
-						intervals = _intervals;
+					oninput={(intervals) => {
+						updated_intervals = intervals;
 						close();
 					}}
 				/>
@@ -378,11 +348,11 @@
 				<h2 class="my_0">pick tonics</h2>
 				<!-- TODO this `new Set` is a hack, probably change the data structure to a set, need serialization for storage -->
 				<Notes_Input
-					notes={new Set(tonics)}
-					{min_note}
-					{max_note}
+					notes={new Set(updated_tonics)}
+					min_note={updated_min_note}
+					max_note={updated_max_note}
 					oninput={(notes) => {
-						tonics = notes;
+						updated_tonics = notes;
 						close();
 					}}
 				/>
