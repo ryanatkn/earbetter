@@ -345,7 +345,7 @@
 		{#snippet children(close)}
 			<div class="bg p_xl width_md box">
 				<h2 class="my_0">pick tonics</h2>
-				<!-- TODO this `new Set` is a hack, probably change the data structure to a set, need serialization for storage -->
+				<!-- TODO @multiple set reactivity - this `new Set` is a hack, probably change the data structure to a set, need serialization for storage -->
 				<Notes_Input
 					notes={new Set(updated_tonics)}
 					min_note={updated_min_note}

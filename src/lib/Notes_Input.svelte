@@ -26,12 +26,12 @@
 		notes: Set<Midi>;
 		min_note: Midi;
 		max_note: Midi;
-		oninput?: (notes: Midi[] | null) => void; // TODO BLOCK API is strange returning an array but taking a set (maybe return both?)
+		oninput?: (notes: Midi[] | null) => void; // TODO @multiple set reactivity - API is strange returning an array but taking a set (maybe return both?)
 	}
 
 	const {notes: notes2, min_note, max_note, oninput}: Props = $props();
 
-	// TODO refactor these collections to use `svelte/reactivity` sets instead of cloning, upstream and downstream where appropriate
+	// TODO @multiple set reactivity - refactor these collections to use `svelte/reactivity` sets instead of cloning, upstream and downstream where appropriate
 
 	let updated_notes: Set<Midi> | undefined = $state();
 	const updated_notes_array: Midi[] | undefined = $derived(
