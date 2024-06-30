@@ -1,12 +1,12 @@
-import {interval_names, lookup_scale, to_scale_notes, type ScaleName} from '$lib/music';
-import {RealmData, RealmName} from '$lib/earbetter/realm';
-import type {LevelData} from '$lib/earbetter/level';
+import {interval_names, lookup_scale, to_scale_notes, type Scale_Name} from '$lib/music.js';
+import {Realm_Data, Realm_Name} from '$lib/earbetter/realm.js';
+import type {Level_Data} from '$lib/earbetter/level.js';
 
 export const to_default_scale_realm = (
-	scale_name: ScaleName,
-	realm_name: RealmName = scale_name as string,
-): RealmData => {
-	const levels: Array<Partial<LevelData>> = [];
+	scale_name: Scale_Name,
+	realm_name: Realm_Name = scale_name as string,
+): Realm_Data => {
+	const levels: Array<Partial<Level_Data>> = [];
 
 	const scale = lookup_scale(scale_name);
 	const {notes} = scale;
@@ -62,5 +62,5 @@ export const to_default_scale_realm = (
 		sequence_length: 8,
 	});
 
-	return RealmData.parse({name: realm_name, levels});
+	return Realm_Data.parse({name: realm_name, levels});
 };

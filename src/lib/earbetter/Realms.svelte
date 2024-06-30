@@ -1,13 +1,17 @@
 <script lang="ts">
 	import {slide} from 'svelte/transition';
 
-	import {RealmData} from '$lib/earbetter/realm';
-	import RealmItems from '$lib/earbetter/RealmItems.svelte';
-	import type {App} from '$lib/earbetter/app';
+	import {Realm_Data} from '$lib/earbetter/realm.js';
+	import Realm_Items from '$lib/earbetter/Realm_Items.svelte';
+	import type {App} from '$lib/earbetter/app.js';
 
-	export let app: App; // TODO maybe change to be more granular objects?
+	interface Props {
+		app: App; // TODO maybe change to be more granular objects?
+	}
 
-	$: ({
+	const {app}: Props = $props();
+
+	const {
 		selected_project_data,
 		realms,
 		selected_realm_data,
@@ -17,35 +21,34 @@
 		select_realm,
 		edit_realm,
 		remove_realm,
-	} = app);
+	} = $derived(app);
 
-	$: creating =
-		$editing_realm && !!$editing_realm_data && $selected_realm_data?.id !== $editing_realm_data?.id;
+	const creating = $derived(
+		$editing_realm && !!$editing_realm_data && $selected_realm_data?.id !== $editing_realm_data?.id,
+	);
 
-	$: no_realms = !$realms?.length;
+	const no_realms = $derived(!$realms?.length);
 
 	const click_create_new = () => {
 		if (no_realms) {
-			// eslint bug
+			// TODO eslint bug
 			// eslint-disable-next-line @typescript-eslint/no-unnecessary-type-assertion
-			(document.querySelector('.realm-def-form input') as HTMLInputElement | null)?.focus?.();
+			(document.querySelector('.realm_def_form input') as HTMLInputElement | null)?.focus?.(); // TODO hacky using the selector
 		} else if (creating) {
 			editing_realm.value = false;
 		} else {
-			edit_realm(RealmData.parse({}));
+			edit_realm(Realm_Data.parse({}));
 		}
 	};
 </script>
 
 <div class="panel p_md">
-	<div class="prose">
-		<header>
-			<h2>realms</h2>
-		</header>
-	</div>
+	<header>
+		<h2 class="my_0">realms</h2>
+	</header>
 	{#if $realms && $selected_project_data}
-		<div class="realm-items-wrapper" transition:slide|local>
-			<RealmItems
+		<div class="pb_md" transition:slide>
+			<Realm_Items
 				project_data={$selected_project_data}
 				selected_realm_data={$selected_realm_data}
 				realms={$realms}
@@ -59,7 +62,7 @@
 	<button
 		class={no_realms ? undefined : 'deselectable'}
 		class:selected={creating || no_realms}
-		on:click={click_create_new}
+		onclick={click_create_new}
 	>
 		create a new realm
 	</button>
@@ -68,8 +71,5 @@
 <style>
 	button {
 		width: 100%;
-	}
-	.realm-items-wrapper {
-		padding-bottom: var(--space_md);
 	}
 </style>

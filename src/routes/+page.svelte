@@ -7,14 +7,16 @@
 
 <main>
 	<Header />
-	<section class="tagline panel">
-		<p>ear training tools and JS/Svelte library for audio and music</p>
+	<section class="tagline panel text_align_center">
+		<p>ear trainer and tools for<br />playing and programming music and audio</p>
 	</section>
 	<section>
-		<menu>
-			<li><a class="panel" href="{base}/game">play the game!</a></li>
-			<li><a class="panel" href="{base}/piano">play piano!</a></li>
-		</menu>
+		<nav>
+			<ul class="unstyled">
+				<li><a class="panel" href="{base}/trainer">train your ear!</a></li>
+				<li><a class="panel" href="{base}/piano">play piano!</a></li>
+			</ul>
+		</nav>
 	</section>
 	<Footer />
 </main>
@@ -26,15 +28,15 @@
 		align-items: center;
 		margin: 0 auto;
 	}
-	menu {
+	ul {
 		display: flex;
 		flex-direction: column;
 		align-items: center;
 	}
-	menu li:not(:last-child) {
-		margin-bottom: var(--space_xl3);
+	ul li:not(:last-child) {
+		margin-bottom: var(--space_xl5);
 	}
-	menu a {
+	ul a {
 		font-size: var(--size_xl3);
 		padding: var(--space_xl);
 	}

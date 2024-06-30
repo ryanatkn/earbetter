@@ -1,9 +1,9 @@
 # earbetter
 
-> ear training tools and JS/Svelte library for audio and music 🎶🦜
+> ear trainer and tools for playing and programming music and audio 🎶🦜
 > [earbetter.ryanatkn.com](https://earbetter.ryanatkn.com/)
 
-- features [a configurable ear trainer](https://earbetter.ryanatkn.com/game)
+- features [a configurable ear trainer](https://earbetter.ryanatkn.com/trainer)
 - also has [a playable piano](https://earbetter.ryanatkn.com/piano)
 - supports MIDI devices like piano keyboards
 
@@ -44,7 +44,7 @@ I can't possibly make all of the best ear training challenges.
 Knowing this, I designed the software so you can
 create and share custom challenges - the content is all configurable.
 
-Earbetter's gameplay has "levels" broken up into "trials".
+Earbetter's trainer has "levels" broken up into "trials".
 Each trial is a sequence of notes that you hear and then play back.
 Your score for the level is the sum of mistakes made in each trial,
 and you'll get a ★ when you reach 0 across four runs of the level.

@@ -1,49 +1,50 @@
 <script lang="ts">
-	import '@ryanatkn/fuz/style.css';
-	import '@ryanatkn/fuz/theme.css';
-	import '@ryanatkn/fuz/semantic_classes.css';
-	import '@ryanatkn/fuz/utility_classes.css';
-	import '@ryanatkn/fuz/variable_classes.css';
-	import '@ryanatkn/fuz/animations.css';
+	import '@ryanatkn/moss/style.css';
+	import '@ryanatkn/moss/theme.css';
 	import '$lib/style.css';
 
 	import Themed from '@ryanatkn/fuz/Themed.svelte';
 	import {base} from '$app/paths';
 	import {is_editable, swallow} from '@ryanatkn/belt/dom.js';
 	import Dialog from '@ryanatkn/fuz/Dialog.svelte';
-	import {slide} from 'svelte/transition';
 	import {browser} from '$app/environment';
-	import {computed, effect, signal} from '@preact/signals-core';
-	import {afterNavigate} from '$app/navigation';
+	import {computed, effect as preact_effect, signal, untracked} from '@preact/signals-core';
 	import {sync_color_scheme} from '@ryanatkn/fuz/theme.js';
 	import {writable} from 'svelte/store';
+	import type {Snippet} from 'svelte';
+	import {page} from '$app/stores';
+
+	import {set_audio_context} from '$lib/audio_context.js';
+	import {adjust_volume, set_instrument, set_volume} from '$lib/helpers.js';
+	import {request_access} from '$lib/midi_access.js';
+	import {App, set_app} from '$lib/earbetter/app.js';
+	import {set_enabled_notes, set_key, set_scale, to_notes_in_scale} from '$lib/music.js';
+	import {load_from_storage, set_in_storage} from '$lib/storage.js';
+	import {Site_Data} from '$routes/site_data.js';
+	import Init_Audio_Context from '$lib/Init_Audio_Context.svelte';
+	import Main_Menu from '$routes/Main_Menu.svelte';
+	import {set_main_menu} from '$routes/main_menu_state.svelte.js';
+	import {Level_Hash_Data} from '$lib/earbetter/level.js';
+	import {parse_from_hash} from '$lib/url.js';
+
+	interface Props {
+		children: Snippet;
+	}
+
+	const {children}: Props = $props();
 
 	const selected_color_scheme = writable('dark' as const);
 	sync_color_scheme($selected_color_scheme); // TODO probably shouldn't be needed
-
-	import {set_ac} from '$lib/ac';
-	import {adjust_volume, set_instrument, set_volume} from '$lib/helpers';
-	import {request_access} from '$lib/midi_access';
-	import {App, set_app} from '$lib/earbetter/app';
-	import {set_enabled_notes, set_key, set_scale, to_notes_in_scale} from '$lib/music';
-	import {load_from_storage, set_in_storage} from '$lib/storage';
-	import SiteMap from '$routes/SiteMap.svelte';
-	import {SiteData} from '$routes/site_data';
-	import VolumeControl from '$lib/VolumeControl.svelte';
-	import InstrumentControl from '$lib/InstrumentControl.svelte';
-	import InitMidiButton from '$lib/InitMidiButton.svelte';
-	import Footer from '$routes/Footer.svelte';
-	import SiteBreadcrumb from '$routes/SiteBreadcrumb.svelte';
 
 	// load site data
 	const SITE_DATA_STORAGE_KEY = 'site';
 	const initial_site_data = load_from_storage(
 		SITE_DATA_STORAGE_KEY,
-		() => SiteData.parse({}),
-		SiteData.parse,
+		() => Site_Data.parse({}),
+		Site_Data.parse,
 	);
 
-	const get_ac = set_ac();
+	const get_audio_context = set_audio_context();
 	const volume = set_volume(signal(initial_site_data.volume));
 	const instrument = set_instrument(signal(initial_site_data.instrument));
 	const scale = set_scale(signal(initial_site_data.scale));
@@ -54,27 +55,45 @@
 		),
 	);
 
+	const app = set_app(new App(get_audio_context, volume, instrument));
+	if (browser) (window as any).app = app;
+
+	const main_menu = set_main_menu();
+
+	const current_level_hash_data = $derived.by(() => {
+		const parsed = Level_Hash_Data.safeParse(parse_from_hash($page.url.hash));
+		return parsed.success ? parsed.data : null;
+	});
+	$effect(() => {
+		app.set_active_level_data(current_level_hash_data?.level ?? null);
+	});
+
 	// save site data
-	const to_site_data = (): SiteData => ({
+	const to_site_data = (): Site_Data => ({
 		// note these have to use `.value`, the `$`-prefix doesn't work for reactivity
 		volume: volume.value,
 		instrument: instrument.value,
 		scale: scale.value,
 		key: key.value,
 	});
-	const save_site_data = () => set_in_storage(SITE_DATA_STORAGE_KEY, to_site_data());
-	effect(save_site_data);
 
-	const app = set_app(new App(get_ac));
-	if (browser) (window as any).app = app;
+	preact_effect(() => set_in_storage(SITE_DATA_STORAGE_KEY, to_site_data()));
 
-	// TODO add to app? context? global store?
-	let show_main_menu = false;
-	afterNavigate(() => (show_main_menu = false));
+	// TODO hacky but lets us avoid saving on init, what's a cleaner pattern? doesn't make sense to put in `app`
+	let inited_save = false;
+	preact_effect(() => {
+		if (untracked(() => inited_save)) {
+			app.save();
+		} else {
+			inited_save = true;
+		}
+	}); // TODO do effects like this need to be cleaned up or is calling dispose only for special cases?
 
 	// TODO refactor
 	const keydown = (e: KeyboardEvent) => {
-		if (is_editable(e.target)) return;
+		if (is_editable(e.target) || e.ctrlKey || e.shiftKey || e.altKey || e.metaKey) {
+			return;
+		}
 		switch (e.key) {
 			case 'c': {
 				swallow(e);
@@ -113,15 +132,13 @@
 			}
 			case 'Escape': {
 				// TODO hacky, maybe change the inner `Dialog` to use `capture`? but that's less flexible
-				if (!show_main_menu && document.getElementsByClassName('dialog').length) return;
+				if (!main_menu.opened && document.getElementsByClassName('dialog').length) return;
 				swallow(e);
-				show_main_menu = !show_main_menu;
+				main_menu.toggle();
 				return;
 			}
 		}
 	};
-
-	let deleting = false;
 </script>
 
 <svelte:head>
@@ -129,72 +146,16 @@
 	<link rel="icon" href="{base}/favicon.png" />
 </svelte:head>
 
-<svelte:window on:keydown={keydown} />
+<svelte:window onkeydown={keydown} />
+
+<Init_Audio_Context />
 
 <Themed {selected_color_scheme} color_scheme_fallback={$selected_color_scheme}>
-	<slot />
+	{@render children()}
 
-	{#if show_main_menu}
-		<Dialog on:close={() => (show_main_menu = false)}>
-			<div class="bg">
-				<section class="prose">
-					<h1 class="section-title box">
-						earbetter <div class="breadcrumbs-wrapper"><SiteBreadcrumb /></div>
-					</h1>
-					<h2 class="section-title">settings</h2>
-					<form class="width_sm box px_md">
-						<VolumeControl {volume} />
-						<InstrumentControl {instrument} />
-						<aside>Earbetter supports MIDI devices like piano keyboards, connect and click:</aside>
-						<InitMidiButton />
-					</form>
-				</section>
-				<section>
-					<SiteMap />
-				</section>
-				<section class="box width_sm">
-					<div class="prose">
-						<h2 class="section-title">data</h2>
-						<div class="px_md">
-							<aside>
-								<a href="https://developer.mozilla.org/en-US/docs/Web/API/Window/localStorage"
-									><code>localStorage</code></a
-								> is used to save your data locally on your computer
-							</aside>
-						</div>
-					</div>
-					<button on:click={() => (deleting = !deleting)}> clear saved data </button>
-					{#if deleting}
-						<div transition:slide|local>
-							<button
-								on:click={() => {
-									localStorage.clear();
-									location.reload();
-								}}
-							>
-								✕ permanently delete all locally saved data
-							</button>
-						</div>
-					{/if}
-				</section>
-				<section class="box prose width_sm">
-					<h2 class="section-title">privacy</h2>
-					<p class="p_md">
-						this website collects no data - the only server it talks to is <a
-							href="https://pages.github.com/">GitHub Pages</a
-						>
-						to serve static files, see
-						<a href="https://github.com/ryanatkn/earbetter">the source code</a> for more
-					</p>
-				</section>
-				<Footer flush={true} />
-			</div>
+	{#if main_menu.opened}
+		<Dialog onclose={() => main_menu.close()}>
+			<Main_Menu />
 		</Dialog>
 	{/if}
 </Themed>
-
-<style>
-	.breadcrumbs-wrapper {
-		font-size: var(--size_md);
-	}
-</style>

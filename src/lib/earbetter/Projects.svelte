@@ -1,11 +1,15 @@
 <script lang="ts">
-	import {ProjectData} from '$lib/earbetter/project';
-	import ProjectItems from '$lib/earbetter/ProjectItems.svelte';
-	import type {App} from '$lib/earbetter/app';
+	import {Project_Data} from '$lib/earbetter/project.js';
+	import Project_Items from '$lib/earbetter/Project_Items.svelte';
+	import type {App} from '$lib/earbetter/app.js';
 
-	export let app: App; // TODO maybe change to be more granular objects?
+	interface Props {
+		app: App; // TODO maybe change to be more granular objects?
+	}
 
-	$: ({
+	const {app}: Props = $props();
+
+	const {
 		app_data,
 		project_datas,
 		selected_project_id,
@@ -16,20 +20,18 @@
 		select_project,
 		edit_project,
 		remove_project,
-	} = app);
+	} = $derived(app);
 
-	$: creating = $editing_project && $selected_project_id !== $editing_project_id;
+	const creating = $derived($editing_project && $selected_project_id !== $editing_project_id);
 
-	$: ({projects} = $app_data);
+	const {projects} = $derived($app_data);
 </script>
 
 <div class="panel p_md">
-	<div class="prose">
-		<header>
-			<h2>projects</h2>
-		</header>
-	</div>
-	<ProjectItems
+	<header>
+		<h2 class="my_0">projects</h2>
+	</header>
+	<Project_Items
 		selected_project_id={$selected_project_id}
 		editing_project_id={$editing_project ? $editing_project_id : null}
 		{projects}
@@ -40,23 +42,16 @@
 		{remove_project}
 	/>
 	<button
-		class="create-new-project deselectable"
+		class="w_100 mt_md deselectable"
 		class:selected={creating}
-		on:click={() => {
+		onclick={() => {
 			if (creating) {
 				editing_project.value = false;
 			} else {
-				edit_project(ProjectData.parse({}));
+				edit_project(Project_Data.parse({}));
 			}
 		}}
 	>
 		create a new project
 	</button>
 </div>
-
-<style>
-	.create-new-project {
-		margin-top: var(--space_md);
-		width: 100%;
-	}
-</style>
