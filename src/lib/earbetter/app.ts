@@ -130,7 +130,6 @@ export class App {
 	) {
 		this.app_data = signal(this.load());
 		const app_data = this.app_data.peek();
-		this.saved = app_data; // hacky, but enables the following effect without waste
 		console.log(`app_data`, app_data);
 
 		// TODO refactor
@@ -178,14 +177,10 @@ export class App {
 		return loaded;
 	}
 
-	private saved: App_Data; // immutable, used to avoid waste
-
 	save(): void {
+		console.log('save');
 		const data = this.toJSON();
-		if (data === this.saved) return;
-		console.log('save', data);
 		set_in_storage(this.storage_key, data);
-		this.saved = data;
 	}
 
 	save_project = (id: Project_Id): void => {
