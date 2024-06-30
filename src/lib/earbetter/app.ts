@@ -1,13 +1,6 @@
 import {goto} from '$app/navigation';
 import {z} from 'zod';
-import {
-	signal,
-	type Signal,
-	computed,
-	effect,
-	type ReadonlySignal,
-	batch,
-} from '@preact/signals-core';
+import {signal, type Signal, computed, effect, type ReadonlySignal} from '@preact/signals-core';
 import {getContext, setContext} from 'svelte';
 import {base} from '$app/paths';
 
@@ -225,36 +218,32 @@ export class App {
 			this.selected_project_id.value = null;
 			return;
 		}
-		batch(() => {
-			const project_data =
-				this.project_datas.peek().find((d) => d.id === id) || this.load_project(id);
-			if (!project_data) console.error('failed to find or load def', id);
-			this.selected_project_id.value = project_data?.id ?? null;
-			this.selected_realm_id.value = project_data?.realms[0]?.id ?? null;
-		});
+		const project_data =
+			this.project_datas.peek().find((d) => d.id === id) || this.load_project(id);
+		if (!project_data) console.error('failed to find or load def', id);
+		this.selected_project_id.value = project_data?.id ?? null;
+		this.selected_realm_id.value = project_data?.realms[0]?.id ?? null;
 	};
 
 	edit_project = (project_data: Project_Data | null): void => {
 		console.log('edit_project', project_data);
-		batch(() => {
-			if (!project_data) {
-				this.editing_project.value = false;
-				this.draft_project_data.value = null;
-				return;
-			}
-			this.editing_project.value = true;
-			const {id} = project_data;
-			const found = this.project_datas.peek().find((d) => d.id === id);
-			if (found) {
-				// existing project
-				this.selected_project_id.value = id;
-				this.editing_project_draft.value = false;
-			} else {
-				// draft project
-				this.draft_project_data.value = project_data;
-				this.editing_project_draft.value = true;
-			}
-		});
+		if (!project_data) {
+			this.editing_project.value = false;
+			this.draft_project_data.value = null;
+			return;
+		}
+		this.editing_project.value = true;
+		const {id} = project_data;
+		const found = this.project_datas.peek().find((d) => d.id === id);
+		if (found) {
+			// existing project
+			this.selected_project_id.value = id;
+			this.editing_project_draft.value = false;
+		} else {
+			// draft project
+			this.draft_project_data.value = project_data;
+			this.editing_project_draft.value = true;
+		}
 	};
 
 	remove_project = (id: Project_Id): void => {
@@ -263,20 +252,18 @@ export class App {
 		const existing = projects.find((d) => d.id === id);
 		if (!existing) return;
 		// TODO syncing `app_data` with `projects` is awkward
-		batch(() => {
-			this.app_data.value = {
-				...this.app_data.peek(),
-				projects: projects.filter((p) => p.id !== id),
-			};
-			this.project_datas.value = this.project_datas.peek().filter((p) => p.id !== id);
-			if (this.selected_project_id.peek() === id) {
-				this.selected_project_id.value =
-					this.project_datas.peek()[0]?.id ||
-					this.load_project(this.app_data.peek().projects[0]?.id)?.id ||
-					null;
-			}
-			this.save_project(id);
-		});
+		this.app_data.value = {
+			...this.app_data.peek(),
+			projects: projects.filter((p) => p.id !== id),
+		};
+		this.project_datas.value = this.project_datas.peek().filter((p) => p.id !== id);
+		if (this.selected_project_id.peek() === id) {
+			this.selected_project_id.value =
+				this.project_datas.peek()[0]?.id ||
+				this.load_project(this.app_data.peek().projects[0]?.id)?.id ||
+				null;
+		}
+		this.save_project(id);
 	};
 
 	create_project = (project_data: Project_Data): Project_Data => {
@@ -288,20 +275,18 @@ export class App {
 			console.log('project already exists', project_data, existing);
 			return existing;
 		}
-		batch(() => {
-			// TODO syncing `app_data` with `projects` is awkward
-			this.app_data.value = {
-				...this.app_data.peek(),
-				projects: this.app_data.peek().projects.concat({id, name: project_data.name}),
-			};
-			this.project_datas.value = projects.concat(project_data);
-			this.selected_project_id.value = id;
-			this.editing_project.value = false;
-			if (this.draft_project_data.peek() === project_data) {
-				this.draft_project_data.value = null;
-			}
-			this.save_project(id);
-		});
+		// TODO syncing `app_data` with `projects` is awkward
+		this.app_data.value = {
+			...this.app_data.peek(),
+			projects: this.app_data.peek().projects.concat({id, name: project_data.name}),
+		};
+		this.project_datas.value = projects.concat(project_data);
+		this.selected_project_id.value = id;
+		this.editing_project.value = false;
+		if (this.draft_project_data.peek() === project_data) {
+			this.draft_project_data.value = null;
+		}
+		this.save_project(id);
 		return project_data;
 	};
 
@@ -313,18 +298,16 @@ export class App {
 			console.error('cannot find project_data with id', id);
 			return;
 		}
-		batch(() => {
-			const {id: _, name, ...rest} = project_data;
-			const new_project_data = Project_Data.parse({
-				...rest,
-				name: to_next_name(name, projects),
-			});
-			this.create_project(new_project_data);
-			this.draft_project_data.value = new_project_data; // TODO move to component?
-			this.selected_project_id.value = new_project_data.id;
-			this.editing_project_draft.value = true;
-			this.editing_project.value = true;
+		const {id: _, name, ...rest} = project_data;
+		const new_project_data = Project_Data.parse({
+			...rest,
+			name: to_next_name(name, projects),
 		});
+		this.create_project(new_project_data);
+		this.draft_project_data.value = new_project_data; // TODO move to component?
+		this.selected_project_id.value = new_project_data.id;
+		this.editing_project_draft.value = true;
+		this.editing_project.value = true;
 	};
 
 	update_project = (project_data: Project_Data): void => {
@@ -361,40 +344,36 @@ export class App {
 		}
 		const realm_data = this.realms.peek()?.find((d) => d.id === id);
 		if (!realm_data) return; // TODO hm, report an error? how to handle?
-		batch(() => {
-			this.selected_realm_id.value = id;
-			this.editing_realm_draft.value = false;
-			// TODO derive instead of manually checking? might not be needed with a restructuring that saves the editing state in the tree
-			if (
-				this.draft_level_data.peek() &&
-				!realm_data.levels.includes(this.draft_level_data.peek()!)
-			) {
-				this.draft_level_data.value = null;
-			}
-		});
+		this.selected_realm_id.value = id;
+		this.editing_realm_draft.value = false;
+		// TODO derive instead of manually checking? might not be needed with a restructuring that saves the editing state in the tree
+		if (
+			this.draft_level_data.peek() &&
+			!realm_data.levels.includes(this.draft_level_data.peek()!)
+		) {
+			this.draft_level_data.value = null;
+		}
 	};
 
 	edit_realm = (realm_data: Realm_Data | null): void => {
 		console.log('edit_realm', realm_data);
-		batch(() => {
-			if (!realm_data) {
-				this.editing_realm.value = false;
-				this.draft_realm_data.value = null;
-				return;
-			}
-			this.editing_realm.value = true;
-			const {id} = realm_data;
-			const found = this.realms.peek()?.find((d) => d.id === id);
-			if (found) {
-				// existing realm
-				this.selected_realm_id.value = id;
-				this.editing_realm_draft.value = false;
-			} else {
-				// draft realm
-				this.draft_realm_data.value = realm_data;
-				this.editing_realm_draft.value = true;
-			}
-		});
+		if (!realm_data) {
+			this.editing_realm.value = false;
+			this.draft_realm_data.value = null;
+			return;
+		}
+		this.editing_realm.value = true;
+		const {id} = realm_data;
+		const found = this.realms.peek()?.find((d) => d.id === id);
+		if (found) {
+			// existing realm
+			this.selected_realm_id.value = id;
+			this.editing_realm_draft.value = false;
+		} else {
+			// draft realm
+			this.draft_realm_data.value = realm_data;
+			this.editing_realm_draft.value = true;
+		}
 	};
 
 	remove_realm = (id: Realm_Id): void => {
@@ -435,13 +414,11 @@ export class App {
 			console.error('cannot find realm_data with id', id);
 			return;
 		}
-		batch(() => {
-			const {id: _, name, ...rest} = realm_data;
-			const new_realm_data = Realm_Data.parse({...rest, name: to_next_name(name, realms)});
-			this.create_realm(new_realm_data);
-			this.draft_realm_data.value = new_realm_data; // TODO move to component?
-			this.selected_realm_id.value = new_realm_data.id;
-		});
+		const {id: _, name, ...rest} = realm_data;
+		const new_realm_data = Realm_Data.parse({...rest, name: to_next_name(name, realms)});
+		this.create_realm(new_realm_data);
+		this.draft_realm_data.value = new_realm_data; // TODO move to component?
+		this.selected_realm_id.value = new_realm_data.id;
 	};
 
 	create_realm = (realm_data: Realm_Data): void => {
@@ -460,14 +437,12 @@ export class App {
 			return;
 		}
 
-		batch(() => {
-			this.update_project({...project_data, realms: realms.concat(realm_data)});
-			this.selected_realm_id.value = realm_data.id;
-			// TODO is awkward but works, should it be an effect?
-			if (this.draft_realm_data.peek()?.id === realm_data.id) {
-				this.editing_realm.value = false;
-			}
-		});
+		this.update_project({...project_data, realms: realms.concat(realm_data)});
+		this.selected_realm_id.value = realm_data.id;
+		// TODO is awkward but works, should it be an effect?
+		if (this.draft_realm_data.peek()?.id === realm_data.id) {
+			this.editing_realm.value = false;
+		}
 	};
 
 	update_realm = (realm_data: Realm_Data): void => {
@@ -486,10 +461,8 @@ export class App {
 		}
 		const updated = realms.slice();
 		updated[index] = realm_data;
-		batch(() => {
-			this.update_project({...project_data, realms: updated});
-			this.selected_realm_id.value = id;
-		});
+		this.update_project({...project_data, realms: updated});
+		this.selected_realm_id.value = id;
 	};
 
 	play_level = async (id: Level_Id): Promise<void> => {
@@ -505,10 +478,8 @@ export class App {
 
 	edit_level = (level_data: Level_Data | null): void => {
 		console.log('edit_level', level_data);
-		batch(() => {
-			this.editing_level.value = !!level_data;
-			this.draft_level_data.value = level_data;
-		});
+		this.editing_level.value = !!level_data;
+		this.draft_level_data.value = level_data;
 	};
 
 	remove_level = (id: Level_Id): void => {
@@ -524,16 +495,14 @@ export class App {
 			const {levels} = realm_data;
 			const level_data_index = levels.findIndex((d) => d.id === id);
 			if (level_data_index === -1) continue;
-			batch(() => {
-				if (id === this.draft_level_data.value?.id) {
-					this.draft_level_data.value = null;
-				}
-				const next_realms = realms.slice();
-				const next_levels = levels.slice();
-				next_levels.splice(level_data_index, 1);
-				next_realms[i] = {...realm_data, levels: next_levels};
-				this.update_project({...project_data, realms: next_realms});
-			});
+			if (id === this.draft_level_data.value?.id) {
+				this.draft_level_data.value = null;
+			}
+			const next_realms = realms.slice();
+			const next_levels = levels.slice();
+			next_levels.splice(level_data_index, 1);
+			next_realms[i] = {...realm_data, levels: next_levels};
+			this.update_project({...project_data, realms: next_realms});
 			return;
 		}
 		console.error('cannot find level_data with id', id);
@@ -572,11 +541,9 @@ export class App {
 			levels: realm_data.levels.concat(level_data),
 		};
 
-		batch(() => {
-			this.update_project({...project_data, realms: next_realms});
-			this.editing_level.value = false;
-			this.draft_level_data.value = null;
-		});
+		this.update_project({...project_data, realms: next_realms});
+		this.editing_level.value = false;
+		this.draft_level_data.value = null;
 
 		return;
 	};
@@ -594,13 +561,11 @@ export class App {
 			console.error('cannot find level_data with id', id);
 			return;
 		}
-		batch(() => {
-			const {id: _, name, ...rest} = level_data;
-			const new_level_data = Level_Data.parse({...rest, name: to_next_name(name, levels)});
-			this.create_level(new_level_data);
-			this.editing_level.value = true;
-			this.draft_level_data.value = new_level_data; // TODO move to component?
-		});
+		const {id: _, name, ...rest} = level_data;
+		const new_level_data = Level_Data.parse({...rest, name: to_next_name(name, levels)});
+		this.create_level(new_level_data);
+		this.editing_level.value = true;
+		this.draft_level_data.value = new_level_data; // TODO move to component?
 	};
 
 	update_level = (level_data: Level_Data): void => {
@@ -617,14 +582,12 @@ export class App {
 			const {levels} = realm_data;
 			const level_data_index = levels.findIndex((d) => d.id === id);
 			if (level_data_index === -1) continue;
-			batch(() => {
-				const next_levels = levels.slice();
-				next_levels[level_data_index] = level_data;
-				const next_realms = realms.slice();
-				next_realms[i] = {...realm_data, levels: next_levels};
-				this.update_project({...project_data, realms: next_realms});
-				this.draft_level_data.value = level_data; // TODO maybe push to the component?
-			});
+			const next_levels = levels.slice();
+			next_levels[level_data_index] = level_data;
+			const next_realms = realms.slice();
+			next_realms[i] = {...realm_data, levels: next_levels};
+			this.update_project({...project_data, realms: next_realms});
+			this.draft_level_data.value = level_data; // TODO maybe push to the component?
 			return;
 		}
 		console.error('cannot find level_data with id', id);
