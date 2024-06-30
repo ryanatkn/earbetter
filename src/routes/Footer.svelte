@@ -1,41 +1,30 @@
 <script lang="ts">
-	import SiteBreadcrumb from '$routes/SiteBreadcrumb.svelte';
+	import Github_Logo from '@ryanatkn/fuz/Github_Logo.svelte';
 
-	export let flush = false;
+	import Site_Breadcrumb from '$routes/Site_Breadcrumb.svelte';
+
+	interface Props {
+		hide_main_menu_button?: boolean;
+	}
+
+	const {hide_main_menu_button = false}: Props = $props();
 </script>
 
-<footer class:flush>
-	<div class="panel p_md width_sm">
-		<a href="https://github.com/ryanatkn/earbetter">source code</a>
-		<div>public domain</div>
-		<div class="breadcrumbs-wrapper">
-			<SiteBreadcrumb />
-		</div>
+<footer>
+	<div class="mb_lg" style:--size="var(--size_xl)">
+		<Site_Breadcrumb {hide_main_menu_button} />
 	</div>
+	<a class="box chip p_md" href="https://github.com/ryanatkn/earbetter">
+		<Github_Logo />
+		source code
+	</a>
+	<!-- TODO switch to `class="size_xl"` when Fuz changes to use vb/vi -->
 </footer>
 
 <style>
 	footer {
+		padding: var(--size_md);
 		margin: var(--space_xl3) auto;
 		text-align: center;
-		display: flex;
-		flex-direction: column;
-		align-items: center;
-		padding-bottom: var(--space_xl3);
-	}
-	.flush {
-		padding-bottom: 0;
-	}
-	.flush > .panel {
-		border-top-left-radius: 0;
-		border-top-right-radius: 0;
-	}
-	.panel {
-		display: flex;
-		flex-direction: column;
-		align-items: center;
-	}
-	.breadcrumbs-wrapper {
-		font-size: var(--size_xl2);
 	}
 </style>

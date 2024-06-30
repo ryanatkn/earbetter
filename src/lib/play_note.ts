@@ -7,8 +7,8 @@ import {
 	type Instrument,
 	type Milliseconds,
 	type Volume,
-} from '$lib/helpers';
-import {type Midi, midi_to_freq} from '$lib/music';
+} from '$lib/helpers.js';
+import {type Midi, midi_to_freq} from '$lib/music.js';
 
 // TODO this API is haphazard, in particular `play_note` versus `start_playing` and `stop_playing`,
 // and we need to support more options like `velocity`, should probably have a single options object
@@ -40,11 +40,12 @@ const stop_osc = (
 	osc.stop(endTime + SMOOTH_GAIN_TIME_CONSTANT * 2);
 };
 
-export interface StopPlaying {
+export interface Stop_Playing {
 	(): void;
 }
 
 // TODO is redundant with `playing` and manually updated
+// TODO @multiple source from `audio` in context
 export const playing_notes: Signal<Set<Midi>> = signal(new Set());
 
 export const start_playing_note = (
@@ -52,7 +53,7 @@ export const start_playing_note = (
 	note: Midi,
 	volume: Volume = DEFAULT_VOLUME,
 	instrument: Instrument = 'sine',
-): StopPlaying => {
+): Stop_Playing => {
 	const freq = midi_to_freq(note);
 	console.log('start playing note', note, freq, volume, instrument);
 
@@ -87,7 +88,7 @@ export const start_playing_note = (
 // Maybe this should be put in the main context and wrap `ac` so it's not accessed directly?
 
 // TODO is redundant with `playing_notes` and manually updated
-const playing: Map<Midi, StopPlaying> = new Map(); // global cache used to enforce that at most one of each note plays
+const playing: Map<Midi, Stop_Playing> = new Map(); // global cache used to enforce that at most one of each note plays
 
 export const start_playing = (
 	ac: AudioContext,

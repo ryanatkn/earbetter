@@ -1,81 +1,43 @@
-/* TODO a lot of this can be deleted or cleaned up */
+/* TODO a lot of this can be deleted or cleaned up, especially using the new Moss colors */
 :root:root:root.dark {
-	/* TODO force dark mode and remove these when Felt supports it */
+	/* TODO force dark mode and remove these when Moss supports it */
 	--bg: hsl(var(--primary_hue), 63%, 11%);
 	--text_color: hsl(var(--primary_hue), 8%, 85%);
-	/* TODO "light" and "ligher" are actually getting darker, should they be renamed? */
-	--text_color_light: hsl(var(--primary_hue), 8%, 65%);
-	--text_color_lighter: hsl(var(--primary_hue), 8%, 45%);
 	--text_color_dark: hsl(var(--primary_hue), 8%, 91%);
 	--link_color: var(--primary_text_color);
 	--button_color: var(--lighten_2);
 	--button_color_dark: var(--lighten_1);
-	--button_color_hover: var(--darken_2);
-	--button_color_active: var(--darken_3);
-	--button_color_disabled: transparent;
-	--input_bg_color: var(--button_color);
+	--input_fill: var(--button_color);
 
 	/* felt overrides */
-	/* TODO hacky */
-	--active_hue: var(--primary_hue);
 
 	/* dealt style vars */
-	--accent_hue: 185;
-	--primary_hue: 275;
+	--accent_hue: 210;
+	--primary_hue: 260;
 	--border_color: hsla(var(--primary_hue), 100%, 98%, 0.2);
-	--primary_text_color: hsl(var(--primary_hue), 90%, 60%);
+	--primary_text_color: hsl(var(--primary_hue), 90%, 70%);
 	--accent_text_color: hsl(var(--accent_hue), 50%, 55%);
 	--light_text_color: hsl(var(--accent_hue), 80%, 60%);
 	/* TODO upstream `accent` stuff */
 	--accent_border_color: hsla(var(--accent_hue), 100%, 58%, 0.5);
 	--accent_border_color_dark: hsla(var(--accent_hue), 100%, 43%, 0.5);
 	--accent_border_color_darker: hsla(var(--accent_hue), 100%, 28%, 0.5);
-	--light_border_color: hsla(var(--accent_hue), 50%, 50%, 0.4);
-	--space_lg: 20px;
-	--size_lg: 20px;
 
 	--primary_color: hsl(var(--primary_hue), 80%, 52%);
 	--primary_color_dark: hsl(var(--primary_hue), 80%, 36%);
 	--accent_color: hsl(var(--accent_hue), 80%, 48%);
 
-	--success_color: hsl(95, 80%, 31%);
-	--failure_color: hsl(5, 80%, 40%);
-
-	--icon: '🔮';
-
 	--text_shadow: 1px 1px 15px #000, 1px 1px 7px #000, 1px 1px #000;
 }
 
-.panel {
-	background-color: var(--lighten_1);
-}
-
-h1,
-h2,
-h3,
-h4,
-h5,
-h6 {
-	color: var(--font_color_heading);
-}
-
-section {
-	/* TODO from Felt */
-	margin-bottom: 60px;
-}
-
-aside {
-	background-color: var(--lighten_1);
-}
-
 a:hover {
-	color: var(--light_text_color);
+	--text_color: var(--light_text_color);
 }
 a:active {
-	color: var(--primary_text_color);
+	--text_color: var(--primary_text_color);
 }
 
-/* TODO maybe upstream? */
+/* TODO probably upstream to Moss as `.pressable` */
 .clickable {
 	cursor: pointer;
 	transition: transform var(--duration_1) ease;
@@ -96,12 +58,6 @@ button.big {
 	padding: var(--space_md) var(--space_xl3);
 }
 
-/* TODO fix this class upstream so this is controlled by a variable */
-.plain-button {
-	--button_color_hover: var(--darken_3);
-	--button_color_active: var(--darken_5);
-}
-
 code {
 	background-color: var(--lighten_2);
 }
@@ -109,9 +65,6 @@ code {
 /* TODO this hack shouldn't be needed */
 .row label {
 	margin-bottom: 0 !important;
-}
-.prose .row:not(:last-child) {
-	margin-bottom: var(--space_lg);
 }
 
 th,
@@ -134,12 +87,13 @@ header {
 	margin-bottom: var(--space_md);
 }
 
+/* TODO use Moss instead */
 .error {
 	--border_color: var(--red);
 	--border_color_dark: hsl(var(--red_hue), 60%, 61%);
 }
 
-/* TODO consider upstreaming this */
+/* TODO upstream this somehow, maybe as a variable */
 button {
 	background: linear-gradient(var(--button_color), var(--button_color_dark));
 }
@@ -155,7 +109,7 @@ button {
 	width: 100%;
 }
 
-.section-title {
+.section_title {
 	padding: var(--space_lg);
 	display: flex;
 	align-items: center;
@@ -165,6 +119,12 @@ button {
 	margin-bottom: var(--space_md);
 }
 
+.section_body {
+	padding: var(--space_md);
+	width: 100%;
+}
+
+/* TODO replace with Moss */
 .accent {
 	--text_color: var(--accent_text_color);
 	--border_color: var(--accent_border_color);
@@ -179,7 +139,7 @@ button {
 	--border_color: var(--accent_border_color_darker);
 }
 
-.progress-bar {
+.progress_bar {
 	position: var(--progress_bar_position, absolute);
 	left: var(--progress_bar_left, 0);
 	top: var(--progress_bar_top, calc(50% - var(--progress_bar_height, var(--space_md)) / 2));

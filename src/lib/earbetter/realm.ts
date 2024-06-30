@@ -1,20 +1,20 @@
 import {z} from 'zod';
 import type {Flavored} from '@ryanatkn/belt/types.js';
 
-import {LevelData} from '$lib/earbetter/level';
-import {to_random_id} from '$lib/id';
+import {Level_Data} from '$lib/earbetter/level.js';
+import {to_random_id} from '$lib/id.js';
 
-export const RealmId = z.string();
-export type RealmId = Flavored<z.infer<typeof RealmId>, 'RealmId'>;
-export const create_realm_id = (): RealmId => to_random_id();
+export const Realm_Id = z.string();
+export type Realm_Id = Flavored<z.infer<typeof Realm_Id>, 'Realm_Id'>; // TODO @multiple this doesn't work when used as a schema, use z.brand() instead? or are the egonomics too bad?
+export const create_realm_id = (): Realm_Id => to_random_id();
 
-export const RealmName = z.string().min(1).max(1000);
-export type RealmName = Flavored<z.infer<typeof RealmName>, 'RealmName'>;
+export const Realm_Name = z.string().min(1).max(1000);
+export type Realm_Name = Flavored<z.infer<typeof Realm_Name>, 'Realm_Name'>; // TODO @multiple this doesn't work when used as a schema, use z.brand() instead? or are the egonomics too bad?
 const DEFAULT_REALM_NAME = 'new realm';
 
-export const RealmData = z.object({
-	id: RealmId.default(create_realm_id),
-	name: RealmName.default(DEFAULT_REALM_NAME),
-	levels: z.array(LevelData).default([]),
+export const Realm_Data = z.object({
+	id: Realm_Id.default(create_realm_id),
+	name: Realm_Name.default(DEFAULT_REALM_NAME),
+	levels: z.array(Level_Data).default([]),
 });
-export type RealmData = z.infer<typeof RealmData>;
+export type Realm_Data = z.infer<typeof Realm_Data>;
