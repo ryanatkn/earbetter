@@ -3,7 +3,7 @@
 	import {page} from '$app/stores';
 	import {base} from '$app/paths';
 
-	import {get_main_menu} from '$routes/main_menu.svelte.js';
+	import {get_main_menu} from '$routes/main_menu_state.svelte.js';
 
 	interface Props {
 		hide_main_menu_button?: boolean;

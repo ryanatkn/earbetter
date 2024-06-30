@@ -121,7 +121,6 @@ button {
 
 .section_body {
 	padding: var(--space_md);
-	max-width: var(--width_sm);
 	width: 100%;
 }
 

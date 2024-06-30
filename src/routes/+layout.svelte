@@ -7,10 +7,8 @@
 	import {base} from '$app/paths';
 	import {is_editable, swallow} from '@ryanatkn/belt/dom.js';
 	import Dialog from '@ryanatkn/fuz/Dialog.svelte';
-	import {slide} from 'svelte/transition';
 	import {browser} from '$app/environment';
 	import {computed, effect as preact_effect, signal} from '@preact/signals-core';
-	import {afterNavigate} from '$app/navigation';
 	import {sync_color_scheme} from '@ryanatkn/fuz/theme.js';
 	import {writable} from 'svelte/store';
 	import type {Snippet} from 'svelte';
@@ -22,15 +20,10 @@
 	import {App, set_app} from '$lib/earbetter/app.js';
 	import {set_enabled_notes, set_key, set_scale, to_notes_in_scale} from '$lib/music.js';
 	import {load_from_storage, set_in_storage} from '$lib/storage.js';
-	import Site_Map from '$routes/Site_Map.svelte';
 	import {Site_Data} from '$routes/site_data.js';
-	import Volume_Control from '$lib/Volume_Control.svelte';
-	import Instrument_Control from '$lib/Instrument_Control.svelte';
-	import Init_Midi_Button from '$lib/Init_Midi_Button.svelte';
-	import Footer from '$routes/Footer.svelte';
-	import Site_Breadcrumb from '$routes/Site_Breadcrumb.svelte';
 	import Init_Audio_Context from '$lib/Init_Audio_Context.svelte';
-	import {set_main_menu} from '$routes/main_menu.svelte.js';
+	import Main_Menu from '$routes/Main_Menu.svelte';
+	import {set_main_menu} from '$routes/main_menu_state.svelte.js';
 	import {Level_Hash_Data} from '$lib/earbetter/level.js';
 	import {parse_from_hash} from '$lib/url.js';
 
@@ -66,7 +59,6 @@
 	if (browser) (window as any).app = app;
 
 	const main_menu = set_main_menu();
-	afterNavigate(() => main_menu.opened && main_menu.close());
 
 	const current_level_hash_data = $derived.by(() => {
 		const parsed = Level_Hash_Data.safeParse(parse_from_hash($page.url.hash));
@@ -140,8 +132,6 @@
 			}
 		}
 	};
-
-	let deleting = $state(false);
 </script>
 
 <svelte:head>
@@ -158,87 +148,7 @@
 
 	{#if main_menu.opened}
 		<Dialog onclose={() => main_menu.close()}>
-			<div class="bg shadow_d_xl">
-				<section>
-					<!-- TODO when `.flex_direction_column` or equivalent is added to Moss, change `.box` to that -->
-					<div class="section_title box">
-						<h1 class="mb_md">earbetter</h1>
-						<!-- TODO switch to `class="size_xl"` when Fuz changes to use vb/vi -->
-						<div style:--size="var(--size_xl)"><Site_Breadcrumb hide_main_menu_button /></div>
-					</div>
-					<div class="section_body">
-						<p>
-							Earbetter is an <a href="https://wikipedia.org/wiki/Ear_training">ear trainer</a>. The
-							website also has some other music tools like
-							<a href="{base}/piano">a virtual piano</a>. More planned, stay tuned.
-						</p>
-						<p>
-							It's made with Svelte and TypeScript. <a href="https://github.com/ryanatkn/earbetter"
-								>The code</a
-							> is open source and permissively licensed.
-						</p>
-						<p>Press <code>Escape</code> to toggle this menu.</p>
-					</div>
-				</section>
-				<section>
-					<h2 class="section_title">settings</h2>
-					<form class="section_body">
-						<Volume_Control {volume} />
-						<Instrument_Control {instrument} />
-						<aside>Earbetter supports MIDI devices like piano keyboards, connect and click:</aside>
-						<Init_Midi_Button />
-					</form>
-				</section>
-				<section>
-					<Site_Map />
-				</section>
-				<section>
-					<h2 class="section_title">data</h2>
-					<div class="section_body">
-						<p>
-							Data is saved locally on your computer using <a
-								href="https://developer.mozilla.org/en-US/docs/Web/API/Window/localStorage"
-								><code>localStorage</code></a
-							>.
-						</p>
-						<!-- TODO add an `export saved data` button -->
-						<button type="button" class="w_100" onclick={() => (deleting = !deleting)}>
-							clear saved data
-						</button>
-						{#if deleting}
-							<div transition:slide>
-								<!-- TODO `color_c_5` shouldn't be needed, something in `style.css` -->
-								<button
-									type="button"
-									class="w_100 color_c color_c_5"
-									onclick={() => {
-										localStorage.clear();
-										location.reload();
-									}}
-								>
-									<div class="size_xl3">✕</div>
-									<div class="ml_lg text_align_left">
-										permanently delete<br />all locally saved data
-									</div>
-								</button>
-							</div>
-						{/if}
-					</div>
-				</section>
-				<section>
-					<h2 class="section_title">privacy</h2>
-					<p class="section_body">
-						This website collects no data - the only server it talks to is <a
-							href="https://pages.github.com/">GitHub Pages</a
-						>
-						to serve static files. See
-						<a href="https://github.com/ryanatkn/earbetter">the source code</a> for more.
-					</p>
-				</section>
-				<div class="section_title">
-					<Footer hide_main_menu_button />
-				</div>
-			</div>
+			<Main_Menu />
 		</Dialog>
 	{/if}
 </Themed>

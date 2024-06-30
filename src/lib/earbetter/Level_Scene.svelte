@@ -123,12 +123,17 @@
 					}
 				}
 			}
-			case '[': {
+			case 'd': {
 				swallow(e);
 				level.guess_correctly();
 				return;
 			}
-			case ']': {
+			case 'a': {
+				swallow(e);
+				level.guess_incorrectly();
+				return;
+			}
+			case 'w': {
 				swallow(e);
 				level.win();
 				return;
@@ -183,7 +188,7 @@
 	<div class="feedback" class:success class:failure class:complete>
 		{#if complete}
 			<div class="completed_level_feedback">
-				<div class="pane shadow_d_xl p_xl3 box" transition:scale>
+				<div class="pane shadow_d_xl p_xl3 pt_0 box" transition:scale>
 					<div class="box row" in:scale={{duration: 3000}}>
 						<div class="completed_header_icon" in:fly={{duration: 4000, x: -200}}>♫</div>
 						<div class="completed_header_icon" in:fly={{duration: 4000, x: 200}}>♩<sup>♪</sup></div>

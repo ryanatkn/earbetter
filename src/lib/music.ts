@@ -269,6 +269,9 @@ export const to_notes_in_scale = (
 	return new Set(notes);
 };
 
+export const MIDI_MIN = 0;
+export const MIDI_MAX = 127;
+
 /**
  * This code uses `Midi`, the midi index from 0 to 127,
  * as the standard musical note identity.
@@ -280,11 +283,8 @@ export const to_notes_in_scale = (
  *
  * @see https://wikipedia.org/wiki/MIDI
  */
-export const Midi = z.number().int().min(0).max(127);
+export const Midi = z.number().int().min(MIDI_MIN).max(MIDI_MAX);
 export type Midi = Flavored<z.infer<typeof Midi>, 'Midi'>; // TODO @multiple this doesn't work when used as a schema, use z.brand() instead? or are the egonomics too bad?
-
-export const MIDI_MIN = 0;
-export const MIDI_MAX = 127;
 
 export const midis: Midi[] = Object.freeze(
 	Array.from({length: MIDI_MAX + 1}, (_, i) => i),

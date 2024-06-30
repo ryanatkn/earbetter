@@ -263,6 +263,13 @@ export class Level {
 		this.guess(note);
 	};
 
+	guess_incorrectly = (): void => {
+		if (this.status.peek() !== 'waiting_for_input') return;
+		const note = get_incorrect_guess_for_trial(this.trial.peek());
+		if (note === null) return;
+		this.guess(note);
+	};
+
 	get_correct_guess = (): void => {
 		get_correct_guess_for_trial(this.trial.peek());
 	};
@@ -273,24 +280,20 @@ const get_correct_guess_for_trial = (trial: Trial | null): Midi | null => {
 	return trial.sequence[trial.guessing_index];
 };
 
-const create_next_trial = (def: Level_Data, current_trial: Trial | null): Trial => {
-	const {min_note, max_note} = def;
+const get_incorrect_guess_for_trial = (trial: Trial | null): Midi | null => {
+	if (!trial) return null;
+	const correct_guess = get_correct_guess_for_trial(trial);
+	if (correct_guess === null) return null;
+	const incorrect_notes = Array.from(trial.valid_notes).filter((n) => n !== correct_guess);
+	if (!incorrect_notes.length) return null;
+	return random_item(incorrect_notes);
+};
 
+const create_next_trial = (def: Level_Data, current_trial: Trial | null): Trial => {
 	const tonic = to_random_tonic(def);
 	const sequence: Midi[] = [tonic];
 
-	// compute the valid notes
-	const intervals = new Set([0, ...def.intervals]); // allow tonic to repeat
-	const valid_notes: Midi[] = [];
-	for (let i = min_note; i <= max_note; i++) {
-		const interval = i - tonic;
-		if (intervals.has(interval)) {
-			valid_notes.push(i);
-		}
-	}
-
-	// TODO how to handle this? keep going? (if so need to avoid infinite loop below)
-	if (valid_notes.length < 2) throw Error('invalid notes');
+	const valid_notes = create_valid_notes(tonic, def.min_note, def.max_note, def.intervals);
 
 	// create the random sequence of notes
 	for (let i = 0; i < def.sequence_length - 1; i++) {
@@ -309,6 +312,31 @@ const create_next_trial = (def: Level_Data, current_trial: Trial | null): Trial 
 		guessing_index: null,
 		retry_count: 0,
 	};
+};
+
+/**
+ * Computes the set of notes that can be selected in a trial
+ * for a given tonic, note range, and intervals.
+ * A trial's sequence of notes can be constructed from these.
+ */
+const create_valid_notes = (
+	tonic: Midi,
+	min_note: Midi,
+	max_note: Midi,
+	intervals: Intervals,
+): Midi[] => {
+	const valid_intervals = new Set([0, ...intervals]); // allow tonic to repeat
+	const valid_notes: Midi[] = [];
+	for (let i = min_note; i <= max_note; i++) {
+		const interval = i - tonic;
+		if (valid_intervals.has(interval)) {
+			valid_notes.push(i);
+		}
+	}
+
+	// TODO how to handle this? upstream validation that `intervals.length >= 1`?
+	if (valid_notes.length < 2) throw Error('invalid notes');
+	return valid_notes;
 };
 
 const to_random_tonic = (def: Level_Data): Midi => {
