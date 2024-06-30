@@ -32,11 +32,9 @@
 	<Realm_Form
 		{editing}
 		{realm_data}
-		onsubmit={(editing ? update_realm : create_realm)
-			? (realm_data) => (editing ? update_realm : create_realm)?.(realm_data)
-			: undefined}
-		onremove={remove_realm ? (realm_id) => remove_realm?.(realm_id) : undefined}
-		onduplicate={duplicate_realm ? (realm_id) => duplicate_realm?.(realm_id) : undefined}
+		onsubmit={editing ? update_realm : create_realm}
+		onremove={(realm_id) => remove_realm?.(realm_id)}
+		onduplicate={(realm_id) => duplicate_realm?.(realm_id)}
 		onclose={() => (editing_realm.value = false)}
 	/>
 </div>
