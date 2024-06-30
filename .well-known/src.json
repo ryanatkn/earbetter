@@ -2,23 +2,6 @@
   "name": "@ryanatkn/earbetter",
   "version": "0.0.1",
   "modules": {
-    "./ac.js": {
-      "path": "ac.ts",
-      "declarations": [
-        {
-          "name": "get_ac",
-          "kind": "function"
-        },
-        {
-          "name": "set_ac",
-          "kind": "function"
-        },
-        {
-          "name": "create_ac",
-          "kind": "function"
-        }
-      ]
-    },
     "./dom.js": {
       "path": "dom.ts",
       "declarations": [
@@ -36,7 +19,7 @@
       "path": "earbetter/app.ts",
       "declarations": [
         {
-          "name": "AppData",
+          "name": "App_Data",
           "kind": "variable"
         },
         {
@@ -53,8 +36,8 @@
         }
       ]
     },
-    "./earbetter/ControlsInstructions.svelte": {
-      "path": "earbetter/ControlsInstructions.svelte",
+    "./earbetter/Controls_Instructions.svelte": {
+      "path": "earbetter/Controls_Instructions.svelte",
       "declarations": []
     },
     "./earbetter/Earbetter.svelte": {
@@ -113,7 +96,7 @@
           "kind": "variable"
         },
         {
-          "name": "LevelId",
+          "name": "Level_Id",
           "kind": "variable"
         },
         {
@@ -121,15 +104,15 @@
           "kind": "function"
         },
         {
-          "name": "LevelName",
+          "name": "Level_Name",
           "kind": "variable"
         },
         {
-          "name": "LevelData",
+          "name": "Level_Data",
           "kind": "variable"
         },
         {
-          "name": "LevelHashData",
+          "name": "Level_Hash_Data",
           "kind": "variable"
         },
         {
@@ -137,27 +120,23 @@
           "kind": "type"
         },
         {
-          "name": "Level",
-          "kind": "type"
-        },
-        {
           "name": "Trial",
           "kind": "type"
         },
         {
-          "name": "create_level",
+          "name": "Level",
+          "kind": "class"
+        },
+        {
+          "name": "to_level_url",
           "kind": "function"
         },
         {
-          "name": "to_play_level_url",
-          "kind": "function"
-        },
-        {
-          "name": "MistakesLevelStats",
+          "name": "Mistakes_Level_Stats",
           "kind": "variable"
         },
         {
-          "name": "LevelStats",
+          "name": "Level_Stats",
           "kind": "variable"
         },
         {
@@ -174,35 +153,35 @@
         }
       ]
     },
-    "./earbetter/LevelForm.svelte": {
-      "path": "earbetter/LevelForm.svelte",
+    "./earbetter/Level_Form.svelte": {
+      "path": "earbetter/Level_Form.svelte",
       "declarations": []
     },
-    "./earbetter/LevelMap.svelte": {
-      "path": "earbetter/LevelMap.svelte",
+    "./earbetter/Level_Map.svelte": {
+      "path": "earbetter/Level_Map.svelte",
       "declarations": []
     },
-    "./earbetter/LevelMapItem.svelte": {
-      "path": "earbetter/LevelMapItem.svelte",
+    "./earbetter/Level_Map_Item.svelte": {
+      "path": "earbetter/Level_Map_Item.svelte",
       "declarations": []
     },
-    "./earbetter/LevelMapItems.svelte": {
-      "path": "earbetter/LevelMapItems.svelte",
+    "./earbetter/Level_Map_Items.svelte": {
+      "path": "earbetter/Level_Map_Items.svelte",
       "declarations": []
     },
-    "./earbetter/LevelProgressIndicator.svelte": {
-      "path": "earbetter/LevelProgressIndicator.svelte",
+    "./earbetter/Level_Progress_Indicator.svelte": {
+      "path": "earbetter/Level_Progress_Indicator.svelte",
       "declarations": []
     },
-    "./earbetter/LevelStatsSummary.svelte": {
-      "path": "earbetter/LevelStatsSummary.svelte",
+    "./earbetter/Level_Stats_Summary.svelte": {
+      "path": "earbetter/Level_Stats_Summary.svelte",
       "declarations": []
     },
     "./earbetter/project.js": {
       "path": "earbetter/project.ts",
       "declarations": [
         {
-          "name": "ProjectId",
+          "name": "Project_Id",
           "kind": "variable"
         },
         {
@@ -210,33 +189,33 @@
           "kind": "function"
         },
         {
-          "name": "ProjectName",
+          "name": "Project_Name",
           "kind": "variable"
         },
         {
-          "name": "ProjectMetadata",
+          "name": "Project_Metadata",
           "kind": "variable"
         },
         {
-          "name": "ProjectData",
+          "name": "Project_Data",
           "kind": "variable"
         }
       ]
     },
-    "./earbetter/ProjectEditor.svelte": {
-      "path": "earbetter/ProjectEditor.svelte",
+    "./earbetter/Project_Editor.svelte": {
+      "path": "earbetter/Project_Editor.svelte",
       "declarations": []
     },
-    "./earbetter/ProjectForm.svelte": {
-      "path": "earbetter/ProjectForm.svelte",
+    "./earbetter/Project_Form.svelte": {
+      "path": "earbetter/Project_Form.svelte",
       "declarations": []
     },
-    "./earbetter/ProjectItem.svelte": {
-      "path": "earbetter/ProjectItem.svelte",
+    "./earbetter/Project_Item.svelte": {
+      "path": "earbetter/Project_Item.svelte",
       "declarations": []
     },
-    "./earbetter/ProjectItems.svelte": {
-      "path": "earbetter/ProjectItems.svelte",
+    "./earbetter/Project_Items.svelte": {
+      "path": "earbetter/Project_Items.svelte",
       "declarations": []
     },
     "./earbetter/Projects.svelte": {
@@ -256,7 +235,7 @@
       "path": "earbetter/realm.ts",
       "declarations": [
         {
-          "name": "RealmId",
+          "name": "Realm_Id",
           "kind": "variable"
         },
         {
@@ -264,41 +243,41 @@
           "kind": "function"
         },
         {
-          "name": "RealmName",
+          "name": "Realm_Name",
           "kind": "variable"
         },
         {
-          "name": "RealmData",
+          "name": "Realm_Data",
           "kind": "variable"
         }
       ]
     },
-    "./earbetter/RealmEditor.svelte": {
-      "path": "earbetter/RealmEditor.svelte",
+    "./earbetter/Realm_Editor.svelte": {
+      "path": "earbetter/Realm_Editor.svelte",
       "declarations": []
     },
-    "./earbetter/RealmForm.svelte": {
-      "path": "earbetter/RealmForm.svelte",
+    "./earbetter/Realm_Form.svelte": {
+      "path": "earbetter/Realm_Form.svelte",
       "declarations": []
     },
-    "./earbetter/RealmItem.svelte": {
-      "path": "earbetter/RealmItem.svelte",
+    "./earbetter/Realm_Item.svelte": {
+      "path": "earbetter/Realm_Item.svelte",
       "declarations": []
     },
-    "./earbetter/RealmItems.svelte": {
-      "path": "earbetter/RealmItems.svelte",
+    "./earbetter/Realm_Items.svelte": {
+      "path": "earbetter/Realm_Items.svelte",
       "declarations": []
     },
     "./earbetter/Realms.svelte": {
       "path": "earbetter/Realms.svelte",
       "declarations": []
     },
-    "./earbetter/RealmStatsSummary.svelte": {
-      "path": "earbetter/RealmStatsSummary.svelte",
+    "./earbetter/Realm_Stats_Summary.svelte": {
+      "path": "earbetter/Realm_Stats_Summary.svelte",
       "declarations": []
     },
-    "./earbetter/TrialProgressIndicator.svelte": {
-      "path": "earbetter/TrialProgressIndicator.svelte",
+    "./earbetter/Trial_Progress_Indicator.svelte": {
+      "path": "earbetter/Trial_Progress_Indicator.svelte",
       "declarations": []
     },
     "./emoji.js": {
@@ -409,16 +388,16 @@
         }
       ]
     },
-    "./InitMidiButton.svelte": {
-      "path": "InitMidiButton.svelte",
+    "./Init_Midi_Button.svelte": {
+      "path": "Init_Midi_Button.svelte",
       "declarations": []
     },
-    "./InstrumentControl.svelte": {
-      "path": "InstrumentControl.svelte",
+    "./Instrument_Control.svelte": {
+      "path": "Instrument_Control.svelte",
       "declarations": []
     },
-    "./IntervalsInput.svelte": {
-      "path": "IntervalsInput.svelte",
+    "./Intervals_Input.svelte": {
+      "path": "Intervals_Input.svelte",
       "declarations": []
     },
     "./midi_access.js": {
@@ -427,6 +406,10 @@
         {
           "name": "midi_access",
           "kind": "variable"
+        },
+        {
+          "name": "reset_midi_access",
+          "kind": "function"
         },
         {
           "name": "request_access",
@@ -438,7 +421,7 @@
       "path": "midi_helpers.ts",
       "declarations": [
         {
-          "name": "MidiMessage",
+          "name": "Midi_Message",
           "kind": "type"
         },
         {
@@ -451,12 +434,12 @@
         }
       ]
     },
-    "./MidiInput.svelte": {
-      "path": "MidiInput.svelte",
+    "./Midi_Input.svelte": {
+      "path": "Midi_Input.svelte",
       "declarations": []
     },
-    "./MidiRangeControl.svelte": {
-      "path": "MidiRangeControl.svelte",
+    "./Midi_Range_Control.svelte": {
+      "path": "Midi_Range_Control.svelte",
       "declarations": []
     },
     "./music.js": {
@@ -475,7 +458,7 @@
           "kind": "variable"
         },
         {
-          "name": "NoteName",
+          "name": "Note_Name",
           "kind": "type"
         },
         {
@@ -484,11 +467,27 @@
         },
         {
           "name": "Chroma",
-          "kind": "type"
+          "kind": "variable"
+        },
+        {
+          "name": "Pitch_Class",
+          "kind": "variable"
+        },
+        {
+          "name": "pitch_classes",
+          "kind": "variable"
+        },
+        {
+          "name": "DEFAULT_PITCH_CLASS",
+          "kind": "variable"
+        },
+        {
+          "name": "pitch_class_aliases",
+          "kind": "variable"
         },
         {
           "name": "Octave",
-          "kind": "type"
+          "kind": "variable"
         },
         {
           "name": "Semitones",
@@ -531,16 +530,16 @@
           "kind": "variable"
         },
         {
-          "name": "IntervalShortNames",
-          "kind": "type"
+          "name": "Interval_Short_Names",
+          "kind": "variable"
         },
         {
           "name": "interval_names",
           "kind": "variable"
         },
         {
-          "name": "IntervalNames",
-          "kind": "type"
+          "name": "Interval_Names",
+          "kind": "variable"
         },
         {
           "name": "get_enabled_notes",
@@ -551,7 +550,7 @@
           "kind": "function"
         },
         {
-          "name": "ScaleName",
+          "name": "Scale_Name",
           "kind": "variable"
         },
         {
@@ -587,22 +586,6 @@
           "kind": "function"
         },
         {
-          "name": "PitchClass",
-          "kind": "variable"
-        },
-        {
-          "name": "pitch_classes",
-          "kind": "variable"
-        },
-        {
-          "name": "DEFAULT_PITCH_CLASS",
-          "kind": "variable"
-        },
-        {
-          "name": "pitch_class_aliases",
-          "kind": "variable"
-        },
-        {
           "name": "get_key",
           "kind": "function"
         },
@@ -615,15 +598,15 @@
           "kind": "function"
         },
         {
-          "name": "Midi",
-          "kind": "variable"
-        },
-        {
           "name": "MIDI_MIN",
           "kind": "variable"
         },
         {
           "name": "MIDI_MAX",
+          "kind": "variable"
+        },
+        {
+          "name": "Midi",
           "kind": "variable"
         },
         {
@@ -667,10 +650,6 @@
           "kind": "variable"
         },
         {
-          "name": "Notes",
-          "kind": "variable"
-        },
-        {
           "name": "serialize_notes",
           "kind": "function"
         },
@@ -680,8 +659,8 @@
         }
       ]
     },
-    "./NotesInput.svelte": {
-      "path": "NotesInput.svelte",
+    "./Notes_Input.svelte": {
+      "path": "Notes_Input.svelte",
       "declarations": []
     },
     "./Piano.svelte": {
@@ -696,7 +675,7 @@
           "kind": "type"
         },
         {
-          "name": "PianoKey",
+          "name": "Piano_Key",
           "kind": "type"
         },
         {
@@ -705,8 +684,8 @@
         }
       ]
     },
-    "./PianoKey.svelte": {
-      "path": "PianoKey.svelte",
+    "./Piano_Key.svelte": {
+      "path": "Piano_Key.svelte",
       "declarations": []
     },
     "./play_note.js": {
@@ -717,7 +696,7 @@
           "kind": "function"
         },
         {
-          "name": "StopPlaying",
+          "name": "Stop_Playing",
           "kind": "type"
         },
         {
@@ -747,8 +726,8 @@
         }
       ]
     },
-    "./SelectNotesControl.svelte": {
-      "path": "SelectNotesControl.svelte",
+    "./Select_Notes_Control.svelte": {
+      "path": "Select_Notes_Control.svelte",
       "declarations": []
     },
     "./storage.js": {
@@ -768,8 +747,8 @@
       "path": "style.css",
       "declarations": []
     },
-    "./TextBurst.svelte": {
-      "path": "TextBurst.svelte",
+    "./Text_Burst.svelte": {
+      "path": "Text_Burst.svelte",
       "declarations": []
     },
     "./url.js": {
@@ -785,8 +764,8 @@
         }
       ]
     },
-    "./VolumeControl.svelte": {
-      "path": "VolumeControl.svelte",
+    "./Volume_Control.svelte": {
+      "path": "Volume_Control.svelte",
       "declarations": []
     },
     "./WebMIDI.js": {

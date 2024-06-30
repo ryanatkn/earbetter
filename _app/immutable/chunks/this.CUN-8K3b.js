@@ -1,0 +1,1 @@
+import{e as c,r as h,u as k,q,S as x}from"./index-client.B8vOuY5H.js";function S(i,f){var s;var a=i&&((s=i[x])==null?void 0:s.t);return i===f||a===f}function b(i,f,a,s){c(()=>{var u,r;return h(()=>{u=r,r=(s==null?void 0:s())||[],k(()=>{i!==a(...r)&&(f(i,...r),u&&S(a(...u),i)&&f(null,...u))})}),()=>{q(()=>{r&&S(a(...r),i)&&f(null,...r)})}})}export{b};

@@ -1,0 +1,1 @@
+import{a as s,t as r}from"./disclose-version.djixEf5P.js";var t=r('<header class="svelte-1phjbaw"><div class="box panel p_md svelte-1phjbaw"><h1 class="mb_md">earbetter</h1> <div class="icons svelte-1phjbaw">🎶🦜</div></div></header>');function p(e){var a=t();s(e,a)}export{p as H};
