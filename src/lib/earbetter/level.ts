@@ -1,7 +1,7 @@
 import {random_item, random_int} from '@ryanatkn/belt/random.js';
 import {z} from 'zod';
 import type {Flavored} from '@ryanatkn/belt/types.js';
-import {signal, batch, Signal} from '@preact/signals-core';
+import {signal, Signal} from '@preact/signals-core';
 import {base} from '$app/paths';
 
 import {Midi, Intervals} from '$lib/music.js';
@@ -88,12 +88,10 @@ export class Level {
 	last_guess: Signal<Midi | null> = signal(null);
 
 	reset = (): void => {
-		batch(() => {
-			this.trial.value = DEFAULT_TRIAL;
-			this.trials.value = [];
-			this.update_status(DEFAULT_STATUS);
-			this.start();
-		});
+		this.trial.value = DEFAULT_TRIAL;
+		this.trials.value = [];
+		this.update_status(DEFAULT_STATUS);
+		this.start();
 	};
 
 	start = (): void => {
@@ -135,13 +133,11 @@ export class Level {
 			await play_note(this.ac(), note, this.volume.peek(), duration, this.instrument.peek()); // eslint-disable-line no-await-in-loop
 			if (current_seq_id !== this.seq_id || !this.trial.peek()) return; // cancel
 		}
-		batch(() => {
-			this.trial.value = {
-				...this.trial.peek()!,
-				presenting_index: null,
-			};
-			this.update_status('waiting_for_input');
-		});
+		this.trial.value = {
+			...this.trial.peek()!,
+			presenting_index: null,
+		};
+		this.update_status('waiting_for_input');
 	};
 
 	// TODO helpful to have a return value?
@@ -150,58 +146,56 @@ export class Level {
 		const $trial = this.trial.peek();
 		const guessing_index = $trial?.guessing_index;
 		if (!$trial || guessing_index == null) return;
-		batch(() => {
-			const actual = get_correct_guess_for_trial($trial);
-			console.log('guess', guessing_index, note, actual);
+		const actual = get_correct_guess_for_trial($trial);
+		console.log('guess', guessing_index, note, actual);
 
-			this.last_guess.value = note;
+		this.last_guess.value = note;
 
-			// if incorrect -> FAILURE -> showing_failure_feedback -> REPROMPT
-			if (actual !== note) {
-				console.log('guess incorrect');
-				void play_note(
-					this.ac(),
-					note,
-					this.volume.peek(),
-					DEFAULT_NOTE_DURATION_FAILED,
-					this.instrument.peek(),
-				);
-				if (guessing_index === 0 || !$trial.valid_notes.has(note)) {
-					return; // no penalty or delay if this is the first one
-				}
-				// TODO should this be "on enter showing_failure_feedback state" logic?
-				this.mistakes.value = this.mistakes.peek() + 1;
-				this.update_status('showing_failure_feedback');
-				setTimeout(() => this.retry_trial(), DEFAULT_FEEDBACK_DURATION);
-				return;
+		// if incorrect -> FAILURE -> showing_failure_feedback -> REPROMPT
+		if (actual !== note) {
+			console.log('guess incorrect');
+			void play_note(
+				this.ac(),
+				note,
+				this.volume.peek(),
+				DEFAULT_NOTE_DURATION_FAILED,
+				this.instrument.peek(),
+			);
+			if (guessing_index === 0 || !$trial.valid_notes.has(note)) {
+				return; // no penalty or delay if this is the first one
 			}
+			// TODO should this be "on enter showing_failure_feedback state" logic?
+			this.mistakes.value = this.mistakes.peek() + 1;
+			this.update_status('showing_failure_feedback');
+			setTimeout(() => this.retry_trial(), DEFAULT_FEEDBACK_DURATION);
+			return;
+		}
 
-			// guess is correct
-			const sequence_length = $trial.sequence.length;
-			const duration =
-				sequence_length < DEFAULT_SEQUENCE_LENGTH ? DEFAULT_NOTE_DURATION_2 : DEFAULT_NOTE_DURATION; // TODO refactor, see elsewhere
-			void play_note(this.ac(), note, this.volume.peek(), duration, this.instrument.peek());
+		// guess is correct
+		const sequence_length = $trial.sequence.length;
+		const duration =
+			sequence_length < DEFAULT_SEQUENCE_LENGTH ? DEFAULT_NOTE_DURATION_2 : DEFAULT_NOTE_DURATION; // TODO refactor, see elsewhere
+		void play_note(this.ac(), note, this.volume.peek(), duration, this.instrument.peek());
 
-			if (guessing_index >= sequence_length - 1) {
-				// if more -> update current response index
-				this.update_status('showing_success_feedback');
-				// TODO should this be "on enter showing_success_feedback state" logic?
-				if ($trial.index < this.level_data.trial_count - 1) {
-					console.log('guess correct and done with trial');
-					setTimeout(() => this.next_trial(), DEFAULT_FEEDBACK_DURATION);
-				} else {
-					console.log('guess correct and done with all trials!');
-					setTimeout(() => this.complete_level(), DEFAULT_FEEDBACK_DURATION); // TODO hacky, the single status mixes completion status and success feedback, seems like this should set complete immediately
-				}
+		if (guessing_index >= sequence_length - 1) {
+			// if more -> update current response index
+			this.update_status('showing_success_feedback');
+			// TODO should this be "on enter showing_success_feedback state" logic?
+			if ($trial.index < this.level_data.trial_count - 1) {
+				console.log('guess correct and done with trial');
+				setTimeout(() => this.next_trial(), DEFAULT_FEEDBACK_DURATION);
 			} else {
-				// SUCCESS -> no status change because we show no visible positive feedback to users until the end
-				console.log('guess correct but not done');
-				this.trial.value = {
-					...$trial,
-					guessing_index: guessing_index + 1,
-				};
+				console.log('guess correct and done with all trials!');
+				setTimeout(() => this.complete_level(), DEFAULT_FEEDBACK_DURATION); // TODO hacky, the single status mixes completion status and success feedback, seems like this should set complete immediately
 			}
-		});
+		} else {
+			// SUCCESS -> no status change because we show no visible positive feedback to users until the end
+			console.log('guess correct but not done');
+			this.trial.value = {
+				...$trial,
+				guessing_index: guessing_index + 1,
+			};
+		}
 	};
 
 	retry_trial = (): void => {
@@ -215,40 +209,34 @@ export class Level {
 		}
 		const $trial = this.trial.peek();
 		if (!$trial) return;
-		batch(() => {
-			// TODO should this be "on enter presenting_prompt state" logic?
-			this.trial.value = {
-				...$trial,
-				retry_count: $trial.retry_count + 1,
-			};
-			this.update_status('presenting_prompt');
-		});
+		// TODO should this be "on enter presenting_prompt state" logic?
+		this.trial.value = {
+			...$trial,
+			retry_count: $trial.retry_count + 1,
+		};
+		this.update_status('presenting_prompt');
 	};
 
 	next_trial = (): void => {
 		if (this.status.peek() === 'complete') {
 			return;
 		}
-		batch(() => {
-			const next_trial = create_next_trial(this.level_data, this.trial.peek());
-			console.log('next trial', next_trial);
-			// TODO should this be "on enter presenting_prompt state" logic?
-			const $trials = this.trials.peek();
-			if ($trials.length === 0) this.mistakes.value = 0;
-			this.trial.value = next_trial;
-			this.trials.value = [...$trials, next_trial];
-			this.update_status('presenting_prompt');
-		});
+		const next_trial = create_next_trial(this.level_data, this.trial.peek());
+		console.log('next trial', next_trial);
+		// TODO should this be "on enter presenting_prompt state" logic?
+		const $trials = this.trials.peek();
+		if ($trials.length === 0) this.mistakes.value = 0;
+		this.trial.value = next_trial;
+		this.trials.value = [...$trials, next_trial];
+		this.update_status('presenting_prompt');
 	};
 
 	complete_level = (): void => {
 		if (this.status.peek() === 'complete') {
 			return;
 		}
-		batch(() => {
-			this.trial.value = null;
-			this.update_status('complete');
-		});
+		this.trial.value = null;
+		this.update_status('complete');
 	};
 
 	// dev and debug methods
