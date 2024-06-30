@@ -183,36 +183,37 @@
 	<div class="feedback" class:success class:failure class:complete>
 		{#if complete}
 			<div class="completed_level_feedback">
-				<div class="pane" transition:scale>
-					<div class="panel box p_md">
-						<div class="box row" in:scale={{duration: 3000}}>
-							<div class="completed_header_icon" in:fly={{duration: 4000, x: -200}}>🎵</div>
-							<div class="completed_header_icon" in:fly={{duration: 4000, x: 200}}>🎶</div>
-						</div>
-						<div class="panel p_md mb_md box w_100" in:scale={{delay: 250}}>
-							<div class="panel p_md mb_md box">
-								{#if $mistakes === 0}
-									<div class="size_xl3">flawless run!</div>
-								{:else}
-									<div class="size_xl3">
-										{$mistakes}
-									</div>
-									<div>
-										mistake{plural($mistakes)} this run
-									</div>
-								{/if}
-							</div>
-							<div class="panel p_md">
-								<Level_Stats_Summary {level_data} {level_stats} />
-							</div>
-						</div>
-						<button class="big mb_md" onclick={() => exit_level()} in:scale={{delay: 500}}>
-							go back to the map &nbsp;<code>Space</code></button
-						>
-						<button class="big" onclick={() => level.reset()} in:scale={{delay: 750}}>
-							replay level &nbsp;<code>r</code>
-						</button>
+				<div class="pane shadow_d_xl p_xl3 box" transition:scale>
+					<div class="box row" in:scale={{duration: 3000}}>
+						<div class="completed_header_icon" in:fly={{duration: 4000, x: -200}}>♫</div>
+						<div class="completed_header_icon" in:fly={{duration: 4000, x: 200}}>♩<sup>♪</sup></div>
 					</div>
+					<!-- TODO buggy in Svelte 5 -   -->
+					<div class="panel p_md mb_md box w_100">
+						<div class="panel p_md mb_md box">
+							{#if $mistakes === 0}
+								<div class="size_xl3 text_align_center">flawless run!</div>
+							{:else}
+								<div class="size_xl3">
+									{$mistakes}
+								</div>
+								<div>
+									mistake{plural($mistakes)} this run
+								</div>
+							{/if}
+						</div>
+						<div class="panel p_md">
+							<Level_Stats_Summary {level_data} {level_stats} />
+						</div>
+					</div>
+					<!-- TODO buggy in Svelte 5 - in:scale={{delay: 500}} -->
+					<button class="big mb_md" onclick={() => exit_level()}>
+						go back to the map &nbsp;<code>Space</code></button
+					>
+					<!-- TODO buggy in Svelte 5 - in:scale={{delay: 750}} -->
+					<button class="big" onclick={() => level.reset()}>
+						replay level &nbsp;<code>r</code>
+					</button>
 				</div>
 			</div>
 		{/if}

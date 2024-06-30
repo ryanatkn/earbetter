@@ -6,6 +6,8 @@ import {type Hsl, hsl_to_string, type Hue} from '@ryanatkn/belt/colors.js';
 
 import type {Frequency} from '$lib/helpers.js';
 
+// ♩ ♪ ♫ ♬ ♯ ♮ ♭ 𝄪 𝄫 ø7 o o7 Δ 𝄐 𝄑 𝄞 𝄢 𝄡 𝆒 𝆓 𝄀 𝄁 𝄂 𝄃 𝄆 𝄇
+
 /**
  * @see https://wikipedia.org/wiki/Musical_tuning
  * @see https://wikipedia.org/wiki/A440_(pitch_standard)
