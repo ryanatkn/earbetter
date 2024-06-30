@@ -15,7 +15,7 @@
 		</tr>
 		<tr>
 			<td><code>Escape</code></td>
-			<td>exit level or open main menu</td>
+			<td>open main menu</td>
 		</tr>
 		<tr>
 			<td><code>1 to 4</code></td>
