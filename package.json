@@ -3,9 +3,11 @@
   "version": "0.0.1",
   "description": "ear trainer and tools for playing and programming music and audio",
   "glyph": "🦜",
+  "logo": "logo.svg",
+  "logo_alt": "a friendly pixelated spider facing you",
   "public": true,
-  "homepage": "https://earbetter.ryanatkn.com/",
   "license": "Unlicense",
+  "homepage": "https://earbetter.ryanatkn.com/",
   "author": {
     "name": "Ryan Atkinson",
     "email": "mail@ryanatkn.com",
@@ -25,16 +27,16 @@
     "audio",
     "audio tools"
   ],
-  "type": "module",
-  "engines": {
-    "node": ">=20.12"
-  },
   "scripts": {
     "start": "gro dev",
     "dev": "gro dev",
     "build": "gro build",
     "test": "gro test",
     "deploy": "gro deploy"
+  },
+  "type": "module",
+  "engines": {
+    "node": ">=20.12"
   },
   "devDependencies": {
     "@preact/signals-core": "^1.6.1",
