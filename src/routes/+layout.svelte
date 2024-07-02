@@ -4,7 +4,6 @@
 	import '$lib/style.css';
 
 	import Themed from '@ryanatkn/fuz/Themed.svelte';
-	import {base} from '$app/paths';
 	import {is_editable, swallow} from '@ryanatkn/belt/dom.js';
 	import Dialog from '@ryanatkn/fuz/Dialog.svelte';
 	import {browser} from '$app/environment';
@@ -143,7 +142,6 @@
 
 <svelte:head>
 	<title>Earbetter</title>
-	<link rel="icon" href="{base}/favicon.png" />
 </svelte:head>
 
 <svelte:window onkeydown={keydown} />
