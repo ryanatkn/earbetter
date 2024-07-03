@@ -1,7 +1,7 @@
 <script lang="ts">
 	import Realm_Form from '$lib/earbetter/Realm_Form.svelte';
 	import type {App} from '$lib/earbetter/app.js';
-	import {Realm_Data} from './realm';
+	import {Realm_Data} from '$lib/earbetter/realm.js';
 
 	interface Props {
 		app: App; // TODO maybe change to be more granular objects?
