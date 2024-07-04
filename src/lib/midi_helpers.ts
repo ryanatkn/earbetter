@@ -12,6 +12,7 @@ import type {
 	MIDIConnectionEvent,
 } from '$lib/WebMIDI.js';
 import type {Midi} from '$lib/music.js';
+import {noop_ssr} from './util.js';
 
 // WebMIDI helpers specific to cosmicplayground
 
@@ -61,7 +62,3 @@ class Midi_Access_Stub extends EventTarget implements MIDIAccess {
 	onstatechange: (event: MIDIConnectionEvent) => void = noop_ssr;
 	readonly sysexEnabled: boolean = false;
 }
-
-const noop_ssr = () => {
-	throw new Error('Cannot call this method outside of the browser');
-};

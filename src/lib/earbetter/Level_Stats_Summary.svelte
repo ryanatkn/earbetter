@@ -1,8 +1,7 @@
 <script lang="ts">
 	import {plural} from '@ryanatkn/belt/string.js';
 
-	import type {Level_Data} from '$lib/earbetter/level.js';
-	import {MISTAKE_HISTORY_LENGTH, type Level_Stats} from '$lib/earbetter/level.js';
+	import {MISTAKE_HISTORY_LENGTH, type Level_Data, type Level_Stats} from '$lib/earbetter/level.js';
 
 	interface Props {
 		level_data: Level_Data;
@@ -11,7 +10,7 @@
 
 	const {level_data, level_stats}: Props = $props();
 
-	const mistakes = $derived(level_stats.mistakes[level_data.id] || []);
+	const mistakes = $derived(level_stats.mistakes[level_data.id] ?? []);
 	const {length} = $derived(mistakes);
 	const remainder = $derived(Math.max(0, MISTAKE_HISTORY_LENGTH - length));
 	const full_history = $derived(length >= MISTAKE_HISTORY_LENGTH);

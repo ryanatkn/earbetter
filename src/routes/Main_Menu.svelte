@@ -14,7 +14,7 @@
 	import Footer from '$routes/Footer.svelte';
 	import Site_Breadcrumb from '$routes/Site_Breadcrumb.svelte';
 	import {get_main_menu} from '$routes/main_menu_state.svelte.js';
-	import {get_instrument, get_volume} from '$lib/helpers.js';
+	import {get_instrument, get_volume} from '$lib/audio_helpers.js';
 
 	// TODO @multiple let any routes (and components?) add sections to the menu via snippets
 

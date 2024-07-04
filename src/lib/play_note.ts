@@ -7,7 +7,7 @@ import {
 	type Instrument,
 	type Milliseconds,
 	type Volume,
-} from '$lib/helpers.js';
+} from '$lib/audio_helpers.js';
 import {type Midi, midi_to_freq} from '$lib/music.js';
 
 // TODO this API is haphazard, in particular `play_note` versus `start_playing` and `stop_playing`,

@@ -16,7 +16,7 @@ import {load_from_storage, set_in_storage} from '$lib/storage.js';
 import {Realm_Id, Realm_Data} from '$lib/earbetter/realm.js';
 import default_project_data from '$lib/projects/default_project.js';
 import {to_next_name} from '$lib/entity.js';
-import type {Instrument, Volume} from '$lib/helpers.js';
+import type {Instrument, Volume} from '$lib/audio_helpers.js';
 
 // TODO maybe a `@batched` or `@action` decorator instead of manual `batch`?
 
@@ -128,13 +128,12 @@ export class App {
 		// TODO refactor
 		const {selected_project_id} = app_data;
 		const project_data = this.load_project(
-			selected_project_id ||
-				app_data.projects[0]?.id ||
+			selected_project_id ?? // eslint-disable-line @typescript-eslint/no-unnecessary-condition
+				app_data.projects[0]?.id ??
 				this.create_project(default_project_data()).id,
 		)!;
 		this.selected_project_id.value = project_data.id;
-		this.selected_realm_id.value =
-			(app_data.selected_realm_id || project_data.realms[0]?.id) ?? null;
+		this.selected_realm_id.value = app_data.selected_realm_id ?? project_data.realms[0]?.id ?? null; // eslint-disable-line @typescript-eslint/no-unnecessary-condition
 		// save changes to `selected_project_id` and `selected_realm_id` back to the `app_data`,
 		// these could be decoupled but are often fired together
 		effect(() => {
@@ -161,7 +160,7 @@ export class App {
 		for (const p of loaded.projects) {
 			if (localStorage.getItem(p.id) === null) {
 				console.warn('deleting unknown id', p);
-				(ids_to_delete || (ids_to_delete = [])).push(p.id);
+				(ids_to_delete ?? (ids_to_delete = [])).push(p.id);
 			}
 		}
 		if (ids_to_delete) {
@@ -219,7 +218,7 @@ export class App {
 			return;
 		}
 		const project_data =
-			this.project_datas.peek().find((d) => d.id === id) || this.load_project(id);
+			this.project_datas.peek().find((d) => d.id === id) ?? this.load_project(id);
 		if (!project_data) console.error('failed to find or load def', id);
 		this.selected_project_id.value = project_data?.id ?? null;
 		this.selected_realm_id.value = project_data?.realms[0]?.id ?? null;
@@ -259,8 +258,8 @@ export class App {
 		this.project_datas.value = this.project_datas.peek().filter((p) => p.id !== id);
 		if (this.selected_project_id.peek() === id) {
 			this.selected_project_id.value =
-				this.project_datas.peek()[0]?.id ||
-				this.load_project(this.app_data.peek().projects[0]?.id)?.id ||
+				this.project_datas.peek()[0]?.id ?? // eslint-disable-line @typescript-eslint/no-unnecessary-condition
+				this.load_project(this.app_data.peek().projects[0]?.id)?.id ??
 				null;
 		}
 		this.save_project(id);

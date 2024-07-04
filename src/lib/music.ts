@@ -4,7 +4,7 @@ import {signal, type Signal} from '@preact/signals-core';
 import {getContext, setContext} from 'svelte';
 import {type Hsl, hsl_to_string, type Hue} from '@ryanatkn/belt/colors.js';
 
-import type {Frequency} from '$lib/helpers.js';
+import type {Frequency} from '$lib/audio_helpers.js';
 
 // ♩ ♪ ♫ ♬ ♯ ♮ ♭ 𝄪 𝄫 ø7 o o7 Δ 𝄐 𝄑 𝄞 𝄢 𝄡 𝆒 𝆓 𝄀 𝄁 𝄂 𝄃 𝄆 𝄇
 

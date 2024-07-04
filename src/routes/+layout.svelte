@@ -14,7 +14,7 @@
 	import {page} from '$app/stores';
 
 	import {set_audio_context} from '$lib/audio_context.js';
-	import {adjust_volume, set_instrument, set_volume} from '$lib/helpers.js';
+	import {adjust_volume, set_instrument, set_volume} from '$lib/audio_helpers.js';
 	import {request_access} from '$lib/midi_access.js';
 	import {App, set_app} from '$lib/earbetter/app.js';
 	import {set_enabled_notes, set_key, set_scale, to_notes_in_scale} from '$lib/music.js';

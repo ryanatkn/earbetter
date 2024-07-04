@@ -13,7 +13,7 @@
 	import Volume_Control from '$lib/Volume_Control.svelte';
 	import Header from '$routes/Header.svelte';
 	import Footer from '$routes/Footer.svelte';
-	import {get_instrument, get_volume, with_velocity} from '$lib/helpers.js';
+	import {get_instrument, get_volume, with_velocity} from '$lib/audio_helpers.js';
 	import Instrument_Control from '$lib/Instrument_Control.svelte';
 	import Midi_Range_Control from '$lib/Midi_Range_Control.svelte';
 	import {get_scale, get_key, get_enabled_notes, Midi} from '$lib/music.js';

@@ -18,7 +18,7 @@ export const DEFAULT_VOLUME_INCREMENT: Volume = 0.01;
 export const DEFAULT_VELOCITY = 0.47; // balances the volume between using a MIDI input and others that don't have velocity
 // TODO the sqrt may be heavy handed, the goal is to normalize the volume for convenience, but idk
 export const with_velocity = (volume: Volume, velocity: number | null | undefined): Volume =>
-	Math.sqrt(velocity == null ? DEFAULT_VELOCITY : velocity) * volume;
+	Math.sqrt(velocity ?? DEFAULT_VELOCITY) * volume;
 
 const VOLUME_KEY = Symbol('volume');
 export const get_volume = (): Signal<Volume> => getContext(VOLUME_KEY);
@@ -33,7 +33,7 @@ export const adjust_volume = (
 	// TODO awkward try/catch, but idk about `safeParse`
 	try {
 		volume.value = Volume.parse(volume.peek() + amount * multiplier);
-	} catch (err) {}
+	} catch (_err) {}
 };
 
 /**

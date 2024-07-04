@@ -1,6 +1,6 @@
 import {z} from 'zod';
 
-import {Volume, Instrument, DEFAULT_VOLUME, DEFAULT_INSTRUMENT} from '$lib/helpers.js';
+import {Volume, Instrument, DEFAULT_VOLUME, DEFAULT_INSTRUMENT} from '$lib/audio_helpers.js';
 import {DEFAULT_PITCH_CLASS, DEFAULT_SCALE, Pitch_Class, Scale} from '$lib/music.js';
 
 // TODO name for this? `Site_Data`, `Global_State`, `User_Settings`, something else?
