@@ -1,3 +1,3 @@
-import config from '@ryanatkn/eslint-config';
+import {configs} from '@ryanatkn/eslint-config';
 
-export default config;
+export default configs;
