@@ -58,7 +58,7 @@
 	let project_data_el: HTMLTextAreaElement | undefined = $state();
 	let start_importing_el: HTMLButtonElement | undefined = $state();
 
-	const import_data = async (): Promise<void> => {
+	const import_data = (): void => {
 		parse_error_message = '';
 		try {
 			const json = JSON.parse(updated);
