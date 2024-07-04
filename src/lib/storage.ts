@@ -21,7 +21,7 @@ export const load_from_storage = <T>(
 	if (!stored) return fn ? (default_value as any)() : default_value;
 	try {
 		return parse(JSON.parse(stored));
-	} catch (err) {
+	} catch (_err) {
 		localStorage.removeItem(key);
 		return fn ? (default_value as any)() : default_value;
 	}
