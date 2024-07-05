@@ -40,6 +40,7 @@
 		{/each}
 	</menu>
 	<button
+		type="button"
 		class:selected={editing_draft || no_levels}
 		class:deselectable={!no_levels}
 		onclick={click_create_new}

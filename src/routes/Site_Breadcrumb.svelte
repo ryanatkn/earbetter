@@ -19,7 +19,7 @@
 
 {#if home}
 	{#if !hide_main_menu_button}
-		<button onclick={() => main_menu.open()}>main menu</button>
+		<button type="button" onclick={() => main_menu.open()}>main menu</button>
 	{/if}
 {:else}
 	<Breadcrumb>🎶🦜</Breadcrumb>

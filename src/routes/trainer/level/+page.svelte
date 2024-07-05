@@ -23,7 +23,7 @@
 	{:else}
 		<div class="box h_100">
 			<p>
-				No level found, <button onclick={app.exit_level}>go back</button> to the map.
+				No level found, <button type="button" onclick={app.exit_level}>go back</button> to the map.
 			</p>
 		</div>
 	{/if}

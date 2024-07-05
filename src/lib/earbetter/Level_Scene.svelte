@@ -212,11 +212,11 @@
 						</div>
 					</div>
 					<!-- TODO buggy in Svelte 5 - in:scale={{delay: 500}} -->
-					<button class="big mb_md" onclick={() => exit_level()}>
+					<button type="button" class="big mb_md" onclick={() => exit_level()}>
 						go back to the map &nbsp;<code>Space</code></button
 					>
 					<!-- TODO buggy in Svelte 5 - in:scale={{delay: 750}} -->
-					<button class="big" onclick={() => level.reset()}>
+					<button type="button" class="big" onclick={() => level.reset()}>
 						replay level &nbsp;<code>r</code>
 					</button>
 				</div>

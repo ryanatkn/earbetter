@@ -96,6 +96,7 @@
 			/>
 			<textarea bind:value={updated} bind:this={project_data_el}></textarea>
 			<button
+				type="button"
 				onclick={import_data}
 				disabled={!changed_serialized}
 				title={changed_serialized ? undefined : 'data has not changed'}

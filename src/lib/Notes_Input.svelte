@@ -145,7 +145,7 @@
 		>
 		<div class="scales mb_lg">
 			{#each scales as scale (scale.name)}
-				<button onclick={() => toggle_scale(scale)}>{scale.name}</button>
+				<button type="button" onclick={() => toggle_scale(scale)}>{scale.name}</button>
 			{/each}
 		</div>
 		{@render buttons()}

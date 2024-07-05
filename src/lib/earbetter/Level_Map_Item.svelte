@@ -38,6 +38,7 @@
 		<Level_Stats_Summary {level_data} {level_stats} />
 	{/if}
 	<button
+		type="button"
 		class="level_button deselectable"
 		title="play this level"
 		onclick={() => play_level(level_data.id)}
@@ -46,6 +47,7 @@
 		{level_data.name}
 	</button>
 	<button
+		type="button"
 		class="icon_button plain_button size_xl"
 		class:selected={!removing && editing}
 		title={removing ? 'remove level' : editing ? 'stop editing level' : 'edit level'}
@@ -55,6 +57,7 @@
 		{#if removing}✖{:else}✎{/if}
 	</button>
 	<button
+		type="button"
 		class="icon_button plain_button size_xl"
 		onclick={() => (removing = !removing)}
 		title={removing ? 'cancel removing' : 'remove level'}

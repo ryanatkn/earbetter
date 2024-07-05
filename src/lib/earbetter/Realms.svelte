@@ -60,6 +60,7 @@
 		</div>
 	{/if}
 	<button
+		type="button"
 		class={no_realms ? undefined : 'deselectable'}
 		class:selected={creating || no_realms}
 		onclick={click_create_new}

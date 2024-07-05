@@ -10,7 +10,7 @@
 	const {title = 'go back', onclick, children}: Props = $props();
 </script>
 
-<button {title} class="icon_button plain_button" {onclick}>
+<button type="button" {title} class="icon_button plain_button" {onclick}>
 	{#if children}
 		{@render children()}
 	{:else}

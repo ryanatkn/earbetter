@@ -42,6 +42,7 @@
 		{remove_project}
 	/>
 	<button
+		type="button"
 		class="w_100 mt_md deselectable"
 		class:selected={creating}
 		onclick={() => {
