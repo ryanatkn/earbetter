@@ -6,7 +6,7 @@ import {base} from '$app/paths';
 
 import {Midi, Intervals} from '$lib/music.js';
 import {play_note} from '$lib/play_note.js';
-import type {Instrument, Milliseconds, Volume} from '$lib/helpers.js';
+import type {Instrument, Milliseconds, Volume} from '$lib/audio_helpers.js';
 import {serialize_to_hash} from '$lib/url.js';
 import {to_random_id} from '$lib/id.js';
 import type {Get_Audio_Context} from '$lib/audio_context.js';
@@ -293,7 +293,7 @@ const create_next_trial = (def: Level_Data, current_trial: Trial | null): Trial 
 	}
 
 	return {
-		index: (current_trial && current_trial.index + 1) || 0,
+		index: (current_trial && current_trial.index + 1) ?? 0,
 		valid_notes: new Set(valid_notes),
 		sequence,
 		presenting_index: null,
@@ -350,7 +350,7 @@ export const to_level_url = (level_data: Level_Data): string => {
 	return `${base}/trainer/level` + serialize_to_hash(data);
 };
 
-export const Mistakes_Level_Stats = z.record(Level_Id, z.array(z.number()));
+export const Mistakes_Level_Stats = z.record(Level_Id, z.array(z.number()).or(z.undefined()));
 export type Mistakes_Level_Stats = z.infer<typeof Mistakes_Level_Stats>;
 
 export const Level_Stats = z.object({
@@ -375,7 +375,7 @@ export const add_mistakes_to_level_stats = (
 export const MISTAKE_HISTORY_LENGTH = 4;
 
 const add_mistakes = (data: number[] | undefined, mistakes: number): number[] => {
-	const updated = data?.slice() || [];
+	const updated = data?.slice() ?? [];
 	if (updated.length >= MISTAKE_HISTORY_LENGTH) {
 		updated.sort((a, b) => a - b).length = MISTAKE_HISTORY_LENGTH;
 		if (mistakes < updated.at(-1)!) {

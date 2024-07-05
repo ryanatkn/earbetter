@@ -1,6 +1,6 @@
-import {browser} from '$app/environment';
+import {BROWSER} from 'esm-env';
 
-// TODO copypasted from dealt
+// TODO upstream to belt?
 
 /**
  * Loads `key` and falls back to `defaultValue`.
@@ -16,12 +16,12 @@ export const load_from_storage = <T>(
 ): T => {
 	const fn = typeof default_value === 'function';
 	console.log(`load_from_storage key`, key);
-	if (!browser) return fn ? (default_value as any)() : default_value;
+	if (!BROWSER) return fn ? (default_value as any)() : default_value;
 	const stored = localStorage.getItem(key);
 	if (!stored) return fn ? (default_value as any)() : default_value;
 	try {
 		return parse(JSON.parse(stored));
-	} catch (err) {
+	} catch (_err) {
 		localStorage.removeItem(key);
 		return fn ? (default_value as any)() : default_value;
 	}
@@ -35,7 +35,7 @@ export const load_from_storage = <T>(
  * @param value
  */
 export const set_in_storage = (key: string, value: any): void => {
-	if (!browser) return;
+	if (!BROWSER) return;
 	if (value === undefined) {
 		localStorage.removeItem(key);
 	} else {

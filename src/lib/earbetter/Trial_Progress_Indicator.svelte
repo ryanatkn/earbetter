@@ -11,13 +11,7 @@
 
 	const {trial, status} = $derived(level);
 
-	const current_index = $derived(
-		$trial
-			? $trial.presenting_index === null
-				? $trial.guessing_index
-				: $trial.presenting_index
-			: null,
-	);
+	const current_index = $derived($trial ? $trial.presenting_index ?? $trial.guessing_index : null);
 
 	const to_bg_color = (s: Status, index: number, current_index: number | null): string =>
 		s === 'showing_failure_feedback'

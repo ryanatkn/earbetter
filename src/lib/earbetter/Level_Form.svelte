@@ -109,7 +109,7 @@
 	let tonics_el: HTMLInputElement | undefined = $state();
 	const tonics_set = $derived(updated_tonics && new Set(updated_tonics));
 
-	const import_data = async (): Promise<void> => {
+	const import_data = (): void => {
 		parse_error_message = '';
 		try {
 			const json = JSON.parse(updated);
@@ -221,7 +221,7 @@
 			<Alert status="error">the lowest note must be lower than the highest</Alert>
 		{:else}
 			<Piano
-				width={piano_width || 0}
+				width={piano_width ?? 0}
 				max_height={50}
 				min_note={updated_min_note}
 				max_note={updated_max_note}

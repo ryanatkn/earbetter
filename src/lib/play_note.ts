@@ -7,7 +7,7 @@ import {
 	type Instrument,
 	type Milliseconds,
 	type Volume,
-} from '$lib/helpers.js';
+} from '$lib/audio_helpers.js';
 import {type Midi, midi_to_freq} from '$lib/music.js';
 
 // TODO this API is haphazard, in particular `play_note` versus `start_playing` and `stop_playing`,
@@ -40,9 +40,7 @@ const stop_osc = (
 	osc.stop(endTime + SMOOTH_GAIN_TIME_CONSTANT * 2);
 };
 
-export interface Stop_Playing {
-	(): void;
-}
+export type Stop_Playing = () => void;
 
 // TODO is redundant with `playing` and manually updated
 // TODO @multiple source from `audio` in context
@@ -104,6 +102,6 @@ export const start_playing = (
 export const stop_playing = (note: Midi): void => {
 	const stop_playing_note = playing.get(note);
 	if (!stop_playing_note) return;
-	stop_playing_note?.();
+	stop_playing_note();
 	playing.delete(note);
 };

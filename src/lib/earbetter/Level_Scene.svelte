@@ -12,7 +12,7 @@
 	import Midi_Input from '$lib/Midi_Input.svelte';
 	import type {Midi} from '$lib/music.js';
 	import {playing_notes, start_playing, stop_playing} from '$lib/play_note.js';
-	import {get_instrument, get_volume, with_velocity} from '$lib/helpers.js';
+	import {get_instrument, get_volume, with_velocity} from '$lib/audio_helpers.js';
 	import {midi_access} from '$lib/midi_access.js';
 	import Level_Stats_Summary from '$lib/earbetter/Level_Stats_Summary.svelte';
 	import Text_Burst from '$lib/Text_Burst.svelte';

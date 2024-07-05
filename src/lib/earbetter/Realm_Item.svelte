@@ -27,7 +27,7 @@
 
 	let removing = $state(false);
 
-	const level_stats = $derived(project_data?.level_stats);
+	const level_stats = $derived(project_data.level_stats);
 </script>
 
 <li class="realm_item" transition:slide class:selected>
@@ -35,11 +35,11 @@
 		<Realm_Stats_Summary {realm_data} {level_stats} />
 	{/if}
 	{#if select}
-		<button class="realm_button" onclick={() => select?.(realm_data.id)} class:selected>
+		<button class="realm_button" onclick={() => select(realm_data.id)} class:selected>
 			{realm_data.name}
 		</button>
 	{/if}
-	{#if (removing && remove) || (!removing && edit)}
+	{#if (removing && remove) ?? (!removing && edit)}
 		<button
 			class="icon_button plain_button size_xl deselectable"
 			class:selected={selected && !removing && editing}

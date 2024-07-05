@@ -9,7 +9,7 @@
 	import {playing_notes, start_playing, stop_playing} from '$lib/play_note.js';
 	import Init_Midi_Button from '$lib/Init_Midi_Button.svelte';
 	import Volume_Control from '$lib/Volume_Control.svelte';
-	import {get_instrument, get_volume, with_velocity} from '$lib/helpers.js';
+	import {get_instrument, get_volume, with_velocity} from '$lib/audio_helpers.js';
 	import Instrument_Control from '$lib/Instrument_Control.svelte';
 	import {
 		Midi,

@@ -6,15 +6,15 @@
 	import Themed from '@ryanatkn/fuz/Themed.svelte';
 	import {is_editable, swallow} from '@ryanatkn/belt/dom.js';
 	import Dialog from '@ryanatkn/fuz/Dialog.svelte';
-	import {browser} from '$app/environment';
 	import {computed, effect as preact_effect, signal, untracked} from '@preact/signals-core';
 	import {sync_color_scheme} from '@ryanatkn/fuz/theme.js';
 	import {writable} from 'svelte/store';
 	import type {Snippet} from 'svelte';
 	import {page} from '$app/stores';
+	import {BROWSER} from 'esm-env';
 
 	import {set_audio_context} from '$lib/audio_context.js';
-	import {adjust_volume, set_instrument, set_volume} from '$lib/helpers.js';
+	import {adjust_volume, set_instrument, set_volume} from '$lib/audio_helpers.js';
 	import {request_access} from '$lib/midi_access.js';
 	import {App, set_app} from '$lib/earbetter/app.js';
 	import {set_enabled_notes, set_key, set_scale, to_notes_in_scale} from '$lib/music.js';
@@ -55,7 +55,7 @@
 	);
 
 	const app = set_app(new App(get_audio_context, volume, instrument));
-	if (browser) (window as any).app = app;
+	if (BROWSER) (window as any).app = app;
 
 	const main_menu = set_main_menu();
 

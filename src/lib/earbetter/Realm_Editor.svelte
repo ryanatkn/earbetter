@@ -33,8 +33,8 @@
 		{editing}
 		{realm_data}
 		onsubmit={editing ? update_realm : create_realm}
-		onremove={(realm_id) => remove_realm?.(realm_id)}
-		onduplicate={(realm_id) => duplicate_realm?.(realm_id)}
+		onremove={(realm_id) => remove_realm(realm_id)}
+		onduplicate={(realm_id) => duplicate_realm(realm_id)}
 		onclose={() => (editing_realm.value = false)}
 	/>
 </div>

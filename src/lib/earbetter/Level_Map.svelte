@@ -8,7 +8,7 @@
 	import Level_Form from '$lib/earbetter/Level_Form.svelte';
 	import Projects from '$lib/earbetter/Projects.svelte';
 	import Volume_Control from '$lib/Volume_Control.svelte';
-	import {get_instrument, get_volume, with_velocity} from '$lib/helpers.js';
+	import {get_instrument, get_volume, with_velocity} from '$lib/audio_helpers.js';
 	import Instrument_Control from '$lib/Instrument_Control.svelte';
 	import type {App} from '$lib/earbetter/app.js';
 	import Controls_Instructions from '$lib/earbetter/Controls_Instructions.svelte';
@@ -80,7 +80,7 @@
 					<Projects {app} />
 				</section>
 			{/if}
-			{#if ($editing_project && $editing_project_data) || !$selected_project_data}
+			{#if ($editing_project && $editing_project_data) ?? !$selected_project_data}
 				<section class="card" transition:slide>
 					<Project_Editor {app} />
 				</section>
@@ -133,7 +133,7 @@
 		<section class="card">
 			<Realms {app} />
 		</section>
-		{#if ($editing_realm && $editing_realm_data) || no_realms}
+		{#if ($editing_realm && $editing_realm_data) ?? no_realms}
 			<section class="card" transition:slide>
 				<Realm_Editor {app} />
 			</section>
@@ -146,7 +146,7 @@
 					<Level_Map_Items {app} levels={$levels} />
 				</section>
 			{/if}
-			{#if $selected_realm_id && (($editing_level && $levels) || $levels?.length === 0)}
+			{#if $selected_realm_id && (($editing_level && $levels) ?? $levels?.length === 0)}
 				<section class="card" transition:slide>
 					<div class="panel p_md">
 						<Level_Form

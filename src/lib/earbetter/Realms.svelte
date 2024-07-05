@@ -24,7 +24,7 @@
 	} = $derived(app);
 
 	const creating = $derived(
-		$editing_realm && !!$editing_realm_data && $selected_realm_data?.id !== $editing_realm_data?.id,
+		$editing_realm && !!$editing_realm_data && $selected_realm_data?.id !== $editing_realm_data.id,
 	);
 
 	const no_realms = $derived(!$realms?.length);
@@ -33,7 +33,7 @@
 		if (no_realms) {
 			// TODO eslint bug
 			// eslint-disable-next-line @typescript-eslint/no-unnecessary-type-assertion
-			(document.querySelector('.realm_def_form input') as HTMLInputElement | null)?.focus?.(); // TODO hacky using the selector
+			(document.querySelector('.realm_def_form input') as HTMLInputElement | null)?.focus(); // TODO hacky using the selector
 		} else if (creating) {
 			editing_realm.value = false;
 		} else {
