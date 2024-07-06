@@ -16,12 +16,22 @@ export const to_default_scale_realm = (
 	const scale = lookup_scale(scale_name);
 	const {notes} = scale;
 
+	// compare adjacent pairs
 	for (let i = 0; i < notes.length - 1; i++) {
 		const note1 = notes[i];
 		const note2 = notes[i + 1];
 		levels.push({
 			name: interval_names[note1] + ' vs ' + interval_names[note2],
 			intervals: [note1, note2],
+		});
+	}
+	// compare adjacent pairs downward
+	for (let i = 0; i < notes.length - 1; i++) {
+		const note1 = notes[i];
+		const note2 = notes[i + 1];
+		levels.push({
+			name: interval_names[note1] + ' vs ' + interval_names[note2] + ' downward',
+			intervals: [-note1, -note2],
 		});
 	}
 	levels.push({
