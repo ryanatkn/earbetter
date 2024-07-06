@@ -1,6 +1,5 @@
 <script lang="ts">
 	import {plural} from '@ryanatkn/belt/string.js';
-	import {swallow} from '@ryanatkn/belt/dom.js';
 
 	import Piano from '$lib/Piano.svelte';
 	import {get_audio_context} from '$lib/audio_context.js';
@@ -174,8 +173,7 @@
 	<button
 		class="mb_lg"
 		type="button"
-		onclick={(e) => {
-			swallow(e);
+		onclick={() => {
 			updated_notes = new Set();
 		}}
 		disabled={notes_count === 0}
@@ -186,8 +184,7 @@
 		type="button"
 		class="accent"
 		disabled={!changed}
-		onclick={(e) => {
-			swallow(e);
+		onclick={() => {
 			oninput?.(updated_notes_array!);
 		}}
 	>

@@ -95,7 +95,6 @@
 
 	const click = (e: MouseEvent) => {
 		if (e.target === el) {
-			swallow(e);
 			level.retry_trial();
 		}
 	};
