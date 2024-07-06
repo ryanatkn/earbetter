@@ -28,6 +28,8 @@
 	let removing = $state(false);
 
 	const level_stats = $derived(project_data.level_stats);
+
+	// TODO BLOCK bug not showing the edit button
 </script>
 
 <li class="realm_item" transition:slide class:selected>
