@@ -7,8 +7,7 @@
 	import {is_editable, swallow} from '@ryanatkn/belt/dom.js';
 	import Dialog from '@ryanatkn/fuz/Dialog.svelte';
 	import {computed, effect as preact_effect, signal, untracked} from '@preact/signals-core';
-	import {sync_color_scheme} from '@ryanatkn/fuz/theme.js';
-	import {writable} from 'svelte/store';
+	import {sync_color_scheme, Themer} from '@ryanatkn/fuz/theme.svelte.js';
 	import type {Snippet} from 'svelte';
 	import {page} from '$app/stores';
 	import {BROWSER} from 'esm-env';
@@ -32,8 +31,8 @@
 
 	const {children}: Props = $props();
 
-	const selected_color_scheme = writable('dark' as const);
-	sync_color_scheme($selected_color_scheme); // TODO probably shouldn't be needed
+	const themer = new Themer(undefined, 'dark');
+	sync_color_scheme(themer.color_scheme); // TODO probably shouldn't be needed
 
 	// load site data
 	const SITE_DATA_STORAGE_KEY = 'site';
@@ -148,7 +147,7 @@
 
 <Init_Audio_Context />
 
-<Themed {selected_color_scheme} color_scheme_fallback={$selected_color_scheme}>
+<Themed {themer} color_scheme_fallback={themer.color_scheme}>
 	{@render children()}
 
 	{#if main_menu.opened}
