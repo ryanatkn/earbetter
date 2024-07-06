@@ -10,8 +10,10 @@ import {
 } from '$lib/audio_helpers.js';
 import {type Midi, midi_to_freq} from '$lib/music.js';
 
-// TODO this API is haphazard, in particular `play_note` versus `start_playing` and `stop_playing`,
-// and we need to support more options like `velocity`, should probably have a single options object
+// TODO this API is haphazard and somewhat bad, in particular `play_note` versus `start_playing` and `stop_playing`,
+// and we need to support more options like `velocity`, should probably have a single options object.
+// One possibility is `play_note` accepts both a `duration` and `unless_already` flag.
+// Needs a full rethink with the `Audio` class idea.
 
 export const play_note = (
 	ac: AudioContext,
@@ -100,8 +102,8 @@ export const start_playing = (
 };
 
 export const stop_playing = (note: Midi): void => {
-	const stop_playing_note = playing.get(note);
-	if (!stop_playing_note) return;
-	stop_playing_note();
+	const stop = playing.get(note);
+	if (!stop) return;
+	stop();
 	playing.delete(note);
 };

@@ -178,6 +178,7 @@ export const interval_names = Object.freeze([
 export const Interval_Names = z.enum(interval_names);
 export type Interval_Names = z.infer<typeof Interval_Names>;
 
+// TODO extract to an `Audio` class probably
 const ENABLED_NOTES_KEY = Symbol('enabled_notes');
 export const get_enabled_notes = (): Signal<Set<Midi> | null> => getContext(ENABLED_NOTES_KEY);
 export const set_enabled_notes = (

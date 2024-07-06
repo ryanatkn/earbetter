@@ -13,7 +13,13 @@
 		highlighted?: boolean;
 		emphasized?: boolean;
 		show_middle_c?: boolean;
-		pressing_any?: {value: boolean; set: (v: boolean) => void};
+		/**
+		 * If focus exits a key while it's pressed without using the mouse,
+		 * it will by default keep the key stuck down until a mouseleave event, which is kind of fun.
+		 * Set to `false` to disable this quirky behavior.
+		 */
+		allow_sticking?: boolean;
+		pressing_any?: boolean;
 		onpress?: (note: Midi) => void;
 		onrelease?: (note: Midi) => void;
 	}
@@ -27,6 +33,7 @@
 		highlighted = false,
 		emphasized = false,
 		show_middle_c = true,
+		allow_sticking = true,
 		pressing_any,
 		onpress,
 		onrelease,
@@ -103,29 +110,28 @@
 	onkeyup={interactive ? keyup : undefined}
 	onmousedown={interactive
 		? (e) => {
-				swallow(e);
 				onpress?.(note);
-				if (pressing_any) pressing_any.set(true);
 				e.currentTarget.focus();
 			}
 		: undefined}
 	onmouseup={interactive
-		? (e) => {
-				swallow(e);
+		? () => {
 				onrelease?.(note);
-				if (pressing_any) pressing_any.set(false);
 			}
 		: undefined}
-	onmouseenter={interactive && pressing_any?.value
+	onmouseenter={interactive && pressing_any
 		? (e) => {
-				swallow(e);
 				onpress?.(note);
 				e.currentTarget.focus();
 			}
 		: undefined}
 	onmouseleave={interactive
-		? (e) => {
-				swallow(e);
+		? () => {
+				onrelease?.(note);
+			}
+		: undefined}
+	onfocusout={interactive && !allow_sticking
+		? () => {
 				onrelease?.(note);
 			}
 		: undefined}

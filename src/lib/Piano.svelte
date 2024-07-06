@@ -39,17 +39,17 @@
 		accidental_key_height,
 	} = $derived(compute_piano(width, min_note, max_note, max_height));
 
-	// TODO remove this when converting from `@preact/signals` to runes and reactive collections
-	// this causes a warning but that's alright because we'll fix it in the followup
-	const pressing_any = $state({
-		value: false,
-		// adding this method to avoid the `ownership_invalid_mutation` warning
-		set(v: boolean) {
-			this.value = v;
-		},
-	});
-	// {drag_to_press}
+	/**
+	 * Used to allow dragging across the piano regardless of where the mousedown event occurred.
+	 */
+	let pressing_any = $state(false);
 </script>
+
+<svelte:window
+	onmousedowncapture={() => (pressing_any = true)}
+	onmouseupcapture={() => (pressing_any = false)}
+	onmouseleave={() => (pressing_any = false)}
+/>
 
 <div
 	class="piano"
