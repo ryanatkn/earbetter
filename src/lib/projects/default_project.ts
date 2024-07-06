@@ -24,7 +24,7 @@ const data = (): Project_Data =>
 						intervals: [4, 5],
 					},
 					{
-						name: 'one octave down',
+						name: 'one octave (downward)',
 						sequence_length: 2,
 						intervals: [-8, -7],
 					},
@@ -34,7 +34,7 @@ const data = (): Project_Data =>
 						intervals: [4, 5, -8, -7],
 					},
 					{
-						name: 'two octaves down',
+						name: 'two octaves (downward)',
 						sequence_length: 2,
 						intervals: [-8, -7, -20, -19],
 					},

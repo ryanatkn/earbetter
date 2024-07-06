@@ -31,7 +31,7 @@ export const to_default_scale_realm = (
 		const note2 = notes[i + 1];
 		levels.push({
 			name: interval_names[note1] + ' vs ' + interval_names[note2] + ' (downward)',
-			intervals: [-note1, -note2],
+			intervals: [note1 - 12, note2 - 12],
 		});
 	}
 	levels.push({
