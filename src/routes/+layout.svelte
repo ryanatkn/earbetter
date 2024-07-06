@@ -6,17 +6,16 @@
 	import Themed from '@ryanatkn/fuz/Themed.svelte';
 	import {is_editable, swallow} from '@ryanatkn/belt/dom.js';
 	import Dialog from '@ryanatkn/fuz/Dialog.svelte';
-	import {computed, effect as preact_effect, signal, untracked} from '@preact/signals-core';
+	import {effect as preact_effect, untracked} from '@preact/signals-core';
 	import {sync_color_scheme, Themer} from '@ryanatkn/fuz/theme.svelte.js';
 	import type {Snippet} from 'svelte';
 	import {page} from '$app/stores';
 	import {BROWSER} from 'esm-env';
 
 	import {set_audio_context} from '$lib/audio_context.js';
-	import {adjust_volume, set_instrument, set_volume} from '$lib/audio_helpers.js';
+	import {adjust_volume} from '$lib/audio_helpers.js';
 	import {request_access} from '$lib/midi_access.js';
 	import {App, set_app} from '$lib/earbetter/app.js';
-	import {set_enabled_notes, set_key, set_scale, to_notes_in_scale} from '$lib/music.js';
 	import {load_from_storage, set_in_storage} from '$lib/storage.js';
 	import {Site_Data} from '$routes/site_data.js';
 	import Init_Audio_Context from '$lib/Init_Audio_Context.svelte';
@@ -41,19 +40,11 @@
 		() => Site_Data.parse({}),
 		Site_Data.parse,
 	);
+	console.log(`initial_site_data`, initial_site_data);
 
 	const get_audio_context = set_audio_context();
-	const volume = set_volume(signal(initial_site_data.volume));
-	const instrument = set_instrument(signal(initial_site_data.instrument));
-	const scale = set_scale(signal(initial_site_data.scale));
-	const key = set_key(signal(initial_site_data.key));
-	set_enabled_notes(
-		computed(() =>
-			scale.value.name === 'chromatic' ? null : to_notes_in_scale(scale.value, key.value),
-		),
-	);
 
-	const app = set_app(new App(get_audio_context, volume, instrument));
+	const app = set_app(new App(get_audio_context, initial_site_data));
 	if (BROWSER) (window as any).app = app;
 
 	const main_menu = set_main_menu();
@@ -69,10 +60,10 @@
 	// save site data
 	const to_site_data = (): Site_Data => ({
 		// note these have to use `.value`, the `$`-prefix doesn't work for reactivity
-		volume: volume.value,
-		instrument: instrument.value,
-		scale: scale.value,
-		key: key.value,
+		volume: app.volume.value,
+		instrument: app.instrument.value,
+		scale: app.scale.value,
+		key: app.key.value,
 	});
 
 	preact_effect(() => set_in_storage(SITE_DATA_STORAGE_KEY, to_site_data()));
@@ -95,37 +86,37 @@
 		switch (e.key) {
 			case 'c': {
 				swallow(e);
-				void request_access();
+				void request_access(app);
 				return;
 			}
 			case '1': {
 				swallow(e);
-				instrument.value = 'sawtooth';
+				app.instrument.value = 'sawtooth';
 				return;
 			}
 			case '2': {
 				swallow(e);
-				instrument.value = 'sine';
+				app.instrument.value = 'sine';
 				return;
 			}
 			case '3': {
 				swallow(e);
-				instrument.value = 'square';
+				app.instrument.value = 'square';
 				return;
 			}
 			case '4': {
 				swallow(e);
-				instrument.value = 'triangle';
+				app.instrument.value = 'triangle';
 				return;
 			}
 			case 'ArrowUp': {
 				swallow(e);
-				adjust_volume(volume);
+				adjust_volume(app);
 				return;
 			}
 			case 'ArrowDown': {
 				swallow(e);
-				adjust_volume(volume, -1);
+				adjust_volume(app, -1);
 				return;
 			}
 			case 'Escape': {

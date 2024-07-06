@@ -12,7 +12,7 @@ import type {
 	MIDIConnectionEvent,
 } from '$lib/WebMIDI.js';
 import type {Midi} from '$lib/music.js';
-import {noop_ssr} from './util.js';
+import {noop_ssr} from '$lib/util.js';
 
 // WebMIDI helpers specific to cosmicplayground
 

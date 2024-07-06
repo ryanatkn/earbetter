@@ -2,7 +2,7 @@ import {setContext, getContext} from 'svelte';
 import {noop} from '@ryanatkn/belt/function.js';
 import {BROWSER} from 'esm-env';
 
-import {noop_ssr} from './util.js';
+import {noop_ssr} from '$lib/util.js';
 
 // There's an unfortunate overlap between "context" as in
 // svelte's `getContext`/`setContext`, and the browser's `AudioContext`.

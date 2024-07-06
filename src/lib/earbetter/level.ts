@@ -10,6 +10,7 @@ import type {Instrument, Milliseconds, Volume} from '$lib/audio_helpers.js';
 import {serialize_to_hash} from '$lib/url.js';
 import {to_random_id} from '$lib/id.js';
 import type {Get_Audio_Context} from '$lib/audio_context.js';
+import type {App} from '$lib/earbetter/app.js';
 
 // TODO this isn't idiomatic signals code yet, uses `peek` too much
 
@@ -74,6 +75,7 @@ export class Level {
 	seq_id = 0; // used to track the async note playing sequence for cancellation
 
 	constructor(
+		public readonly app: App,
 		public readonly level_data: Level_Data, // TODO maybe make optional?
 		public readonly ac: Get_Audio_Context,
 		public readonly volume: Signal<Volume>,
@@ -130,7 +132,15 @@ export class Level {
 			};
 			const duration =
 				sequence_length < DEFAULT_SEQUENCE_LENGTH ? DEFAULT_NOTE_DURATION_2 : DEFAULT_NOTE_DURATION; // TODO refactor, see elsewhere
-			await play_note(this.ac(), note, this.volume.peek(), duration, this.instrument.peek()); // eslint-disable-line no-await-in-loop
+			// eslint-disable-next-line no-await-in-loop
+			await play_note(
+				this.app,
+				this.ac(),
+				note,
+				this.volume.peek(),
+				duration,
+				this.instrument.peek(),
+			);
 			if (current_seq_id !== this.seq_id || !this.trial.peek()) return; // cancel
 		}
 		this.trial.value = {
@@ -155,6 +165,7 @@ export class Level {
 		if (actual !== note) {
 			console.log('guess incorrect');
 			void play_note(
+				this.app,
 				this.ac(),
 				note,
 				this.volume.peek(),
@@ -175,7 +186,7 @@ export class Level {
 		const sequence_length = $trial.sequence.length;
 		const duration =
 			sequence_length < DEFAULT_SEQUENCE_LENGTH ? DEFAULT_NOTE_DURATION_2 : DEFAULT_NOTE_DURATION; // TODO refactor, see elsewhere
-		void play_note(this.ac(), note, this.volume.peek(), duration, this.instrument.peek());
+		void play_note(this.app, this.ac(), note, this.volume.peek(), duration, this.instrument.peek());
 
 		if (guessing_index >= sequence_length - 1) {
 			// if more -> update current response index

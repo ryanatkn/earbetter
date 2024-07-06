@@ -16,7 +16,22 @@ import {load_from_storage, set_in_storage} from '$lib/storage.js';
 import {Realm_Id, Realm_Data} from '$lib/earbetter/realm.js';
 import default_project_data from '$lib/projects/default_project.js';
 import {to_next_name} from '$lib/entity.js';
-import type {Instrument, Volume} from '$lib/audio_helpers.js';
+import {
+	DEFAULT_INSTRUMENT,
+	DEFAULT_VOLUME,
+	type Instrument,
+	type Volume,
+} from '$lib/audio_helpers.js';
+import {
+	DEFAULT_SCALE,
+	pitch_classes,
+	to_notes_in_scale,
+	type Midi,
+	type Pitch_Class,
+	type Scale,
+} from '$lib/music.js';
+import type {MIDIAccess} from '$lib/WebMIDI.js';
+import type {Site_Data} from '$routes/site_data.js';
 
 // TODO maybe a `@batched` or `@action` decorator instead of manual `batch`?
 
@@ -39,6 +54,23 @@ export class App {
 	// currently manually syncing the same changes to both `app_data` `projects` --
 	// mixing serialization concerns with runtime representations
 	app_data: Signal<App_Data>;
+
+	// TODO does initializing these to the defaults without the app data cause any weirdness? creating them eagerly because we can't do `this.volume = $state(...)` in the constructor
+	volume: Signal<Volume> = signal(DEFAULT_VOLUME);
+	instrument: Signal<Instrument> = signal(DEFAULT_INSTRUMENT);
+	scale: Signal<Scale> = signal(DEFAULT_SCALE);
+	key: Signal<Pitch_Class> = signal(pitch_classes[0]);
+	enabled_notes: Signal<Set<Midi> | null> = computed(() =>
+		this.scale.value.name === 'chromatic'
+			? null
+			: to_notes_in_scale(this.scale.value, this.key.value),
+	);
+	playing_notes: Signal<Set<Midi>> = signal(new Set());
+
+	/**
+	 * Holds the result of `navigator.requestMIDIAccess`.
+	 */
+	midi_access: Signal<MIDIAccess | null> = signal(null);
 
 	show_trainer_help: ReadonlySignal<boolean> = computed(
 		() => this.app_data.value.show_trainer_help,
@@ -100,6 +132,7 @@ export class App {
 		console.log('computing level', this.active_level_data.value);
 		return this.active_level_data.value
 			? new Level(
+					this,
 					this.active_level_data.value,
 					this.get_audio_context,
 					this.volume,
@@ -117,13 +150,19 @@ export class App {
 
 	constructor(
 		public readonly get_audio_context: () => AudioContext,
-		public readonly volume: Signal<Volume>,
-		public readonly instrument: Signal<Instrument>,
+		initial_site_data: Site_Data | null = null,
 		public readonly storage_key = 'app',
 	) {
 		this.app_data = signal(this.load());
 		const app_data = this.app_data.peek();
 		console.log(`app_data`, app_data);
+
+		if (initial_site_data) {
+			this.volume.value = initial_site_data.volume;
+			this.instrument.value = initial_site_data.instrument;
+			this.scale.value = initial_site_data.scale;
+			this.key.value = initial_site_data.key;
+		}
 
 		// TODO refactor
 		const {selected_project_id} = app_data;

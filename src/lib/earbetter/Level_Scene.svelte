@@ -11,11 +11,11 @@
 	import {get_audio_context} from '$lib/audio_context.js';
 	import Midi_Input from '$lib/Midi_Input.svelte';
 	import type {Midi} from '$lib/music.js';
-	import {playing_notes, start_playing, stop_playing} from '$lib/play_note.js';
-	import {get_instrument, get_volume, with_velocity} from '$lib/audio_helpers.js';
-	import {midi_access} from '$lib/midi_access.js';
+	import {start_playing, stop_playing} from '$lib/play_note.js';
+	import {with_velocity} from '$lib/audio_helpers.js';
 	import Level_Stats_Summary from '$lib/earbetter/Level_Stats_Summary.svelte';
 	import Text_Burst from '$lib/Text_Burst.svelte';
+	import {get_app} from '$lib/earbetter/app.js';
 
 	interface Props {
 		level: Level;
@@ -25,9 +25,10 @@
 
 	const {level, level_stats, exit_level}: Props = $props();
 
+	const app = get_app();
+	const {playing_notes, midi_access, volume, instrument} = app;
+
 	const ac = get_audio_context();
-	const volume = get_volume();
-	const instrument = get_instrument();
 
 	let clientWidth: number | undefined = $state();
 
@@ -147,7 +148,7 @@
 	onnotestart={(note, velocity) => {
 		// TODO should this be ignored if it's not an enabled key? should the level itself ignore the guess?
 		if ($status === 'complete') {
-			start_playing(ac(), note, with_velocity($volume, velocity), $instrument);
+			start_playing(app, ac(), note, with_velocity($volume, velocity), $instrument);
 		} else {
 			console.log(`guessing $status`, $status);
 			// TODO should we intercept here if disabled, and just play the blip with no penalty? or should that be a param to `guess`?
@@ -178,7 +179,7 @@
 				onpress={$status === 'waiting_for_input'
 					? (note) => on_press_key(note)
 					: $status === 'complete'
-						? (note) => start_playing(ac(), note, with_velocity($volume, null), $instrument)
+						? (note) => start_playing(app, ac(), note, with_velocity($volume, null), $instrument)
 						: undefined}
 				onrelease={$status === 'complete' ? (note) => stop_playing(note) : undefined}
 			/>

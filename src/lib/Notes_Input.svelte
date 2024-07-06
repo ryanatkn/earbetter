@@ -1,14 +1,14 @@
 <script lang="ts">
 	import {plural} from '@ryanatkn/belt/string.js';
+	import {Signal} from '@preact/signals-core';
 
 	import Piano from '$lib/Piano.svelte';
 	import {get_audio_context} from '$lib/audio_context.js';
-	import {midi_access} from '$lib/midi_access.js';
 	import Midi_Input from '$lib/Midi_Input.svelte';
-	import {playing_notes, start_playing, stop_playing} from '$lib/play_note.js';
+	import {start_playing, stop_playing} from '$lib/play_note.js';
 	import Init_Midi_Button from '$lib/Init_Midi_Button.svelte';
 	import Volume_Control from '$lib/Volume_Control.svelte';
-	import {get_instrument, get_volume, with_velocity} from '$lib/audio_helpers.js';
+	import {Instrument, Volume, with_velocity} from '$lib/audio_helpers.js';
 	import Instrument_Control from '$lib/Instrument_Control.svelte';
 	import {
 		Midi,
@@ -20,17 +20,26 @@
 		pitch_classes,
 		to_notes_in_scale,
 	} from '$lib/music.js';
+	import type {MIDIAccess} from '$lib/WebMIDI.js';
 
 	// TODO @multiple naming convention between `Intervals_Input`/`Notes_Input`/`Select_Notes_Control`?
 
 	interface Props {
+		audio_state: {
+			volume: Signal<Volume>;
+			instrument: Signal<Instrument>;
+			playing_notes: Signal<Set<Midi>>;
+			midi_access: Signal<MIDIAccess | null>;
+		};
 		notes: Set<Midi>;
 		min_note: Midi;
 		max_note: Midi;
 		oninput?: (notes: Midi[] | null) => void; // TODO @multiple set reactivity - API is strange returning an array but taking a set (maybe return both?)
 	}
 
-	const {notes, min_note, max_note, oninput}: Props = $props();
+	const {audio_state, notes, min_note, max_note, oninput}: Props = $props();
+
+	const {volume, instrument, playing_notes, midi_access} = $derived(audio_state);
 
 	// TODO @multiple set reactivity - refactor these collections to use `svelte/reactivity` sets instead of cloning, upstream and downstream where appropriate
 
@@ -69,8 +78,6 @@
 	let key = $state(DEFAULT_PITCH_CLASS);
 
 	const ac = get_audio_context();
-	const volume = get_volume();
-	const instrument = get_instrument();
 
 	// TODO hacky
 	let innerWidth: number | undefined = $state();
@@ -78,7 +85,7 @@
 	const piano_padding = 20;
 
 	const play = (note: Midi, velocity: number | null = null): void => {
-		start_playing(ac(), note, with_velocity($volume, velocity), $instrument);
+		start_playing(audio_state, ac(), note, with_velocity($volume, velocity), $instrument);
 	};
 
 	const toggle_scale = (scale: Scale): void => {
@@ -166,7 +173,7 @@
 			<Volume_Control {volume} />
 		</fieldset>
 		<fieldset>
-			<Init_Midi_Button />
+			<Init_Midi_Button midi_state={audio_state} />
 		</fieldset>
 	</form>
 </div>

@@ -20,6 +20,7 @@
 	import Notes_Input from '$lib/Notes_Input.svelte';
 	import Piano from '$lib/Piano.svelte';
 	import Copy_To_Clipboard from '$lib/earbetter/Copy_To_Clipboard.svelte';
+	import {get_app} from '$lib/earbetter/app.js';
 
 	interface Props {
 		level_data: Level_Data;
@@ -40,6 +41,8 @@
 		onplay,
 		onclose,
 	}: Props = $props();
+
+	const app = get_app();
 
 	let removing = $state(false);
 
@@ -364,6 +367,7 @@
 				<h2 class="my_0">pick tonics</h2>
 				<!-- TODO @multiple set reactivity - this `new Set` is a hack, probably change the data structure to a set, need serialization for storage -->
 				<Notes_Input
+					audio_state={app}
 					notes={new Set(updated_tonics)}
 					min_note={updated_min_note}
 					max_note={updated_max_note}
