@@ -2,6 +2,11 @@ import {interval_names, lookup_scale, to_scale_notes, type Scale_Name} from '$li
 import {Realm_Data, Realm_Name} from '$lib/earbetter/realm.js';
 import type {Level_Data} from '$lib/earbetter/level.js';
 
+// TODO expand the default levels
+// variants that go down, not just up
+// variants for 4 notes on 3 total ones
+// variants for 3-4 total notes instead of a whole octave
+
 export const to_default_scale_realm = (
 	scale_name: Scale_Name,
 	realm_name: Realm_Name = scale_name as string,
