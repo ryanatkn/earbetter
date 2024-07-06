@@ -7,9 +7,11 @@
 - also has [a playable piano](https://earbetter.ryanatkn.com/piano)
 - supports MIDI devices like piano keyboards
 
-to help see [contributing.md](contributing.md)
-
 play at [earbetter.ryanatkn.com](https://earbetter.ryanatkn.com/)
+
+Feedback is super welcome,
+please open any [discussions](https://github.com/ryanatkn/earbetter/discussions)
+or issues. For more see [contributing.md](contributing.md).
 
 ## usage
 

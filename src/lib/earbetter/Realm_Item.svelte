@@ -39,7 +39,9 @@
 			{realm_data.name}
 		</button>
 	{/if}
-	{#if (removing && remove) ?? (!removing && edit)}
+	<!-- TODO this is a bug in the eslint plugin -->
+	<!-- eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing -->
+	{#if (removing && remove) || (!removing && edit)}
 		<button
 			type="button"
 			class="icon_button plain_button size_xl deselectable"

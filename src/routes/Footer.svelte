@@ -14,10 +14,12 @@
 	<div class="mb_lg" style:--size="var(--size_xl)">
 		<Site_Breadcrumb {hide_main_menu_button} />
 	</div>
-	<a class="box chip p_md" href="https://github.com/ryanatkn/earbetter">
-		<Github_Logo />
-		source code
-	</a>
+	<div class="box">
+		<a class="box chip p_md" href="https://github.com/ryanatkn/earbetter">
+			<Github_Logo />
+			source code
+		</a>
+	</div>
 	<!-- TODO switch to `class="size_xl"` when Fuz changes to use vb/vi -->
 </footer>
 
