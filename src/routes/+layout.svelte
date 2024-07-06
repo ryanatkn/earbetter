@@ -95,7 +95,7 @@
 		switch (e.key) {
 			case 'c': {
 				swallow(e);
-				void request_access();
+				void request_access(app);
 				return;
 			}
 			case '1': {

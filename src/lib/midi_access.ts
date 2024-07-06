@@ -1,28 +1,24 @@
-import {type Signal, signal} from '@preact/signals-core';
+import type {Signal} from '@preact/signals-core';
 
 import type {MIDIAccess} from '$lib/WebMIDI.js';
 import {request_midi_access} from '$lib/midi_helpers.js';
 
 // TODO handle disconnections
 
-// TODO @multiple source from `audio` in context
-/**
- * Holds the result of `navigator.requestMIDIAccess`.
- */
-export const midi_access: Signal<MIDIAccess | null> = signal(null);
-
 let requesting: Promise<MIDIAccess | null> | undefined;
 
 // TODO @multiple source from `audio` in context, delete this or heavily refactor
-export const reset_midi_access = (): void => {
+export const reset_midi_access = (state: {midi_access: Signal<MIDIAccess | null>}): void => {
 	console.log('resetting midi_access');
 	requesting = undefined;
-	midi_access.value = null;
+	state.midi_access.value = null;
 };
 
 // TODO @multiple source from `audio` in context, this is convoluted for race conditions, probably doesn't need to be
-export const request_access = async (): Promise<MIDIAccess | null> => {
-	const existing = midi_access.peek();
+export const request_access = async (state: {
+	midi_access: Signal<MIDIAccess | null>;
+}): Promise<MIDIAccess | null> => {
+	const existing = state.midi_access.peek();
 	if (existing) {
 		return existing;
 	}
@@ -37,7 +33,7 @@ export const request_access = async (): Promise<MIDIAccess | null> => {
 		if (r !== requesting) {
 			return requesting; // eslint-disable-line @typescript-eslint/return-await
 		}
-		midi_access.value = value;
+		state.midi_access.value = value;
 		return value;
 	} catch (err) {
 		console.error('request_access failed', err);

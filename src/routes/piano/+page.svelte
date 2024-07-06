@@ -6,9 +6,8 @@
 
 	import Piano from '$lib/Piano.svelte';
 	import {get_audio_context} from '$lib/audio_context.js';
-	import {midi_access} from '$lib/midi_access.js';
 	import Midi_Input from '$lib/Midi_Input.svelte';
-	import {playing_notes, start_playing, stop_playing} from '$lib/play_note.js';
+	import {start_playing, stop_playing} from '$lib/play_note.js';
 	import Init_Midi_Button from '$lib/Init_Midi_Button.svelte';
 	import Volume_Control from '$lib/Volume_Control.svelte';
 	import Header from '$routes/Header.svelte';
@@ -20,6 +19,10 @@
 	import Select_Notes_Control from '$lib/Select_Notes_Control.svelte';
 	import {load_from_storage, set_in_storage} from '$lib/storage.js';
 	import Back_Button from '$routes/Back_Button.svelte';
+	import {get_app} from '$lib/earbetter/app.js';
+
+	const app = get_app();
+	const {playing_notes, midi_access} = $derived(app);
 
 	// TODO extract? is pretty specific
 	const Piano_Settings = z.object({
@@ -59,7 +62,7 @@
 
 	const play = (note: Midi, velocity: number | null = null): void => {
 		if (!$enabled_notes || $enabled_notes.has(note)) {
-			start_playing(ac(), note, with_velocity($volume, velocity), $instrument);
+			start_playing(app, ac(), note, with_velocity($volume, velocity), $instrument);
 		}
 	};
 </script>
@@ -100,7 +103,7 @@
 			<Volume_Control {volume} />
 		</fieldset>
 		<fieldset>
-			<Init_Midi_Button />
+			<Init_Midi_Button midi_state={app} />
 		</fieldset>
 		<fieldset class="row">
 			<Midi_Range_Control {min_note} {max_note} />

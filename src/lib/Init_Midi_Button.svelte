@@ -4,21 +4,20 @@
 	import type {Signal} from '@preact/signals-core';
 
 	import type {MIDIAccess} from '$lib/WebMIDI.js';
-	import {
-		reset_midi_access,
-		midi_access as default_midi_access,
-		request_access as default_request_access,
-	} from '$lib/midi_access.js';
+	import {reset_midi_access, request_access as default_request_access} from '$lib/midi_access.js';
 
 	interface Props {
-		midi_access?: Signal<MIDIAccess | null>;
-		request_access?: () => Promise<MIDIAccess | null>;
+		midi_state: {midi_access: Signal<MIDIAccess | null>};
+		request_access?: (state: {
+			midi_access: Signal<MIDIAccess | null>;
+		}) => Promise<MIDIAccess | null>;
 	}
 
-	const {midi_access = default_midi_access, request_access = default_request_access}: Props =
-		$props();
+	const {midi_state, request_access = default_request_access}: Props = $props();
 
 	// TODO move MIDI initialization to some other action, like the button to start a level
+
+	const {midi_access} = $derived(midi_state);
 
 	let request_status: Async_Status = $state('initial');
 
@@ -41,8 +40,8 @@
 		request_status = 'pending';
 		try {
 			// TODO @multiple source from `audio` in context, makes this convoluted
-			reset_midi_access();
-			await request_access();
+			reset_midi_access(midi_state);
+			await request_access(midi_state);
 			request_status = 'success';
 		} catch (err) {
 			console.error('failed to request midi access', err);

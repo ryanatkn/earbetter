@@ -17,6 +17,8 @@ import {Realm_Id, Realm_Data} from '$lib/earbetter/realm.js';
 import default_project_data from '$lib/projects/default_project.js';
 import {to_next_name} from '$lib/entity.js';
 import type {Instrument, Volume} from '$lib/audio_helpers.js';
+import type {Midi} from '$lib/music.js';
+import type {MIDIAccess} from '$lib/WebMIDI.js';
 
 // TODO maybe a `@batched` or `@action` decorator instead of manual `batch`?
 
@@ -39,6 +41,14 @@ export class App {
 	// currently manually syncing the same changes to both `app_data` `projects` --
 	// mixing serialization concerns with runtime representations
 	app_data: Signal<App_Data>;
+
+	/**
+	 * Holds the result of `navigator.requestMIDIAccess`.
+	 */
+	midi_access: Signal<MIDIAccess | null> = signal(null);
+
+	// TODO is redundant with `playing` and manually updated
+	playing_notes: Signal<Set<Midi>> = signal(new Set());
 
 	show_trainer_help: ReadonlySignal<boolean> = computed(
 		() => this.app_data.value.show_trainer_help,
@@ -100,6 +110,7 @@ export class App {
 		console.log('computing level', this.active_level_data.value);
 		return this.active_level_data.value
 			? new Level(
+					this,
 					this.active_level_data.value,
 					this.get_audio_context,
 					this.volume,

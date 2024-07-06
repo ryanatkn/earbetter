@@ -1,4 +1,4 @@
-import {signal, type Signal} from '@preact/signals-core';
+import type {Signal} from '@preact/signals-core';
 
 import {
 	DEFAULT_VOLUME,
@@ -16,13 +16,14 @@ import {type Midi, midi_to_freq} from '$lib/music.js';
 // Needs a full rethink with the `Audio` class idea.
 
 export const play_note = (
+	state: {playing_notes: Signal<Set<Midi>>},
 	ac: AudioContext,
 	note: Midi,
 	volume: Volume,
 	duration: Milliseconds,
 	instrument?: Instrument,
 ): Promise<void> => {
-	const stop = start_playing_note(ac, note, volume, instrument);
+	const stop = start_playing_note(state, ac, note, volume, instrument);
 	return new Promise((resolve) =>
 		setTimeout(() => {
 			stop();
@@ -44,11 +45,8 @@ const stop_osc = (
 
 export type Stop_Playing = () => void;
 
-// TODO is redundant with `playing` and manually updated
-// TODO @multiple source from `audio` in context
-export const playing_notes: Signal<Set<Midi>> = signal(new Set());
-
 export const start_playing_note = (
+	state: {playing_notes: Signal<Set<Midi>>},
 	ac: AudioContext,
 	note: Midi,
 	volume: Volume = DEFAULT_VOLUME,
@@ -66,9 +64,9 @@ export const start_playing_note = (
 	osc.start();
 	osc.connect(gain);
 
-	const next_playing_notes = new Set(playing_notes.peek());
+	const next_playing_notes = new Set(state.playing_notes.peek());
 	next_playing_notes.add(note);
-	playing_notes.value = next_playing_notes;
+	state.playing_notes.value = next_playing_notes;
 
 	let disposed = false;
 	return () => {
@@ -78,9 +76,9 @@ export const start_playing_note = (
 		console.log(`stop playing note`, note);
 		stop_osc(ac, 10, gain, osc);
 
-		const next_playing_notes = new Set(playing_notes.peek());
+		const next_playing_notes = new Set(state.playing_notes.peek());
 		next_playing_notes.delete(note);
-		playing_notes.value = next_playing_notes;
+		state.playing_notes.value = next_playing_notes;
 	};
 };
 
@@ -91,6 +89,7 @@ export const start_playing_note = (
 const playing: Map<Midi, Stop_Playing> = new Map(); // global cache used to enforce that at most one of each note plays
 
 export const start_playing = (
+	state: {playing_notes: Signal<Set<Midi>>},
 	ac: AudioContext,
 	note: Midi,
 	volume?: Volume,
@@ -98,7 +97,7 @@ export const start_playing = (
 ): void => {
 	const current = playing.get(note);
 	if (current) return;
-	playing.set(note, start_playing_note(ac, note, volume, instrument));
+	playing.set(note, start_playing_note(state, ac, note, volume, instrument));
 };
 
 export const stop_playing = (note: Midi): void => {
