@@ -40,6 +40,7 @@
 		() => Site_Data.parse({}),
 		Site_Data.parse,
 	);
+	console.log(`initial_site_data`, initial_site_data);
 
 	const get_audio_context = set_audio_context();
 

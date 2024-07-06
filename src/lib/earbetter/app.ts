@@ -31,6 +31,7 @@ import {
 	type Scale,
 } from '$lib/music.js';
 import type {MIDIAccess} from '$lib/WebMIDI.js';
+import type {Site_Data} from '$routes/site_data.js';
 
 // TODO maybe a `@batched` or `@action` decorator instead of manual `batch`?
 
@@ -54,11 +55,11 @@ export class App {
 	// mixing serialization concerns with runtime representations
 	app_data: Signal<App_Data>;
 
-	// TODO is redundant with `playing` and manually updated
-	volume: Signal<Volume> = signal(this.initial_site_data.volume ?? DEFAULT_VOLUME);
-	instrument: Signal<Instrument> = signal(this.initial_site_data.instrument ?? DEFAULT_INSTRUMENT);
-	scale: Signal<Scale> = signal(this.initial_site_data.scale ?? DEFAULT_SCALE);
-	key: Signal<Pitch_Class> = signal(this.initial_site_data.key ?? pitch_classes[0]);
+	// TODO does initializing these to the defaults without the app data cause any weirdness? creating them eagerly because we can't do `this.volume = $state(...)` in the constructor
+	volume: Signal<Volume> = signal(DEFAULT_VOLUME);
+	instrument: Signal<Instrument> = signal(DEFAULT_INSTRUMENT);
+	scale: Signal<Scale> = signal(DEFAULT_SCALE);
+	key: Signal<Pitch_Class> = signal(pitch_classes[0]);
 	enabled_notes: Signal<Set<Midi> | null> = computed(() =>
 		this.scale.value.name === 'chromatic'
 			? null
@@ -149,11 +150,19 @@ export class App {
 
 	constructor(
 		public readonly get_audio_context: () => AudioContext,
+		initial_site_data: Site_Data | null = null,
 		public readonly storage_key = 'app',
 	) {
 		this.app_data = signal(this.load());
 		const app_data = this.app_data.peek();
 		console.log(`app_data`, app_data);
+
+		if (initial_site_data) {
+			this.volume.value = initial_site_data.volume;
+			this.instrument.value = initial_site_data.instrument;
+			this.scale.value = initial_site_data.scale;
+			this.key.value = initial_site_data.key;
+		}
 
 		// TODO refactor
 		const {selected_project_id} = app_data;
