@@ -6,7 +6,7 @@
 	import Level_Form from '$lib/earbetter/Level_Form.svelte';
 	import Projects from '$lib/earbetter/Projects.svelte';
 	import Volume_Control from '$lib/Volume_Control.svelte';
-	import {get_instrument, get_volume, with_velocity} from '$lib/audio_helpers.js';
+	import {with_velocity} from '$lib/audio_helpers.js';
 	import Instrument_Control from '$lib/Instrument_Control.svelte';
 	import type {App} from '$lib/earbetter/app.js';
 	import Controls_Instructions from '$lib/earbetter/Controls_Instructions.svelte';
@@ -25,6 +25,8 @@
 	const {app}: Props = $props();
 
 	const {
+		volume,
+		instrument,
 		midi_access,
 		project_datas: projects,
 		editing_project,
@@ -49,9 +51,6 @@
 
 	const ac = get_audio_context();
 	(window as any).ac = ac;
-
-	const volume = get_volume();
-	const instrument = get_instrument();
 
 	// TODO review the draft/editing data properties of `app`, some inconsistencies between levels/realms/projects
 	const level_data = $derived($draft_level_data ?? Level_Data.parse({}));

@@ -12,17 +12,17 @@
 	import Volume_Control from '$lib/Volume_Control.svelte';
 	import Header from '$routes/Header.svelte';
 	import Footer from '$routes/Footer.svelte';
-	import {get_instrument, get_volume, with_velocity} from '$lib/audio_helpers.js';
+	import {with_velocity} from '$lib/audio_helpers.js';
 	import Instrument_Control from '$lib/Instrument_Control.svelte';
 	import Midi_Range_Control from '$lib/Midi_Range_Control.svelte';
-	import {get_scale, get_key, get_enabled_notes, Midi} from '$lib/music.js';
+	import {Midi} from '$lib/music.js';
 	import Select_Notes_Control from '$lib/Select_Notes_Control.svelte';
 	import {load_from_storage, set_in_storage} from '$lib/storage.js';
 	import Back_Button from '$routes/Back_Button.svelte';
 	import {get_app} from '$lib/earbetter/app.js';
 
 	const app = get_app();
-	const {playing_notes, midi_access} = $derived(app);
+	const {playing_notes, midi_access, volume, instrument, scale, key, enabled_notes} = $derived(app);
 
 	// TODO extract? is pretty specific
 	const Piano_Settings = z.object({
@@ -48,11 +48,6 @@
 	effect(save_piano_data);
 
 	const ac = get_audio_context();
-	const volume = get_volume();
-	const instrument = get_instrument();
-	const scale = get_scale();
-	const key = get_key();
-	const enabled_notes = get_enabled_notes();
 
 	const pressed_keys = $derived($playing_notes);
 

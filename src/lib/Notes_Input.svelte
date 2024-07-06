@@ -8,7 +8,7 @@
 	import {start_playing, stop_playing} from '$lib/play_note.js';
 	import Init_Midi_Button from '$lib/Init_Midi_Button.svelte';
 	import Volume_Control from '$lib/Volume_Control.svelte';
-	import {get_instrument, get_volume, with_velocity} from '$lib/audio_helpers.js';
+	import {Instrument, Volume, with_velocity} from '$lib/audio_helpers.js';
 	import Instrument_Control from '$lib/Instrument_Control.svelte';
 	import {
 		Midi,
@@ -25,7 +25,12 @@
 	// TODO @multiple naming convention between `Intervals_Input`/`Notes_Input`/`Select_Notes_Control`?
 
 	interface Props {
-		audio_state: {playing_notes: Signal<Set<Midi>>; midi_access: Signal<MIDIAccess | null>};
+		audio_state: {
+			volume: Signal<Volume>;
+			instrument: Signal<Instrument>;
+			playing_notes: Signal<Set<Midi>>;
+			midi_access: Signal<MIDIAccess | null>;
+		};
 		notes: Set<Midi>;
 		min_note: Midi;
 		max_note: Midi;
@@ -34,7 +39,7 @@
 
 	const {audio_state, notes, min_note, max_note, oninput}: Props = $props();
 
-	const {playing_notes, midi_access} = $derived(audio_state);
+	const {volume, instrument, playing_notes, midi_access} = $derived(audio_state);
 
 	// TODO @multiple set reactivity - refactor these collections to use `svelte/reactivity` sets instead of cloning, upstream and downstream where appropriate
 
@@ -73,8 +78,6 @@
 	let key = $state(DEFAULT_PITCH_CLASS);
 
 	const ac = get_audio_context();
-	const volume = get_volume();
-	const instrument = get_instrument();
 
 	// TODO hacky
 	let innerWidth: number | undefined = $state();

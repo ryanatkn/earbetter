@@ -16,8 +16,20 @@ import {load_from_storage, set_in_storage} from '$lib/storage.js';
 import {Realm_Id, Realm_Data} from '$lib/earbetter/realm.js';
 import default_project_data from '$lib/projects/default_project.js';
 import {to_next_name} from '$lib/entity.js';
-import type {Instrument, Volume} from '$lib/audio_helpers.js';
-import type {Midi} from '$lib/music.js';
+import {
+	DEFAULT_INSTRUMENT,
+	DEFAULT_VOLUME,
+	type Instrument,
+	type Volume,
+} from '$lib/audio_helpers.js';
+import {
+	DEFAULT_SCALE,
+	pitch_classes,
+	to_notes_in_scale,
+	type Midi,
+	type Pitch_Class,
+	type Scale,
+} from '$lib/music.js';
 import type {MIDIAccess} from '$lib/WebMIDI.js';
 
 // TODO maybe a `@batched` or `@action` decorator instead of manual `batch`?
@@ -42,13 +54,22 @@ export class App {
 	// mixing serialization concerns with runtime representations
 	app_data: Signal<App_Data>;
 
+	// TODO is redundant with `playing` and manually updated
+	volume: Signal<Volume> = signal(this.initial_site_data.volume ?? DEFAULT_VOLUME);
+	instrument: Signal<Instrument> = signal(this.initial_site_data.instrument ?? DEFAULT_INSTRUMENT);
+	scale: Signal<Scale> = signal(this.initial_site_data.scale ?? DEFAULT_SCALE);
+	key: Signal<Pitch_Class> = signal(this.initial_site_data.key ?? pitch_classes[0]);
+	enabled_notes: Signal<Set<Midi> | null> = computed(() =>
+		this.scale.value.name === 'chromatic'
+			? null
+			: to_notes_in_scale(this.scale.value, this.key.value),
+	);
+	playing_notes: Signal<Set<Midi>> = signal(new Set());
+
 	/**
 	 * Holds the result of `navigator.requestMIDIAccess`.
 	 */
 	midi_access: Signal<MIDIAccess | null> = signal(null);
-
-	// TODO is redundant with `playing` and manually updated
-	playing_notes: Signal<Set<Midi>> = signal(new Set());
 
 	show_trainer_help: ReadonlySignal<boolean> = computed(
 		() => this.app_data.value.show_trainer_help,
@@ -128,8 +149,6 @@ export class App {
 
 	constructor(
 		public readonly get_audio_context: () => AudioContext,
-		public readonly volume: Signal<Volume>,
-		public readonly instrument: Signal<Instrument>,
 		public readonly storage_key = 'app',
 	) {
 		this.app_data = signal(this.load());

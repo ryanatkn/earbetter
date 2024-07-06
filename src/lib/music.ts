@@ -1,7 +1,5 @@
 import {z} from 'zod';
 import type {Flavored} from '@ryanatkn/belt/types.js';
-import {signal, type Signal} from '@preact/signals-core';
-import {getContext, setContext} from 'svelte';
 import {type Hsl, hsl_to_string, type Hue} from '@ryanatkn/belt/colors.js';
 
 import type {Frequency} from '$lib/audio_helpers.js';
@@ -178,13 +176,6 @@ export const interval_names = Object.freeze([
 export const Interval_Names = z.enum(interval_names);
 export type Interval_Names = z.infer<typeof Interval_Names>;
 
-// TODO extract to an `Audio` class probably
-const ENABLED_NOTES_KEY = Symbol('enabled_notes');
-export const get_enabled_notes = (): Signal<Set<Midi> | null> => getContext(ENABLED_NOTES_KEY);
-export const set_enabled_notes = (
-	store: Signal<Set<Midi> | null> = signal(null),
-): Signal<Set<Midi> | null> => setContext(ENABLED_NOTES_KEY, store);
-
 /**
  * @see https://wikipedia.org/wiki/Scale_(music)
  */
@@ -239,17 +230,6 @@ export const to_scale_notes = (scale: Scale, octaves: number): Intervals => {
 	}
 	return notes;
 };
-
-const SCALE_KEY = Symbol('scale');
-export const get_scale = (): Signal<Scale> => getContext(SCALE_KEY);
-export const set_scale = (store: Signal<Scale> = signal(DEFAULT_SCALE)): Signal<Scale> =>
-	setContext(SCALE_KEY, store);
-
-const KEY_KEY = Symbol('key');
-export const get_key = (): Signal<Pitch_Class> => getContext(KEY_KEY);
-export const set_key = (
-	store: Signal<Pitch_Class> = signal(pitch_classes[0]),
-): Signal<Pitch_Class> => setContext(KEY_KEY, store);
 
 export const to_notes_in_scale = (
 	scale: Scale,

@@ -12,7 +12,7 @@
 	import Midi_Input from '$lib/Midi_Input.svelte';
 	import type {Midi} from '$lib/music.js';
 	import {start_playing, stop_playing} from '$lib/play_note.js';
-	import {get_instrument, get_volume, with_velocity} from '$lib/audio_helpers.js';
+	import {with_velocity} from '$lib/audio_helpers.js';
 	import Level_Stats_Summary from '$lib/earbetter/Level_Stats_Summary.svelte';
 	import Text_Burst from '$lib/Text_Burst.svelte';
 	import {get_app} from '$lib/earbetter/app.js';
@@ -26,11 +26,9 @@
 	const {level, level_stats, exit_level}: Props = $props();
 
 	const app = get_app();
-	const {playing_notes, midi_access} = $derived(app);
+	const {playing_notes, midi_access, volume, instrument} = app;
 
 	const ac = get_audio_context();
-	const volume = get_volume();
-	const instrument = get_instrument();
 
 	let clientWidth: number | undefined = $state();
 
