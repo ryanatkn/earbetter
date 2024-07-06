@@ -13,6 +13,7 @@ const data = (): Project_Data =>
 			to_default_scale_realm('Lydian'),
 			to_default_scale_realm('Mixolydian'),
 			to_default_scale_realm('Locrian'),
+			to_default_scale_realm('chromatic'),
 			// TODO this will change, just including to see where to go next
 			{
 				name: 'major third vs perfect fourth',
