@@ -1,4 +1,6 @@
 <script lang="ts">
+	import type {Snippet} from 'svelte';
+
 	import Piano_Key from '$lib/Piano_Key.svelte';
 	import {MIDI_MIN, MIDI_MAX, type Midi} from '$lib/music.js';
 	import {compute_piano} from '$lib/piano.js';
@@ -13,6 +15,16 @@
 		highlighted_keys?: Set<Midi> | null;
 		emphasized_keys?: Set<Midi> | null;
 		clickable?: boolean;
+		/**
+		 * Adds a label to the middle C key.
+		 */
+		middle_c_label?: string | boolean | Snippet;
+		/**
+		 * If focus exits a key while it's pressed without using the mouse,
+		 * it will by default keep the key stuck down until a mouseleave event, which is kind of fun.
+		 * Set to `false` to disable this quirky behavior.
+		 */
+		allow_sticking?: boolean;
 		onpress?: (note: Midi) => void;
 		onrelease?: (note: Midi) => void;
 	}
@@ -27,6 +39,8 @@
 		highlighted_keys = null,
 		emphasized_keys = null,
 		clickable = true,
+		middle_c_label,
+		allow_sticking,
 		onpress,
 		onrelease,
 	}: Props = $props();
@@ -71,6 +85,8 @@
 			pressed={pressed_keys?.has(note)}
 			highlighted={highlighted_keys?.has(note)}
 			emphasized={emphasized_keys?.has(note)}
+			{middle_c_label}
+			{allow_sticking}
 			{pressing_any}
 			{onpress}
 			{onrelease}

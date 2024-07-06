@@ -16,7 +16,7 @@ const data = (): Project_Data =>
 			to_default_scale_realm('chromatic'),
 			// TODO this will change, just including to see where to go next
 			{
-				name: 'major second vs perfect fifth (easier for learning the app)',
+				name: 'major second vs perfect fifth (easier for learning the tool)',
 				levels: [
 					{
 						name: 'one octave',

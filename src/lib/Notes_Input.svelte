@@ -123,6 +123,8 @@
 				max_height={300}
 				pressed_keys={$playing_notes}
 				highlighted_keys={current_notes}
+				middle_c_label
+				allow_sticking
 				onpress={(note) => {
 					toggle_note(note);
 					play(note);

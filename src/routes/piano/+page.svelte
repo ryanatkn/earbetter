@@ -86,6 +86,8 @@
 				enabled_notes={$enabled_notes}
 				onpress={(note) => play(note)}
 				onrelease={(note) => stop_playing(note)}
+				middle_c_label
+				allow_sticking
 			/>
 		{/if}
 	</div>

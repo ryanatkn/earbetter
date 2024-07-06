@@ -1,5 +1,6 @@
 <script lang="ts">
 	import {swallow} from '@ryanatkn/belt/dom.js';
+	import type {Snippet} from 'svelte';
 
 	import {type Midi, midi_naturals} from '$lib/music.js';
 	import {find_next_sibling, find_previous_sibling} from '$lib/dom.js';
@@ -12,7 +13,11 @@
 		pressed?: boolean;
 		highlighted?: boolean;
 		emphasized?: boolean;
-		show_middle_c?: boolean;
+		/**
+		 * Adds a label to the middle C key.
+		 * Defaults to `C4` if `true`.
+		 */
+		middle_c_label?: string | boolean | Snippet;
 		/**
 		 * If focus exits a key while it's pressed without using the mouse,
 		 * it will by default keep the key stuck down until a mouseleave event, which is kind of fun.
@@ -32,8 +37,8 @@
 		pressed = false,
 		highlighted = false,
 		emphasized = false,
-		show_middle_c = true,
-		allow_sticking = true,
+		middle_c_label = true,
+		allow_sticking = false,
 		pressing_any,
 		onpress,
 		onrelease,
@@ -139,8 +144,16 @@
 	data-note={note}
 	style:left="{left_offset}px"
 >
-	{#if is_middle_c && show_middle_c}
-		<span class="middle_c">C4</span>
+	{#if is_middle_c && middle_c_label}
+		<div class="middle_c">
+			{#if typeof middle_c_label === 'string'}
+				{middle_c_label}
+			{:else if typeof middle_c_label === 'boolean'}
+				C4
+			{:else}
+				{@render middle_c_label()}
+			{/if}
+		</div>
 	{/if}
 </button>
 

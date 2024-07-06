@@ -227,6 +227,7 @@
 				max_note={updated_max_note}
 				highlighted_keys={tonics_set}
 				clickable={false}
+				middle_c_label
 			/>
 			<br />
 		{/if}
