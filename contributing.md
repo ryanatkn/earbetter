@@ -1,6 +1,6 @@
-# contributing to earbetter
+# Contributing to Earbetter
 
-hey cool thanks for your interest
+Hey thanks for your interest
 
 1. This project is non-commercial, open source, and public domain,
    and is not affiliated with any websites or apps except
