@@ -38,14 +38,7 @@ export const to_default_scale_realm = (
 		name: 'one octave',
 		intervals: notes,
 	});
-	levels.push({
-		name: 'two octaves',
-		intervals: to_scale_notes(scale, 2),
-	});
-	levels.push({
-		name: 'four octaves',
-		intervals: to_scale_notes(scale, 4),
-	});
+	// TODO for the 4 note variants, maybe include the note at the start of the next octave?
 	levels.push({
 		name: 'one octave (4 notes)',
 		intervals: notes,
@@ -56,7 +49,10 @@ export const to_default_scale_realm = (
 		intervals: notes,
 		sequence_length: 8,
 	});
-	// TODO for the 4 note variants, maybe include the note at the start of the next octave?
+	levels.push({
+		name: 'two octaves',
+		intervals: to_scale_notes(scale, 2),
+	});
 	levels.push({
 		name: 'two octaves (4 notes)',
 		intervals: to_scale_notes(scale, 2),
@@ -66,6 +62,10 @@ export const to_default_scale_realm = (
 		name: 'two octaves (8 notes)',
 		intervals: to_scale_notes(scale, 2),
 		sequence_length: 8,
+	});
+	levels.push({
+		name: 'four octaves',
+		intervals: to_scale_notes(scale, 4),
 	});
 	levels.push({
 		name: 'four octaves (4 notes)',
