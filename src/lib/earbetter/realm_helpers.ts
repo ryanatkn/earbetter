@@ -30,7 +30,7 @@ export const to_default_scale_realm = (
 		const note1 = notes[i];
 		const note2 = notes[i + 1];
 		levels.push({
-			name: interval_names[note1] + ' vs ' + interval_names[note2] + ' downward',
+			name: interval_names[note1] + ' vs ' + interval_names[note2] + ' (downward)',
 			intervals: [-note1, -note2],
 		});
 	}
@@ -51,6 +51,11 @@ export const to_default_scale_realm = (
 		intervals: notes,
 		sequence_length: 4,
 	});
+	levels.push({
+		name: 'one octave (8 notes)',
+		intervals: notes,
+		sequence_length: 8,
+	});
 	// TODO for the 4 note variants, maybe include the note at the start of the next octave?
 	levels.push({
 		name: 'two octaves (4 notes)',
@@ -58,24 +63,23 @@ export const to_default_scale_realm = (
 		sequence_length: 4,
 	});
 	levels.push({
-		name: 'four octaves (4 notes)',
-		intervals: to_scale_notes(scale, 4),
-		sequence_length: 4,
-	});
-	levels.push({
-		name: 'one octave (8 notes)',
-		intervals: notes,
-		sequence_length: 8,
-	});
-	levels.push({
 		name: 'two octaves (8 notes)',
 		intervals: to_scale_notes(scale, 2),
 		sequence_length: 8,
 	});
 	levels.push({
+		name: 'four octaves (4 notes)',
+		intervals: to_scale_notes(scale, 4),
+		sequence_length: 4,
+		min_note: 41,
+		max_note: 96,
+	});
+	levels.push({
 		name: 'four octaves (8 notes)',
 		intervals: to_scale_notes(scale, 4),
 		sequence_length: 8,
+		min_note: 41,
+		max_note: 96,
 	});
 
 	return Realm_Data.parse({name: realm_name, levels});
