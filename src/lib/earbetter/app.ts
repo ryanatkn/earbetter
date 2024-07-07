@@ -1,6 +1,6 @@
 import {goto} from '$app/navigation';
 import {z} from 'zod';
-import {getContext, setContext} from 'svelte';
+import {getContext, setContext, untrack} from 'svelte';
 import {base} from '$app/paths';
 
 import {
@@ -72,8 +72,8 @@ export class App {
 	show_trainer_help: boolean = $derived(this.app_data.show_trainer_help);
 	toggle_trainer_help = (): void => {
 		this.app_data = {
-			...this.app_data.peek(),
-			show_trainer_help: !this.show_trainer_help.peek(),
+			...this.app_data,
+			show_trainer_help: !this.show_trainer_help,
 		};
 	};
 
@@ -155,7 +155,7 @@ export class App {
 		// save changes to `selected_project_id` and `selected_realm_id` back to the `app_data`,
 		// these could be decoupled but are often fired together
 		$effect(() => {
-			const app_data = this.app_data.peek();
+			const app_data = untrack(() => this.app_data);
 			const selected_project_id = this.selected_project_id;
 			const selected_realm_id = this.selected_realm_id;
 			if (
