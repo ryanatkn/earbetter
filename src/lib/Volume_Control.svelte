@@ -7,6 +7,8 @@
 
 	// TODO add an `oninput` callback unless the `bind` restriction is lifted
 	let {volume = $bindable(DEFAULT_VOLUME)}: Props = $props();
+
+	// TODO see about using `bind:` below if the types are correct
 </script>
 
 <label class="text_align_center">

@@ -172,7 +172,7 @@
 	</section>
 	<form class="width_sm panel p_md">
 		<fieldset>
-			<Instrument_Control instrument={audio_state.instrument} />
+			<Instrument_Control bind:instrument={audio_state.instrument} />
 			<Volume_Control bind:volume={audio_state.volume} />
 		</fieldset>
 		<fieldset>

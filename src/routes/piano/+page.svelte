@@ -86,7 +86,7 @@
 	</div>
 	<form class="width_sm panel p_md">
 		<fieldset>
-			<Instrument_Control instrument={app.instrument} />
+			<Instrument_Control bind:instrument={app.instrument} />
 			<div class="row">
 				<Select_Notes_Control scale={app.scale} key={app.key} />
 			</div>

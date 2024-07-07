@@ -56,7 +56,7 @@
 		<h2 class="section_title">settings</h2>
 		<form class="section_body">
 			<Volume_Control bind:volume={app.volume} />
-			<Instrument_Control instrument={app.instrument} />
+			<Instrument_Control bind:instrument={app.instrument} />
 			<aside>Earbetter supports MIDI devices like piano keyboards, connect and click:</aside>
 			<Init_Midi_Button midi_state={app} />
 		</form>
