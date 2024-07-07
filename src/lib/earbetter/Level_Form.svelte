@@ -3,7 +3,7 @@
 	import Dialog from '@ryanatkn/fuz/Dialog.svelte';
 	import Alert from '@ryanatkn/fuz/Alert.svelte';
 
-	import {create_level_id, Level_Data, type Level_Id} from '$lib/earbetter/level.js';
+	import {create_level_id, Level_Data, type Level_Id} from '$lib/earbetter/level.svelte.js';
 	import {
 		parse_intervals,
 		serialize_intervals,
@@ -20,7 +20,7 @@
 	import Notes_Input from '$lib/Notes_Input.svelte';
 	import Piano from '$lib/Piano.svelte';
 	import Copy_To_Clipboard from '$lib/earbetter/Copy_To_Clipboard.svelte';
-	import {get_app} from '$lib/earbetter/app.js';
+	import {get_app} from '$lib/earbetter/app.svelte.js';
 
 	interface Props {
 		level_data: Level_Data;

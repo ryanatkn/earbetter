@@ -9,7 +9,7 @@ import {
 	Level,
 	Level_Data,
 	type Level_Id,
-} from '$lib/earbetter/level.js';
+} from '$lib/earbetter/level.svelte.js';
 import {Project_Data, Project_Id, Project_Name} from '$lib/earbetter/project.js';
 import {load_from_storage, set_in_storage} from '$lib/storage.js';
 import {Realm_Id, Realm_Data} from '$lib/earbetter/realm.js';

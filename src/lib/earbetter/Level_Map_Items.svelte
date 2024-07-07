@@ -1,7 +1,7 @@
 <script lang="ts">
 	import Level_Map_Item from '$lib/earbetter/Level_Map_Item.svelte';
-	import type {App} from '$lib/earbetter/app.js';
-	import {Level_Data} from '$lib/earbetter/level.js';
+	import type {App} from '$lib/earbetter/app.svelte.js';
+	import {Level_Data} from '$lib/earbetter/level.svelte.js';
 
 	interface Props {
 		app: App;

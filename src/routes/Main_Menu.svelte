@@ -14,7 +14,7 @@
 	import Footer from '$routes/Footer.svelte';
 	import Site_Breadcrumb from '$routes/Site_Breadcrumb.svelte';
 	import {get_main_menu} from '$routes/main_menu_state.svelte.js';
-	import {get_app} from '$lib/earbetter/app.js';
+	import {get_app} from '$lib/earbetter/app.svelte.js';
 
 	// TODO @multiple let any routes (and components?) add sections to the menu via snippets
 

@@ -1,5 +1,5 @@
 <script lang="ts">
-	import type {Level, Status, Trial} from '$lib/earbetter/level.js';
+	import type {Level, Status, Trial} from '$lib/earbetter/level.svelte.js';
 
 	interface Props {
 		level: Level;

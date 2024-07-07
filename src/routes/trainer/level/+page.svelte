@@ -1,6 +1,6 @@
 <script lang="ts">
 	import Level_Scene from '$lib/earbetter/Level_Scene.svelte';
-	import {get_app} from '$lib/earbetter/app.js';
+	import {get_app} from '$lib/earbetter/app.svelte.js';
 	import Back_Button from '$routes/Back_Button.svelte';
 
 	const app = get_app();

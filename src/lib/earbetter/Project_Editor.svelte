@@ -1,6 +1,6 @@
 <script lang="ts">
 	import Project_Form from '$lib/earbetter/Project_Form.svelte';
-	import type {App} from '$lib/earbetter/app.js';
+	import type {App} from '$lib/earbetter/app.svelte.js';
 	import {Project_Data} from '$lib/earbetter/project.js';
 
 	interface Props {

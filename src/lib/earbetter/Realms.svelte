@@ -3,7 +3,7 @@
 
 	import {Realm_Data} from '$lib/earbetter/realm.js';
 	import Realm_Items from '$lib/earbetter/Realm_Items.svelte';
-	import type {App} from '$lib/earbetter/app.js';
+	import type {App} from '$lib/earbetter/app.svelte.js';
 
 	interface Props {
 		app: App; // TODO maybe change to be more granular objects?

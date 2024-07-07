@@ -1,7 +1,11 @@
 <script lang="ts">
 	import {plural} from '@ryanatkn/belt/string.js';
 
-	import {MISTAKE_HISTORY_LENGTH, type Level_Data, type Level_Stats} from '$lib/earbetter/level.js';
+	import {
+		MISTAKE_HISTORY_LENGTH,
+		type Level_Data,
+		type Level_Stats,
+	} from '$lib/earbetter/level.svelte.js';
 
 	interface Props {
 		level_data: Level_Data;

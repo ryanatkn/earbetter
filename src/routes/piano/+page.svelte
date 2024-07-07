@@ -18,7 +18,7 @@
 	import Select_Notes_Control from '$lib/Select_Notes_Control.svelte';
 	import {load_from_storage, set_in_storage} from '$lib/storage.js';
 	import Back_Button from '$routes/Back_Button.svelte';
-	import {get_app} from '$lib/earbetter/app.js';
+	import {get_app} from '$lib/earbetter/app.svelte.js';
 
 	const app = get_app();
 

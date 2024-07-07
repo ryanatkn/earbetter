@@ -1,6 +1,6 @@
 <script lang="ts">
 	import Realm_Form from '$lib/earbetter/Realm_Form.svelte';
-	import type {App} from '$lib/earbetter/app.js';
+	import type {App} from '$lib/earbetter/app.svelte.js';
 	import {Realm_Data} from '$lib/earbetter/realm.js';
 
 	interface Props {

@@ -8,12 +8,12 @@
 	import Volume_Control from '$lib/Volume_Control.svelte';
 	import {with_velocity} from '$lib/audio_helpers.js';
 	import Instrument_Control from '$lib/Instrument_Control.svelte';
-	import type {App} from '$lib/earbetter/app.js';
+	import type {App} from '$lib/earbetter/app.svelte.js';
 	import Controls_Instructions from '$lib/earbetter/Controls_Instructions.svelte';
 	import Midi_Input from '$lib/Midi_Input.svelte';
 	import {start_playing, stop_playing} from '$lib/play_note.js';
 	import Realms from '$lib/earbetter/Realms.svelte';
-	import {Level_Data, MISTAKE_HISTORY_LENGTH} from '$lib/earbetter/level.js';
+	import {Level_Data, MISTAKE_HISTORY_LENGTH} from '$lib/earbetter/level.svelte.js';
 	import Realm_Editor from '$lib/earbetter/Realm_Editor.svelte';
 	import Level_Map_Items from '$lib/earbetter/Level_Map_Items.svelte';
 	import Project_Editor from '$lib/earbetter/Project_Editor.svelte';

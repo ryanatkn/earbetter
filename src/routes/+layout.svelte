@@ -14,13 +14,13 @@
 	import {set_audio_context} from '$lib/audio_context.js';
 	import {adjust_volume} from '$lib/audio_helpers.js';
 	import {request_access} from '$lib/midi_access.js';
-	import {App, set_app} from '$lib/earbetter/app.js';
+	import {App, set_app} from '$lib/earbetter/app.svelte.js';
 	import {load_from_storage, set_in_storage} from '$lib/storage.js';
 	import {Site_Data} from '$routes/site_data.js';
 	import Init_Audio_Context from '$lib/Init_Audio_Context.svelte';
 	import Main_Menu from '$routes/Main_Menu.svelte';
 	import {set_main_menu} from '$routes/main_menu_state.svelte.js';
-	import {Level_Hash_Data} from '$lib/earbetter/level.js';
+	import {Level_Hash_Data} from '$lib/earbetter/level.svelte.js';
 	import {parse_from_hash} from '$lib/url.js';
 
 	interface Props {

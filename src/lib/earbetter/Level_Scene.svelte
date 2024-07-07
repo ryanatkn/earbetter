@@ -4,7 +4,7 @@
 	import {plural} from '@ryanatkn/belt/string.js';
 	import {onMount, untrack} from 'svelte';
 
-	import {Level_Stats, type Level} from '$lib/earbetter/level.js';
+	import {Level_Stats, type Level} from '$lib/earbetter/level.svelte.js';
 	import Piano from '$lib/Piano.svelte';
 	import Level_Progress_Indicator from '$lib/earbetter/Level_Progress_Indicator.svelte';
 	import Trial_Progress_Indicator from '$lib/earbetter/Trial_Progress_Indicator.svelte';
@@ -15,7 +15,7 @@
 	import {with_velocity} from '$lib/audio_helpers.js';
 	import Level_Stats_Summary from '$lib/earbetter/Level_Stats_Summary.svelte';
 	import Text_Burst from '$lib/Text_Burst.svelte';
-	import {get_app} from '$lib/earbetter/app.js';
+	import {get_app} from '$lib/earbetter/app.svelte.js';
 
 	interface Props {
 		level: Level;

@@ -1,4 +1,4 @@
-import {DEFAULT_MIN_NOTE} from '$lib/earbetter/level.js';
+import {DEFAULT_MIN_NOTE} from '$lib/earbetter/level.svelte.js';
 import {Project_Data} from '$lib/earbetter/project.js';
 import {to_default_scale_realm} from '$lib/earbetter/realm_helpers.js';
 

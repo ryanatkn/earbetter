@@ -1,8 +1,8 @@
 <script lang="ts">
 	import {slide} from 'svelte/transition';
 
-	import type {Level_Data} from '$lib/earbetter/level.js';
-	import type {App} from '$lib/earbetter/app.js';
+	import type {Level_Data} from '$lib/earbetter/level.svelte.js';
+	import type {App} from '$lib/earbetter/app.svelte.js';
 	import Level_Stats_Summary from '$lib/earbetter/Level_Stats_Summary.svelte';
 
 	interface Props {

@@ -1,7 +1,7 @@
 import {z} from 'zod';
 import type {Flavored} from '@ryanatkn/belt/types.js';
 
-import {Level_Data} from '$lib/earbetter/level.js';
+import {Level_Data} from '$lib/earbetter/level.svelte.js';
 import {to_random_id} from '$lib/id.js';
 
 export const Realm_Id = z.string();

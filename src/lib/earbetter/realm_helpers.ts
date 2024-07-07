@@ -1,6 +1,6 @@
 import {interval_names, lookup_scale, to_scale_notes, type Scale_Name} from '$lib/music.js';
 import {Realm_Data, Realm_Name} from '$lib/earbetter/realm.js';
-import type {Level_Data} from '$lib/earbetter/level.js';
+import type {Level_Data} from '$lib/earbetter/level.svelte.js';
 
 // TODO expand the default levels
 // variants that go down, not just up

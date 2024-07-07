@@ -9,7 +9,7 @@ import type {Milliseconds} from '$lib/audio_helpers.js';
 import {serialize_to_hash} from '$lib/url.js';
 import {to_random_id} from '$lib/id.js';
 import type {Get_Audio_Context} from '$lib/audio_context.js';
-import type {App} from '$lib/earbetter/app.js';
+import type {App} from '$lib/earbetter/app.svelte.js';
 
 // TODO this isn't idiomatic signals code yet, uses `peek` too much
 

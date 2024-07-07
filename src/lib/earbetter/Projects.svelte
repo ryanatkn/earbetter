@@ -1,7 +1,7 @@
 <script lang="ts">
 	import {Project_Data} from '$lib/earbetter/project.js';
 	import Project_Items from '$lib/earbetter/Project_Items.svelte';
-	import type {App} from '$lib/earbetter/app.js';
+	import type {App} from '$lib/earbetter/app.svelte.js';
 
 	interface Props {
 		app: App; // TODO maybe change to be more granular objects?
