@@ -88,7 +88,7 @@
 		<fieldset>
 			<Instrument_Control bind:instrument={app.instrument} />
 			<div class="row">
-				<Select_Notes_Control scale={app.scale} key={app.key} />
+				<Select_Notes_Control bind:scale={app.scale} bind:key={app.key} />
 			</div>
 			<Volume_Control bind:volume={app.volume} />
 		</fieldset>

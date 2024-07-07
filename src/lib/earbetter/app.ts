@@ -52,12 +52,12 @@ export class App {
 	// TODO wheres the source of truth?
 	// currently manually syncing the same changes to both `app_data` `projects` --
 	// mixing serialization concerns with runtime representations
-	app_data: App_Data = $state(this.load());
+	app_data: App_Data = $state.frozen(this.load());
 
 	// TODO does initializing these to the defaults without the app data cause any weirdness? creating them eagerly because we can't do `this.volume = $state(...)` in the constructor
 	volume: Volume = $state(DEFAULT_VOLUME);
 	instrument: Instrument = $state(DEFAULT_INSTRUMENT);
-	scale: Scale = $state(DEFAULT_SCALE);
+	scale: Scale = $state.frozen(DEFAULT_SCALE);
 	key: Pitch_Class = $state(pitch_classes[0]);
 	enabled_notes: Set<Midi> | null = $derived(
 		this.scale.name === 'chromatic' ? null : to_notes_in_scale(this.scale, this.key),
