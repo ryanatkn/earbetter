@@ -52,7 +52,7 @@ export class App {
 	// TODO wheres the source of truth?
 	// currently manually syncing the same changes to both `app_data` `projects` --
 	// mixing serialization concerns with runtime representations
-	app_data: App_Data = $state.frozen(this.load());
+	app_data: App_Data = $state.frozen()!;
 
 	// TODO does initializing these to the defaults without the app data cause any weirdness? creating them eagerly because we can't do `this.volume = $state(...)` in the constructor
 	volume: Volume = $state(DEFAULT_VOLUME);
@@ -133,6 +133,7 @@ export class App {
 		initial_site_data: Site_Data | null = null,
 		public readonly storage_key = 'app',
 	) {
+		this.app_data = this.load();
 		console.log(`app_data`, this.app_data);
 
 		if (initial_site_data) {
