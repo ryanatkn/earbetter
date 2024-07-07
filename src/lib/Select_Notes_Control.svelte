@@ -19,7 +19,7 @@
 
 	$inspect('scale', scale);
 
-	// TODO BLOCK @multiple event callback or $bindable here and below
+	// TODO @multiple event callback or $bindable here and below
 	const input_key = (e: Event & {currentTarget: HTMLSelectElement}) =>
 		(scale = lookup_scale(e.currentTarget.value));
 </script>

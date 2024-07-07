@@ -7,7 +7,7 @@
 
 	let {instrument = $bindable()}: Props = $props();
 
-	// TODO BLOCK @multiple event callback or $bindable
+	// TODO @multiple event callback or $bindable
 </script>
 
 <div class="mb_lg">
