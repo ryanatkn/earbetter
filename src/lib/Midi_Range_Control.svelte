@@ -1,7 +1,6 @@
 <script lang="ts">
 	import Alert from '@ryanatkn/fuz/Alert.svelte';
 	import {slide} from 'svelte/transition';
-	import type {Signal} from '@preact/signals-core';
 
 	import {midi_names, MIDI_MAX, MIDI_MIN, type Midi} from '$lib/music.js';
 

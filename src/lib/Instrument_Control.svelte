@@ -1,6 +1,4 @@
 <script lang="ts">
-	import type {Signal} from '@preact/signals-core';
-
 	import {instruments, type Instrument} from '$lib/audio_helpers.js';
 
 	interface Props {

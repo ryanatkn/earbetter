@@ -1,7 +1,6 @@
 <script lang="ts">
 	import type {Async_Status} from '@ryanatkn/belt/async.js';
 	import {fade} from 'svelte/transition';
-	import type {Signal} from '@preact/signals-core';
 
 	import type {MIDIAccess} from '$lib/WebMIDI.js';
 	import {reset_midi_access, request_access as default_request_access} from '$lib/midi_access.js';

@@ -1,4 +1,3 @@
-import type {Signal} from '@preact/signals-core';
 import {z} from 'zod';
 import type {Flavored} from '@ryanatkn/belt/types.js';
 import {round} from '@ryanatkn/belt/maths.js';

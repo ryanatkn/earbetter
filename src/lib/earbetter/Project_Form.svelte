@@ -36,7 +36,7 @@
 			level_stats: project_data.level_stats,
 		});
 
-	// TODO review this effect to try to remove it
+	// TODO @multiple review this effect to try to remove it
 	$effect(() => {
 		console.log(`set_project_data`, project_data);
 		updated_name = project_data.name;
@@ -50,7 +50,7 @@
 	let updated = $state('');
 	const changed_serialized = $derived(serialized !== updated);
 	let parse_error_message = $state('');
-	// TODO review this effect to try to remove it
+	// TODO @multiple review this effect to try to remove it
 	$effect(() => {
 		project_data;
 		parse_error_message = '';

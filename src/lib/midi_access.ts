@@ -1,5 +1,3 @@
-import type {Signal} from '@preact/signals-core';
-
 import type {MIDIAccess} from '$lib/WebMIDI.js';
 import {request_midi_access} from '$lib/midi_helpers.js';
 

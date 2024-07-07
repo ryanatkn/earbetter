@@ -20,13 +20,14 @@
 	// TODO visualize the intervals with a piano
 	const intervals: Intervals = $derived(to_scale_notes(updated_scale, updated_octaves));
 
-	// TODO hacky
+	// TODO @multiple review this effect to try to remove it
 	$effect(() => {
 		updated_scale = scale;
 	});
 	$effect(() => {
 		updated_octaves = octaves;
 	});
+	// TODO @multiple review this effect to try to remove it
 	// TODO hacky, could use oninput handlers but
 	// the scale select needs to wait a tick to get `updated_scale`,
 	// unlike the octave range input, maybe a bug?

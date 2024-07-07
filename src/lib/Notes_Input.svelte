@@ -1,6 +1,5 @@
 <script lang="ts">
 	import {plural} from '@ryanatkn/belt/string.js';
-	import {Signal} from '@preact/signals-core';
 
 	import Piano from '$lib/Piano.svelte';
 	import {get_audio_context} from '$lib/audio_context.js';
