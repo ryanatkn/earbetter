@@ -115,14 +115,14 @@ export class Level {
 	}
 
 	present_trial_prompt = async (): Promise<void> => {
-		const $trial = this.trial;
-		if (!$trial) return;
-		console.log('present_trial_prompt', $trial.sequence);
-		this.trial = {...$trial, guessing_index: 0};
+		const trial = this.trial;
+		if (!trial) return;
+		console.log('present_trial_prompt', trial.sequence);
+		this.trial = {...trial, guessing_index: 0};
 		const current_seq_id = ++this.seq_id;
-		const sequence_length = $trial.sequence.length;
+		const sequence_length = trial.sequence.length;
 		for (let i = 0; i < sequence_length; i++) {
-			const note = $trial.sequence[i];
+			const note = trial.sequence[i];
 			this.trial = {
 				...this.trial,
 				presenting_index: i,
@@ -143,10 +143,10 @@ export class Level {
 	// TODO helpful to have a return value?
 	guess = (note: Midi): void => {
 		if (this.status !== 'waiting_for_input') return;
-		const $trial = this.trial;
-		const guessing_index = $trial?.guessing_index;
-		if (!$trial || guessing_index == null) return;
-		const actual = get_correct_guess_for_trial($trial);
+		const trial = this.trial;
+		const guessing_index = trial?.guessing_index;
+		if (!trial || guessing_index == null) return;
+		const actual = get_correct_guess_for_trial(trial);
 		console.log('guess', guessing_index, note, actual);
 
 		this.last_guess = note;
@@ -162,7 +162,7 @@ export class Level {
 				DEFAULT_NOTE_DURATION_FAILED,
 				this.app.instrument,
 			);
-			if (guessing_index === 0 || !$trial.valid_notes.has(note)) {
+			if (guessing_index === 0 || !trial.valid_notes.has(note)) {
 				return; // no penalty or delay if this is the first one
 			}
 			// TODO should this be "on enter showing_failure_feedback state" logic?
@@ -173,7 +173,7 @@ export class Level {
 		}
 
 		// guess is correct
-		const sequence_length = $trial.sequence.length;
+		const sequence_length = trial.sequence.length;
 		const duration =
 			sequence_length < DEFAULT_SEQUENCE_LENGTH ? DEFAULT_NOTE_DURATION_2 : DEFAULT_NOTE_DURATION; // TODO refactor, see elsewhere
 		void play_note(this.app, this.ac(), note, this.app.volume, duration, this.app.instrument);
@@ -182,7 +182,7 @@ export class Level {
 			// if more -> update current response index
 			this.update_status('showing_success_feedback');
 			// TODO should this be "on enter showing_success_feedback state" logic?
-			if ($trial.index < this.level_data.trial_count - 1) {
+			if (trial.index < this.level_data.trial_count - 1) {
 				console.log('guess correct and done with trial');
 				setTimeout(() => this.next_trial(), DEFAULT_FEEDBACK_DURATION);
 			} else {
@@ -193,27 +193,27 @@ export class Level {
 			// SUCCESS -> no status change because we show no visible positive feedback to users until the end
 			console.log('guess correct but not done');
 			this.trial = {
-				...$trial,
+				...trial,
 				guessing_index: guessing_index + 1,
 			};
 		}
 	};
 
 	retry_trial = (): void => {
-		const $status = this.status;
+		const status = this.status;
 		if (
-			$status !== 'waiting_for_input' &&
-			$status !== 'showing_success_feedback' &&
-			$status !== 'showing_failure_feedback'
+			status !== 'waiting_for_input' &&
+			status !== 'showing_success_feedback' &&
+			status !== 'showing_failure_feedback'
 		) {
 			return;
 		}
-		const $trial = this.trial;
-		if (!$trial) return;
+		const trial = this.trial;
+		if (!trial) return;
 		// TODO should this be "on enter presenting_prompt state" logic?
 		this.trial = {
-			...$trial,
-			retry_count: $trial.retry_count + 1,
+			...trial,
+			retry_count: trial.retry_count + 1,
 		};
 		this.update_status('presenting_prompt');
 	};
@@ -225,10 +225,10 @@ export class Level {
 		const next_trial = create_next_trial(this.level_data, this.trial);
 		console.log('next trial', next_trial);
 		// TODO should this be "on enter presenting_prompt state" logic?
-		const $trials = this.trials;
-		if ($trials.length === 0) this.mistakes = 0;
+		const trials = this.trials;
+		if (trials.length === 0) this.mistakes = 0;
 		this.trial = next_trial;
-		this.trials = [...$trials, next_trial];
+		this.trials = [...trials, next_trial];
 		this.update_status('presenting_prompt');
 	};
 
