@@ -25,7 +25,7 @@ export const adjust_volume = (
 ): void => {
 	// TODO awkward try/catch, but idk about `safeParse`
 	try {
-		state.volume = Volume.parse(state.volume.peek() + amount * multiplier);
+		state.volume = Volume.parse(state.volume + amount * multiplier);
 	} catch (_err) {}
 };
 

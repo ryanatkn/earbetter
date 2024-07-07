@@ -194,9 +194,9 @@ export class App {
 
 	save_project = (id: Project_Id): void => {
 		console.log('save_project', id);
-		const project_data = this.project_datas.peek().find((p) => p.id === id);
+		const project_data = this.project_datas.find((p) => p.id === id);
 		set_in_storage(id, project_data); // correctly deletes the storage key if `undefined`
-		const app_data = this.app_data.peek();
+		const app_data = this.app_data;
 		const {projects} = app_data;
 		if (project_data) {
 			if (!projects.some((p) => p.id === id)) {
@@ -218,7 +218,7 @@ export class App {
 		console.log(`loaded`, loaded);
 		if (loaded) {
 			// TODO batch if this code stays imperative like this
-			this.project_datas = this.project_datas.peek().concat(loaded);
+			this.project_datas = this.project_datas.concat(loaded);
 			return loaded;
 		} else {
 			console.log(`load_project failed, creating new`, id);
@@ -234,8 +234,7 @@ export class App {
 			this.selected_project_id = null;
 			return;
 		}
-		const project_data =
-			this.project_datas.peek().find((d) => d.id === id) ?? this.load_project(id);
+		const project_data = this.project_datas.find((d) => d.id === id) ?? this.load_project(id);
 		if (!project_data) console.error('failed to find or load def', id);
 		this.selected_project_id = project_data?.id ?? null;
 		this.selected_realm_id = project_data?.realms[0]?.id ?? null;
@@ -250,7 +249,7 @@ export class App {
 		}
 		this.editing_project = true;
 		const {id} = project_data;
-		const found = this.project_datas.peek().find((d) => d.id === id);
+		const found = this.project_datas.find((d) => d.id === id);
 		if (found) {
 			// existing project
 			this.selected_project_id = id;
@@ -264,19 +263,19 @@ export class App {
 
 	remove_project = (id: Project_Id): void => {
 		console.log('remove_project', id);
-		const {projects} = this.app_data.peek();
+		const {projects} = this.app_data;
 		const existing = projects.find((d) => d.id === id);
 		if (!existing) return;
 		// TODO syncing `app_data` with `projects` is awkward
 		this.app_data = {
-			...this.app_data.peek(),
+			...this.app_data,
 			projects: projects.filter((p) => p.id !== id),
 		};
-		this.project_datas = this.project_datas.peek().filter((p) => p.id !== id);
-		if (this.selected_project_id.peek() === id) {
+		this.project_datas = this.project_datas.filter((p) => p.id !== id);
+		if (this.selected_project_id === id) {
 			this.selected_project_id =
-				this.project_datas.peek()[0]?.id ?? // eslint-disable-line @typescript-eslint/no-unnecessary-condition
-				this.load_project(this.app_data.peek().projects[0]?.id)?.id ??
+				this.project_datas[0]?.id ?? // eslint-disable-line @typescript-eslint/no-unnecessary-condition
+				this.load_project(this.app_data.projects[0]?.id)?.id ??
 				null;
 		}
 		this.save_project(id);
@@ -284,7 +283,7 @@ export class App {
 
 	create_project = (project_data: Project_Data): Project_Data => {
 		console.log('create_project', project_data);
-		const projects = this.project_datas.peek();
+		const projects = this.project_datas;
 		const {id} = project_data;
 		const existing = projects.find((d) => d.id === id);
 		if (existing) {
@@ -293,13 +292,13 @@ export class App {
 		}
 		// TODO syncing `app_data` with `projects` is awkward
 		this.app_data = {
-			...this.app_data.peek(),
-			projects: this.app_data.peek().projects.concat({id, name: project_data.name}),
+			...this.app_data,
+			projects: this.app_data.projects.concat({id, name: project_data.name}),
 		};
 		this.project_datas = projects.concat(project_data);
 		this.selected_project_id = id;
 		this.editing_project = false;
-		if (this.draft_project_data.peek() === project_data) {
+		if (this.draft_project_data === project_data) {
 			this.draft_project_data = null;
 		}
 		this.save_project(id);
@@ -308,7 +307,7 @@ export class App {
 
 	duplicate_project = (id: Project_Id): void => {
 		console.log('duplicate_project_data', id);
-		const projects = this.project_datas.peek();
+		const projects = this.project_datas;
 		const project_data = projects.find((d) => d.id === id);
 		if (!project_data) {
 			console.error('cannot find project_data with id', id);
@@ -328,7 +327,7 @@ export class App {
 
 	update_project = (project_data: Project_Data): void => {
 		console.log('update_project', project_data);
-		const projects = this.project_datas.peek();
+		const projects = this.project_datas;
 		const {id} = project_data;
 		const index = projects.findIndex((p) => p.id === id);
 		if (index === -1) {
@@ -338,7 +337,7 @@ export class App {
 		const existing = projects[index];
 		// TODO syncing `app_data` with `projects` is awkward
 		if (project_data.name !== existing.name) {
-			const app_data = this.app_data.peek();
+			const app_data = this.app_data;
 			this.app_data = {
 				...app_data,
 				projects: app_data.projects.map((p) =>
@@ -358,15 +357,12 @@ export class App {
 			this.selected_realm_id = null;
 			return;
 		}
-		const realm_data = this.realms.peek()?.find((d) => d.id === id);
+		const realm_data = this.realms?.find((d) => d.id === id);
 		if (!realm_data) return; // TODO hm, report an error? how to handle?
 		this.selected_realm_id = id;
 		this.editing_realm_draft = false;
 		// TODO derive instead of manually checking? might not be needed with a restructuring that saves the editing state in the tree
-		if (
-			this.draft_level_data.peek() &&
-			!realm_data.levels.includes(this.draft_level_data.peek()!)
-		) {
+		if (this.draft_level_data && !realm_data.levels.includes(this.draft_level_data)) {
 			this.draft_level_data = null;
 		}
 	};
@@ -380,7 +376,7 @@ export class App {
 		}
 		this.editing_realm = true;
 		const {id} = realm_data;
-		const found = this.realms.peek()?.find((d) => d.id === id);
+		const found = this.realms?.find((d) => d.id === id);
 		if (found) {
 			// existing realm
 			this.selected_realm_id = id;
@@ -394,7 +390,7 @@ export class App {
 
 	remove_realm = (id: Realm_Id): void => {
 		console.log('remove_realm_data', id);
-		const project_data = this.selected_project_data.peek();
+		const project_data = this.selected_project_data;
 		if (!project_data) {
 			console.error('cannot remove realm_data without a project', project_data, id);
 			return; // no active project
@@ -405,10 +401,10 @@ export class App {
 			console.error('cannot find realm_data with id', id);
 			return;
 		}
-		if (id === this.editing_realm_id.peek()) {
+		if (id === this.editing_realm_id) {
 			this.editing_realm = false; // TODO move to component?
 		}
-		if (id === this.selected_realm_id.peek()) {
+		if (id === this.selected_realm_id) {
 			this.selected_realm_id = null;
 		}
 		this.update_project({
@@ -419,7 +415,7 @@ export class App {
 
 	duplicate_realm = (id: Realm_Id): void => {
 		console.log('duplicate_realm_data', id);
-		const project_data = this.selected_project_data.peek();
+		const project_data = this.selected_project_data;
 		if (!project_data) {
 			console.error('cannot duplicate realm_data without a project', project_data, id);
 			return; // no active project
@@ -439,7 +435,7 @@ export class App {
 
 	create_realm = (realm_data: Realm_Data): void => {
 		console.log('create_realm', realm_data);
-		const project_data = this.selected_project_data.peek();
+		const project_data = this.selected_project_data;
 		if (!project_data) {
 			console.error('cannot create a realm_data without a project', project_data, realm_data);
 			return; // no active project
@@ -456,14 +452,14 @@ export class App {
 		this.update_project({...project_data, realms: realms.concat(realm_data)});
 		this.selected_realm_id = realm_data.id;
 		// TODO is awkward but works, should it be an effect?
-		if (this.draft_realm_data.peek()?.id === realm_data.id) {
+		if (this.draft_realm_data?.id === realm_data.id) {
 			this.editing_realm = false;
 		}
 	};
 
 	update_realm = (realm_data: Realm_Data): void => {
 		console.log('update_realm_data', realm_data);
-		const project_data = this.selected_project_data.peek();
+		const project_data = this.selected_project_data;
 		if (!project_data) {
 			console.error('cannot update realm_data without a project', project_data, realm_data);
 			return; // no active project
@@ -483,7 +479,7 @@ export class App {
 
 	play_level = async (id: Level_Id): Promise<void> => {
 		console.log('play_level', id);
-		const level_data = this.levels.peek()?.find((d) => d.id === id);
+		const level_data = this.levels?.find((d) => d.id === id);
 		if (!level_data) {
 			console.error('cannot find level_data with id', id);
 			return;
@@ -500,7 +496,7 @@ export class App {
 
 	remove_level = (id: Level_Id): void => {
 		console.log('remove_level', id);
-		const project_data = this.selected_project_data.peek();
+		const project_data = this.selected_project_data;
 		if (!project_data) {
 			console.error('cannot remove level_data without a project', project_data, id);
 			return; // no active project
@@ -527,13 +523,13 @@ export class App {
 	// TODO inconsistent naming with `realm` having the `_def` prefix here
 	create_level = (level_data: Level_Data): void => {
 		console.log('create_level', level_data);
-		const project_data = this.selected_project_data.peek();
+		const project_data = this.selected_project_data;
 		if (!project_data) {
 			console.error('cannot create level_data without a project', project_data, level_data);
 			return; // no active project
 		}
 		const {realms} = project_data;
-		const realm_data = this.selected_realm_data.peek();
+		const realm_data = this.selected_realm_data;
 		if (!realm_data) {
 			console.error('cannot create level_data without a selected realm');
 			return;
@@ -566,7 +562,7 @@ export class App {
 
 	duplicate_level = (id: Level_Id): void => {
 		console.log('duplicate_level_data', id);
-		const realm_data = this.selected_realm_data.peek();
+		const realm_data = this.selected_realm_data;
 		if (!realm_data) {
 			console.error('cannot duplicate level_data without a realm', realm_data, id);
 			return; // no active realm
@@ -586,7 +582,7 @@ export class App {
 
 	update_level = (level_data: Level_Data): void => {
 		console.log('update_level', level_data);
-		const project_data = this.selected_project_data.peek();
+		const project_data = this.selected_project_data;
 		if (!project_data) {
 			console.error('cannot update level_data without a project', project_data, level_data);
 			return; // no active project
@@ -610,7 +606,7 @@ export class App {
 	};
 
 	register_success = (id: Level_Id, mistakes: number): void => {
-		const project_data = this.selected_project_data.peek();
+		const project_data = this.selected_project_data;
 		if (!project_data) return;
 		this.update_project({
 			...project_data,
@@ -622,11 +618,11 @@ export class App {
 	 * Sets the level data.
 	 */
 	set_active_level_data(value: Level_Data | null): void {
-		if (this.active_level_data.peek() === value) {
+		if (this.active_level_data === value) {
 			return;
 		}
 		console.log('setting `active_level_data`', value);
-		this.level.peek()?.dispose(); // TODO better way to do this? doing it in the `this.level` derived is hacky
+		this.level?.dispose(); // TODO better way to do this? doing it in the `this.level` derived is hacky
 		this.active_level_data = value;
 	}
 

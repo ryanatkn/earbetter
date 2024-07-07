@@ -16,7 +16,7 @@ export const reset_midi_access = (state: {midi_access: MIDIAccess | null}): void
 export const request_access = async (state: {
 	midi_access: MIDIAccess | null;
 }): Promise<MIDIAccess | null> => {
-	const existing = state.midi_access.peek();
+	const existing = state.midi_access;
 	if (existing) {
 		return existing;
 	}
