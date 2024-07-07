@@ -10,9 +10,9 @@
 
 	const {app, levels}: Props = $props();
 
-	const {selected_realm_data, editing_level, draft_level_data, edit_level} = $derived(app);
-
-	const editing_draft = $derived($editing_level && !levels.some((d) => d === $draft_level_data));
+	const editing_draft = $derived(
+		app.editing_level && !levels.some((d) => d === app.draft_level_data),
+	);
 
 	const no_levels = $derived(!levels.length);
 
@@ -24,7 +24,7 @@
 			// eslint-disable-next-line @typescript-eslint/no-unnecessary-type-assertion
 			(document.querySelector('.level_def_form input') as HTMLInputElement | null)?.focus(); // TODO hacky using the selector
 		} else {
-			edit_level(editing_draft ? null : Level_Data.parse({}));
+			app.edit_level(editing_draft ? null : Level_Data.parse({}));
 		}
 	};
 </script>
@@ -32,7 +32,7 @@
 <div class="panel p_md">
 	<header>
 		<h2 class="my_0">levels</h2>
-		<h3 class="my_0">{$selected_realm_data?.name}</h3>
+		<h3 class="my_0">{app.selected_realm_data?.name}</h3>
 	</header>
 	<menu class="levels unstyled">
 		{#each levels as d (d.id)}

@@ -9,22 +9,13 @@
 
 	const {app}: Props = $props();
 
-	const {
-		app_data,
-		project_datas,
-		selected_project_id,
-		editing_project,
-		editing_project_id,
-		editing_project_data,
-		load_project,
-		select_project,
-		edit_project,
-		remove_project,
-	} = $derived(app);
+	const {load_project, select_project, edit_project, remove_project} = $derived(app);
 
-	const creating = $derived($editing_project && $selected_project_id !== $editing_project_id);
+	const creating = $derived(
+		app.editing_project && app.selected_project_id !== app.editing_project_id,
+	);
 
-	const {projects} = $derived($app_data);
+	const {projects} = $derived(app.app_data);
 </script>
 
 <div class="panel p_md">
@@ -32,13 +23,14 @@
 		<h2 class="my_0">projects</h2>
 	</header>
 	<Project_Items
-		selected_project_id={$selected_project_id}
-		editing_project_id={$editing_project ? $editing_project_id : null}
+		selected_project_id={app.selected_project_id}
+		editing_project_id={app.editing_project ? app.editing_project_id : null}
 		{projects}
-		project_datas={$project_datas}
+		project_datas={app.project_datas}
 		{load_project}
 		{select_project}
-		edit_project={(p) => edit_project(p === $editing_project_data && $editing_project ? null : p)}
+		edit_project={(p) =>
+			edit_project(p === app.editing_project_data && app.editing_project ? null : p)}
 		{remove_project}
 	/>
 	<button
@@ -47,7 +39,7 @@
 		class:selected={creating}
 		onclick={() => {
 			if (creating) {
-				editing_project.value = false;
+				app.editing_project = false;
 			} else {
 				edit_project(Project_Data.parse({}));
 			}

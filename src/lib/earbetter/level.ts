@@ -95,7 +95,7 @@ export class Level {
 
 	start = (): void => {
 		console.log('start level');
-		if (this.status.peek() !== 'initial') return;
+		if (this.status !== 'initial') return;
 		this.next_trial();
 	};
 

@@ -9,7 +9,7 @@
 
 	const {instrument}: Props = $props();
 
-	// TODO remove after signals adds `set` so we can use two-way binding
+	// TODO BLOCK event callback or $bindable
 	const input = (e: any) => (instrument.value = e.currentTarget.value);
 </script>
 

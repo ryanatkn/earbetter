@@ -9,19 +9,11 @@
 
 	const {app}: Props = $props();
 
-	const {
-		project_datas: projects,
-		editing_project,
-		editing_project_data, // TODO review this and with `project_data` below
-		remove_project,
-		duplicate_project,
-		update_project,
-		create_project,
-	} = $derived(app);
+	const {remove_project, duplicate_project, update_project, create_project} = $derived(app);
 
-	const project_data = $derived($editing_project_data ?? Project_Data.parse({}));
+	const project_data = $derived(app.editing_project_data ?? Project_Data.parse({}));
 
-	const editing = $derived($projects.some((d) => d.id === project_data.id));
+	const editing = $derived(app.project_datas.some((d) => d.id === project_data.id));
 </script>
 
 <div class="panel p_md">
@@ -31,6 +23,6 @@
 		onsubmit={editing ? update_project : create_project}
 		onremove={remove_project}
 		onduplicate={duplicate_project}
-		onclose={() => (editing_project.value = false)}
+		onclose={() => (app.editing_project = false)}
 	/>
 </div>

@@ -21,7 +21,6 @@
 	import {get_app} from '$lib/earbetter/app.js';
 
 	const app = get_app();
-	const {playing_notes, midi_access, volume, instrument, scale, key, enabled_notes} = $derived(app);
 
 	// TODO extract? is pretty specific
 	const Piano_Settings = z.object({
@@ -45,15 +44,15 @@
 
 	const ac = get_audio_context();
 
-	const pressed_keys = $derived($playing_notes);
+	const pressed_keys = $derived(app.playing_notes);
 
 	let clientWidth: number | undefined = $state();
 
 	const piano_padding = 20;
 
 	const play = (note: Midi, velocity: number | null = null): void => {
-		if (!$enabled_notes || $enabled_notes.has(note)) {
-			start_playing(app, ac(), note, with_velocity($volume, velocity), $instrument);
+		if (!app.enabled_notes || app.enabled_notes.has(note)) {
+			start_playing(app, ac(), note, with_velocity(app.volume, velocity), app.instrument);
 		}
 	};
 </script>
@@ -63,7 +62,7 @@
 </svelte:head>
 
 <Midi_Input
-	{midi_access}
+	midi_access={app.midi_access}
 	onnotestart={(note, velocity) => play(note, velocity)}
 	onnotestop={(note) => stop_playing(note)}
 />
@@ -77,7 +76,7 @@
 				{min_note}
 				{max_note}
 				{pressed_keys}
-				enabled_notes={$enabled_notes}
+				enabled_notes={app.enabled_notes}
 				onpress={(note) => play(note)}
 				onrelease={(note) => stop_playing(note)}
 				middle_c_label
@@ -87,11 +86,11 @@
 	</div>
 	<form class="width_sm panel p_md">
 		<fieldset>
-			<Instrument_Control {instrument} />
+			<Instrument_Control instrument={app.instrument} />
 			<div class="row">
-				<Select_Notes_Control {scale} {key} />
+				<Select_Notes_Control scale={app.scale} key={app.key} />
 			</div>
-			<Volume_Control {volume} />
+			<Volume_Control volume={app.volume} />
 		</fieldset>
 		<fieldset>
 			<Init_Midi_Button midi_state={app} />

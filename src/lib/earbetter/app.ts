@@ -52,144 +52,124 @@ export class App {
 	// TODO wheres the source of truth?
 	// currently manually syncing the same changes to both `app_data` `projects` --
 	// mixing serialization concerns with runtime representations
-	app_data: Signal<App_Data>;
+	app_data: App_Data = $state(this.load());
 
 	// TODO does initializing these to the defaults without the app data cause any weirdness? creating them eagerly because we can't do `this.volume = $state(...)` in the constructor
-	volume: Signal<Volume> = signal(DEFAULT_VOLUME);
-	instrument: Signal<Instrument> = signal(DEFAULT_INSTRUMENT);
-	scale: Signal<Scale> = signal(DEFAULT_SCALE);
-	key: Signal<Pitch_Class> = signal(pitch_classes[0]);
-	enabled_notes: Signal<Set<Midi> | null> = computed(() =>
-		this.scale.value.name === 'chromatic'
-			? null
-			: to_notes_in_scale(this.scale.value, this.key.value),
+	volume: Volume = $state(DEFAULT_VOLUME);
+	instrument: Instrument = $state(DEFAULT_INSTRUMENT);
+	scale: Scale = $state(DEFAULT_SCALE);
+	key: Pitch_Class = $state(pitch_classes[0]);
+	enabled_notes: Set<Midi> | null = $derived(
+		this.scale.name === 'chromatic' ? null : to_notes_in_scale(this.scale, this.key),
 	);
-	playing_notes: Signal<Set<Midi>> = signal(new Set());
+	playing_notes: Set<Midi> = $state(new Set());
 
 	/**
 	 * Holds the result of `navigator.requestMIDIAccess`.
 	 */
-	midi_access: Signal<MIDIAccess | null> = signal(null);
+	midi_access: MIDIAccess | null = $state(null);
 
-	show_trainer_help: ReadonlySignal<boolean> = computed(
-		() => this.app_data.value.show_trainer_help,
-	);
+	show_trainer_help: boolean = $derived(this.app_data.show_trainer_help);
 	toggle_trainer_help = (): void => {
-		this.app_data.value = {
+		this.app_data = {
 			...this.app_data.peek(),
 			show_trainer_help: !this.show_trainer_help.peek(),
 		};
 	};
 
-	project_datas: Signal<Project_Data[]> = signal([]); // TODO weird name
+	project_datas: Project_Data[] = $state([]); // TODO weird name
 
-	selected_project_id: Signal<Project_Id | null> = signal(null);
-	selected_project_data: ReadonlySignal<Project_Data | null> = computed(() => {
-		const id = this.selected_project_id.value;
-		return this.project_datas.value.find((p) => p.id === id) ?? null;
-	});
-	realms: ReadonlySignal<Realm_Data[] | null> = computed(
-		() => this.selected_project_data.value?.realms ?? null,
+	selected_project_id: Project_Id | null = $state(null);
+	selected_project_data: Project_Data | null = $derived(
+		this.project_datas.find((p) => p.id === this.selected_project_id) ?? null,
 	);
-	editing_project: Signal<boolean> = signal(false);
-	editing_project_draft: Signal<boolean> = signal(false);
-	draft_project_data: Signal<Project_Data | null> = signal(null);
-	editing_project_id: ReadonlySignal<Project_Id | null> = computed(() =>
-		this.editing_project_draft.value
-			? this.draft_project_data.value?.id ?? null
-			: this.selected_project_data.value?.id ?? null,
+	realms: Realm_Data[] | null = $derived(this.selected_project_data?.realms ?? null);
+	editing_project: boolean = $state(false);
+	editing_project_draft: boolean = $state(false);
+	draft_project_data: Project_Data | null = $state(null);
+	editing_project_id: Project_Id | null = $derived(
+		this.editing_project_draft
+			? this.draft_project_data?.id ?? null
+			: this.selected_project_data?.id ?? null,
 	); // this may be `selected_project_data`, or a new project def draft that hasn't been created yet
-	editing_project_data: ReadonlySignal<Project_Data | null> = computed(() =>
-		this.editing_project_draft.value
-			? this.draft_project_data.value
-			: this.selected_project_data.value,
+	editing_project_data: Project_Data | null = $derived(
+		this.editing_project_draft ? this.draft_project_data : this.selected_project_data,
 	);
 
-	selected_realm_id: Signal<Realm_Id | null> = signal(null);
-	selected_realm_data: ReadonlySignal<Realm_Data | null> = computed(() => {
-		const id = this.selected_realm_id.value;
-		return this.realms.value?.find((p) => p.id === id) ?? null;
-	});
-	editing_realm: Signal<boolean> = signal(false);
-	editing_realm_draft: Signal<boolean> = signal(false);
-	draft_realm_data: Signal<Realm_Data | null> = signal(null);
-	editing_realm_id: ReadonlySignal<Realm_Id | null> = computed(() =>
-		this.editing_realm_draft.value
-			? this.draft_realm_data.value?.id ?? null
-			: this.selected_realm_data.value?.id ?? null,
+	selected_realm_id: Realm_Id | null = $state(null);
+	selected_realm_data: Realm_Data | null = $derived(
+		this.realms?.find((p) => p.id === this.selected_realm_id) ?? null,
+	);
+	editing_realm: boolean = $state(false);
+	editing_realm_draft: boolean = $state(false);
+	draft_realm_data: Realm_Data | null = $state(null);
+	editing_realm_id: Realm_Id | null = $derived(
+		this.editing_realm_draft
+			? this.draft_realm_data?.id ?? null
+			: this.selected_realm_data?.id ?? null,
 	); // this may be `selected_realm_data`, or a new realm def draft that hasn't been created yet
-	editing_realm_data: ReadonlySignal<Realm_Data | null> = computed(() =>
-		this.editing_realm_draft.value ? this.draft_realm_data.value : this.selected_realm_data.value,
+	editing_realm_data: Realm_Data | null = $derived(
+		this.editing_realm_draft ? this.draft_realm_data : this.selected_realm_data,
 	);
 
 	/**
 	 * Sourced from the URL hash on the `/level` route.
 	 */
-	active_level_data: Signal<Level_Data | null> = signal(null);
+	active_level_data: Level_Data | null = $state(null);
 
-	level: ReadonlySignal<Level | null> = computed(() => {
-		console.log('computing level', this.active_level_data.value);
-		return this.active_level_data.value
-			? new Level(
-					this,
-					this.active_level_data.value,
-					this.get_audio_context,
-					this.volume,
-					this.instrument,
-					this.register_success,
-				)
+	level: Level | null = $derived.by(() => {
+		console.log('computing level', this.active_level_data);
+		return this.active_level_data
+			? new Level(this, this.active_level_data, this.get_audio_context, this.register_success)
 			: null;
 	});
 
-	levels: ReadonlySignal<Level_Data[] | null> = computed(
-		() => this.selected_realm_data.value?.levels ?? null,
-	);
-	editing_level: Signal<boolean> = signal(false);
-	draft_level_data: Signal<Level_Data | null> = signal(null);
+	levels: Level_Data[] | null = $derived(this.selected_realm_data?.levels ?? null);
+	editing_level: boolean = $state(false);
+	draft_level_data: Level_Data | null = $state(null);
 
 	constructor(
 		public readonly get_audio_context: () => AudioContext,
 		initial_site_data: Site_Data | null = null,
 		public readonly storage_key = 'app',
 	) {
-		this.app_data = signal(this.load());
-		const app_data = this.app_data.peek();
-		console.log(`app_data`, app_data);
+		console.log(`app_data`, this.app_data);
 
 		if (initial_site_data) {
-			this.volume.value = initial_site_data.volume;
-			this.instrument.value = initial_site_data.instrument;
-			this.scale.value = initial_site_data.scale;
-			this.key.value = initial_site_data.key;
+			this.volume = initial_site_data.volume;
+			this.instrument = initial_site_data.instrument;
+			this.scale = initial_site_data.scale;
+			this.key = initial_site_data.key;
 		}
 
 		// TODO refactor
-		const {selected_project_id} = app_data;
+		const {selected_project_id} = this.app_data;
 		const project_data = this.load_project(
 			selected_project_id ?? // eslint-disable-line @typescript-eslint/no-unnecessary-condition
-				app_data.projects[0]?.id ??
+				this.app_data.projects[0]?.id ??
 				this.create_project(default_project_data()).id,
 		)!;
-		this.selected_project_id.value = project_data.id;
-		this.selected_realm_id.value = app_data.selected_realm_id ?? project_data.realms[0]?.id ?? null; // eslint-disable-line @typescript-eslint/no-unnecessary-condition
+		this.selected_project_id = project_data.id;
+		this.selected_realm_id = this.app_data.selected_realm_id ?? project_data.realms[0]?.id ?? null; // eslint-disable-line @typescript-eslint/no-unnecessary-condition
+		// TODO rethink how this works - is setting state inside an $effect, and in a constructor
 		// save changes to `selected_project_id` and `selected_realm_id` back to the `app_data`,
 		// these could be decoupled but are often fired together
-		effect(() => {
+		$effect(() => {
 			const app_data = this.app_data.peek();
-			const selected_project_id = this.selected_project_id.value;
-			const selected_realm_id = this.selected_realm_id.value;
+			const selected_project_id = this.selected_project_id;
+			const selected_realm_id = this.selected_realm_id;
 			if (
 				selected_project_id !== app_data.selected_project_id ||
 				selected_realm_id !== app_data.selected_realm_id
 			) {
-				this.app_data.value = {...app_data, selected_project_id, selected_realm_id};
+				this.app_data = {...app_data, selected_project_id, selected_realm_id};
 			}
 		});
 	}
 
 	// returns a stable reference to data that's immutable by convention
 	toJSON(): App_Data {
-		return this.app_data.value;
+		return this.app_data;
 	}
 
 	load(): App_Data {
@@ -207,9 +187,8 @@ export class App {
 		return loaded;
 	}
 
-	save(): void {
+	save(data: App_Data): void {
 		console.log('save');
-		const data = this.toJSON();
 		set_in_storage(this.storage_key, data);
 	}
 

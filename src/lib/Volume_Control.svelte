@@ -9,7 +9,7 @@
 
 	const {volume}: Props = $props();
 
-	// TODO use bind:value when signals adds `set`
+	// TODO BLOCK event callback or $bindable
 </script>
 
 <label class="text_align_center">

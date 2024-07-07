@@ -23,7 +23,6 @@
 	 */
 
 	const app = get_app();
-	const {volume, instrument} = app;
 
 	const main_menu = get_main_menu();
 	afterNavigate(() => main_menu.opened && main_menu.close());
@@ -56,8 +55,8 @@
 	<section>
 		<h2 class="section_title">settings</h2>
 		<form class="section_body">
-			<Volume_Control {volume} />
-			<Instrument_Control {instrument} />
+			<Volume_Control volume={app.volume} />
+			<Instrument_Control instrument={app.instrument} />
 			<aside>Earbetter supports MIDI devices like piano keyboards, connect and click:</aside>
 			<Init_Midi_Button midi_state={app} />
 		</form>

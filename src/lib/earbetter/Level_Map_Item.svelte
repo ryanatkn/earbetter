@@ -12,21 +12,12 @@
 
 	const {app, level_data}: Props = $props();
 
-	const {
-		editing_level,
-		draft_level_data,
-		selected_project_data,
-		play_level,
-		edit_level,
-		remove_level,
-	} = $derived(app);
-
 	// TODO hacky - the `editing_this_level` is needed when clicking into a level and going back,
 	// the `draft_level_data` is set but `editing_level` may be false,
 	// and we need to show it selected but not the edit button (needs restructuring for a proper fix)
-	const editing_this_level = $derived($draft_level_data === level_data);
-	const editing = $derived($editing_level && editing_this_level);
-	const level_stats = $derived($selected_project_data?.level_stats);
+	const editing_this_level = $derived(app.draft_level_data === level_data);
+	const editing = $derived(app.editing_level && editing_this_level);
+	const level_stats = $derived(app.selected_project_data?.level_stats);
 
 	let removing = $state(false);
 
@@ -41,7 +32,7 @@
 		type="button"
 		class="level_button deselectable"
 		title="play this level"
-		onclick={() => play_level(level_data.id)}
+		onclick={() => app.play_level(level_data.id)}
 		class:selected
 	>
 		{level_data.name}
@@ -52,7 +43,7 @@
 		class:selected={!removing && editing}
 		title={removing ? 'remove level' : editing ? 'stop editing level' : 'edit level'}
 		onclick={() =>
-			removing ? remove_level(level_data.id) : edit_level(editing ? null : level_data)}
+			removing ? app.remove_level(level_data.id) : app.edit_level(editing ? null : level_data)}
 	>
 		{#if removing}✖{:else}✎{/if}
 	</button>

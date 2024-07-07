@@ -59,17 +59,18 @@
 	// save site data
 	const to_site_data = (): Site_Data => ({
 		// note these have to use `.value`, the `$`-prefix doesn't work for reactivity
-		volume: app.volume.value,
-		instrument: app.instrument.value,
-		scale: app.scale.value,
-		key: app.key.value,
+		volume: app.volume,
+		instrument: app.instrument,
+		scale: app.scale,
+		key: app.key,
 	});
 
 	// TODO @multiple probably refactor, maybe combining the two into one piece of state
 	let inited_site_data_save = false;
 	$effect(() => {
+		const site_data = to_site_data();
 		if (inited_site_data_save) {
-			set_in_storage(SITE_DATA_STORAGE_KEY, to_site_data());
+			set_in_storage(SITE_DATA_STORAGE_KEY, site_data);
 		} else {
 			inited_site_data_save = true;
 		}
@@ -78,8 +79,9 @@
 	// TODO @multiple probably refactor, maybe combining the two into one piece of state
 	let inited_app_save = false;
 	$effect(() => {
+		const data = app.toJSON();
 		if (inited_app_save) {
-			app.save();
+			app.save(data);
 		} else {
 			inited_app_save = true;
 		}
@@ -98,22 +100,22 @@
 			}
 			case '1': {
 				swallow(e);
-				app.instrument.value = 'sawtooth';
+				app.instrument = 'sawtooth';
 				return;
 			}
 			case '2': {
 				swallow(e);
-				app.instrument.value = 'sine';
+				app.instrument = 'sine';
 				return;
 			}
 			case '3': {
 				swallow(e);
-				app.instrument.value = 'square';
+				app.instrument = 'square';
 				return;
 			}
 			case '4': {
 				swallow(e);
-				app.instrument.value = 'triangle';
+				app.instrument = 'triangle';
 				return;
 			}
 			case 'ArrowUp': {

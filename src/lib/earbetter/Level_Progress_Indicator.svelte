@@ -7,8 +7,6 @@
 
 	const {level}: Props = $props();
 
-	const {level_data, trial, status, trials} = $derived(level);
-
 	const to_bg_color = (s: Status, t: Trial | null, ts: Trial[], index: number): string => {
 		return s === 'complete'
 			? 'var(--lighten_5)'
@@ -20,15 +18,19 @@
 	};
 
 	const percent_complete = $derived(
-		$status === 'complete' ? 1 : $trial ? ($trial.index + 0.5) / level_data.trial_count : 0,
+		level.status === 'complete'
+			? 1
+			: level.trial
+				? (level.trial.index + 0.5) / level.level_data.trial_count
+				: 0,
 	);
 </script>
 
 <div class="level_progress_indicator" style:--progress_bar_percent={percent_complete}>
-	{#each {length: level_data.trial_count} as _, index}
+	{#each {length: level.level_data.trial_count} as _, index}
 		<div
 			class="level"
-			style:background-color={to_bg_color($status, $trial, $trials, index)}
+			style:background-color={to_bg_color(level.status, level.trial, level.trials, index)}
 			aria-hidden="true"
 		></div>
 	{/each}

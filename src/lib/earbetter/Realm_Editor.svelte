@@ -9,23 +9,14 @@
 
 	const {app}: Props = $props();
 
-	const {
-		realms,
-		selected_realm_data,
-		editing_realm,
-		editing_realm_data,
-		remove_realm,
-		duplicate_realm,
-		update_realm,
-		create_realm,
-	} = $derived(app);
+	const {remove_realm, duplicate_realm, update_realm, create_realm} = $derived(app);
 
-	const realm_data = $derived($editing_realm_data ?? Realm_Data.parse({}));
+	const realm_data = $derived(app.editing_realm_data ?? Realm_Data.parse({}));
 
-	const editing = $derived($realms ? $realms.some((d) => d.id === realm_data.id) : false);
+	const editing = $derived(app.realms ? app.realms.some((d) => d.id === realm_data.id) : false);
 
-	$inspect(`$selected_realm_data`, $selected_realm_data);
-	$inspect(`$realms`, $realms);
+	$inspect(`app.selected_realm_data`, app.selected_realm_data);
+	$inspect(`app.realms`, app.realms);
 </script>
 
 <div class="panel p_md">
@@ -35,6 +26,6 @@
 		onsubmit={editing ? update_realm : create_realm}
 		onremove={(realm_id) => remove_realm(realm_id)}
 		onduplicate={(realm_id) => duplicate_realm(realm_id)}
-		onclose={() => (editing_realm.value = false)}
+		onclose={() => (app.editing_realm = false)}
 	/>
 </div>
