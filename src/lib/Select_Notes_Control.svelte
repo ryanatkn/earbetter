@@ -16,7 +16,7 @@
 
 	let {scale = $bindable(), key = $bindable()}: Props = $props();
 
-	// TODO BLOCK event callback or $bindable here and below
+	// TODO BLOCK @multiple event callback or $bindable here and below
 	const input_key = (e: Event & {currentTarget: HTMLSelectElement}) =>
 		(key = e.currentTarget.value as Pitch_Class);
 </script>
