@@ -1,6 +1,5 @@
 import {goto} from '$app/navigation';
 import {z} from 'zod';
-import {signal, type Signal, computed, effect, type ReadonlySignal} from '@preact/signals-core';
 import {getContext, setContext} from 'svelte';
 import {base} from '$app/paths';
 

@@ -6,7 +6,6 @@
 	import Themed from '@ryanatkn/fuz/Themed.svelte';
 	import {is_editable, swallow} from '@ryanatkn/belt/dom.js';
 	import Dialog from '@ryanatkn/fuz/Dialog.svelte';
-	import {effect as preact_effect, untracked} from '@preact/signals-core';
 	import {sync_color_scheme, Themer} from '@ryanatkn/fuz/theme.svelte.js';
 	import type {Snippet} from 'svelte';
 	import {page} from '$app/stores';
@@ -66,17 +65,25 @@
 		key: app.key.value,
 	});
 
-	preact_effect(() => set_in_storage(SITE_DATA_STORAGE_KEY, to_site_data()));
+	// TODO @multiple probably refactor, maybe combining the two into one piece of state
+	let inited_site_data_save = false;
+	$effect(() => {
+		if (inited_site_data_save) {
+			set_in_storage(SITE_DATA_STORAGE_KEY, to_site_data());
+		} else {
+			inited_site_data_save = true;
+		}
+	});
 
-	// TODO hacky but lets us avoid saving on init, what's a cleaner pattern? doesn't make sense to put in `app`
-	let inited_save = false;
-	preact_effect(() => {
-		if (untracked(() => inited_save)) {
+	// TODO @multiple probably refactor, maybe combining the two into one piece of state
+	let inited_app_save = false;
+	$effect(() => {
+		if (inited_app_save) {
 			app.save();
 		} else {
-			inited_save = true;
+			inited_app_save = true;
 		}
-	}); // TODO do effects like this need to be cleaned up or is calling dispose only for special cases?
+	});
 
 	// TODO refactor
 	const keydown = (e: KeyboardEvent) => {

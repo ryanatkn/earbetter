@@ -1,12 +1,11 @@
 import {random_item, random_int} from '@ryanatkn/belt/random.js';
 import {z} from 'zod';
 import type {Flavored} from '@ryanatkn/belt/types.js';
-import {signal, Signal} from '@preact/signals-core';
 import {base} from '$app/paths';
 
 import {Midi, Intervals} from '$lib/music.js';
 import {play_note} from '$lib/play_note.js';
-import type {Instrument, Milliseconds, Volume} from '$lib/audio_helpers.js';
+import type {Milliseconds} from '$lib/audio_helpers.js';
 import {serialize_to_hash} from '$lib/url.js';
 import {to_random_id} from '$lib/id.js';
 import type {Get_Audio_Context} from '$lib/audio_context.js';
@@ -78,20 +77,18 @@ export class Level {
 		public readonly app: App,
 		public readonly level_data: Level_Data, // TODO maybe make optional?
 		public readonly ac: Get_Audio_Context,
-		public readonly volume: Signal<Volume>,
-		public readonly instrument: Signal<Instrument>,
 		protected register_success: (id: Level_Id, mistake_count: number) => void,
 	) {}
 
-	status: Signal<Status> = signal(DEFAULT_STATUS);
-	mistakes: Signal<number> = signal(0);
-	trial: Signal<Trial | null> = signal(DEFAULT_TRIAL);
-	trials: Signal<Trial[]> = signal([]);
-	last_guess: Signal<Midi | null> = signal(null);
+	status: Status = $state(DEFAULT_STATUS);
+	mistakes: number = $state(0);
+	trial: Trial | null = $state(DEFAULT_TRIAL);
+	trials: Trial[] = $state([]);
+	last_guess: Midi | null = $state(null);
 
 	reset = (): void => {
-		this.trial.value = DEFAULT_TRIAL;
-		this.trials.value = [];
+		this.trial = DEFAULT_TRIAL;
+		this.trials = [];
 		this.update_status(DEFAULT_STATUS);
 		this.start();
 	};
@@ -108,7 +105,7 @@ export class Level {
 
 	update_status(value: Status): void {
 		console.log(`update_status`, value);
-		this.status.value = value;
+		this.status = value;
 		// TODO maybe a wait a tick here or refactor? is dependent on being called after changes to e.g. `this.trial`
 		if (value === 'presenting_prompt') {
 			void this.present_trial_prompt();
@@ -121,12 +118,12 @@ export class Level {
 		const $trial = this.trial.peek();
 		if (!$trial) return;
 		console.log('present_trial_prompt', $trial.sequence);
-		this.trial.value = {...$trial, guessing_index: 0};
+		this.trial = {...$trial, guessing_index: 0};
 		const current_seq_id = ++this.seq_id;
 		const sequence_length = $trial.sequence.length;
 		for (let i = 0; i < sequence_length; i++) {
 			const note = $trial.sequence[i];
-			this.trial.value = {
+			this.trial = {
 				...this.trial.peek()!,
 				presenting_index: i,
 			};
@@ -137,13 +134,13 @@ export class Level {
 				this.app,
 				this.ac(),
 				note,
-				this.volume.peek(),
+				this.app.volume.peek(),
 				duration,
-				this.instrument.peek(),
+				this.app.instrument.peek(),
 			);
 			if (current_seq_id !== this.seq_id || !this.trial.peek()) return; // cancel
 		}
-		this.trial.value = {
+		this.trial = {
 			...this.trial.peek()!,
 			presenting_index: null,
 		};
@@ -159,7 +156,7 @@ export class Level {
 		const actual = get_correct_guess_for_trial($trial);
 		console.log('guess', guessing_index, note, actual);
 
-		this.last_guess.value = note;
+		this.last_guess = note;
 
 		// if incorrect -> FAILURE -> showing_failure_feedback -> REPROMPT
 		if (actual !== note) {
@@ -168,15 +165,15 @@ export class Level {
 				this.app,
 				this.ac(),
 				note,
-				this.volume.peek(),
+				this.app.volume.peek(),
 				DEFAULT_NOTE_DURATION_FAILED,
-				this.instrument.peek(),
+				this.app.instrument.peek(),
 			);
 			if (guessing_index === 0 || !$trial.valid_notes.has(note)) {
 				return; // no penalty or delay if this is the first one
 			}
 			// TODO should this be "on enter showing_failure_feedback state" logic?
-			this.mistakes.value = this.mistakes.peek() + 1;
+			this.mistakes = this.mistakes.peek() + 1;
 			this.update_status('showing_failure_feedback');
 			setTimeout(() => this.retry_trial(), DEFAULT_FEEDBACK_DURATION);
 			return;
@@ -186,7 +183,14 @@ export class Level {
 		const sequence_length = $trial.sequence.length;
 		const duration =
 			sequence_length < DEFAULT_SEQUENCE_LENGTH ? DEFAULT_NOTE_DURATION_2 : DEFAULT_NOTE_DURATION; // TODO refactor, see elsewhere
-		void play_note(this.app, this.ac(), note, this.volume.peek(), duration, this.instrument.peek());
+		void play_note(
+			this.app,
+			this.ac(),
+			note,
+			this.app.volume.peek(),
+			duration,
+			this.app.instrument.peek(),
+		);
 
 		if (guessing_index >= sequence_length - 1) {
 			// if more -> update current response index
@@ -202,7 +206,7 @@ export class Level {
 		} else {
 			// SUCCESS -> no status change because we show no visible positive feedback to users until the end
 			console.log('guess correct but not done');
-			this.trial.value = {
+			this.trial = {
 				...$trial,
 				guessing_index: guessing_index + 1,
 			};
@@ -221,7 +225,7 @@ export class Level {
 		const $trial = this.trial.peek();
 		if (!$trial) return;
 		// TODO should this be "on enter presenting_prompt state" logic?
-		this.trial.value = {
+		this.trial = {
 			...$trial,
 			retry_count: $trial.retry_count + 1,
 		};
@@ -236,9 +240,9 @@ export class Level {
 		console.log('next trial', next_trial);
 		// TODO should this be "on enter presenting_prompt state" logic?
 		const $trials = this.trials.peek();
-		if ($trials.length === 0) this.mistakes.value = 0;
-		this.trial.value = next_trial;
-		this.trials.value = [...$trials, next_trial];
+		if ($trials.length === 0) this.mistakes = 0;
+		this.trial = next_trial;
+		this.trials = [...$trials, next_trial];
 		this.update_status('presenting_prompt');
 	};
 
@@ -246,7 +250,7 @@ export class Level {
 		if (this.status.peek() === 'complete') {
 			return;
 		}
-		this.trial.value = null;
+		this.trial = null;
 		this.update_status('complete');
 	};
 

@@ -1,6 +1,5 @@
 <script lang="ts">
 	import {z} from 'zod';
-	import {effect, signal} from '@preact/signals-core';
 	import {goto} from '$app/navigation';
 	import {base} from '$app/paths';
 
@@ -37,15 +36,12 @@
 		Piano_Settings.parse,
 	);
 
-	const min_note = signal(initial_piano_settings.min_note);
-	const max_note = signal(initial_piano_settings.max_note);
+	const min_note = $state(initial_piano_settings.min_note);
+	const max_note = $state(initial_piano_settings.max_note);
 
-	const to_piano_data = (): Piano_Settings => ({
-		min_note: min_note.value,
-		max_note: max_note.value,
-	});
+	const to_piano_data = (): Piano_Settings => ({min_note, max_note});
 	const save_piano_data = () => set_in_storage(SITE_DATA_STORAGE_KEY, to_piano_data());
-	effect(save_piano_data);
+	$effect(save_piano_data);
 
 	const ac = get_audio_context();
 
@@ -78,8 +74,8 @@
 		{#if clientWidth}
 			<Piano
 				width={clientWidth - piano_padding * 2}
-				min_note={$min_note}
-				max_note={$max_note}
+				{min_note}
+				{max_note}
 				{pressed_keys}
 				enabled_notes={$enabled_notes}
 				onpress={(note) => play(note)}
