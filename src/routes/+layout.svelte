@@ -7,7 +7,7 @@
 	import {is_editable, swallow} from '@ryanatkn/belt/dom.js';
 	import Dialog from '@ryanatkn/fuz/Dialog.svelte';
 	import {sync_color_scheme, Themer} from '@ryanatkn/fuz/theme.svelte.js';
-	import type {Snippet} from 'svelte';
+	import {untrack, type Snippet} from 'svelte';
 	import {page} from '$app/stores';
 	import {BROWSER} from 'esm-env';
 
@@ -53,7 +53,8 @@
 		return parsed.success ? parsed.data : null;
 	});
 	$effect(() => {
-		app.set_active_level_data(current_level_hash_data?.level ?? null);
+		const d = current_level_hash_data;
+		untrack(() => app.set_active_level_data(d?.level ?? null));
 	});
 
 	// save site data
