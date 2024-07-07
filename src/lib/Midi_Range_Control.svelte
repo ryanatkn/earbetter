@@ -5,29 +5,29 @@
 	import {midi_names, MIDI_MAX, MIDI_MIN, type Midi} from '$lib/music.js';
 
 	interface Props {
-		min_note: Signal<Midi>;
-		max_note: Signal<Midi>;
+		min_note: Midi;
+		max_note: Midi;
 	}
 
-	const {min_note, max_note}: Props = $props();
+	let {min_note = $bindable(), max_note = $bindable()}: Props = $props();
 
 	const error_message = $derived(
-		$min_note > $max_note ? 'note min cannot be larger than the max' : false,
+		min_note > max_note ? 'note min cannot be larger than the max' : false,
 	);
 
-	// TODO remove and use `bind:` once Signals support it
-	const input_min_note = (e: any) => (min_note.value = Number(e.currentTarget.value));
-	const input_max_note = (e: any) => (max_note.value = Number(e.currentTarget.value));
+	// TODO @multiple see about using `bind:` below if the types are correct
+	const input_min_note = (e: any) => (min_note = Number(e.currentTarget.value));
+	const input_max_note = (e: any) => (max_note = Number(e.currentTarget.value));
 </script>
 
 <div class="midi-range-control" class:error={!!error_message}>
 	<div class="box row">
 		<label class="text_align_center">
 			<div class="title">lowest note</div>
-			<div>{midi_names[$min_note]}</div>
+			<div>{midi_names[min_note]}</div>
 			<input
 				type="range"
-				value={$min_note}
+				value={min_note}
 				oninput={input_min_note}
 				step={1}
 				min={MIDI_MIN}
@@ -35,7 +35,7 @@
 			/>
 			<input
 				type="number"
-				value={$min_note}
+				value={min_note}
 				oninput={input_min_note}
 				step={1}
 				min={MIDI_MIN}
@@ -44,10 +44,10 @@
 		</label>
 		<label class="text_align_center">
 			<div class="title">highest note</div>
-			<div>{midi_names[$max_note]}</div>
+			<div>{midi_names[max_note]}</div>
 			<input
 				type="range"
-				value={$max_note}
+				value={max_note}
 				oninput={input_max_note}
 				step={1}
 				min={MIDI_MIN}
@@ -55,7 +55,7 @@
 			/>
 			<input
 				type="number"
-				value={$max_note}
+				value={max_note}
 				oninput={input_max_note}
 				step={1}
 				min={MIDI_MIN}
