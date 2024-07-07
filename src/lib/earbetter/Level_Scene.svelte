@@ -38,6 +38,7 @@
 	const pressed_keys = $derived(level.status === 'presenting_prompt' ? null : app.playing_notes);
 	const highlighted_keys = $derived(level.trial && new Set([level.trial.sequence[0]]));
 
+	// TODO `onMount` makes this not reactive to `level` changing, need to rethink starting it anyway for the audio context init
 	onMount(() => {
 		level.start(); // TODO problem here is the audio context needs to be resumed, so if it's not ready maybe have a start button
 	});
