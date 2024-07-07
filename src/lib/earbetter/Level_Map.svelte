@@ -73,7 +73,7 @@
 						<h2 class="my_0">controls</h2>
 					</header>
 					<Controls_Instructions />
-					<Volume_Control volume={app.volume} />
+					<Volume_Control bind:volume={app.volume} />
 					<Instrument_Control instrument={app.instrument} />
 					<aside>Earbetter supports MIDI devices like piano keyboards, connect and click:</aside>
 					<Init_Midi_Button midi_state={app} />

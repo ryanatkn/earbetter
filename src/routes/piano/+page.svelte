@@ -90,7 +90,7 @@
 			<div class="row">
 				<Select_Notes_Control scale={app.scale} key={app.key} />
 			</div>
-			<Volume_Control volume={app.volume} />
+			<Volume_Control bind:volume={app.volume} />
 		</fieldset>
 		<fieldset>
 			<Init_Midi_Button midi_state={app} />
