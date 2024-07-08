@@ -23,21 +23,13 @@
 	// TODO @multiple review this effect to try to remove it
 	$effect(() => {
 		updated_scale = scale;
-		// TODO probably `onscale?.(updated_scale);`
-	});
-	$effect(() => {
-		updated_octaves = octaves;
-		// TODO probably `onoctaves?.(updated_octaves);`
-	});
-	// TODO @multiple review this effect to try to remove it
-	// TODO (look above) hacky, could use oninput handlers but
-	// the scale select needs to wait a tick to get `updated_scale`,
-	// unlike the octave range input, maybe a bug?
-	$effect(() => {
 		if (scale !== updated_scale) {
 			console.log('onscale', updated_scale);
 			onscale?.(updated_scale);
 		}
+	});
+	$effect(() => {
+		updated_octaves = octaves;
 		if (octaves !== updated_octaves) {
 			console.log('onoctaves', updated_octaves);
 			onoctaves?.(updated_octaves);
