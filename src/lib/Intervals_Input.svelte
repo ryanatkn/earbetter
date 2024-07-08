@@ -30,17 +30,37 @@
 
 	// TODO visualize the intervals with a piano
 	const intervals_from_scale_and_octave = $derived(to_scale_notes(scale, octaves));
+	const serizlized_intervals_from_scale_and_octave = $derived(
+		serialize_intervals(intervals_from_scale_and_octave),
+	);
 
-	let input_intervals_str = $state(serialize_intervals(intervals));
-	const parsed_input_intervals = $derived(parse_intervals(input_intervals_str));
+	const serialized_intervals = $state(serialize_intervals(intervals));
+	let input_intervals_str = $state(serialized_intervals);
 
-	const changed = $derived(!dequal(intervals, parsed_input_intervals));
-	const valid = $derived(!!parsed_input_intervals.length);
+	// The order here matters, on init we want the prop intervals to be the source of truth.
+	const last_time_intervals_from_scale_and_octave_changed = $derived.by(() => {
+		intervals_from_scale_and_octave;
+		return Date.now();
+	});
+	const last_time_intervals_changed = $derived.by(() => {
+		intervals;
+		return Date.now();
+	});
+
+	const current_str = $derived(
+		last_time_intervals_changed >= last_time_intervals_from_scale_and_octave_changed
+			? input_intervals_str
+			: serizlized_intervals_from_scale_and_octave,
+	);
+	const current_intervals = $derived(parse_intervals(current_str));
+
+	const changed = $derived(!dequal(intervals, current_intervals));
+	const valid = $derived(!!current_intervals.length);
 </script>
 
 <small
 	><textarea
-		value={input_intervals_str}
+		value={current_str}
 		oninput={(e) => (input_intervals_str = e.currentTarget.value)}
 		class="preview width_sm panel"
 	></textarea></small
@@ -49,7 +69,7 @@
 	type="button"
 	class="mb_lg"
 	disabled={!changed || !valid}
-	onclick={() => oninput?.(parse_intervals(input_intervals_str), scale, octaves)}
+	onclick={() => oninput?.(current_intervals, scale, octaves)}
 >
 	use these intervals
 </button>
