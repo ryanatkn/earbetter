@@ -29,17 +29,13 @@
 	}: Props = $props();
 
 	// TODO visualize the intervals with a piano
-	const updated_intervals: Intervals = $derived(to_scale_notes(scale, octaves));
-
-	// TODO extract helpers
+	const intervals_from_scale_and_octave = $derived(to_scale_notes(scale, octaves));
 
 	let input_intervals_str = $state(serialize_intervals(intervals));
 	const parsed_input_intervals = $derived(parse_intervals(input_intervals_str));
 
 	const changed = $derived(!dequal(intervals, parsed_input_intervals));
 	const valid = $derived(!!parsed_input_intervals.length);
-
-	// TODO next UX: discard/use buttons where the latter gets disabled, and a cancel button if unchanged
 </script>
 
 <small
