@@ -63,7 +63,7 @@ export class App {
 	enabled_notes: Set<Midi> | null = $derived(
 		this.scale.name === 'chromatic' ? null : to_notes_in_scale(this.scale, this.key),
 	);
-	pressed_keys: Set<Midi> = new SvelteSet();
+	playing_notes: SvelteSet<Midi> = new SvelteSet();
 
 	/**
 	 * Holds the result of `navigator.requestMIDIAccess`.

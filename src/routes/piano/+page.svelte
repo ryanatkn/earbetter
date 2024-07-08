@@ -44,7 +44,7 @@
 
 	const ac = get_audio_context();
 
-	const {pressed_keys} = app;
+	const {playing_notes} = app;
 
 	let clientWidth: number | undefined = $state();
 
@@ -75,7 +75,7 @@
 				width={clientWidth - piano_padding * 2}
 				{min_note}
 				{max_note}
-				{pressed_keys}
+				pressed_keys={playing_notes}
 				enabled_notes={app.enabled_notes}
 				onpress={(note) => play(note)}
 				onrelease={(note) => stop_playing(note)}
