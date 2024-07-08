@@ -2,6 +2,7 @@
 	import {slide} from 'svelte/transition';
 	import Dialog from '@ryanatkn/fuz/Dialog.svelte';
 	import Alert from '@ryanatkn/fuz/Alert.svelte';
+	import {dequal} from 'dequal';
 
 	import {create_level_id, Level_Data, type Level_Id} from '$lib/earbetter/level.svelte.js';
 	import {
@@ -89,9 +90,9 @@
 			updated_sequence_length !== level_data.sequence_length ||
 			updated_min_note !== level_data.min_note ||
 			updated_max_note !== level_data.max_note ||
-			updated_intervals.toString() !== level_data.intervals.toString() ||
-			normalized_updated_tonics?.toString() !== level_data.tonics?.toString(),
-	); // TODO speed these comparisons up
+			!dequal(updated_intervals, level_data.intervals) ||
+			!dequal(normalized_updated_tonics, level_data.tonics),
+	);
 
 	// TODO lots of similarity with `Project_Form`
 	let importing = $state(false);
