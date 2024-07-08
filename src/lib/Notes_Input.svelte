@@ -1,6 +1,7 @@
 <script lang="ts">
 	import {plural} from '@ryanatkn/belt/string.js';
 	import type {Snippet} from 'svelte';
+	import type {SvelteSet} from 'svelte/reactivity';
 
 	import Piano from '$lib/Piano.svelte';
 	import {get_audio_context} from '$lib/audio_context.js';
@@ -28,7 +29,7 @@
 		audio_state: {
 			volume: Volume;
 			instrument: Instrument;
-			playing_notes: Set<Midi>;
+			playing_notes: SvelteSet<Midi>;
 			midi_access: MIDIAccess | null;
 		};
 		notes: Set<Midi>;
@@ -39,6 +40,8 @@
 	}
 
 	const {audio_state, notes, min_note, max_note, before_buttons, oninput}: Props = $props();
+
+	const {playing_notes} = audio_state;
 
 	// TODO @many set reactivity - refactor these collections to use `svelte/reactivity` sets instead of cloning, upstream and downstream where appropriate
 
@@ -133,7 +136,7 @@
 				{min_note}
 				{max_note}
 				max_height={300}
-				pressed_keys={audio_state.playing_notes}
+				pressed_keys={playing_notes}
 				highlighted_keys={current_notes}
 				middle_c_label
 				allow_sticking

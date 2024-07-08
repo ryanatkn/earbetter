@@ -1,5 +1,6 @@
 <script lang="ts">
 	import type {Snippet} from 'svelte';
+	import type {SvelteSet} from 'svelte/reactivity';
 
 	import Piano_Key from '$lib/Piano_Key.svelte';
 	import {MIDI_MIN, MIDI_MAX, type Midi} from '$lib/music.js';
@@ -11,7 +12,7 @@
 		min_note?: Midi;
 		max_note?: Midi;
 		enabled_notes?: Set<Midi> | null;
-		pressed_keys?: Set<Midi> | null;
+		pressed_keys?: SvelteSet<Midi> | null;
 		highlighted_keys?: Set<Midi> | null;
 		emphasized_keys?: Set<Midi> | null;
 		clickable?: boolean;
