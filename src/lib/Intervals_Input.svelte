@@ -30,7 +30,7 @@
 
 	// TODO visualize the intervals with a piano
 	const intervals_from_scale_and_octave = $derived(to_scale_notes(scale, octaves));
-	const serizlized_intervals_from_scale_and_octave = $derived(
+	const serialized_intervals_from_scale_and_octave = $derived(
 		serialize_intervals(intervals_from_scale_and_octave),
 	);
 
@@ -50,7 +50,7 @@
 	const current_str = $derived(
 		last_time_intervals_changed >= last_time_intervals_from_scale_and_octave_changed
 			? input_intervals_str
-			: serizlized_intervals_from_scale_and_octave,
+			: serialized_intervals_from_scale_and_octave,
 	);
 	const current_intervals = $derived(parse_intervals(current_str));
 
