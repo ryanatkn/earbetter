@@ -89,7 +89,7 @@ export type Semitones = Flavored<z.infer<typeof Semitones>, 'Semitones'>; // TOD
 /**
  * @see https://wikipedia.org/wiki/Interval_(music)
  */
-export const Intervals = z.array(Semitones);
+export const Intervals = z.array(Semitones).readonly();
 export type Intervals = Flavored<z.infer<typeof Intervals>, 'Intervals'>; // TODO @many this doesn't work when used as a schema, use z.brand() instead? or are the egonomics too bad?
 // TODO replace with zod, also probably add a min/max
 export const serialize_intervals = (intervals: Intervals): string => intervals.join(', ');
@@ -328,7 +328,8 @@ export const midi_naturals: Set<Midi> = new Set(
 );
 
 // TODO replace with zod
-export const serialize_notes = (notes: Midi[] | null): string => (notes ? notes.join(', ') : '');
+export const serialize_notes = (notes: readonly Midi[] | null): string =>
+	notes ? notes.join(', ') : '';
 export const parse_notes = (value: string): Midi[] =>
 	value
 		.split(',')
