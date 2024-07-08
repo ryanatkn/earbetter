@@ -91,13 +91,18 @@ export type Semitones = Flavored<z.infer<typeof Semitones>, 'Semitones'>; // TOD
  */
 export const Intervals = z.array(Semitones);
 export type Intervals = Flavored<z.infer<typeof Intervals>, 'Intervals'>; // TODO @multiple this doesn't work when used as a schema, use z.brand() instead? or are the egonomics too bad?
-// TODO replace with zod
+// TODO replace with zod, also probably add a min/max
 export const serialize_intervals = (intervals: Intervals): string => intervals.join(', ');
 export const parse_intervals = (value: string): Intervals =>
-	value
-		.split(',')
-		.map((v) => Number(v.trim()) | 0)
-		.filter(Boolean); // exclude 0 intentionally
+	// TODO use a real `unique` helper
+	Array.from(
+		new Set(
+			value
+				.split(',')
+				.map((v) => parseInt(v, 10))
+				.filter((v) => !!v && v <= MIDI_MAX && v >= -MIDI_MAX), // exclude 0 intentionally
+		),
+	);
 
 /**
  * @see https://wikipedia.org/wiki/Natural_(music)
