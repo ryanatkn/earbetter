@@ -68,7 +68,7 @@
 >
 <button
 	type="button"
-	class="mb_lg"
+	class="accent mb_lg"
 	disabled={!changed || !valid}
 	onclick={() => oninput?.(current_intervals, scale, octaves)}
 >

@@ -87,7 +87,7 @@ header {
 	margin-bottom: var(--space_md);
 }
 
-/* TODO use Moss instead */
+/* TODO use Moss instead, "danger"? */
 .error {
 	--border_color: var(--red);
 	--border_color_dark: hsl(var(--red_hue), 60%, 61%);
