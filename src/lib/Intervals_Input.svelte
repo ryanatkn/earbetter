@@ -37,6 +37,7 @@
 	const serialized_intervals = $state(serialize_intervals(intervals));
 	let input_intervals_str = $state(serialized_intervals);
 
+	// TODO maybe on init, we should figure out a way to use the intervals from the scale and octave when appropriate, but I can't think of when that is right now
 	// The order here matters, on init we want the prop intervals to be the source of truth.
 	const last_time_intervals_from_scale_and_octave_changed = $derived.by(() => {
 		intervals_from_scale_and_octave;
