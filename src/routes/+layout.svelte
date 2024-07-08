@@ -12,7 +12,6 @@
 	import {BROWSER} from 'esm-env';
 
 	import {set_audio_context} from '$lib/audio_context.js';
-	import {adjust_volume} from '$lib/audio_helpers.js';
 	import {request_access} from '$lib/midi_access.js';
 	import {App, set_app} from '$lib/earbetter/app.svelte.js';
 	import {load_from_storage, set_in_storage} from '$lib/storage.js';
@@ -117,16 +116,6 @@
 			case '4': {
 				swallow(e);
 				app.instrument = 'triangle';
-				return;
-			}
-			case 'ArrowUp': {
-				swallow(e);
-				adjust_volume(app);
-				return;
-			}
-			case 'ArrowDown': {
-				swallow(e);
-				adjust_volume(app, -1);
 				return;
 			}
 			case 'Escape': {

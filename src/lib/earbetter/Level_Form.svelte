@@ -11,10 +11,10 @@
 		MIDI_MIN,
 		type Midi,
 		midi_names,
-		Scale,
 		Intervals,
 		serialize_notes,
 		parse_notes,
+		DEFAULT_SCALE,
 	} from '$lib/music.js';
 	import Intervals_Input from '$lib/Intervals_Input.svelte';
 	import Notes_Input from '$lib/Notes_Input.svelte';
@@ -136,10 +136,8 @@
 	// use SvelteKit snapshots for that - https://kit.svelte.dev/docs/snapshots
 	// This is an object instead of as plain values because
 	// Svelte errors on the non-$state `let` updates, and that'll work well with snapshots.
-	const persisted: {scale: Scale | undefined; octaves: number | undefined} = {
-		scale: undefined,
-		octaves: undefined,
-	};
+	let scale = $state(DEFAULT_SCALE);
+	let octaves = $state(1);
 
 	// TODO helper component for measuring? with `let:width` - first look at Svelte's new box bindings
 	let piano_width: number | undefined = $state();
@@ -341,16 +339,17 @@
 		{#snippet children(close)}
 			<div class="bg shadow_d_xl p_xl width_md box">
 				<h2 class="my_0">pick intervals</h2>
+				<!-- TODO maybe `bind:intervals` and remove from `oninput`, but we still need oninput to close the dialog -->
 				<Intervals_Input
-					scale={persisted.scale}
-					octaves={persisted.octaves}
-					onscale={(scale) => (persisted.scale = scale)}
-					onoctaves={(octaves) => (persisted.octaves = octaves)}
+					intervals={updated_intervals}
+					bind:scale
+					bind:octaves
 					oninput={(intervals) => {
 						updated_intervals = intervals;
 						close();
 					}}
 				/>
+				<button type="button" onclick={close}>cancel</button>
 			</div>
 		{/snippet}
 	</Dialog>
@@ -375,7 +374,11 @@
 						updated_tonics = notes;
 						close();
 					}}
-				/>
+				>
+					{#snippet before_buttons()}
+						<button type="button" class="mb_lg" onclick={close}>cancel</button>
+					{/snippet}
+				</Notes_Input>
 			</div>
 		{/snippet}
 	</Dialog>

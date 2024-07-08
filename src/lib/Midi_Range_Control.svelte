@@ -14,10 +14,6 @@
 	const error_message = $derived(
 		min_note > max_note ? 'note min cannot be larger than the max' : false,
 	);
-
-	// TODO @multiple see about using `bind:` below if the types are correct
-	const input_min_note = (e: any) => (min_note = Number(e.currentTarget.value));
-	const input_max_note = (e: any) => (max_note = Number(e.currentTarget.value));
 </script>
 
 <div class="midi-range-control" class:error={!!error_message}>
@@ -25,42 +21,14 @@
 		<label class="text_align_center">
 			<div class="title">lowest note</div>
 			<div>{midi_names[min_note]}</div>
-			<input
-				type="range"
-				value={min_note}
-				oninput={input_min_note}
-				step={1}
-				min={MIDI_MIN}
-				max={MIDI_MAX}
-			/>
-			<input
-				type="number"
-				value={min_note}
-				oninput={input_min_note}
-				step={1}
-				min={MIDI_MIN}
-				max={MIDI_MAX}
-			/>
+			<input type="range" bind:value={min_note} step={1} min={MIDI_MIN} max={MIDI_MAX} />
+			<input type="number" bind:value={min_note} step={1} min={MIDI_MIN} max={MIDI_MAX} />
 		</label>
 		<label class="text_align_center">
 			<div class="title">highest note</div>
 			<div>{midi_names[max_note]}</div>
-			<input
-				type="range"
-				value={max_note}
-				oninput={input_max_note}
-				step={1}
-				min={MIDI_MIN}
-				max={MIDI_MAX}
-			/>
-			<input
-				type="number"
-				value={max_note}
-				oninput={input_max_note}
-				step={1}
-				min={MIDI_MIN}
-				max={MIDI_MAX}
-			/>
+			<input type="range" bind:value={max_note} step={1} min={MIDI_MIN} max={MIDI_MAX} />
+			<input type="number" bind:value={max_note} step={1} min={MIDI_MIN} max={MIDI_MAX} />
 		</label>
 	</div>
 	{#if error_message}

@@ -20,14 +20,12 @@
 	$inspect('scale', scale);
 
 	// TODO @multiple event callback or $bindable here and below
-	const input_key = (e: Event & {currentTarget: HTMLSelectElement}) =>
-		(scale = lookup_scale(e.currentTarget.value));
 </script>
 
 <label class="text_align_center">
 	<div class="title">scale</div>
 	<!-- TODO bind the objects not the names to simplify -->
-	<select value={scale.name} oninput={input_key}>
+	<select value={scale.name} oninput={(e) => (scale = lookup_scale(e.currentTarget.value))}>
 		{#each scales as s (s)}
 			<option value={s.name}>{s.name}</option>
 		{/each}

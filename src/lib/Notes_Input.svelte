@@ -1,5 +1,6 @@
 <script lang="ts">
 	import {plural} from '@ryanatkn/belt/string.js';
+	import type {Snippet} from 'svelte';
 
 	import Piano from '$lib/Piano.svelte';
 	import {get_audio_context} from '$lib/audio_context.js';
@@ -33,10 +34,11 @@
 		notes: Set<Midi>;
 		min_note: Midi;
 		max_note: Midi;
+		before_buttons: Snippet;
 		oninput?: (notes: Midi[] | null) => void; // TODO @multiple set reactivity - API is strange returning an array but taking a set (maybe return both?)
 	}
 
-	const {audio_state, notes, min_note, max_note, oninput}: Props = $props();
+	const {audio_state, notes, min_note, max_note, before_buttons, oninput}: Props = $props();
 
 	// TODO @multiple set reactivity - refactor these collections to use `svelte/reactivity` sets instead of cloning, upstream and downstream where appropriate
 
@@ -182,6 +184,7 @@
 </div>
 
 {#snippet buttons()}
+	{#if before_buttons}{@render before_buttons()}{/if}
 	<button
 		class="mb_lg"
 		type="button"
