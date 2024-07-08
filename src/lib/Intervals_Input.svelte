@@ -15,10 +15,10 @@
 	// TODO @multiple naming convention between `Intervals_Input`/`Notes_Input`/`Select_Notes_Control`?
 
 	interface Props {
-		intervals: Intervals;
+		intervals: Intervals; // TODO maybe make bindable? gets tricky because of the 2 sources of truth
 		scale?: Scale;
 		octaves?: number;
-		oninput?: (intervals: Intervals, scale: Scale, octaves: number) => void;
+		oninput?: (intervals: Intervals, from?: {scale: Scale; octaves: number}) => void;
 	}
 
 	let {
@@ -37,6 +37,7 @@
 	const serialized_intervals = $state(serialize_intervals(intervals));
 	let input_intervals_str = $state(serialized_intervals);
 
+	// TODO this is experimental - is it a good pattern? the point is to share the textarea with 2 sources of truth, this makes it declarative
 	// TODO maybe on init, we should figure out a way to use the intervals from the scale and octave when appropriate, but I can't think of when that is right now
 	// The order here matters, on init we want the prop intervals to be the source of truth.
 	const last_time_intervals_from_scale_and_octave_changed = $derived.by(() => {
@@ -48,10 +49,14 @@
 		return Date.now();
 	});
 
+	const current_is_from_scale_and_octaves = $derived(
+		last_time_intervals_from_scale_and_octave_changed > last_time_intervals_changed, // tie goes to `intervals`
+	);
+
 	const current_str = $derived(
-		last_time_intervals_changed >= last_time_intervals_from_scale_and_octave_changed
-			? input_intervals_str
-			: serialized_intervals_from_scale_and_octave,
+		current_is_from_scale_and_octaves
+			? serialized_intervals_from_scale_and_octave
+			: input_intervals_str,
 	);
 	const current_intervals = $derived(parse_intervals(current_str));
 
@@ -70,7 +75,8 @@
 	type="button"
 	class="mb_lg"
 	disabled={!changed || !valid}
-	onclick={() => oninput?.(current_intervals, scale, octaves)}
+	onclick={() =>
+		oninput?.(current_intervals, current_is_from_scale_and_octaves ? {scale, octaves} : undefined)}
 >
 	use these intervals
 </button>

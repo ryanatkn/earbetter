@@ -339,7 +339,6 @@
 		{#snippet children(close)}
 			<div class="bg shadow_d_xl p_xl width_md box">
 				<h2 class="my_0">pick intervals</h2>
-				<!-- TODO maybe `bind:intervals` and remove from `oninput`, but we still need oninput to close the dialog -->
 				<Intervals_Input
 					intervals={updated_intervals}
 					bind:scale
