@@ -8,12 +8,12 @@
 	import Volume_Control from '$lib/Volume_Control.svelte';
 	import {with_velocity} from '$lib/audio_helpers.js';
 	import Instrument_Control from '$lib/Instrument_Control.svelte';
-	import type {App} from '$lib/earbetter/app.js';
+	import type {App} from '$lib/earbetter/app.svelte.js';
 	import Controls_Instructions from '$lib/earbetter/Controls_Instructions.svelte';
 	import Midi_Input from '$lib/Midi_Input.svelte';
 	import {start_playing, stop_playing} from '$lib/play_note.js';
 	import Realms from '$lib/earbetter/Realms.svelte';
-	import {Level_Data, MISTAKE_HISTORY_LENGTH} from '$lib/earbetter/level.js';
+	import {Level_Data, MISTAKE_HISTORY_LENGTH} from '$lib/earbetter/level.svelte.js';
 	import Realm_Editor from '$lib/earbetter/Realm_Editor.svelte';
 	import Level_Map_Items from '$lib/earbetter/Level_Map_Items.svelte';
 	import Project_Editor from '$lib/earbetter/Project_Editor.svelte';
@@ -25,21 +25,6 @@
 	const {app}: Props = $props();
 
 	const {
-		volume,
-		instrument,
-		midi_access,
-		project_datas: projects,
-		editing_project,
-		editing_project_data,
-		selected_project_data,
-		realms,
-		editing_realm,
-		editing_realm_data,
-		levels,
-		editing_level,
-		draft_level_data,
-		selected_realm_id,
-		show_trainer_help,
 		toggle_trainer_help,
 		play_level,
 		edit_level,
@@ -53,31 +38,31 @@
 	(window as any).ac = ac;
 
 	// TODO review the draft/editing data properties of `app`, some inconsistencies between levels/realms/projects
-	const level_data = $derived($draft_level_data ?? Level_Data.parse({}));
+	const level_data = $derived(app.draft_level_data ?? Level_Data.parse({}));
 
-	const editing = $derived($levels ? $levels.some((d) => d.id === level_data.id) : false);
+	const editing = $derived(app.levels ? app.levels.some((d) => d.id === level_data.id) : false);
 
-	const no_realms = $derived(!$realms?.length);
+	const no_realms = $derived(!app.realms?.length);
 </script>
 
 <Midi_Input
-	{midi_access}
+	midi_access={app.midi_access}
 	onnotestart={(note, velocity) => {
-		start_playing(app, ac(), note, with_velocity($volume, velocity), $instrument);
+		start_playing(app, ac(), note, with_velocity(app.volume, velocity), app.instrument);
 	}}
 	onnotestop={(note) => {
 		stop_playing(note);
 	}}
 />
 <div class="map">
-	{#if $projects.length}
+	{#if app.project_datas.length}
 		<div class="width_sm">
-			{#if $selected_project_data}
+			{#if app.selected_project_data}
 				<section class="card" transition:slide>
 					<Projects {app} />
 				</section>
 			{/if}
-			{#if ($editing_project && $editing_project_data) ?? !$selected_project_data}
+			{#if (app.editing_project && app.editing_project_data) ?? !app.selected_project_data}
 				<section class="card" transition:slide>
 					<Project_Editor {app} />
 				</section>
@@ -88,8 +73,8 @@
 						<h2 class="my_0">controls</h2>
 					</header>
 					<Controls_Instructions />
-					<Volume_Control {volume} />
-					<Instrument_Control {instrument} />
+					<Volume_Control bind:volume={app.volume} />
+					<Instrument_Control bind:instrument={app.instrument} />
 					<aside>Earbetter supports MIDI devices like piano keyboards, connect and click:</aside>
 					<Init_Midi_Button midi_state={app} />
 				</div>
@@ -97,7 +82,7 @@
 		</div>
 	{/if}
 	<div class="width_sm">
-		{#if $show_trainer_help}
+		{#if app.show_trainer_help}
 			<section class="card" transition:slide>
 				<div class="panel p_md">
 					<p>
@@ -130,20 +115,20 @@
 		<section class="card">
 			<Realms {app} />
 		</section>
-		{#if ($editing_realm && $editing_realm_data) ?? no_realms}
+		{#if (app.editing_realm && app.editing_realm_data) ?? no_realms}
 			<section class="card" transition:slide>
 				<Realm_Editor {app} />
 			</section>
 		{/if}
 	</div>
-	{#if $projects.length}
+	{#if app.project_datas.length}
 		<div class="width_sm">
-			{#if $levels}
+			{#if app.levels}
 				<section class="card" transition:slide>
-					<Level_Map_Items {app} levels={$levels} />
+					<Level_Map_Items {app} levels={app.levels} />
 				</section>
 			{/if}
-			{#if $selected_realm_id && (($editing_level && $levels) ?? $levels?.length === 0)}
+			{#if app.selected_realm_id && ((app.editing_level && app.levels) ?? app.levels?.length === 0)}
 				<section class="card" transition:slide>
 					<div class="panel p_md">
 						<Level_Form

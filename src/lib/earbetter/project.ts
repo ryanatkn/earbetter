@@ -2,7 +2,7 @@ import {z} from 'zod';
 import {random_item} from '@ryanatkn/belt/random.js';
 import type {Flavored} from '@ryanatkn/belt/types.js';
 
-import {DEFAULT_LEVEL_STATS, Level_Stats} from '$lib/earbetter/level.js';
+import {DEFAULT_LEVEL_STATS, Level_Stats} from '$lib/earbetter/level.svelte.js';
 import {emojis} from '$lib/emoji.js';
 import {Realm_Data} from '$lib/earbetter/realm.js';
 import {to_random_id} from '$lib/id.js';

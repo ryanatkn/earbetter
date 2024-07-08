@@ -1,7 +1,7 @@
 <script lang="ts">
 	import {fade} from 'svelte/transition';
 
-	import type {Level, Status} from '$lib/earbetter/level.js';
+	import type {Level, Status} from '$lib/earbetter/level.svelte.js';
 
 	interface Props {
 		level: Level;
@@ -9,9 +9,9 @@
 
 	const {level}: Props = $props();
 
-	const {trial, status} = $derived(level);
-
-	const current_index = $derived($trial ? $trial.presenting_index ?? $trial.guessing_index : null);
+	const current_index = $derived(
+		level.trial ? level.trial.presenting_index ?? level.trial.guessing_index : null,
+	);
 
 	const to_bg_color = (s: Status, index: number, current_index: number | null): string =>
 		s === 'showing_failure_feedback'
@@ -25,28 +25,28 @@
 						: 'transparent';
 
 	const percent_complete = $derived(
-		$status === 'initial' || $status === 'showing_failure_feedback'
+		level.status === 'initial' || level.status === 'showing_failure_feedback'
 			? 0
-			: $status === 'complete' || $status === 'showing_success_feedback'
+			: level.status === 'complete' || level.status === 'showing_success_feedback'
 				? 1
-				: $trial?.presenting_index != null
-					? ($trial.presenting_index + 0.5) / $trial.sequence.length
-					: $trial?.guessing_index != null
-						? ($trial.guessing_index + 0.5) / $trial.sequence.length
+				: level.trial?.presenting_index != null
+					? (level.trial.presenting_index + 0.5) / level.trial.sequence.length
+					: level.trial?.guessing_index != null
+						? (level.trial.guessing_index + 0.5) / level.trial.sequence.length
 						: 0,
 	);
 </script>
 
-{#if $trial}
+{#if level.trial}
 	<div
 		class="trial_progress_indicator"
 		style:--progress_bar_percent={percent_complete}
 		transition:fade
 	>
-		{#each {length: $trial.sequence.length} as _, index}
+		{#each {length: level.trial.sequence.length} as _, index}
 			<div
 				class="trial"
-				style:background-color={to_bg_color($status, index, current_index)}
+				style:background-color={to_bg_color(level.status, index, current_index)}
 				aria-hidden="true"
 			></div>
 		{/each}

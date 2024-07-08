@@ -3,7 +3,7 @@
 
 	import {Realm_Data} from '$lib/earbetter/realm.js';
 	import Realm_Items from '$lib/earbetter/Realm_Items.svelte';
-	import type {App} from '$lib/earbetter/app.js';
+	import type {App} from '$lib/earbetter/app.svelte.js';
 
 	interface Props {
 		app: App; // TODO maybe change to be more granular objects?
@@ -11,23 +11,15 @@
 
 	const {app}: Props = $props();
 
-	const {
-		selected_project_data,
-		realms,
-		selected_realm_data,
-		editing_realm,
-		editing_realm_id,
-		editing_realm_data,
-		select_realm,
-		edit_realm,
-		remove_realm,
-	} = $derived(app);
+	const {select_realm, edit_realm, remove_realm} = $derived(app);
 
 	const creating = $derived(
-		$editing_realm && !!$editing_realm_data && $selected_realm_data?.id !== $editing_realm_data.id,
+		app.editing_realm &&
+			!!app.editing_realm_data &&
+			app.selected_realm_data?.id !== app.editing_realm_data.id,
 	);
 
-	const no_realms = $derived(!$realms?.length);
+	const no_realms = $derived(!app.realms?.length);
 
 	const click_create_new = () => {
 		if (no_realms) {
@@ -35,7 +27,7 @@
 			// eslint-disable-next-line @typescript-eslint/no-unnecessary-type-assertion
 			(document.querySelector('.realm_def_form input') as HTMLInputElement | null)?.focus(); // TODO hacky using the selector
 		} else if (creating) {
-			editing_realm.value = false;
+			app.editing_realm = false;
 		} else {
 			edit_realm(Realm_Data.parse({}));
 		}
@@ -46,15 +38,15 @@
 	<header>
 		<h2 class="my_0">realms</h2>
 	</header>
-	{#if $realms && $selected_project_data}
+	{#if app.realms && app.selected_project_data}
 		<div class="pb_md" transition:slide>
 			<Realm_Items
-				project_data={$selected_project_data}
-				selected_realm_data={$selected_realm_data}
-				realms={$realms}
-				editing_realm_id={$editing_realm ? $editing_realm_id : null}
+				project_data={app.selected_project_data}
+				selected_realm_data={app.selected_realm_data}
+				realms={app.realms}
+				editing_realm_id={app.editing_realm ? app.editing_realm_id : null}
 				{select_realm}
-				edit_realm={(p) => edit_realm(p === $editing_realm_data && $editing_realm ? null : p)}
+				edit_realm={(p) => edit_realm(p === app.editing_realm_data && app.editing_realm ? null : p)}
 				{remove_realm}
 			/>
 		</div>

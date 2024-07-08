@@ -1,13 +1,11 @@
 <script lang="ts">
 	import Level_Scene from '$lib/earbetter/Level_Scene.svelte';
-	import {get_app} from '$lib/earbetter/app.js';
+	import {get_app} from '$lib/earbetter/app.svelte.js';
 	import Back_Button from '$routes/Back_Button.svelte';
 
 	const app = get_app();
 
-	const {level, exit_level, selected_project_data} = $derived(app);
-
-	const level_stats = $derived($selected_project_data?.level_stats);
+	const level_stats = $derived(app.selected_project_data?.level_stats);
 </script>
 
 <svelte:head>
@@ -16,9 +14,9 @@
 
 <main>
 	<Back_Button onclick={app.exit_level} />
-	{#if $level && level_stats}
+	{#if app.level && level_stats}
 		<div class="level">
-			<Level_Scene level={$level} {level_stats} {exit_level} />
+			<Level_Scene level={app.level} {level_stats} exit_level={app.exit_level} />
 		</div>
 	{:else}
 		<div class="box h_100">

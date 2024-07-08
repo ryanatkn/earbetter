@@ -3,7 +3,7 @@
 	import Dialog from '@ryanatkn/fuz/Dialog.svelte';
 	import Alert from '@ryanatkn/fuz/Alert.svelte';
 
-	import {create_level_id, Level_Data, type Level_Id} from '$lib/earbetter/level.js';
+	import {create_level_id, Level_Data, type Level_Id} from '$lib/earbetter/level.svelte.js';
 	import {
 		parse_intervals,
 		serialize_intervals,
@@ -20,7 +20,7 @@
 	import Notes_Input from '$lib/Notes_Input.svelte';
 	import Piano from '$lib/Piano.svelte';
 	import Copy_To_Clipboard from '$lib/earbetter/Copy_To_Clipboard.svelte';
-	import {get_app} from '$lib/earbetter/app.js';
+	import {get_app} from '$lib/earbetter/app.svelte.js';
 
 	interface Props {
 		level_data: Level_Data;
@@ -72,7 +72,7 @@
 			max_note: updated_max_note,
 		});
 
-	// TODO review this effect to try to remove it
+	// TODO @multiple review this effect to try to remove it
 	$effect(() => {
 		updated_name = level_data.name;
 		updated_intervals = level_data.intervals;
@@ -101,7 +101,7 @@
 	let updated = $state('');
 	const changed_serialized = $derived(serialized !== updated);
 	let parse_error_message = $state('');
-	// TODO review this effect to try to remove it
+	// TODO @multiple review this effect to try to remove it
 	$effect(() => {
 		level_data;
 		parse_error_message = '';

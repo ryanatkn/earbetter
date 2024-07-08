@@ -1,4 +1,3 @@
-import type {Signal} from '@preact/signals-core';
 import {z} from 'zod';
 import type {Flavored} from '@ryanatkn/belt/types.js';
 import {round} from '@ryanatkn/belt/maths.js';
@@ -20,13 +19,13 @@ export const with_velocity = (volume: Volume, velocity: number | null | undefine
 	Math.sqrt(velocity ?? DEFAULT_VELOCITY) * volume;
 
 export const adjust_volume = (
-	state: {volume: Signal<Volume>},
+	state: {volume: Volume},
 	multiplier = 1,
 	amount = DEFAULT_VOLUME_INCREMENT,
 ): void => {
 	// TODO awkward try/catch, but idk about `safeParse`
 	try {
-		state.volume.value = Volume.parse(state.volume.peek() + amount * multiplier);
+		state.volume = Volume.parse(state.volume + amount * multiplier);
 	} catch (_err) {}
 };
 

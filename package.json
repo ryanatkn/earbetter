@@ -41,7 +41,6 @@
     "node": ">=20.12"
   },
   "devDependencies": {
-    "@preact/signals-core": "^1.6.1",
     "@ryanatkn/belt": "^0.24.4",
     "@ryanatkn/eslint-config": "^0.4.0",
     "@ryanatkn/fuz": "^0.108.3",

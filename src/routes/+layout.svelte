@@ -6,22 +6,21 @@
 	import Themed from '@ryanatkn/fuz/Themed.svelte';
 	import {is_editable, swallow} from '@ryanatkn/belt/dom.js';
 	import Dialog from '@ryanatkn/fuz/Dialog.svelte';
-	import {effect as preact_effect, untracked} from '@preact/signals-core';
 	import {sync_color_scheme, Themer} from '@ryanatkn/fuz/theme.svelte.js';
-	import type {Snippet} from 'svelte';
+	import {untrack, type Snippet} from 'svelte';
 	import {page} from '$app/stores';
 	import {BROWSER} from 'esm-env';
 
 	import {set_audio_context} from '$lib/audio_context.js';
 	import {adjust_volume} from '$lib/audio_helpers.js';
 	import {request_access} from '$lib/midi_access.js';
-	import {App, set_app} from '$lib/earbetter/app.js';
+	import {App, set_app} from '$lib/earbetter/app.svelte.js';
 	import {load_from_storage, set_in_storage} from '$lib/storage.js';
 	import {Site_Data} from '$routes/site_data.js';
 	import Init_Audio_Context from '$lib/Init_Audio_Context.svelte';
 	import Main_Menu from '$routes/Main_Menu.svelte';
 	import {set_main_menu} from '$routes/main_menu_state.svelte.js';
-	import {Level_Hash_Data} from '$lib/earbetter/level.js';
+	import {Level_Hash_Data} from '$lib/earbetter/level.svelte.js';
 	import {parse_from_hash} from '$lib/url.js';
 
 	interface Props {
@@ -54,29 +53,40 @@
 		return parsed.success ? parsed.data : null;
 	});
 	$effect(() => {
-		app.set_active_level_data(current_level_hash_data?.level ?? null);
+		const d = current_level_hash_data;
+		untrack(() => app.set_active_level_data(d?.level ?? null));
 	});
 
 	// save site data
 	const to_site_data = (): Site_Data => ({
 		// note these have to use `.value`, the `$`-prefix doesn't work for reactivity
-		volume: app.volume.value,
-		instrument: app.instrument.value,
-		scale: app.scale.value,
-		key: app.key.value,
+		volume: app.volume,
+		instrument: app.instrument,
+		scale: app.scale,
+		key: app.key,
 	});
 
-	preact_effect(() => set_in_storage(SITE_DATA_STORAGE_KEY, to_site_data()));
-
-	// TODO hacky but lets us avoid saving on init, what's a cleaner pattern? doesn't make sense to put in `app`
-	let inited_save = false;
-	preact_effect(() => {
-		if (untracked(() => inited_save)) {
-			app.save();
+	// TODO @multiple probably refactor, maybe combining the two into one piece of state
+	let inited_site_data_save = false;
+	$effect(() => {
+		const site_data = to_site_data();
+		if (inited_site_data_save) {
+			set_in_storage(SITE_DATA_STORAGE_KEY, site_data);
 		} else {
-			inited_save = true;
+			inited_site_data_save = true;
 		}
-	}); // TODO do effects like this need to be cleaned up or is calling dispose only for special cases?
+	});
+
+	// TODO @multiple probably refactor, maybe combining the two into one piece of state
+	let inited_app_save = false;
+	$effect(() => {
+		const data = app.toJSON();
+		if (inited_app_save) {
+			app.save(data);
+		} else {
+			inited_app_save = true;
+		}
+	});
 
 	// TODO refactor
 	const keydown = (e: KeyboardEvent) => {
@@ -91,22 +101,22 @@
 			}
 			case '1': {
 				swallow(e);
-				app.instrument.value = 'sawtooth';
+				app.instrument = 'sawtooth';
 				return;
 			}
 			case '2': {
 				swallow(e);
-				app.instrument.value = 'sine';
+				app.instrument = 'sine';
 				return;
 			}
 			case '3': {
 				swallow(e);
-				app.instrument.value = 'square';
+				app.instrument = 'square';
 				return;
 			}
 			case '4': {
 				swallow(e);
-				app.instrument.value = 'triangle';
+				app.instrument = 'triangle';
 				return;
 			}
 			case 'ArrowUp': {

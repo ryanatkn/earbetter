@@ -1,6 +1,5 @@
 <script lang="ts">
 	import {plural} from '@ryanatkn/belt/string.js';
-	import {Signal} from '@preact/signals-core';
 
 	import Piano from '$lib/Piano.svelte';
 	import {get_audio_context} from '$lib/audio_context.js';
@@ -26,10 +25,10 @@
 
 	interface Props {
 		audio_state: {
-			volume: Signal<Volume>;
-			instrument: Signal<Instrument>;
-			playing_notes: Signal<Set<Midi>>;
-			midi_access: Signal<MIDIAccess | null>;
+			volume: Volume;
+			instrument: Instrument;
+			playing_notes: Set<Midi>;
+			midi_access: MIDIAccess | null;
 		};
 		notes: Set<Midi>;
 		min_note: Midi;
@@ -38,8 +37,6 @@
 	}
 
 	const {audio_state, notes, min_note, max_note, oninput}: Props = $props();
-
-	const {volume, instrument, playing_notes, midi_access} = $derived(audio_state);
 
 	// TODO @multiple set reactivity - refactor these collections to use `svelte/reactivity` sets instead of cloning, upstream and downstream where appropriate
 
@@ -85,7 +82,13 @@
 	const piano_padding = 20;
 
 	const play = (note: Midi, velocity: number | null = null): void => {
-		start_playing(audio_state, ac(), note, with_velocity($volume, velocity), $instrument);
+		start_playing(
+			audio_state,
+			ac(),
+			note,
+			with_velocity(audio_state.volume, velocity),
+			audio_state.instrument,
+		);
 	};
 
 	const toggle_scale = (scale: Scale): void => {
@@ -113,7 +116,7 @@
 <svelte:window bind:innerWidth />
 
 <Midi_Input
-	{midi_access}
+	midi_access={audio_state.midi_access}
 	onnotestart={(note, velocity) => play(note, velocity)}
 	onnotestop={(note) => stop_playing(note)}
 />
@@ -128,7 +131,7 @@
 				{min_note}
 				{max_note}
 				max_height={300}
-				pressed_keys={$playing_notes}
+				pressed_keys={audio_state.playing_notes}
 				highlighted_keys={current_notes}
 				middle_c_label
 				allow_sticking
@@ -169,8 +172,8 @@
 	</section>
 	<form class="width_sm panel p_md">
 		<fieldset>
-			<Instrument_Control {instrument} />
-			<Volume_Control {volume} />
+			<Instrument_Control bind:instrument={audio_state.instrument} />
+			<Volume_Control bind:volume={audio_state.volume} />
 		</fieldset>
 		<fieldset>
 			<Init_Midi_Button midi_state={audio_state} />

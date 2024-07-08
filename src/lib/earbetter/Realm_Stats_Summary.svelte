@@ -1,6 +1,6 @@
 <script lang="ts">
 	import type {Realm_Data} from '$lib/earbetter/realm.js';
-	import {MISTAKE_HISTORY_LENGTH, type Level_Stats} from '$lib/earbetter/level.js';
+	import {MISTAKE_HISTORY_LENGTH, type Level_Stats} from '$lib/earbetter/level.svelte.js';
 
 	interface Props {
 		realm_data: Realm_Data;
