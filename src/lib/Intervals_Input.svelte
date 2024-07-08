@@ -1,57 +1,45 @@
 <script lang="ts">
-	import {Intervals, Scale, scales, to_scale_notes} from '$lib/music.js';
+	import {
+		DEFAULT_SCALE,
+		Intervals,
+		lookup_scale,
+		Scale,
+		scales,
+		to_scale_notes,
+	} from '$lib/music.js';
 
 	// TODO @multiple naming convention between `Intervals_Input`/`Notes_Input`/`Select_Notes_Control`?
 
 	interface Props {
 		scale?: Scale;
 		octaves?: number;
-		onscale?: (scale: Scale) => void;
-		onoctaves?: (octaves: number) => void;
 		oninput?: (intervals: Intervals, scale: Scale, octaves: number) => void;
 	}
 
-	const {scale = scales[0], octaves = 1, onscale, onoctaves, oninput}: Props = $props();
-
-	let updated_scale: Scale = $state.frozen(scale);
-
-	let updated_octaves: number = $state(octaves);
+	let {scale = $bindable(DEFAULT_SCALE), octaves = $bindable(1), oninput}: Props = $props();
 
 	// TODO visualize the intervals with a piano
-	const intervals: Intervals = $derived(to_scale_notes(updated_scale, updated_octaves));
+	const intervals: Intervals = $derived(to_scale_notes(scale, octaves));
 
-	// TODO @multiple review this effect to try to remove it
-	$effect(() => {
-		updated_scale = scale;
-		if (scale !== updated_scale) {
-			console.log('onscale', updated_scale);
-			onscale?.(updated_scale);
-		}
-	});
-	$effect(() => {
-		updated_octaves = octaves;
-		if (octaves !== updated_octaves) {
-			console.log('onoctaves', updated_octaves);
-			onoctaves?.(updated_octaves);
-		}
-	});
+	// TODO next UX: discard/use buttons where the latter gets disabled, and a cancel button if unchanged
 </script>
 
 <label>
 	<div class="title text_align_center">scale</div>
-	<select bind:value={updated_scale}>
+	<!-- TODO bind the objects not the names to simplify -->
+	<select value={scale.name} oninput={(e) => (scale = lookup_scale(e.currentTarget.value))}>
 		{#each scales as s (s)}
-			<option value={s}>{s.name}</option>
+			<option value={s.name}>{s.name}</option>
 		{/each}
 	</select>
 </label>
 <label>
 	<div class="title text_align_center">octaves</div>
-	<div class="text_align_center">{updated_octaves}</div>
-	<input type="range" min={1} max={6} bind:value={updated_octaves} />
+	<div class="text_align_center">{octaves}</div>
+	<input type="range" min={1} max={6} bind:value={octaves} />
 </label>
 <small class="preview width_sm panel">{intervals.join(', ')}</small>
-<button type="button" onclick={() => oninput?.(intervals, updated_scale, updated_octaves)}>
+<button type="button" onclick={() => oninput?.(intervals, scale, octaves)}>
 	use these intervals
 </button>
 
