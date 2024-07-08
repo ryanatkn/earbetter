@@ -44,7 +44,7 @@
 
 	const ac = get_audio_context();
 
-	const pressed_keys = $derived(app.playing_notes);
+	const {pressed_keys} = app;
 
 	let clientWidth: number | undefined = $state();
 

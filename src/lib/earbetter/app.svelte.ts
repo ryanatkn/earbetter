@@ -2,6 +2,7 @@ import {goto} from '$app/navigation';
 import {z} from 'zod';
 import {getContext, setContext, untrack} from 'svelte';
 import {base} from '$app/paths';
+import {SvelteSet} from 'svelte/reactivity';
 
 import {
 	add_mistakes_to_level_stats,
@@ -62,7 +63,7 @@ export class App {
 	enabled_notes: Set<Midi> | null = $derived(
 		this.scale.name === 'chromatic' ? null : to_notes_in_scale(this.scale, this.key),
 	);
-	playing_notes: Set<Midi> = $state(new Set());
+	pressed_keys: Set<Midi> = new SvelteSet();
 
 	/**
 	 * Holds the result of `navigator.requestMIDIAccess`.
