@@ -16,7 +16,7 @@
 	import {get_main_menu} from '$routes/main_menu_state.svelte.js';
 	import {get_app} from '$lib/earbetter/app.svelte.js';
 
-	// TODO @multiple let any routes (and components?) add sections to the menu via snippets
+	// TODO @many let any routes (and components?) add sections to the menu via snippets
 
 	/**
 	 * Designed as a singleton to be used in the entire application. Maybe make more general?

@@ -1,6 +1,6 @@
 import {getContext, setContext} from 'svelte';
 
-// TODO @multiple let any routes (and components?) add sections to the menu via snippets
+// TODO @many let any routes (and components?) add sections to the menu via snippets
 
 /**
  * Designed as a singleton to be used in the entire application. Maybe make more general?

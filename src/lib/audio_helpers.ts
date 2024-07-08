@@ -9,7 +9,7 @@ export const Volume = z
 	.min(0)
 	.max(1)
 	.transform((v) => round(v, 2));
-export type Volume = Flavored<z.infer<typeof Volume>, 'Volume'>; // TODO @multiple this doesn't work when used as a schema, use z.brand() instead? or are the egonomics too bad?
+export type Volume = Flavored<z.infer<typeof Volume>, 'Volume'>; // TODO @many this doesn't work when used as a schema, use z.brand() instead? or are the egonomics too bad?
 
 export const DEFAULT_VOLUME: Volume = 0.59;
 export const DEFAULT_VOLUME_INCREMENT: Volume = 0.01;

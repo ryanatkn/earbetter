@@ -72,7 +72,7 @@
 			max_note: updated_max_note,
 		});
 
-	// TODO @multiple review this effect to try to remove it
+	// TODO @many review this effect to try to remove it
 	$effect(() => {
 		updated_name = level_data.name;
 		updated_intervals = level_data.intervals;
@@ -101,7 +101,7 @@
 	let updated = $state('');
 	const changed_serialized = $derived(serialized !== updated);
 	let parse_error_message = $state('');
-	// TODO @multiple review this effect to try to remove it
+	// TODO @many review this effect to try to remove it
 	$effect(() => {
 		level_data;
 		parse_error_message = '';
@@ -363,7 +363,7 @@
 		{#snippet children(close)}
 			<div class="bg shadow_d_xl py_xl box">
 				<h2 class="my_0">pick tonics</h2>
-				<!-- TODO @multiple set reactivity - this `new Set` is a hack, probably change the data structure to a set, need serialization for storage -->
+				<!-- TODO @many set reactivity - this `new Set` is a hack, probably change the data structure to a set, need serialization for storage -->
 				<Notes_Input
 					audio_state={app}
 					notes={new Set(updated_tonics)}

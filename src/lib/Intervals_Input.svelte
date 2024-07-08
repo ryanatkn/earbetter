@@ -12,7 +12,7 @@
 		to_scale_notes,
 	} from '$lib/music.js';
 
-	// TODO @multiple naming convention between `Intervals_Input`/`Notes_Input`/`Select_Notes_Control`?
+	// TODO @many naming convention between `Intervals_Input`/`Notes_Input`/`Select_Notes_Control`?
 
 	interface Props {
 		intervals: Intervals; // TODO maybe make bindable? gets tricky because of the 2 sources of truth
