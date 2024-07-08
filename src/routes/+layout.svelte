@@ -65,7 +65,7 @@
 		key: app.key,
 	});
 
-	// TODO @multiple probably refactor, maybe combining the two into one piece of state
+	// TODO @many probably refactor, maybe combining the two into one piece of state
 	let inited_site_data_save = false;
 	$effect(() => {
 		const site_data = to_site_data();
@@ -76,7 +76,7 @@
 		}
 	});
 
-	// TODO @multiple probably refactor, maybe combining the two into one piece of state
+	// TODO @many probably refactor, maybe combining the two into one piece of state
 	let inited_app_save = false;
 	$effect(() => {
 		const data = app.toJSON();

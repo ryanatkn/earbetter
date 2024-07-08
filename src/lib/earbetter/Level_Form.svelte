@@ -2,6 +2,7 @@
 	import {slide} from 'svelte/transition';
 	import Dialog from '@ryanatkn/fuz/Dialog.svelte';
 	import Alert from '@ryanatkn/fuz/Alert.svelte';
+	import {dequal} from 'dequal';
 
 	import {create_level_id, Level_Data, type Level_Id} from '$lib/earbetter/level.svelte.js';
 	import {
@@ -48,8 +49,8 @@
 
 	let updated_name: string = $state(level_data.name);
 	const normalized_updated_name = $derived((updated_name as any)?.trim());
-	let updated_intervals: Intervals = $state(level_data.intervals);
-	let updated_tonics: Midi[] | null = $state(level_data.tonics);
+	let updated_intervals: Intervals = $state.frozen(level_data.intervals);
+	let updated_tonics: readonly Midi[] | null = $state.frozen(level_data.tonics);
 	const normalized_updated_tonics = $derived(
 		updated_tonics
 			? updated_tonics.filter((t) => t >= updated_min_note && t <= updated_max_note)
@@ -72,7 +73,7 @@
 			max_note: updated_max_note,
 		});
 
-	// TODO @multiple review this effect to try to remove it
+	// TODO @many review this effect to try to remove it
 	$effect(() => {
 		updated_name = level_data.name;
 		updated_intervals = level_data.intervals;
@@ -89,9 +90,9 @@
 			updated_sequence_length !== level_data.sequence_length ||
 			updated_min_note !== level_data.min_note ||
 			updated_max_note !== level_data.max_note ||
-			updated_intervals.toString() !== level_data.intervals.toString() ||
-			normalized_updated_tonics?.toString() !== level_data.tonics?.toString(),
-	); // TODO speed these comparisons up
+			!dequal(updated_intervals, level_data.intervals) ||
+			!dequal(normalized_updated_tonics, level_data.tonics),
+	);
 
 	// TODO lots of similarity with `Project_Form`
 	let importing = $state(false);
@@ -101,7 +102,7 @@
 	let updated = $state('');
 	const changed_serialized = $derived(serialized !== updated);
 	let parse_error_message = $state('');
-	// TODO @multiple review this effect to try to remove it
+	// TODO @many review this effect to try to remove it
 	$effect(() => {
 		level_data;
 		parse_error_message = '';
@@ -339,7 +340,6 @@
 		{#snippet children(close)}
 			<div class="bg shadow_d_xl p_xl width_md box">
 				<h2 class="my_0">pick intervals</h2>
-				<!-- TODO maybe `bind:intervals` and remove from `oninput`, but we still need oninput to close the dialog -->
 				<Intervals_Input
 					intervals={updated_intervals}
 					bind:scale
@@ -364,7 +364,7 @@
 		{#snippet children(close)}
 			<div class="bg shadow_d_xl py_xl box">
 				<h2 class="my_0">pick tonics</h2>
-				<!-- TODO @multiple set reactivity - this `new Set` is a hack, probably change the data structure to a set, need serialization for storage -->
+				<!-- TODO @many set reactivity - this `new Set` is a hack, probably change the data structure to a set, need serialization for storage -->
 				<Notes_Input
 					audio_state={app}
 					notes={new Set(updated_tonics)}

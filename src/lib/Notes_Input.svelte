@@ -22,7 +22,7 @@
 	} from '$lib/music.js';
 	import type {MIDIAccess} from '$lib/WebMIDI.js';
 
-	// TODO @multiple naming convention between `Intervals_Input`/`Notes_Input`/`Select_Notes_Control`?
+	// TODO @many naming convention between `Intervals_Input`/`Notes_Input`/`Select_Notes_Control`?
 
 	interface Props {
 		audio_state: {
@@ -35,12 +35,12 @@
 		min_note: Midi;
 		max_note: Midi;
 		before_buttons: Snippet;
-		oninput?: (notes: Midi[] | null) => void; // TODO @multiple set reactivity - API is strange returning an array but taking a set (maybe return both?)
+		oninput?: (notes: Midi[] | null) => void; // TODO @many set reactivity - API is strange returning an array but taking a set (maybe return both?)
 	}
 
 	const {audio_state, notes, min_note, max_note, before_buttons, oninput}: Props = $props();
 
-	// TODO @multiple set reactivity - refactor these collections to use `svelte/reactivity` sets instead of cloning, upstream and downstream where appropriate
+	// TODO @many set reactivity - refactor these collections to use `svelte/reactivity` sets instead of cloning, upstream and downstream where appropriate
 
 	let updated_notes: Set<Midi> | undefined = $state();
 	const updated_notes_array: Midi[] | undefined = $derived(
@@ -127,7 +127,7 @@
 	{@render buttons()}
 	<div class="piano_wrapper" style:padding="{piano_padding}px">
 		{#if innerWidth}
-			<!-- TODO @multiple hacky width -->
+			<!-- TODO @many hacky width -->
 			<Piano
 				width={innerWidth - piano_padding * 5}
 				{min_note}
@@ -209,8 +209,8 @@
 
 <style>
 	.notes_input {
-		width: var(--notes_input_width, auto); /* TODO @multiple hacky width */
-		max-width: calc(100vw - 120px); /* TODO @multiple hacky width */
+		width: var(--notes_input_width, auto); /* TODO @many hacky width */
+		max-width: calc(100vw - 120px); /* TODO @many hacky width */
 		display: flex;
 		align-items: center;
 		flex-direction: column;

@@ -8,7 +8,7 @@
 		lookup_scale,
 	} from '$lib/music.js';
 
-	// TODO @multiple naming convention between `Intervals_Input`/`Notes_Input`/`Select_Notes_Control`?
+	// TODO @many naming convention between `Intervals_Input`/`Notes_Input`/`Select_Notes_Control`?
 
 	interface Props {
 		scale: Scale;
@@ -19,7 +19,7 @@
 
 	$inspect('scale', scale);
 
-	// TODO @multiple event callback or $bindable here and below
+	// TODO @many event callback or $bindable here and below
 </script>
 
 <label class="text_align_center">

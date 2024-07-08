@@ -36,7 +36,7 @@
 		console.log('requesting midi access');
 		request_status = 'pending';
 		try {
-			// TODO @multiple source from `audio` in context, makes this convoluted
+			// TODO @many source from `audio` in context, makes this convoluted
 			reset_midi_access(midi_state);
 			await request_access(midi_state);
 			request_status = 'success';

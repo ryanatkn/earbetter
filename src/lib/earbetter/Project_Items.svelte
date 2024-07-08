@@ -6,7 +6,7 @@
 		selected_project_id?: Project_Id | null;
 		editing_project_id?: Project_Id | null;
 		projects?: Project_Metadata[];
-		project_datas?: Project_Data[];
+		project_datas?: readonly Project_Data[];
 		load_project: (id: Project_Id) => Project_Data | null;
 		select_project: (id: Project_Id) => void;
 		edit_project: (project_data: Project_Data | null) => void;

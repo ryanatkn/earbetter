@@ -26,11 +26,11 @@ export const DEFAULT_MIN_NOTE: Midi = 48;
 export const DEFAULT_MAX_NOTE: Midi = 84;
 
 export const Level_Id = z.string();
-export type Level_Id = Flavored<z.infer<typeof Level_Id>, 'Level_Id'>; // TODO @multiple this doesn't work when used as a schema, use z.brand() instead? or are the egonomics too bad?
+export type Level_Id = Flavored<z.infer<typeof Level_Id>, 'Level_Id'>; // TODO @many this doesn't work when used as a schema, use z.brand() instead? or are the egonomics too bad?
 export const create_level_id = (): Level_Id => to_random_id();
 
 export const Level_Name = z.string().min(1).max(1000);
-export type Level_Name = Flavored<z.infer<typeof Level_Name>, 'Level_Name'>; // TODO @multiple this doesn't work when used as a schema, use z.brand() instead? or are the egonomics too bad?
+export type Level_Name = Flavored<z.infer<typeof Level_Name>, 'Level_Name'>; // TODO @many this doesn't work when used as a schema, use z.brand() instead? or are the egonomics too bad?
 
 export const Level_Data = z.object({
 	id: Level_Id.default(create_level_id),

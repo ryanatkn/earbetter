@@ -5,14 +5,14 @@ import {request_midi_access} from '$lib/midi_helpers.js';
 
 let requesting: Promise<MIDIAccess | null> | undefined;
 
-// TODO @multiple source from `audio` in context, delete this or heavily refactor
+// TODO @many source from `audio` in context, delete this or heavily refactor
 export const reset_midi_access = (state: {midi_access: MIDIAccess | null}): void => {
 	console.log('resetting midi_access');
 	requesting = undefined;
 	state.midi_access = null;
 };
 
-// TODO @multiple source from `audio` in context, this is convoluted for race conditions, probably doesn't need to be
+// TODO @many source from `audio` in context, this is convoluted for race conditions, probably doesn't need to be
 export const request_access = async (state: {
 	midi_access: MIDIAccess | null;
 }): Promise<MIDIAccess | null> => {

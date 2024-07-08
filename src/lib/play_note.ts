@@ -62,7 +62,7 @@ export const start_playing_note = (
 	osc.start();
 	osc.connect(gain);
 
-	const next_playing_notes: Set<Midi> = new Set(state.playing_notes);
+	const next_playing_notes = new Set(state.playing_notes);
 	next_playing_notes.add(note);
 	state.playing_notes = next_playing_notes;
 
@@ -74,7 +74,7 @@ export const start_playing_note = (
 		console.log(`stop playing note`, note);
 		stop_osc(ac, 10, gain, osc);
 
-		const next_playing_notes: Set<Midi> = new Set(state.playing_notes);
+		const next_playing_notes = new Set(state.playing_notes);
 		next_playing_notes.delete(note);
 		state.playing_notes = next_playing_notes;
 	};

@@ -84,13 +84,13 @@ export type Octave = Flavored<z.infer<typeof Octave>, 'Octave'>;
  * @see https://wikipedia.org/wiki/Semitone
  */
 export const Semitones = z.number().int();
-export type Semitones = Flavored<z.infer<typeof Semitones>, 'Semitones'>; // TODO @multiple this doesn't work when used as a schema, use z.brand() instead? or are the egonomics too bad?
+export type Semitones = Flavored<z.infer<typeof Semitones>, 'Semitones'>; // TODO @many this doesn't work when used as a schema, use z.brand() instead? or are the egonomics too bad?
 
 /**
  * @see https://wikipedia.org/wiki/Interval_(music)
  */
-export const Intervals = z.array(Semitones);
-export type Intervals = Flavored<z.infer<typeof Intervals>, 'Intervals'>; // TODO @multiple this doesn't work when used as a schema, use z.brand() instead? or are the egonomics too bad?
+export const Intervals = z.array(Semitones).readonly();
+export type Intervals = Flavored<z.infer<typeof Intervals>, 'Intervals'>; // TODO @many this doesn't work when used as a schema, use z.brand() instead? or are the egonomics too bad?
 // TODO replace with zod, also probably add a min/max
 export const serialize_intervals = (intervals: Intervals): string => intervals.join(', ');
 export const parse_intervals = (value: string): Intervals =>
@@ -185,7 +185,7 @@ export type Interval_Names = z.infer<typeof Interval_Names>;
  * @see https://wikipedia.org/wiki/Scale_(music)
  */
 export const Scale_Name = z.string();
-export type Scale_Name = Flavored<z.infer<typeof Scale_Name>, 'Scale_Name'>; // TODO @multiple this doesn't work when used as a schema, use z.brand() instead? or are the egonomics too bad?
+export type Scale_Name = Flavored<z.infer<typeof Scale_Name>, 'Scale_Name'>; // TODO @many this doesn't work when used as a schema, use z.brand() instead? or are the egonomics too bad?
 
 /**
  * @see https://wikipedia.org/wiki/Scale_(music)
@@ -270,7 +270,7 @@ export const MIDI_MAX = 127;
  * @see https://wikipedia.org/wiki/MIDI
  */
 export const Midi = z.number().int().min(MIDI_MIN).max(MIDI_MAX);
-export type Midi = Flavored<z.infer<typeof Midi>, 'Midi'>; // TODO @multiple this doesn't work when used as a schema, use z.brand() instead? or are the egonomics too bad?
+export type Midi = Flavored<z.infer<typeof Midi>, 'Midi'>; // TODO @many this doesn't work when used as a schema, use z.brand() instead? or are the egonomics too bad?
 
 export const midis: Midi[] = Object.freeze(
 	Array.from({length: MIDI_MAX + 1}, (_, i) => i),
@@ -328,7 +328,8 @@ export const midi_naturals: Set<Midi> = new Set(
 );
 
 // TODO replace with zod
-export const serialize_notes = (notes: Midi[] | null): string => (notes ? notes.join(', ') : '');
+export const serialize_notes = (notes: readonly Midi[] | null): string =>
+	notes ? notes.join(', ') : '';
 export const parse_notes = (value: string): Midi[] =>
 	value
 		.split(',')

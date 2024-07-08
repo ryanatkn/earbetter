@@ -77,7 +77,7 @@ export class App {
 		};
 	};
 
-	project_datas: Project_Data[] = $state([]); // TODO weird name
+	project_datas: readonly Project_Data[] = $state.frozen([]); // TODO weird name
 
 	selected_project_id: Project_Id | null = $state(null);
 	selected_project_data: Project_Data | null = $derived(
@@ -86,7 +86,7 @@ export class App {
 	realms: Realm_Data[] | null = $derived(this.selected_project_data?.realms ?? null);
 	editing_project: boolean = $state(false);
 	editing_project_draft: boolean = $state(false);
-	draft_project_data: Project_Data | null = $state(null);
+	draft_project_data: Project_Data | null = $state.frozen(null);
 	editing_project_id: Project_Id | null = $derived(
 		this.editing_project_draft
 			? this.draft_project_data?.id ?? null
@@ -102,7 +102,7 @@ export class App {
 	);
 	editing_realm: boolean = $state(false);
 	editing_realm_draft: boolean = $state(false);
-	draft_realm_data: Realm_Data | null = $state(null);
+	draft_realm_data: Realm_Data | null = $state.frozen(null);
 	editing_realm_id: Realm_Id | null = $derived(
 		this.editing_realm_draft
 			? this.draft_realm_data?.id ?? null
@@ -115,7 +115,7 @@ export class App {
 	/**
 	 * Sourced from the URL hash on the `/level` route.
 	 */
-	active_level_data: Level_Data | null = $state(null);
+	active_level_data: Level_Data | null = $state.frozen(null);
 
 	level: Level | null = $derived.by(() => {
 		console.log('computing level', this.active_level_data);
@@ -126,7 +126,7 @@ export class App {
 
 	levels: Level_Data[] | null = $derived(this.selected_realm_data?.levels ?? null);
 	editing_level: boolean = $state(false);
-	draft_level_data: Level_Data | null = $state(null);
+	draft_level_data: Level_Data | null = $state.frozen(null);
 
 	constructor(
 		public readonly get_audio_context: () => AudioContext,
