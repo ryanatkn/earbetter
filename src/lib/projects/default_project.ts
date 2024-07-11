@@ -8,12 +8,12 @@ const data = (): Project_Data =>
 			to_default_scale_realm('major pentatonic'),
 			to_default_scale_realm('major', 'major scale (Ionian)'),
 			to_default_scale_realm('minor', 'minor scale (Aeolian)'),
+			to_default_scale_realm('chromatic'),
 			to_default_scale_realm('Dorian'),
 			to_default_scale_realm('Phrygian'),
 			to_default_scale_realm('Lydian'),
 			to_default_scale_realm('Mixolydian'),
 			to_default_scale_realm('Locrian'),
-			to_default_scale_realm('chromatic'),
 			// TODO this will change, just including to see where to go next
 			{
 				name: 'major second vs perfect fifth (easier for learning the tool)',

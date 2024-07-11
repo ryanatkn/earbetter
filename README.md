@@ -1,5 +1,7 @@
 # earbetter
 
+[<img src="static/logo.svg" alt="two beamed musical notes with ears" align="right" width="192" height="192">](https://earbetter.ryanatkn.com/)
+
 > ear trainer and tools for playing and programming music and audio 🎶🦜
 > [earbetter.ryanatkn.com](https://earbetter.ryanatkn.com/)
 

@@ -6,6 +6,7 @@
 	import {base} from '$app/paths';
 	import {slide} from 'svelte/transition';
 	import {afterNavigate} from '$app/navigation';
+	import Earbetter_Logo from '@ryanatkn/fuz/Earbetter_Logo.svelte';
 
 	import Site_Map from '$routes/Site_Map.svelte';
 	import Volume_Control from '$lib/Volume_Control.svelte';
@@ -34,6 +35,7 @@
 	<section>
 		<!-- TODO when `.flex_direction_column` or equivalent is added to Moss, change `.box` to that -->
 		<div class="section_title box">
+			<Earbetter_Logo size="var(--icon_size_xl2)" />
 			<h1 class="mb_md">earbetter</h1>
 			<!-- TODO switch to `class="size_xl"` when Fuz changes to use vb/vi -->
 			<div style:--size="var(--size_xl)"><Site_Breadcrumb hide_main_menu_button /></div>
