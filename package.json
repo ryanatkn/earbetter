@@ -43,7 +43,7 @@
   "devDependencies": {
     "@ryanatkn/belt": "^0.24.4",
     "@ryanatkn/eslint-config": "^0.4.0",
-    "@ryanatkn/fuz": "^0.108.3",
+    "@ryanatkn/fuz": "^0.108.6",
     "@ryanatkn/gro": "^0.129.13",
     "@ryanatkn/moss": "^0.7.0",
     "@sveltejs/adapter-static": "^3.0.2",
