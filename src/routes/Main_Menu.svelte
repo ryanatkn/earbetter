@@ -15,6 +15,7 @@
 	import Site_Breadcrumb from '$routes/Site_Breadcrumb.svelte';
 	import {get_main_menu} from '$routes/main_menu_state.svelte.js';
 	import {get_app} from '$lib/earbetter/app.svelte.js';
+	import Earbetter_Logo from '@ryanatkn/fuz/Earbetter_Logo.svelte';
 
 	// TODO @many let any routes (and components?) add sections to the menu via snippets
 
@@ -34,6 +35,7 @@
 	<section>
 		<!-- TODO when `.flex_direction_column` or equivalent is added to Moss, change `.box` to that -->
 		<div class="section_title box">
+			<Earbetter_Logo size="var(--icon_size_xl2)" />
 			<h1 class="mb_md">earbetter</h1>
 			<!-- TODO switch to `class="size_xl"` when Fuz changes to use vb/vi -->
 			<div style:--size="var(--size_xl)"><Site_Breadcrumb hide_main_menu_button /></div>
