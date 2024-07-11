@@ -6,6 +6,7 @@
 	import {base} from '$app/paths';
 	import {slide} from 'svelte/transition';
 	import {afterNavigate} from '$app/navigation';
+	import Earbetter_Logo from '@ryanatkn/fuz/Earbetter_Logo.svelte';
 
 	import Site_Map from '$routes/Site_Map.svelte';
 	import Volume_Control from '$lib/Volume_Control.svelte';
@@ -15,7 +16,6 @@
 	import Site_Breadcrumb from '$routes/Site_Breadcrumb.svelte';
 	import {get_main_menu} from '$routes/main_menu_state.svelte.js';
 	import {get_app} from '$lib/earbetter/app.svelte.js';
-	import Earbetter_Logo from '@ryanatkn/fuz/Earbetter_Logo.svelte';
 
 	// TODO @many let any routes (and components?) add sections to the menu via snippets
 
