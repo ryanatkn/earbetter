@@ -11,11 +11,8 @@
 
 	const {hide_main_menu_button = false}: Props = $props();
 
-	// TODO @many find the other of these hacks - what's going on? I can't seem to find anything searching online about this, it's `.` on SSR for some reason
-	const TODO_HACK_base = (base as any) === '.' ? '' : base;
-
 	const pathname = $derived($page.url.pathname);
-	const home = $derived(pathname === TODO_HACK_base + '/');
+	const home = $derived(pathname === base + '/');
 
 	const main_menu = get_main_menu();
 </script>

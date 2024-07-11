@@ -1,5 +1,6 @@
 <script lang="ts">
 	import {slide} from 'svelte/transition';
+	import {BROWSER} from 'esm-env';
 
 	import {get_audio_context} from '$lib/audio_context.js';
 	import Init_Midi_Button from '$lib/Init_Midi_Button.svelte';
@@ -35,7 +36,7 @@
 	} = $derived(app);
 
 	const ac = get_audio_context();
-	(window as any).ac = ac;
+	if (BROWSER) (window as any).ac = ac;
 
 	// TODO review the draft/editing data properties of `app`, some inconsistencies between levels/realms/projects
 	const level_data = $derived(app.draft_level_data ?? Level_Data.parse({}));
