@@ -10,7 +10,7 @@
 	const {level}: Props = $props();
 
 	const current_index = $derived(
-		level.trial ? level.trial.presenting_index ?? level.trial.guessing_index : null,
+		level.trial ? (level.trial.presenting_index ?? level.trial.guessing_index) : null,
 	);
 
 	const to_bg_color = (s: Status, index: number, current_index: number | null): string =>

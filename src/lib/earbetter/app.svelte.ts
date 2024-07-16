@@ -90,8 +90,8 @@ export class App {
 	draft_project_data: Project_Data | null = $state.frozen(null);
 	editing_project_id: Project_Id | null = $derived(
 		this.editing_project_draft
-			? this.draft_project_data?.id ?? null
-			: this.selected_project_data?.id ?? null,
+			? (this.draft_project_data?.id ?? null)
+			: (this.selected_project_data?.id ?? null),
 	); // this may be `selected_project_data`, or a new project def draft that hasn't been created yet
 	editing_project_data: Project_Data | null = $derived(
 		this.editing_project_draft ? this.draft_project_data : this.selected_project_data,
@@ -106,8 +106,8 @@ export class App {
 	draft_realm_data: Realm_Data | null = $state.frozen(null);
 	editing_realm_id: Realm_Id | null = $derived(
 		this.editing_realm_draft
-			? this.draft_realm_data?.id ?? null
-			: this.selected_realm_data?.id ?? null,
+			? (this.draft_realm_data?.id ?? null)
+			: (this.selected_realm_data?.id ?? null),
 	); // this may be `selected_realm_data`, or a new realm def draft that hasn't been created yet
 	editing_realm_data: Realm_Data | null = $derived(
 		this.editing_realm_draft ? this.draft_realm_data : this.selected_realm_data,
