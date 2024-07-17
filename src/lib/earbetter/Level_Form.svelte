@@ -194,15 +194,19 @@
 		<fieldset>
 			<label title="the number of trials per level">
 				<div class="title">trial count</div>
-				<input type="number" bind:value={updated_trial_count} min={1} />
-				<input type="range" bind:value={updated_trial_count} min={1} max={20} />
+				<div class="row">
+					<input class="small_input" type="number" bind:value={updated_trial_count} min={1} />
+					<input type="range" bind:value={updated_trial_count} min={1} max={20} />
+				</div>
 			</label>
 		</fieldset>
 		<fieldset>
 			<label title="the number of notes per trial">
 				<div class="title">sequence length</div>
-				<input bind:value={updated_sequence_length} min={2} />
-				<input type="range" bind:value={updated_sequence_length} min={2} max={16} />
+				<div class="row">
+					<input class="small_input" type="number" bind:value={updated_sequence_length} min={2} />
+					<input type="range" bind:value={updated_sequence_length} min={2} max={16} />
+				</div>
 			</label>
 		</fieldset>
 		<fieldset class="row">
@@ -391,5 +395,10 @@
 	}
 	.importing textarea {
 		height: calc(var(--input_height) * 3);
+	}
+
+	.small_input {
+		width: 75px;
+		min-width: 75px;
 	}
 </style>
