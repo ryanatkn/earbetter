@@ -116,7 +116,9 @@
 		<section class="card">
 			<Realms {app} />
 		</section>
-		{#if (app.editing_realm && app.editing_realm_data) ?? no_realms}
+		<!-- TODO bug probably with eslint-plugin-svelte or typescript-eslint -->
+		<!-- eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing -->
+		{#if (app.editing_realm && app.editing_realm_data) || no_realms}
 			<section class="card" transition:slide>
 				<Realm_Editor {app} />
 			</section>
