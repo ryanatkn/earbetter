@@ -97,6 +97,7 @@
 						</li>
 						<li>realms group levels into bigger challenges</li>
 						<li>projects group realms so you can customize various experiences</li>
+						<li>levels can be shared via their links or exporting/importing data</li>
 					</ul>
 					<p>
 						See also <a href="https://www.youtube.com/watch?v=zW2zI1A_Ikw"

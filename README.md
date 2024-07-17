@@ -8,6 +8,7 @@
 - features [a configurable ear trainer](https://earbetter.ryanatkn.com/trainer)
 - also has [a playable piano](https://earbetter.ryanatkn.com/piano)
 - supports MIDI devices like piano keyboards
+- levels can be shared via their links or exporting/importing data
 
 play at [earbetter.ryanatkn.com](https://earbetter.ryanatkn.com/)
 
