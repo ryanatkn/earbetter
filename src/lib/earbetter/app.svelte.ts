@@ -435,7 +435,7 @@ export class App {
 		this.selected_realm_id = new_realm_data.id;
 	};
 
-	create_realm = (realm_data: Realm_Data): void => {
+	create_realm = (realm_data: Realm_Data, select = true): void => {
 		console.log('create_realm', realm_data);
 		const project_data = this.selected_project_data;
 		if (!project_data) {
@@ -447,13 +447,13 @@ export class App {
 		// or would it be better to always go through the `project_data`?
 		const existing = realms.find((d) => d.id === realm_data.id);
 		if (existing) {
-			console.log('realm_data already exists', realm_data, existing);
+			console.error('realm_data already exists', realm_data, existing);
 			return;
 		}
 
 		this.update_project({...project_data, realms: realms.concat(realm_data)});
-		this.selected_realm_id = realm_data.id;
-		// TODO is awkward but works, should it be an effect?
+		if (select) this.selected_realm_id = realm_data.id;
+		// TODO is awkward but works
 		if (this.draft_realm_data?.id === realm_data.id) {
 			this.editing_realm = false;
 		}

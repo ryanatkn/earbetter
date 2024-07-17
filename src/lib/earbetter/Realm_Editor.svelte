@@ -17,13 +17,29 @@
 
 	$inspect(`app.selected_realm_data`, app.selected_realm_data);
 	$inspect(`app.realms`, app.realms);
+
+	const update_or_create = (r: Realm_Data, select: boolean) => {
+		if (app.realms?.some((d) => d.id === r.id)) {
+			update_realm(r);
+		} else {
+			create_realm(r, select);
+		}
+	};
 </script>
 
 <div class="panel p_md">
 	<Realm_Form
 		{editing}
 		{realm_data}
-		onsubmit={editing ? update_realm : create_realm}
+		onsubmit={(data) => {
+			if (Array.isArray(data)) {
+				for (let i = 0; i < data.length; i++) {
+					update_or_create(data[i], i === 0);
+				}
+			} else {
+				update_or_create(data, true);
+			}
+		}}
 		onremove={(realm_id) => remove_realm(realm_id)}
 		onduplicate={(realm_id) => duplicate_realm(realm_id)}
 		onclose={() => (app.editing_realm = false)}

@@ -11,7 +11,7 @@
 	interface Props {
 		realm_data: Realm_Data;
 		editing?: boolean;
-		onsubmit: (realm_data: Realm_Data) => void;
+		onsubmit: (realm_data: Realm_Data | Realm_Data[]) => void;
 		onremove?: (realm_id: Realm_Id) => void;
 		onduplicate?: (realm_id: Realm_Id) => void;
 		onclose?: (realm_id: Realm_Id) => void;
@@ -173,9 +173,7 @@
 					class="w_100"
 					onclick={() => {
 						toggle_create_default_realms = false;
-						for (const realm_data of default_project_data().realms) {
-							onsubmit(realm_data);
-						}
+						onsubmit(default_project_data().realms);
 					}}
 				>
 					create {default_realms.length} new realms
