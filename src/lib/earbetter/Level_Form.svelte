@@ -161,7 +161,7 @@
 			</label>
 		</fieldset>
 		<fieldset>
-			<label class="mb_0">
+			<label class="mb_0" title="the semitones to include relative to the tonic">
 				<div class="title">intervals</div>
 				<input
 					bind:this={intervals_el}
@@ -192,14 +192,14 @@
 			</details>
 		</fieldset>
 		<fieldset>
-			<label>
+			<label title="the number of trials per level">
 				<div class="title">trial count</div>
 				<input type="number" bind:value={updated_trial_count} min={1} />
 				<input type="range" bind:value={updated_trial_count} min={1} max={20} />
 			</label>
 		</fieldset>
 		<fieldset>
-			<label>
+			<label title="the number of notes per trial">
 				<div class="title">sequence length</div>
 				<input bind:value={updated_sequence_length} min={2} />
 				<input type="range" bind:value={updated_sequence_length} min={2} max={16} />
@@ -234,7 +234,7 @@
 			<br />
 		{/if}
 		<fieldset bind:clientWidth={piano_width}>
-			<label class="mb_0">
+			<label class="mb_0" title="the possible starting notes for each trial">
 				<div class="title">tonics</div>
 				<input
 					bind:this={tonics_el}
@@ -248,8 +248,8 @@
 				<summary>about <code>tonics</code></summary>
 				<p>
 					The <a href="https://wikipedia.org/wiki/Tonic_(music)">tonic</a> is like the "base" or "home"
-					note, and for our purposes it's always the first note played in a trial, and other notes in
-					the trial are calculated from the tonic and intervals. (see above)
+					note, and for our purposes it's always the first note played in a trial. Other notes in the
+					trial are calculated from the tonic and intervals. (see above)
 				</p>
 			</details>
 		</fieldset>
