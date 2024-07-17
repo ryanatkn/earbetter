@@ -1,4 +1,4 @@
-# earbetter
+# Earbetter
 
 [<img src="static/logo.svg" alt="two beamed musical notes with ears" align="right" width="192" height="192">](https://earbetter.ryanatkn.com/)
 
@@ -11,11 +11,15 @@
 
 play at [earbetter.ryanatkn.com](https://earbetter.ryanatkn.com/)
 
+[video intro on YouTube](https://www.youtube.com/watch?v=zW2zI1A_Ikw)
+
+raw programming vods [YouTube playlist](https://www.youtube.com/playlist?list=PLio_5jgyVNVnamRztrGFag4XihZNmLKZT)
+
 Feedback is super welcome,
 please open any [discussions](https://github.com/ryanatkn/earbetter/discussions)
 or issues. For more see [contributing.md](contributing.md).
 
-## usage
+## Usage
 
 ```bash
 npm i -D @ryanatkn/earbetter
@@ -25,16 +29,9 @@ npm i -D @ryanatkn/earbetter
 import Piano from '@ryanatkn/earbetter/Piano.svelte';
 ```
 
-Earbetter is made with [Signals](https://github.com/preactjs/signals)
-from [@preactjs](https://github.com/preactjs) as the main store library.
-It works well but I have mixed feelings.
-I haven't used the library again, and I'm not sure if I will.
-[This issue](https://github.com/preactjs/signals/issues/299) is a blocker.
-It does make code concise.
+## About
 
-No docs yet, for now see the modules referenced in [`package.json`](/package.json).
-
-## intro
+[video intro on YouTube](https://www.youtube.com/watch?v=zW2zI1A_Ikw)
 
 In 2016 I made a simple ear trainer named
 [Ear Sharpener](https://github.com/ryanatkn/ear-sharpener)
@@ -80,7 +77,7 @@ For more please see [contributing.md](contributing.md)
 and the GitHub [discussions](https://github.com/ryanatkn/earbetter/discussions)
 and [issues](https://github.com/ryanatkn/earbetter/issues).
 
-## develop
+## Develop
 
 This project uses [SvelteKit](https://kit.svelte.dev/) with the static adapter
 and [Vite](https://vitejs.dev/),
@@ -101,7 +98,7 @@ See [SvelteKit](https://github.com/sveltejs/kit),
 [Fuz](https://github.com/fuz-dev/fuz),
 and [Gro](https://github.com/feltjs/gro) for more.
 
-## build
+## Build
 
 ```bash
 gro build
@@ -109,7 +106,7 @@ gro build
 
 See [Gro's build docs](https://github.com/feltjs/gro/blob/main/src/docs/build.md) for more.
 
-## test
+## Test
 
 ```bash
 gro test
@@ -118,7 +115,7 @@ gro test
 See [`uvu`](https://github.com/lukeed/uvu)
 and [Gro's test docs](https://github.com/feltjs/gro/blob/main/src/docs/test.md).
 
-## deploy
+## Deploy
 
 [Deploy](https://github.com/feltjs/gro/blob/main/src/docs/deploy.md)
 (build, commit, and push) to the `deploy` branch, e.g. for GitHub Pages:
@@ -130,7 +127,7 @@ gro deploy
 To configure GitHub pages (which this repo uses) or another static host,
 customize or delete [src/static/CNAME](/src/static/CNAME).
 
-## credits 🐢<sub>🐢</sub><sub><sub>🐢</sub></sub>
+## Credits 🐢<sub>🐢</sub><sub><sub>🐢</sub></sub>
 
 [TypeScript](https://github.com/microsoft/TypeScript) ∙
 [Svelte](https://github.com/sveltejs/svelte) ∙
@@ -144,6 +141,6 @@ customize or delete [src/static/CNAME](/src/static/CNAME).
 [Prettier](https://github.com/prettier/prettier)
 & [more](package.json)
 
-## license [🐦](https://wikipedia.org/wiki/Free_and_open-source_software)
+## License [🐦](https://wikipedia.org/wiki/Free_and_open-source_software)
 
 public domain ⚘ [The Unlicense](license)

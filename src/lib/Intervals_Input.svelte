@@ -46,6 +46,7 @@
 	});
 	const last_time_intervals_changed = $derived.by(() => {
 		intervals;
+		input_intervals_str;
 		return Date.now();
 	});
 

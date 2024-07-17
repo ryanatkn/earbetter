@@ -98,12 +98,17 @@
 						<li>realms group levels into bigger challenges</li>
 						<li>projects group realms so you can customize various experiences</li>
 					</ul>
-					<p>more info in <a href="https://github.com/ryanatkn/earbetter">the readme</a></p>
+					<p>
+						See also <a href="https://www.youtube.com/watch?v=zW2zI1A_Ikw"
+							>the video intro on YouTube</a
+						>
+						and <a href="https://github.com/ryanatkn/earbetter">the readme</a>.
+					</p>
 					<aside>
 						Earbetter is in early development, and many things are unfinished and unknown - feedback
 						is appreciated on <a href="https://github.com/ryanatkn/earbetter"
 							>the GitHub discussions and issues</a
-						>
+						>.
 					</aside>
 					<div class="box row">
 						<button type="button" class="m_0" onclick={() => toggle_trainer_help()}
