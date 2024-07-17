@@ -180,7 +180,7 @@ export class App {
 		for (const p of loaded.projects) {
 			if (localStorage.getItem(p.id) === null) {
 				console.warn('deleting unknown id', p);
-				(ids_to_delete ?? (ids_to_delete = [])).push(p.id);
+				(ids_to_delete ??= []).push(p.id);
 			}
 		}
 		if (ids_to_delete) {
