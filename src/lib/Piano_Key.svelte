@@ -253,7 +253,7 @@
 		text-shadow: var(--text_shadow);
 		position: absolute;
 		left: calc(50% - var(--emphasized_marker_width) / 2);
-		bottom: calc(var(--emphasized_marker_width) / 2);
+		bottom: 0;
 		width: var(--emphasized_marker_width);
 		height: var(--emphasized_marker_width);
 		user-select: none;
