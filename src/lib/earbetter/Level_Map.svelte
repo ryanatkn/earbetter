@@ -100,8 +100,8 @@
 						<li>levels can be shared via their links or exporting/importing data</li>
 					</ul>
 					<p>
-						See also <a href="https://www.youtube.com/watch?v=zW2zI1A_Ikw"
-							>the video intro on YouTube</a
+						See also the 3 minute <a href="https://www.youtube.com/watch?v=zW2zI1A_Ikw"
+							>video intro on YouTube</a
 						>
 						and <a href="https://github.com/ryanatkn/earbetter">the readme</a>.
 					</p>

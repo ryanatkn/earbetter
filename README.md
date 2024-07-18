@@ -12,7 +12,7 @@
 
 play at [earbetter.ryanatkn.com](https://earbetter.ryanatkn.com/)
 
-[video intro on YouTube](https://www.youtube.com/watch?v=zW2zI1A_Ikw)
+3 minute [video intro on YouTube](https://www.youtube.com/watch?v=zW2zI1A_Ikw)
 
 raw programming vods [YouTube playlist](https://www.youtube.com/playlist?list=PLio_5jgyVNVnamRztrGFag4XihZNmLKZT)
 
@@ -32,7 +32,7 @@ import Piano from '@ryanatkn/earbetter/Piano.svelte';
 
 ## About
 
-[video intro on YouTube](https://www.youtube.com/watch?v=zW2zI1A_Ikw)
+3 minute [video intro on YouTube](https://www.youtube.com/watch?v=zW2zI1A_Ikw)
 
 In 2016 I made a simple ear trainer named
 [Ear Sharpener](https://github.com/ryanatkn/ear-sharpener)
