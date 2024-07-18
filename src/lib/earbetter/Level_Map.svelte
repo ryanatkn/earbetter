@@ -83,7 +83,7 @@
 		</div>
 	{/if}
 	<div class="width_sm">
-		{#if app.show_trainer_help}
+		{#if BROWSER && app.show_trainer_help}
 			<section class="card" transition:slide>
 				<div class="panel p_md">
 					<p>
