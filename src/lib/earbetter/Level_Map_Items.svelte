@@ -34,7 +34,7 @@
 		<h2 class="my_0">levels</h2>
 		<h3 class="my_0">{app.selected_realm_data?.name}</h3>
 	</header>
-	<menu class="levels unstyled">
+	<menu class="levels unstyled mb_0">
 		{#each levels as d (d.id)}
 			<Level_Map_Item {app} level_data={d} />
 		{/each}
@@ -54,7 +54,6 @@
 		display: flex;
 		flex-direction: column;
 		align-items: stretch;
-		margin-bottom: var(--space_md);
 	}
 	button {
 		width: 100%;

@@ -74,7 +74,9 @@
 						<h2 class="my_0">controls</h2>
 					</header>
 					<Controls_Instructions />
-					<Volume_Control bind:volume={app.volume} />
+					<div class="mb_lg">
+						<Volume_Control bind:volume={app.volume} />
+					</div>
 					<Instrument_Control bind:instrument={app.instrument} />
 					<aside>Earbetter supports MIDI devices like piano keyboards, connect and click:</aside>
 					<Init_Midi_Button midi_state={app} />
@@ -137,7 +139,9 @@
 					<Level_Map_Items {app} levels={app.levels} />
 				</section>
 			{/if}
-			{#if app.selected_realm_id && ((app.editing_level && app.levels) ?? app.levels?.length === 0)}
+			<!-- TODO bug, maybe in eslint-plugin-svelte? -->
+			<!-- eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing -->
+			{#if app.selected_realm_id && ((app.editing_level && app.levels) || app.levels?.length === 0)}
 				<section class="card" transition:slide>
 					<div class="panel p_md">
 						<Level_Form

@@ -43,9 +43,10 @@
 			class="icon_button plain_button size_xl deselectable"
 			title={removing ? 'remove project' : 'edit project'}
 			class:selected={selected && !removing && editing}
+			class:color_c={removing}
 			onclick={() => (removing ? remove?.(project.id) : edit?.(project_data ?? load(project.id)))}
 		>
-			{#if removing}✖{:else}✎{/if}
+			{#if removing}✕{:else}✎{/if}
 		</button>
 	{/if}
 	{#if remove}
@@ -63,7 +64,9 @@
 <style>
 	.project_item {
 		display: flex;
+		align-items: center;
 		width: 100%;
+		margin-bottom: var(--space_md);
 	}
 	.plain_button:not(.selected) {
 		visibility: hidden;

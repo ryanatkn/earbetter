@@ -11,6 +11,15 @@
 
 <label class="text_align_center">
 	<div class="title">volume</div>
-	<input type="number" bind:value={volume} step={0.01} min={0} max={1} />
-	<input type="range" bind:value={volume} step={0.01} min={0} max={1} />
+	<div class="row">
+		<input type="number" bind:value={volume} step={0.01} min={0} max={1} />
+		<input type="range" bind:value={volume} step={0.01} min={0} max={1} />
+	</div>
 </label>
+
+<style>
+	input[type='number'] {
+		width: 75px;
+		max-width: 75px;
+	}
+</style>

@@ -39,7 +39,7 @@
 		<h2 class="my_0">realms</h2>
 	</header>
 	{#if app.realms && app.selected_project_data}
-		<div class="pb_md" transition:slide>
+		<div transition:slide>
 			<Realm_Items
 				project_data={app.selected_project_data}
 				selected_realm_data={app.selected_realm_data}

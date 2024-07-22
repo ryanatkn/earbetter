@@ -140,20 +140,18 @@
 			<div transition:slide>
 				<button
 					type="button"
-					class="w_100"
+					class="color_c w_100"
 					onclick={() => {
 						removing = false;
 						onremove(realm_data.id);
 					}}
 				>
-					✖ confirm remove
+					✕ confirm remove
 				</button>
 			</div>
 		{/if}
 		{#if onduplicate}
-			<button type="button" class="mt_lg" onclick={() => onduplicate(realm_data.id)}>
-				duplicate realm
-			</button>
+			<button type="button" onclick={() => onduplicate(realm_data.id)}> duplicate realm </button>
 		{/if}
 	{/if}
 	<button type="button" onclick={start_importing_data} bind:this={start_importing_el}>
@@ -203,5 +201,8 @@
 
 	button {
 		width: 100%;
+	}
+	button:not(:last-child) {
+		margin-bottom: var(--space_md);
 	}
 </style>

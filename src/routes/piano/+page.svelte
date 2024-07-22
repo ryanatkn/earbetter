@@ -87,7 +87,7 @@
 	<form class="width_sm panel p_md">
 		<fieldset>
 			<Instrument_Control bind:instrument={app.instrument} />
-			<div class="row">
+			<div class="row mb_lg">
 				<Select_Notes_Control bind:scale={app.scale} bind:key={app.key} />
 			</div>
 			<Volume_Control bind:volume={app.volume} />

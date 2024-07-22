@@ -271,20 +271,18 @@
 				<div transition:slide>
 					<button
 						type="button"
-						class="w_100"
+						class="color_c w_100"
 						onclick={() => {
 							removing = false;
 							onremove(level_data.id);
 						}}
 					>
-						✖ confirm remove
+						✕ confirm remove
 					</button>
 				</div>
 			{/if}
 			{#if onduplicate}
-				<button type="button" class="mt_lg" onclick={() => onduplicate(level_data.id)}>
-					duplicate level
-				</button>
+				<button type="button" onclick={() => onduplicate(level_data.id)}> duplicate level </button>
 			{/if}
 		{/if}
 		<button type="button" onclick={start_importing_data} bind:this={start_importing_el}>
@@ -400,5 +398,9 @@
 	.small_input {
 		width: 75px;
 		min-width: 75px;
+	}
+
+	button:not(:last-child) {
+		margin-bottom: var(--space_md);
 	}
 </style>

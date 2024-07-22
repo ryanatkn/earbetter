@@ -46,10 +46,11 @@
 			type="button"
 			class="icon_button plain_button size_xl deselectable"
 			class:selected={selected && !removing && editing}
+			class:color_c={removing}
 			title={removing ? 'remove realm' : editing ? 'stop editing realm' : 'edit realm'}
 			onclick={() => (removing ? remove?.(realm_data.id) : edit?.(realm_data))}
 		>
-			{#if removing}✖{:else}✎{/if}
+			{#if removing}✕{:else}✎{/if}
 		</button>
 	{/if}
 	{#if remove}
@@ -67,7 +68,9 @@
 <style>
 	.realm_item {
 		display: flex;
+		align-items: center;
 		width: 100%;
+		margin-bottom: var(--space_md);
 	}
 	.plain_button:not(.selected) {
 		visibility: hidden;

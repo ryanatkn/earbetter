@@ -41,11 +41,12 @@
 		type="button"
 		class="icon_button plain_button size_xl"
 		class:selected={!removing && editing}
+		class:color_c={removing}
 		title={removing ? 'remove level' : editing ? 'stop editing level' : 'edit level'}
 		onclick={() =>
 			removing ? app.remove_level(level_data.id) : app.edit_level(editing ? null : level_data)}
 	>
-		{#if removing}✖{:else}✎{/if}
+		{#if removing}✕{:else}✎{/if}
 	</button>
 	<button
 		type="button"
@@ -60,6 +61,8 @@
 <style>
 	.level_map_item {
 		display: flex;
+		align-items: center;
+		margin-bottom: var(--space_md);
 	}
 	.plain_button:not(.selected) {
 		visibility: hidden;

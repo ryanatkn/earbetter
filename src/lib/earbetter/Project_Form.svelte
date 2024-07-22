@@ -142,13 +142,13 @@
 			<div transition:slide>
 				<button
 					type="button"
-					class="w_100"
+					class="color_c w_100"
 					onclick={() => {
 						removing = false;
 						onremove(project_data.id);
 					}}
 				>
-					✖ confirm remove
+					✕ confirm remove
 				</button>
 			</div>
 		{/if}
@@ -176,5 +176,9 @@
 <style>
 	.importing textarea {
 		height: calc(var(--input_height) * 3);
+	}
+
+	button:not(:last-child) {
+		margin-bottom: var(--space_md);
 	}
 </style>
