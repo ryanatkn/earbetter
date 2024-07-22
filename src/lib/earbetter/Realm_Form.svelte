@@ -137,7 +137,7 @@
 	{#if onremove && editing}
 		<button type="button" onclick={() => (removing = !removing)}> remove realm </button>
 		{#if removing}
-			<div transition:slide>
+			<div transition:slide class="pb_md">
 				<button
 					type="button"
 					class="color_c w_100"
