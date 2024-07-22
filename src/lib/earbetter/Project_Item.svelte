@@ -37,7 +37,9 @@
 			{project.name}
 		</button>
 	{/if}
-	{#if (removing && remove) ?? (!removing && edit)}
+	<!-- TODO bug with eslint-plugin-svelte? -->
+	<!-- eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing -->
+	{#if (removing && remove) || (!removing && edit)}
 		<button
 			type="button"
 			class="icon_button plain_button size_xl deselectable"

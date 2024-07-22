@@ -63,7 +63,9 @@
 					<Projects {app} />
 				</section>
 			{/if}
-			{#if (app.editing_project && app.editing_project_data) ?? !app.selected_project_data}
+			<!-- TODO bug with eslint-plugin-svelte? -->
+			<!-- eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing -->
+			{#if (app.editing_project && app.editing_project_data) || !app.selected_project_data}
 				<section class="card" transition:slide>
 					<Project_Editor {app} />
 				</section>
