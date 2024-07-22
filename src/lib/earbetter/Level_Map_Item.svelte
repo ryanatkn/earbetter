@@ -1,5 +1,6 @@
 <script lang="ts">
 	import {slide} from 'svelte/transition';
+	import {tick} from 'svelte';
 
 	import type {Level_Data} from '$lib/earbetter/level.svelte.js';
 	import type {App} from '$lib/earbetter/app.svelte.js';
@@ -43,8 +44,19 @@
 		class:selected={!removing && editing}
 		class:color_c={removing}
 		title={removing ? 'remove level' : editing ? 'stop editing level' : 'edit level'}
-		onclick={() =>
-			removing ? app.remove_level(level_data.id) : app.edit_level(editing ? null : level_data)}
+		onclick={async () => {
+			if (removing) {
+				app.remove_level(level_data.id);
+			} else {
+				const opening = !editing;
+				app.edit_level(opening ? level_data : null);
+				if (opening) {
+					await tick();
+					const el = document.querySelector('.level_def_form');
+					el?.scrollIntoView({behavior: 'smooth', block: 'center'});
+				}
+			}
+		}}
 	>
 		{#if removing}✕{:else}✎{/if}
 	</button>

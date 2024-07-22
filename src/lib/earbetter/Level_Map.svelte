@@ -142,7 +142,8 @@
 			<!-- TODO bug, maybe in eslint-plugin-svelte? -->
 			<!-- eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing -->
 			{#if app.selected_realm_id && ((app.editing_level && app.levels) || app.levels?.length === 0)}
-				<section class="card" transition:slide>
+				<!-- TODO transition only out, so we can scroll to it - but ideally we'd open a column to the right if there's space -->
+				<section class="card" out:slide>
 					<div class="panel p_md">
 						<Level_Form
 							{editing}
