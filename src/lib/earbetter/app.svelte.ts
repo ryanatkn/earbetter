@@ -53,12 +53,12 @@ export class App {
 	// TODO wheres the source of truth?
 	// currently manually syncing the same changes to both `app_data` `projects` --
 	// mixing serialization concerns with runtime representations
-	app_data: App_Data = $state.frozen()!;
+	app_data: App_Data = $state.raw()!;
 
 	// TODO does initializing these to the defaults without the app data cause any weirdness? creating them eagerly because we can't do `this.volume = $state(...)` in the constructor
 	volume: Volume = $state(DEFAULT_VOLUME);
 	instrument: Instrument = $state(DEFAULT_INSTRUMENT);
-	scale: Scale = $state.frozen(DEFAULT_SCALE);
+	scale: Scale = $state.raw(DEFAULT_SCALE);
 	key: Pitch_Class = $state(pitch_classes[0]);
 	enabled_notes: Set<Midi> | null = $derived(
 		this.scale.name === 'chromatic' ? null : to_notes_in_scale(this.scale, this.key),
@@ -78,7 +78,7 @@ export class App {
 		};
 	};
 
-	project_datas: readonly Project_Data[] = $state.frozen([]); // TODO weird name
+	project_datas: readonly Project_Data[] = $state.raw([]); // TODO weird name
 
 	selected_project_id: Project_Id | null = $state(null);
 	selected_project_data: Project_Data | null = $derived(
@@ -87,7 +87,7 @@ export class App {
 	realms: Realm_Data[] | null = $derived(this.selected_project_data?.realms ?? null);
 	editing_project: boolean = $state(false);
 	editing_project_draft: boolean = $state(false);
-	draft_project_data: Project_Data | null = $state.frozen(null);
+	draft_project_data: Project_Data | null = $state.raw(null);
 	editing_project_id: Project_Id | null = $derived(
 		this.editing_project_draft
 			? (this.draft_project_data?.id ?? null)
@@ -103,7 +103,7 @@ export class App {
 	);
 	editing_realm: boolean = $state(false);
 	editing_realm_draft: boolean = $state(false);
-	draft_realm_data: Realm_Data | null = $state.frozen(null);
+	draft_realm_data: Realm_Data | null = $state.raw(null);
 	editing_realm_id: Realm_Id | null = $derived(
 		this.editing_realm_draft
 			? (this.draft_realm_data?.id ?? null)
@@ -116,7 +116,7 @@ export class App {
 	/**
 	 * Sourced from the URL hash on the `/level` route.
 	 */
-	active_level_data: Level_Data | null = $state.frozen(null);
+	active_level_data: Level_Data | null = $state.raw(null);
 
 	level: Level | null = $derived.by(() => {
 		console.log('computing level', this.active_level_data);
@@ -127,7 +127,7 @@ export class App {
 
 	levels: Level_Data[] | null = $derived(this.selected_realm_data?.levels ?? null);
 	editing_level: boolean = $state(false);
-	draft_level_data: Level_Data | null = $state.frozen(null);
+	draft_level_data: Level_Data | null = $state.raw(null);
 
 	constructor(
 		public readonly get_audio_context: () => AudioContext,
