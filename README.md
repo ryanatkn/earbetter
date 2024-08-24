@@ -131,7 +131,8 @@ customize or delete [src/static/CNAME](/src/static/CNAME).
 ## Credits 🐢<sub>🐢</sub><sub><sub>🐢</sub></sub>
 
 My sister Lisa helped me evolve the logo concept -
-[instagram.com/lisaeatkinson](https://www.instagram.com/lisaeatkinson/)
+[instagram.com/lisaeatkinson](https://www.instagram.com/lisaeatkinson/) -
+she's currently looking for work as a UX designer
 
 [TypeScript](https://github.com/microsoft/TypeScript) ∙
 [Svelte](https://github.com/sveltejs/svelte) ∙
