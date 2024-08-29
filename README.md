@@ -132,7 +132,7 @@ customize or delete [src/static/CNAME](/src/static/CNAME).
 
 My sister Lisa helped me evolve the logo concept -
 [instagram.com/lisaeatkinson](https://www.instagram.com/lisaeatkinson/) -
-she's currently looking for work as a UX designer
+she's a designer and currently looking for work
 
 [TypeScript](https://github.com/microsoft/TypeScript) ∙
 [Svelte](https://github.com/sveltejs/svelte) ∙
