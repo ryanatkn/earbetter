@@ -187,7 +187,7 @@
 </div>
 
 {#snippet buttons()}
-	{#if before_buttons}{@render before_buttons()}{/if}
+	{@render before_buttons()}
 	<button
 		class="mb_lg"
 		type="button"
