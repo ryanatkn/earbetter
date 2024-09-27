@@ -21,7 +21,7 @@
 	import Notes_Input from '$lib/Notes_Input.svelte';
 	import Piano from '$lib/Piano.svelte';
 	import Copy_To_Clipboard from '$lib/earbetter/Copy_To_Clipboard.svelte';
-	import {get_app} from '$lib/earbetter/app.svelte.js';
+	import {app_context} from '$lib/earbetter/app.svelte.js';
 
 	interface Props {
 		level_data: Level_Data;
@@ -43,7 +43,7 @@
 		onclose,
 	}: Props = $props();
 
-	const app = get_app();
+	const app = app_context.get();
 
 	let removing = $state(false);
 

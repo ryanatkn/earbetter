@@ -3,7 +3,7 @@
 	import {page} from '$app/stores';
 	import {base} from '$app/paths';
 
-	import {get_main_menu} from '$routes/main_menu_state.svelte.js';
+	import {main_menu_context} from '$routes/main_menu_state.svelte.js';
 
 	interface Props {
 		hide_main_menu_button?: boolean;
@@ -14,7 +14,7 @@
 	const pathname = $derived($page.url.pathname);
 	const home = $derived(pathname === base + '/');
 
-	const main_menu = get_main_menu();
+	const main_menu = main_menu_context.get();
 </script>
 
 {#if home}

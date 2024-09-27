@@ -1,7 +1,7 @@
 <script lang="ts">
-	import {get_main_menu} from '$routes/main_menu_state.svelte.js';
+	import {main_menu_context} from '$routes/main_menu_state.svelte.js';
 
-	const main_menu = get_main_menu();
+	const main_menu = main_menu_context.get();
 </script>
 
 <aside>

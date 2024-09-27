@@ -4,7 +4,7 @@
 	import {base} from '$app/paths';
 
 	import Piano from '$lib/Piano.svelte';
-	import {get_audio_context} from '$lib/audio_context.js';
+	import {audio_context_context} from '$lib/audio_context.js';
 	import Midi_Input from '$lib/Midi_Input.svelte';
 	import {start_playing, stop_playing} from '$lib/play_note.js';
 	import Init_Midi_Button from '$lib/Init_Midi_Button.svelte';
@@ -18,9 +18,9 @@
 	import Select_Notes_Control from '$lib/Select_Notes_Control.svelte';
 	import {load_from_storage, set_in_storage} from '$lib/storage.js';
 	import Back_Button from '$routes/Back_Button.svelte';
-	import {get_app} from '$lib/earbetter/app.svelte.js';
+	import {app_context} from '$lib/earbetter/app.svelte.js';
 
-	const app = get_app();
+	const app = app_context.get();
 
 	// TODO extract? is pretty specific
 	const Piano_Settings = z.object({
@@ -42,7 +42,7 @@
 	const save_piano_data = () => set_in_storage(SITE_DATA_STORAGE_KEY, to_piano_data());
 	$effect(save_piano_data);
 
-	const ac = get_audio_context();
+	const ac = audio_context_context.get();
 
 	const {playing_notes} = app;
 

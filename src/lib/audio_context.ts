@@ -1,4 +1,4 @@
-import {setContext, getContext} from 'svelte';
+import {create_context} from '@ryanatkn/fuz/context_helpers.js';
 import {noop} from '@ryanatkn/belt/function.js';
 import {BROWSER} from 'esm-env';
 
@@ -9,23 +9,16 @@ import {noop_ssr} from '$lib/util.js';
 // The "ctx" abbreviation refers to `AudioContext`,
 // and the fully spelled out "context" refers to usage with Svelte.
 
-const KEY = Symbol('audio_context');
-
 export type Get_Audio_Context = () => AudioContext;
 
 /**
- * Components can do `const ac = get_audio_context();` and then use it with `ac()`.
- */
-export const get_audio_context = (): Get_Audio_Context => getContext(KEY);
-
-/**
  * Puts a lazy getter for `AudioContext` into the component's context.
+ * Components can do `const ac = audio_context_context.get();` and then use it with `ac()`.
  */
-export const set_audio_context = (): Get_Audio_Context => {
+export const audio_context_context = create_context((): Get_Audio_Context => {
 	let ac: AudioContext | undefined;
-	const get_audio_context: Get_Audio_Context = () => (ac ??= create_audio_context());
-	return setContext(KEY, get_audio_context);
-};
+	return () => (ac ??= create_audio_context());
+});
 
 /**
  * This should be called during a user input action like a click,

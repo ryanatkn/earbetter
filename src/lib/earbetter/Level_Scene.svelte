@@ -8,14 +8,14 @@
 	import Piano from '$lib/Piano.svelte';
 	import Level_Progress_Indicator from '$lib/earbetter/Level_Progress_Indicator.svelte';
 	import Trial_Progress_Indicator from '$lib/earbetter/Trial_Progress_Indicator.svelte';
-	import {get_audio_context} from '$lib/audio_context.js';
+	import {audio_context_context} from '$lib/audio_context.js';
 	import Midi_Input from '$lib/Midi_Input.svelte';
 	import type {Midi} from '$lib/music.js';
 	import {start_playing, stop_playing} from '$lib/play_note.js';
 	import {with_velocity} from '$lib/audio_helpers.js';
 	import Level_Stats_Summary from '$lib/earbetter/Level_Stats_Summary.svelte';
 	import Text_Burst from '$lib/Text_Burst.svelte';
-	import {get_app} from '$lib/earbetter/app.svelte.js';
+	import {app_context} from '$lib/earbetter/app.svelte.js';
 
 	interface Props {
 		level: Level;
@@ -25,9 +25,9 @@
 
 	const {level, level_stats, exit_level}: Props = $props();
 
-	const app = get_app();
+	const app = app_context.get();
 
-	const ac = get_audio_context();
+	const ac = audio_context_context.get();
 
 	let clientWidth: number | undefined = $state();
 

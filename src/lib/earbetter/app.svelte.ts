@@ -1,6 +1,7 @@
 import {goto} from '$app/navigation';
 import {z} from 'zod';
-import {getContext, setContext, untrack} from 'svelte';
+import {untrack} from 'svelte';
+import {create_context} from '@ryanatkn/fuz/context_helpers.js';
 import {base} from '$app/paths';
 import {SvelteSet} from 'svelte/reactivity';
 
@@ -45,9 +46,7 @@ export const App_Data = z.object({
 });
 export type App_Data = z.infer<typeof App_Data>;
 
-const APP_KEY = Symbol('app');
-export const get_app = (): App => getContext(APP_KEY);
-export const set_app = (store: App): App => setContext(APP_KEY, store);
+export const app_context = create_context<App>();
 
 export class App {
 	// TODO wheres the source of truth?

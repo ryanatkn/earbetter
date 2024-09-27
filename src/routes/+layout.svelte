@@ -11,14 +11,14 @@
 	import {page} from '$app/stores';
 	import {BROWSER} from 'esm-env';
 
-	import {set_audio_context} from '$lib/audio_context.js';
+	import {audio_context_context} from '$lib/audio_context.js';
 	import {request_access} from '$lib/midi_access.js';
-	import {App, set_app} from '$lib/earbetter/app.svelte.js';
+	import {App, app_context} from '$lib/earbetter/app.svelte.js';
 	import {load_from_storage, set_in_storage} from '$lib/storage.js';
 	import {Site_Data} from '$routes/site_data.js';
 	import Init_Audio_Context from '$lib/Init_Audio_Context.svelte';
 	import Main_Menu from '$routes/Main_Menu.svelte';
-	import {set_main_menu} from '$routes/main_menu_state.svelte.js';
+	import {main_menu_context} from '$routes/main_menu_state.svelte.js';
 	import {Level_Hash_Data} from '$lib/earbetter/level.svelte.js';
 	import {parse_from_hash} from '$lib/url.js';
 
@@ -40,12 +40,12 @@
 	);
 	console.log(`initial_site_data`, initial_site_data);
 
-	const get_audio_context = set_audio_context();
+	const get_audio_context = audio_context_context.set();
 
-	const app = set_app(new App(get_audio_context, initial_site_data));
+	const app = app_context.set(new App(get_audio_context, initial_site_data));
 	if (BROWSER) (window as any).app = app;
 
-	const main_menu = set_main_menu();
+	const main_menu = main_menu_context.set();
 
 	const current_level_hash_data = $derived.by(() => {
 		const parsed = Level_Hash_Data.safeParse(parse_from_hash($page.url.hash));

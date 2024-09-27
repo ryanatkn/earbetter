@@ -1,9 +1,9 @@
 <script lang="ts">
 	import Level_Scene from '$lib/earbetter/Level_Scene.svelte';
-	import {get_app} from '$lib/earbetter/app.svelte.js';
+	import {app_context} from '$lib/earbetter/app.svelte.js';
 	import Back_Button from '$routes/Back_Button.svelte';
 
-	const app = get_app();
+	const app = app_context.get();
 
 	const level_stats = $derived(app.selected_project_data?.level_stats);
 </script>

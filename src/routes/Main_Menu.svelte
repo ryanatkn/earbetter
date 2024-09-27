@@ -15,8 +15,8 @@
 	import Init_Midi_Button from '$lib/Init_Midi_Button.svelte';
 	import Footer from '$routes/Footer.svelte';
 	import Site_Breadcrumb from '$routes/Site_Breadcrumb.svelte';
-	import {get_main_menu} from '$routes/main_menu_state.svelte.js';
-	import {get_app} from '$lib/earbetter/app.svelte.js';
+	import {main_menu_context} from '$routes/main_menu_state.svelte.js';
+	import {app_context} from '$lib/earbetter/app.svelte.js';
 
 	// TODO @many let any routes (and components?) add sections to the menu via snippets
 
@@ -24,9 +24,9 @@
 	 * Designed as a singleton to be used in the entire application. Maybe make more general?
 	 */
 
-	const app = get_app();
+	const app = app_context.get();
 
-	const main_menu = get_main_menu();
+	const main_menu = main_menu_context.get();
 	afterNavigate(() => main_menu.opened && main_menu.close());
 
 	let deleting = $state(false);

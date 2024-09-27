@@ -4,11 +4,11 @@
 
 	import Header from '$routes/Header.svelte';
 	import Footer from '$routes/Footer.svelte';
-	import {get_app} from '$lib/earbetter/app.svelte.js';
+	import {app_context} from '$lib/earbetter/app.svelte.js';
 	import Level_Map from '$lib/earbetter/Level_Map.svelte';
 	import Back_Button from '$routes/Back_Button.svelte';
 
-	const app = get_app();
+	const app = app_context.get();
 </script>
 
 <svelte:head>

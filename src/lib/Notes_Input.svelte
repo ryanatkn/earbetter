@@ -4,7 +4,7 @@
 	import type {SvelteSet} from 'svelte/reactivity';
 
 	import Piano from '$lib/Piano.svelte';
-	import {get_audio_context} from '$lib/audio_context.js';
+	import {audio_context_context} from '$lib/audio_context.js';
 	import Midi_Input from '$lib/Midi_Input.svelte';
 	import {start_playing, stop_playing} from '$lib/play_note.js';
 	import Init_Midi_Button from '$lib/Init_Midi_Button.svelte';
@@ -79,7 +79,7 @@
 
 	let key = $state(DEFAULT_PITCH_CLASS);
 
-	const ac = get_audio_context();
+	const ac = audio_context_context.get();
 
 	// TODO hacky
 	let innerWidth: number | undefined = $state();

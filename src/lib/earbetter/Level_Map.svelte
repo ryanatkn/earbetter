@@ -2,7 +2,7 @@
 	import {slide} from 'svelte/transition';
 	import {BROWSER} from 'esm-env';
 
-	import {get_audio_context} from '$lib/audio_context.js';
+	import {audio_context_context} from '$lib/audio_context.js';
 	import Init_Midi_Button from '$lib/Init_Midi_Button.svelte';
 	import Level_Form from '$lib/earbetter/Level_Form.svelte';
 	import Projects from '$lib/earbetter/Projects.svelte';
@@ -35,7 +35,7 @@
 		update_level,
 	} = $derived(app);
 
-	const ac = get_audio_context();
+	const ac = audio_context_context.get();
 	if (BROWSER) (window as any).ac = ac;
 
 	// TODO review the draft/editing data properties of `app`, some inconsistencies between levels/realms/projects
