@@ -4,11 +4,6 @@ import {BROWSER} from 'esm-env';
 
 import {noop_ssr} from '$lib/util.js';
 
-// There's an unfortunate overlap between "context" as in
-// svelte's `getContext`/`setContext`, and the browser's `AudioContext`.
-// The "ctx" abbreviation refers to `AudioContext`,
-// and the fully spelled out "context" refers to usage with Svelte.
-
 export type Get_Audio_Context = () => AudioContext;
 
 /**
