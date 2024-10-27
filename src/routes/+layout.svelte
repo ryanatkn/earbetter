@@ -1,8 +1,8 @@
 <script lang="ts">
 	import '@ryanatkn/moss/style.css';
 	import '@ryanatkn/moss/theme.css';
-	import '$lib/style.css';
 	import '$routes/moss.css';
+	import '$lib/style.css';
 
 	import Themed from '@ryanatkn/fuz/Themed.svelte';
 	import {is_editable, swallow} from '@ryanatkn/belt/dom.js';
