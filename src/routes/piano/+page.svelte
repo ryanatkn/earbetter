@@ -22,17 +22,17 @@
 
 	const app = app_context.get();
 
-	// TODO extract? is pretty specific
-	const Piano_Settings = z.object({
+	// TODO extract? is pretty specific - and Svelte is erroring without the `_Schema`
+	const Piano_Settings_Schema = z.object({
 		min_note: Midi.default(36),
 		max_note: Midi.default(96),
 	});
-	type Piano_Settings = z.infer<typeof Piano_Settings>;
+	type Piano_Settings = z.infer<typeof Piano_Settings_Schema>;
 	const SITE_DATA_STORAGE_KEY = 'piano';
 	const initial_piano_settings = load_from_storage(
 		SITE_DATA_STORAGE_KEY,
-		() => Piano_Settings.parse({}),
-		Piano_Settings.parse,
+		() => Piano_Settings_Schema.parse({}),
+		Piano_Settings_Schema.parse,
 	);
 
 	let min_note = $state(initial_piano_settings.min_note);
