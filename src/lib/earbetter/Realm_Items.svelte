@@ -6,7 +6,7 @@
 	interface Props {
 		selected_realm_data?: Realm_Data | null;
 		editing_realm_id?: Realm_Id | null;
-		realms?: Realm_Data[];
+		realms?: Array<Realm_Data>;
 		project_data: Project_Data;
 		select_realm: (id: Realm_Id) => void;
 		edit_realm: (realm_data: Realm_Data | null) => void;

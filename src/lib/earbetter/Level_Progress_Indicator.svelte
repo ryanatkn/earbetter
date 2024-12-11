@@ -7,7 +7,7 @@
 
 	const {level}: Props = $props();
 
-	const to_bg_color = (s: Status, t: Trial | null, ts: Trial[], index: number): string => {
+	const to_bg_color = (s: Status, t: Trial | null, ts: Array<Trial>, index: number): string => {
 		return s === 'complete'
 			? 'var(--lighten_5)'
 			: ts[index] // trials are created when needed, not ahead of time

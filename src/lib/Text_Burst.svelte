@@ -5,7 +5,7 @@
 
 	interface Props {
 		count: number;
-		items: string[];
+		items: Array<string>;
 		duration?: number;
 		x_radius?: number;
 		y_radius?: number;

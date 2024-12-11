@@ -21,7 +21,7 @@ export const DEFAULT_SEQUENCE_LENGTH = 2;
 export const DEFAULT_TRIAL_COUNT = 5;
 export const DEFAULT_LEVEL_NAME = 'new level';
 export const DEFAULT_INTERVALS: Intervals = [5, 7];
-export const DEFAULT_TONICS: Midi[] | null = null;
+export const DEFAULT_TONICS: Array<Midi> | null = null;
 export const DEFAULT_MIN_NOTE: Midi = 48;
 export const DEFAULT_MAX_NOTE: Midi = 84;
 
@@ -61,7 +61,7 @@ export type Status =
 export interface Trial {
 	index: number;
 	valid_notes: Set<Midi>;
-	sequence: Midi[];
+	sequence: Array<Midi>;
 	presenting_index: number | null; // index of interval being presented
 	guessing_index: number | null; // index of interval being guessed
 	retry_count: number;
@@ -83,7 +83,7 @@ export class Level {
 	status: Status = $state(DEFAULT_STATUS);
 	mistakes: number = $state(0);
 	trial: Trial | null = $state(DEFAULT_TRIAL);
-	trials: Trial[] = $state([]);
+	trials: Array<Trial> = $state([]);
 	last_guess: Midi | null = $state(null);
 
 	reset = (): void => {
@@ -280,7 +280,7 @@ const get_incorrect_guess_for_trial = (trial: Trial | null): Midi | null => {
 
 const create_next_trial = (def: Level_Data, current_trial: Trial | null): Trial => {
 	const tonic = to_random_tonic(def);
-	const sequence: Midi[] = [tonic];
+	const sequence: Array<Midi> = [tonic];
 
 	const valid_notes = create_valid_notes(tonic, def.min_note, def.max_note, def.intervals);
 
@@ -313,9 +313,9 @@ const create_valid_notes = (
 	min_note: Midi,
 	max_note: Midi,
 	intervals: Intervals,
-): Midi[] => {
+): Array<Midi> => {
 	const valid_intervals = new Set([0, ...intervals]); // allow tonic to repeat
-	const valid_notes: Midi[] = [];
+	const valid_notes: Array<Midi> = [];
 	for (let i = min_note; i <= max_note; i++) {
 		const interval = i - tonic;
 		if (valid_intervals.has(interval)) {
@@ -375,7 +375,7 @@ export const add_mistakes_to_level_stats = (
 // TODO refactor - parameter?
 export const MISTAKE_HISTORY_LENGTH = 4;
 
-const add_mistakes = (data: number[] | undefined, mistakes: number): number[] => {
+const add_mistakes = (data: Array<number> | undefined, mistakes: number): Array<number> => {
 	const updated = data?.slice() ?? [];
 	if (updated.length >= MISTAKE_HISTORY_LENGTH) {
 		updated.sort((a, b) => a - b).length = MISTAKE_HISTORY_LENGTH;

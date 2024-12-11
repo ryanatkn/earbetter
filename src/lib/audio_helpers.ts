@@ -44,5 +44,5 @@ export const SMOOTH_GAIN_TIME_CONSTANT = 0.03;
 // and we'll probably add to the type union the data for `createPeriodicWave`
 export const Instrument = z.enum(['sawtooth', 'sine', 'square', 'triangle']);
 export type Instrument = z.infer<typeof Instrument>;
-export const instruments: Instrument[] = Instrument.options;
+export const instruments: Array<Instrument> = Instrument.options;
 export const DEFAULT_INSTRUMENT: Instrument = 'sine';

@@ -77,13 +77,13 @@ export class App {
 		};
 	};
 
-	project_datas: readonly Project_Data[] = $state.raw([]); // TODO weird name
+	project_datas: ReadonlyArray<Project_Data> = $state.raw([]); // TODO weird name
 
 	selected_project_id: Project_Id | null = $state(null);
 	selected_project_data: Project_Data | null = $derived(
 		this.project_datas.find((p) => p.id === this.selected_project_id) ?? null,
 	);
-	realms: Realm_Data[] | null = $derived(this.selected_project_data?.realms ?? null);
+	realms: Array<Realm_Data> | null = $derived(this.selected_project_data?.realms ?? null);
 	editing_project: boolean = $state(false);
 	editing_project_draft: boolean = $state(false);
 	draft_project_data: Project_Data | null = $state.raw(null);
@@ -124,7 +124,7 @@ export class App {
 			: null;
 	});
 
-	levels: Level_Data[] | null = $derived(this.selected_realm_data?.levels ?? null);
+	levels: Array<Level_Data> | null = $derived(this.selected_realm_data?.levels ?? null);
 	editing_level: boolean = $state(false);
 	draft_level_data: Level_Data | null = $state.raw(null);
 
@@ -175,7 +175,7 @@ export class App {
 
 	load(): App_Data {
 		const loaded = load_from_storage(this.storage_key, () => App_Data.parse({}), App_Data.parse);
-		let ids_to_delete: Project_Id[] | null = null;
+		let ids_to_delete: Array<Project_Id> | null = null;
 		for (const p of loaded.projects) {
 			if (localStorage.getItem(p.id) === null) {
 				console.warn('deleting unknown id', p);

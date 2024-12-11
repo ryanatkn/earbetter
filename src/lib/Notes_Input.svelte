@@ -2,6 +2,7 @@
 	import {plural} from '@ryanatkn/belt/string.js';
 	import type {Snippet} from 'svelte';
 	import type {SvelteSet} from 'svelte/reactivity';
+	import {innerWidth} from 'svelte/reactivity/window';
 
 	import Piano from '$lib/Piano.svelte';
 	import {audio_context_context} from '$lib/audio_context.js';
@@ -36,7 +37,7 @@
 		min_note: Midi;
 		max_note: Midi;
 		before_buttons: Snippet;
-		oninput?: (notes: Midi[] | null) => void; // TODO @many set reactivity - API is strange returning an array but taking a set (maybe return both?)
+		oninput?: (notes: Array<Midi> | null) => void; // TODO @many set reactivity - API is strange returning an array but taking a set (maybe return both?)
 	}
 
 	const {audio_state, notes, min_note, max_note, before_buttons, oninput}: Props = $props();
@@ -46,7 +47,7 @@
 	// TODO @many set reactivity - refactor these collections to use `svelte/reactivity` sets instead of cloning, upstream and downstream where appropriate
 
 	let updated_notes: Set<Midi> | undefined = $state();
-	const updated_notes_array: Midi[] | undefined = $derived(
+	const updated_notes_array: Array<Midi> | undefined = $derived(
 		updated_notes && Array.from(updated_notes).sort((a, b) => a - b),
 	);
 
@@ -80,9 +81,6 @@
 	let key = $state(DEFAULT_PITCH_CLASS);
 
 	const ac = audio_context_context.get();
-
-	// TODO hacky
-	let innerWidth: number | undefined = $state();
 
 	const piano_padding = 20;
 
@@ -118,8 +116,6 @@
 	};
 </script>
 
-<svelte:window bind:innerWidth />
-
 <Midi_Input
 	midi_access={audio_state.midi_access}
 	onnotestart={(note, velocity) => play(note, velocity)}
@@ -129,10 +125,10 @@
 <div class="notes_input pt_lg">
 	{@render buttons()}
 	<div class="piano_wrapper" style:padding="{piano_padding}px">
-		{#if innerWidth}
+		{#if innerWidth.current}
 			<!-- TODO @many hacky width -->
 			<Piano
-				width={innerWidth - piano_padding * 5}
+				width={innerWidth.current - piano_padding * 5}
 				{min_note}
 				{max_note}
 				max_height={300}

@@ -50,7 +50,7 @@
 	let updated_name: string = $state(level_data.name);
 	const normalized_updated_name = $derived((updated_name as any)?.trim());
 	let updated_intervals: Intervals = $state.raw(level_data.intervals);
-	let updated_tonics: readonly Midi[] | null = $state.raw(level_data.tonics);
+	let updated_tonics: ReadonlyArray<Midi> | null = $state.raw(level_data.tonics);
 	const normalized_updated_tonics = $derived(
 		updated_tonics
 			? updated_tonics.filter((t) => t >= updated_min_note && t <= updated_max_note)

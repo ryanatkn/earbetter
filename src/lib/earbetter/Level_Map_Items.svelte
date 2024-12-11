@@ -5,7 +5,7 @@
 
 	interface Props {
 		app: App;
-		levels: Level_Data[]; // TODO making this a prop here, but using `app` most places, maybe change it to context?
+		levels: Array<Level_Data>; // TODO making this a prop here, but using `app` most places, maybe change it to context?
 	}
 
 	const {app, levels}: Props = $props();

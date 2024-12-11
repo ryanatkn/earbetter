@@ -107,8 +107,8 @@ export const parse_intervals = (value: string): Intervals =>
 /**
  * @see https://wikipedia.org/wiki/Natural_(music)
  */
-export const compute_naturals = (min: Midi, max: Midi): Midi[] => {
-	const naturals: Midi[] = [];
+export const compute_naturals = (min: Midi, max: Midi): Array<Midi> => {
+	const naturals: Array<Midi> = [];
 	for (let i = min; i <= max; i++) {
 		if (midi_naturals.has(i)) naturals.push(i);
 	}
@@ -200,7 +200,7 @@ export type Scale = z.infer<typeof Scale>;
  * @see https://wikipedia.org/wiki/Scale_(music)
  * @see https://wikipedia.org/wiki/Mode_(music)
  */
-export const scales: Scale[] = [
+export const scales: Array<Scale> = [
 	{name: 'chromatic', notes: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11]},
 	{name: 'major', notes: [2, 4, 5, 7, 9, 11]},
 	{name: 'minor', notes: [2, 3, 5, 7, 8, 10]},
@@ -222,7 +222,7 @@ export const lookup_scale = (name: Scale_Name): Scale => {
 };
 
 export const to_scale_notes = (scale: Scale, octaves: number): Intervals => {
-	const notes: number[] = [];
+	const notes: Array<number> = [];
 	for (let i = 0; i < octaves; i++) {
 		const up = i % 2 === 0;
 		const direction = up ? 1 : -1;
@@ -242,7 +242,7 @@ export const to_notes_in_scale = (
 	min_note: Midi = MIDI_MIN,
 	max_note: Midi = MIDI_MAX,
 ): Set<Midi> => {
-	const notes: Midi[] = [];
+	const notes: Array<Midi> = [];
 	const pitch_class_offset = pitch_classes.indexOf(key);
 	const note_offset_min = pitch_classes.indexOf(midi_pitch_classes[min_note]);
 	const initial_offset = pitch_class_offset - note_offset_min;
@@ -272,9 +272,9 @@ export const MIDI_MAX = 127;
 export const Midi = z.number().int().min(MIDI_MIN).max(MIDI_MAX);
 export type Midi = Flavored<z.infer<typeof Midi>, 'Midi'>; // TODO @many this doesn't work when used as a schema, use z.brand() instead? or are the egonomics too bad?
 
-export const midis: Midi[] = Object.freeze(
+export const midis: Array<Midi> = Object.freeze(
 	Array.from({length: MIDI_MAX + 1}, (_, i) => i),
-) as Midi[];
+) as Array<Midi>;
 
 export const is_midi = (n: number): n is Midi =>
 	n >= MIDI_MIN && n <= MIDI_MAX && Number.isInteger(n);
@@ -304,21 +304,21 @@ export const freq_to_midi_safe = (freq: Frequency, tuning: Frequency): Midi | nu
 // TODO consider converting all of these to `Map`s
 // TODO do we want to remove the `midi` part of these data array names, or otherwise rename them? maybe instead of `midi_*`, rename to `note_*`?
 
-export const midi_chromas: Chroma[] & Record<Midi, Chroma> = Object.freeze(
+export const midi_chromas: Array<Chroma> & Record<Midi, Chroma> = Object.freeze(
 	midis.map((m) => (m % 12) + 1),
-) as Chroma[];
+) as Array<Chroma>;
 
-export const midi_pitch_classes: Pitch_Class[] & Record<Midi, Pitch_Class> = Object.freeze(
+export const midi_pitch_classes: Array<Pitch_Class> & Record<Midi, Pitch_Class> = Object.freeze(
 	midis.map((m) => pitch_classes[midi_chromas[m] - 1]),
-) as Pitch_Class[];
+) as Array<Pitch_Class>;
 
-export const midi_octaves: Octave[] & Record<Midi, Octave> = Object.freeze(
+export const midi_octaves: Array<Octave> & Record<Midi, Octave> = Object.freeze(
 	midis.map((m) => Math.floor(m / 12) - 1),
-) as Octave[];
+) as Array<Octave>;
 
-export const midi_names: Note_Name[] & Record<Midi, Note_Name> = Object.freeze(
+export const midi_names: Array<Note_Name> & Record<Midi, Note_Name> = Object.freeze(
 	midis.map((m) => midi_pitch_classes[m] + midi_octaves[m]),
-) as Note_Name[];
+) as Array<Note_Name>;
 
 /**
  * @see https://wikipedia.org/wiki/Natural_(music)
@@ -328,9 +328,9 @@ export const midi_naturals: Set<Midi> = new Set(
 );
 
 // TODO replace with zod
-export const serialize_notes = (notes: readonly Midi[] | null): string =>
+export const serialize_notes = (notes: ReadonlyArray<Midi> | null): string =>
 	notes ? notes.join(', ') : '';
-export const parse_notes = (value: string): Midi[] =>
+export const parse_notes = (value: string): Array<Midi> =>
 	value
 		.split(',')
 		.map((v) => Number(v.trim()) | 0)
