@@ -5,8 +5,8 @@
 > ear trainer and tools for playing and programming music and audio 🎶🦜
 > [earbetter.ryanatkn.com](https://earbetter.ryanatkn.com/)
 
-- features [a configurable ear trainer](https://earbetter.ryanatkn.com/trainer)
-- also has [a playable piano](https://earbetter.ryanatkn.com/piano)
+- features a [configurable ear trainer](https://earbetter.ryanatkn.com/trainer)
+- also has a [playable piano](https://earbetter.ryanatkn.com/piano)
 - supports MIDI devices like piano keyboards
 - levels can be shared via their links or exporting/importing data
 
@@ -71,7 +71,7 @@ For now I'm accepting content submissions in this repo,
 so we get the benefit having a lot of static content without needing a server.
 I'm open to input but I'm hesitant to operate any kind of service or add non-static dependencies --
 for now, you're invited to open PRs with your exported data
-following [the default example](src/lib//projects/default_project.ts),
+following the [default example](src/lib//projects/default_project.ts),
 or email me if you don't use GitHub.
 
 For more please see [contributing.md](contributing.md)
