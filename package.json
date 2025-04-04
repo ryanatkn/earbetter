@@ -38,7 +38,7 @@
   },
   "type": "module",
   "engines": {
-    "node": ">=20.17"
+    "node": ">=22.11"
   },
   "devDependencies": {
     "@ryanatkn/belt": "^0.29.0",
