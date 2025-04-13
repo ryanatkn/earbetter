@@ -43,7 +43,7 @@
 		style:--progress_bar_percent={percent_complete}
 		transition:fade
 	>
-		{#each {length: level.trial.sequence.length} as _, index}
+		{#each {length: level.trial.sequence.length} as _, index (index)}
 			<div
 				class="trial"
 				style:background-color={to_bg_color(level.status, index, current_index)}

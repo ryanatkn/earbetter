@@ -18,7 +18,7 @@
 
 	const {midi_access, onnotestart, onnotestop, onpadstart, onpadstop, onmodwheel}: Props = $props();
 
-	$inspect('midi_access', midi_access);
+	// $inspect('midi_access', midi_access);
 
 	const onmidimessage = (event: MIDIMessageEvent): void => {
 		const message = parse_midi_message(event);

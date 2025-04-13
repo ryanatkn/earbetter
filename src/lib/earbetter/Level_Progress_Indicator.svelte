@@ -27,7 +27,7 @@
 </script>
 
 <div class="level_progress_indicator" style:--progress_bar_percent={percent_complete}>
-	{#each {length: level.level_data.trial_count} as _, index}
+	{#each {length: level.level_data.trial_count} as _, index (index)}
 		<div
 			class="level"
 			style:background-color={to_bg_color(level.status, level.trial, level.trials, index)}
