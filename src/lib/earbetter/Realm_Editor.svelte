@@ -15,8 +15,8 @@
 
 	const editing = $derived(app.realms ? app.realms.some((d) => d.id === realm_data.id) : false);
 
-	$inspect(`app.selected_realm_data`, app.selected_realm_data);
-	$inspect(`app.realms`, app.realms);
+	// $inspect(`app.selected_realm_data`, app.selected_realm_data);
+	// $inspect(`app.realms`, app.realms);
 
 	const update_or_create = (r: Realm_Data, select: boolean) => {
 		if (app.realms?.some((d) => d.id === r.id)) {

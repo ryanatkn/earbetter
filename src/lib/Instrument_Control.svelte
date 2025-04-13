@@ -14,8 +14,8 @@
 	<label class="text_align_center">
 		<div class="title">instrument</div>
 		<select bind:value={instrument}>
-			{#each instruments as t}
-				<option value={t}>{t}</option>
+			{#each instruments as v (v)}
+				<option value={v}>{v}</option>
 			{/each}
 		</select>
 	</label>

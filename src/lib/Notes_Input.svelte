@@ -74,7 +74,7 @@
 		updated_notes = updated;
 	};
 
-	$inspect(`notes`, current_notes);
+	// $inspect(`notes`, current_notes);
 
 	// TODO lots of copypasta below
 

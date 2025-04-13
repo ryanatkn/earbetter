@@ -26,7 +26,7 @@
 
 	let request_error: string | undefined = $state();
 
-	$inspect('midi_state.midi_access', midi_state.midi_access);
+	// $inspect('midi_state.midi_access', midi_state.midi_access);
 </script>
 
 <button
@@ -54,7 +54,7 @@
 			<div>
 				<div>MIDI devices</div>
 				<ul>
-					{#each midi_inputs as midi_input}
+					{#each midi_inputs as midi_input (midi_input)}
 						<li><small>{midi_input.name}</small></li>
 					{/each}
 				</ul>
