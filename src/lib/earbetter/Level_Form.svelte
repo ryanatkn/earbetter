@@ -312,7 +312,7 @@
 			start_importing_el?.focus();
 		}}
 	>
-		<div class="importing bg shadow_d_xl p_xl width_md box">
+		<div class="importing pane shadow_d_xl p_xl width_md mx_auto">
 			<h2 class="my_0">import level data</h2>
 			<Copy_To_Clipboard
 				text={updated}
@@ -340,7 +340,7 @@
 		}}
 	>
 		{#snippet children(close)}
-			<div class="bg shadow_d_xl p_xl width_md box">
+			<div class="pane mx_auto shadow_d_xl p_xl width_md box">
 				<h2 class="my_0">pick intervals</h2>
 				<Intervals_Input
 					intervals={updated_intervals}
@@ -364,7 +364,7 @@
 		}}
 	>
 		{#snippet children(close)}
-			<div class="bg shadow_d_xl py_xl box">
+			<div class="pane mx_auto shadow_d_xl py_xl box">
 				<h2 class="my_0">pick tonics</h2>
 				<!-- TODO @many set reactivity - this `new Set` is a hack, probably change the data structure to a set, need serialization for storage -->
 				<Notes_Input

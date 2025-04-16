@@ -32,7 +32,7 @@
 	let deleting = $state(false);
 </script>
 
-<div class="bg shadow_d_xl width_sm">
+<div class="pane shadow_d_xl width_sm">
 	<section>
 		<!-- TODO when `.flex_direction_column` or equivalent is added to Moss, change `.box` to that -->
 		<div class="section_title box">
@@ -112,7 +112,7 @@
 			<a href="https://github.com/ryanatkn/earbetter">the source code</a> for more.
 		</p>
 	</section>
-	<div class="section_title">
+	<div class="section_title mb_0">
 		<Footer hide_main_menu_button />
 	</div>
 </div>
