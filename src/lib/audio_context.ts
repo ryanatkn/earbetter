@@ -1,38 +1,26 @@
-import {browser} from '$app/environment';
-import {setContext, getContext} from 'svelte';
+import {create_context} from '@ryanatkn/fuz/context_helpers.js';
 import {noop} from '@ryanatkn/belt/function.js';
+import {BROWSER} from 'esm-env';
 
-// There's an unfortunate overlap between "context" as in
-// svelte's `getContext`/`setContext`, and the browser's `AudioContext`.
-// The "ctx" abbreviation refers to `AudioContext`,
-// and the fully spelled out "context" refers to usage with Svelte.
+import {noop_ssr} from '$lib/util.js';
 
-const KEY = Symbol('audio_context');
-
-export interface Get_Audio_Context {
-	(): AudioContext;
-}
-
-/**
- * Components can do `const ac = get_audio_context();` and then use it with `ac()`.
- */
-export const get_audio_context = (): Get_Audio_Context => getContext(KEY);
+export type Get_Audio_Context = () => AudioContext;
 
 /**
  * Puts a lazy getter for `AudioContext` into the component's context.
+ * Components can do `const ac = audio_context_context.get();` and then use it with `ac()`.
  */
-export const set_audio_context = (): Get_Audio_Context => {
+export const audio_context_context = create_context((): Get_Audio_Context => {
 	let ac: AudioContext | undefined;
-	const get_audio_context: Get_Audio_Context = () => (ac ??= create_audio_context());
-	return setContext(KEY, get_audio_context);
-};
+	return () => (ac ??= create_audio_context());
+});
 
 /**
  * This should be called during a user input action like a click,
  * or it needs `resume` called for some browsers.
  */
 export const create_audio_context = (): AudioContext => {
-	if (!browser) return new Audio_Context_Stub() as any;
+	if (!BROWSER) return new Audio_Context_Stub() as any;
 	const ac = new AudioContext();
 	return ac;
 };
@@ -50,7 +38,3 @@ class Audio_Context_Stub {
 	createMediaStreamTrackSource = noop_ssr;
 	getOutputTimestamp = noop_ssr;
 }
-
-const noop_ssr = () => {
-	throw new Error('Cannot call this method outside of the browser');
-};

@@ -5,7 +5,7 @@
 
 	interface Props {
 		count: number;
-		items: string[];
+		items: Array<string>;
 		duration?: number;
 		x_radius?: number;
 		y_radius?: number;
@@ -49,7 +49,8 @@
 
 {#if !done}
 	<div class="burst" style:--animation_timer="{duration}ms">
-		{#each {length: count} as _}<div
+		{#each {length: count} as _, index (index)}
+			<div
 				class="burst-item"
 				style:--target_x="{random_int(-x_radius, x_radius)}px"
 				style:--target_y="{random_int(-y_radius, y_radius)}px"
@@ -59,7 +60,8 @@
 				style:--hue_rotation="{random_int(hue_rotation_min, hue_rotation_max)}deg"
 			>
 				{random_item(items)}
-			</div>{/each}
+			</div>
+		{/each}
 	</div>
 {/if}
 

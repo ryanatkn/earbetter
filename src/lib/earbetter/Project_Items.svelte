@@ -5,8 +5,8 @@
 	interface Props {
 		selected_project_id?: Project_Id | null;
 		editing_project_id?: Project_Id | null;
-		projects?: Project_Metadata[];
-		project_datas?: Project_Data[];
+		projects?: Array<Project_Metadata>;
+		project_datas?: ReadonlyArray<Project_Data>;
 		load_project: (id: Project_Id) => Project_Data | null;
 		select_project: (id: Project_Id) => void;
 		edit_project: (project_data: Project_Data | null) => void;
@@ -25,7 +25,7 @@
 	}: Props = $props();
 </script>
 
-<menu class="unstyled width_sm">
+<menu class="unstyled width_sm mb_0">
 	{#each projects as project (project.id)}
 		<Project_Item
 			{project}

@@ -1,25 +1,21 @@
 <script lang="ts">
-	import type {Signal} from '@preact/signals-core';
-
-	import {instruments, type Instrument} from '$lib/helpers.js';
+	import {instruments, type Instrument} from '$lib/audio_helpers.js';
 
 	interface Props {
-		instrument: Signal<Instrument>;
+		instrument: Instrument;
 	}
 
-	const {instrument}: Props = $props();
+	let {instrument = $bindable()}: Props = $props();
 
-	// TODO remove after signals adds `set` so we can use two-way binding
-	const input = (e: any) => (instrument.value = e.currentTarget.value);
+	// TODO @many event callback or $bindable
 </script>
 
 <div class="mb_lg">
 	<label class="text_align_center">
 		<div class="title">instrument</div>
-		<!-- TODO use `bind:value={$instrument}` when this PR is in: https://github.com/preactjs/signals/pull/325  -->
-		<select value={$instrument} oninput={input}>
-			{#each instruments as t}
-				<option value={t}>{t}</option>
+		<select bind:value={instrument}>
+			{#each instruments as v (v)}
+				<option value={v}>{v}</option>
 			{/each}
 		</select>
 	</label>

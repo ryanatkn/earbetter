@@ -6,6 +6,8 @@
 	import {base} from '$app/paths';
 	import {slide} from 'svelte/transition';
 	import {afterNavigate} from '$app/navigation';
+	import Svg from '@ryanatkn/fuz/Svg.svelte';
+	import {earbetter_logo} from '@ryanatkn/fuz/logos.js';
 
 	import Site_Map from '$routes/Site_Map.svelte';
 	import Volume_Control from '$lib/Volume_Control.svelte';
@@ -13,28 +15,28 @@
 	import Init_Midi_Button from '$lib/Init_Midi_Button.svelte';
 	import Footer from '$routes/Footer.svelte';
 	import Site_Breadcrumb from '$routes/Site_Breadcrumb.svelte';
-	import {get_main_menu} from '$routes/main_menu_state.svelte.js';
-	import {get_instrument, get_volume} from '$lib/helpers.js';
+	import {main_menu_context} from '$routes/main_menu_state.svelte.js';
+	import {app_context} from '$lib/earbetter/app.svelte.js';
 
-	// TODO @multiple let any routes (and components?) add sections to the menu via snippets
+	// TODO @many let any routes (and components?) add sections to the menu via snippets
 
 	/**
 	 * Designed as a singleton to be used in the entire application. Maybe make more general?
 	 */
 
-	const main_menu = get_main_menu();
-	afterNavigate(() => main_menu.opened && main_menu.close());
+	const app = app_context.get();
 
-	const volume = get_volume();
-	const instrument = get_instrument();
+	const main_menu = main_menu_context.get();
+	afterNavigate(() => main_menu.opened && main_menu.close());
 
 	let deleting = $state(false);
 </script>
 
-<div class="bg shadow_d_xl width_sm">
+<div class="pane shadow_d_xl width_sm">
 	<section>
 		<!-- TODO when `.flex_direction_column` or equivalent is added to Moss, change `.box` to that -->
 		<div class="section_title box">
+			<Svg data={earbetter_logo} size="var(--icon_size_xl2)" />
 			<h1 class="mb_md">earbetter</h1>
 			<!-- TODO switch to `class="size_xl"` when Fuz changes to use vb/vi -->
 			<div style:--size="var(--size_xl)"><Site_Breadcrumb hide_main_menu_button /></div>
@@ -56,10 +58,12 @@
 	<section>
 		<h2 class="section_title">settings</h2>
 		<form class="section_body">
-			<Volume_Control {volume} />
-			<Instrument_Control {instrument} />
+			<div class="mb_lg">
+				<Volume_Control bind:volume={app.volume} />
+			</div>
+			<Instrument_Control bind:instrument={app.instrument} />
 			<aside>Earbetter supports MIDI devices like piano keyboards, connect and click:</aside>
-			<Init_Midi_Button />
+			<Init_Midi_Button midi_state={app} />
 		</form>
 	</section>
 	<section>
@@ -104,11 +108,11 @@
 			This website collects no data - the only server it talks to is <a
 				href="https://pages.github.com/">GitHub Pages</a
 			>
-			to serve static files. See
+			to serve static files, and I don't use a DNS proxy. See
 			<a href="https://github.com/ryanatkn/earbetter">the source code</a> for more.
 		</p>
 	</section>
-	<div class="section_title">
+	<div class="section_title mb_0">
 		<Footer hide_main_menu_button />
 	</div>
 </div>

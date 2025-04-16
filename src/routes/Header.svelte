@@ -1,7 +1,12 @@
+<script lang="ts">
+	import Svg from '@ryanatkn/fuz/Svg.svelte';
+	import {earbetter_logo} from '@ryanatkn/fuz/logos.js';
+</script>
+
 <header>
-	<div class="box panel p_md">
-		<h1 class="mb_md">earbetter</h1>
-		<div class="icons">🎶🦜</div>
+	<div class="box panel p_md pt_xl2">
+		<Svg data={earbetter_logo} size="var(--icon_size_xl3)" />
+		<h1 class="my_md">earbetter</h1>
 	</div>
 </header>
 
@@ -18,8 +23,5 @@
 		display: flex;
 		flex-direction: column;
 		align-items: center;
-	}
-	.icons {
-		font-size: var(--size_xl5);
 	}
 </style>

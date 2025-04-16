@@ -1,15 +1,15 @@
 import {random_item, random_int} from '@ryanatkn/belt/random.js';
 import {z} from 'zod';
 import type {Flavored} from '@ryanatkn/belt/types.js';
-import {signal, batch, Signal} from '@preact/signals-core';
 import {base} from '$app/paths';
 
 import {Midi, Intervals} from '$lib/music.js';
 import {play_note} from '$lib/play_note.js';
-import type {Instrument, Milliseconds, Volume} from '$lib/helpers.js';
+import type {Milliseconds} from '$lib/audio_helpers.js';
 import {serialize_to_hash} from '$lib/url.js';
 import {to_random_id} from '$lib/id.js';
 import type {Get_Audio_Context} from '$lib/audio_context.js';
+import type {App} from '$lib/earbetter/app.svelte.js';
 
 // TODO this isn't idiomatic signals code yet, uses `peek` too much
 
@@ -21,16 +21,16 @@ export const DEFAULT_SEQUENCE_LENGTH = 2;
 export const DEFAULT_TRIAL_COUNT = 5;
 export const DEFAULT_LEVEL_NAME = 'new level';
 export const DEFAULT_INTERVALS: Intervals = [5, 7];
-export const DEFAULT_TONICS: Midi[] | null = null;
+export const DEFAULT_TONICS: Array<Midi> | null = null;
 export const DEFAULT_MIN_NOTE: Midi = 48;
 export const DEFAULT_MAX_NOTE: Midi = 84;
 
 export const Level_Id = z.string();
-export type Level_Id = Flavored<z.infer<typeof Level_Id>, 'Level_Id'>; // TODO @multiple this doesn't work when used as a schema, use z.brand() instead? or are the egonomics too bad?
+export type Level_Id = Flavored<z.infer<typeof Level_Id>, 'Level_Id'>; // TODO @many this doesn't work when used as a schema, use z.brand() instead? or are the egonomics too bad?
 export const create_level_id = (): Level_Id => to_random_id();
 
 export const Level_Name = z.string().min(1).max(1000);
-export type Level_Name = Flavored<z.infer<typeof Level_Name>, 'Level_Name'>; // TODO @multiple this doesn't work when used as a schema, use z.brand() instead? or are the egonomics too bad?
+export type Level_Name = Flavored<z.infer<typeof Level_Name>, 'Level_Name'>; // TODO @many this doesn't work when used as a schema, use z.brand() instead? or are the egonomics too bad?
 
 export const Level_Data = z.object({
 	id: Level_Id.default(create_level_id),
@@ -61,7 +61,7 @@ export type Status =
 export interface Trial {
 	index: number;
 	valid_notes: Set<Midi>;
-	sequence: Midi[];
+	sequence: Array<Midi>;
 	presenting_index: number | null; // index of interval being presented
 	guessing_index: number | null; // index of interval being guessed
 	retry_count: number;
@@ -74,31 +74,28 @@ export class Level {
 	seq_id = 0; // used to track the async note playing sequence for cancellation
 
 	constructor(
+		public readonly app: App,
 		public readonly level_data: Level_Data, // TODO maybe make optional?
 		public readonly ac: Get_Audio_Context,
-		public readonly volume: Signal<Volume>,
-		public readonly instrument: Signal<Instrument>,
 		protected register_success: (id: Level_Id, mistake_count: number) => void,
 	) {}
 
-	status: Signal<Status> = signal(DEFAULT_STATUS);
-	mistakes: Signal<number> = signal(0);
-	trial: Signal<Trial | null> = signal(DEFAULT_TRIAL);
-	trials: Signal<Trial[]> = signal([]);
-	last_guess: Signal<Midi | null> = signal(null);
+	status: Status = $state(DEFAULT_STATUS);
+	mistakes: number = $state(0);
+	trial: Trial | null = $state(DEFAULT_TRIAL);
+	trials: Array<Trial> = $state([]);
+	last_guess: Midi | null = $state(null);
 
 	reset = (): void => {
-		batch(() => {
-			this.trial.value = DEFAULT_TRIAL;
-			this.trials.value = [];
-			this.update_status(DEFAULT_STATUS);
-			this.start();
-		});
+		this.trial = DEFAULT_TRIAL;
+		this.trials = [];
+		this.update_status(DEFAULT_STATUS);
+		this.start();
 	};
 
 	start = (): void => {
 		console.log('start level');
-		if (this.status.peek() !== 'initial') return;
+		if (this.status !== 'initial') return;
 		this.next_trial();
 	};
 
@@ -108,147 +105,139 @@ export class Level {
 
 	update_status(value: Status): void {
 		console.log(`update_status`, value);
-		this.status.value = value;
+		this.status = value;
 		// TODO maybe a wait a tick here or refactor? is dependent on being called after changes to e.g. `this.trial`
 		if (value === 'presenting_prompt') {
 			void this.present_trial_prompt();
 		} else if (value === 'complete') {
-			this.register_success(this.level_data.id, this.mistakes.peek());
+			this.register_success(this.level_data.id, this.mistakes);
 		}
 	}
 
 	present_trial_prompt = async (): Promise<void> => {
-		const $trial = this.trial.peek();
-		if (!$trial) return;
-		console.log('present_trial_prompt', $trial.sequence);
-		this.trial.value = {...$trial, guessing_index: 0};
+		const trial = this.trial;
+		if (!trial) return;
+		console.log('present_trial_prompt', trial.sequence);
+		this.trial = {...trial, guessing_index: 0};
 		const current_seq_id = ++this.seq_id;
-		const sequence_length = $trial.sequence.length;
+		const sequence_length = trial.sequence.length;
 		for (let i = 0; i < sequence_length; i++) {
-			const note = $trial.sequence[i];
-			this.trial.value = {
-				...this.trial.peek()!,
+			const note = trial.sequence[i];
+			this.trial = {
+				...this.trial,
 				presenting_index: i,
 			};
 			const duration =
 				sequence_length < DEFAULT_SEQUENCE_LENGTH ? DEFAULT_NOTE_DURATION_2 : DEFAULT_NOTE_DURATION; // TODO refactor, see elsewhere
-			await play_note(this.ac(), note, this.volume.peek(), duration, this.instrument.peek()); // eslint-disable-line no-await-in-loop
-			if (current_seq_id !== this.seq_id || !this.trial.peek()) return; // cancel
+			// eslint-disable-next-line no-await-in-loop
+			await play_note(this.app, this.ac(), note, this.app.volume, duration, this.app.instrument);
+			if (current_seq_id !== this.seq_id) return; // cancel
 		}
-		batch(() => {
-			this.trial.value = {
-				...this.trial.peek()!,
-				presenting_index: null,
-			};
-			this.update_status('waiting_for_input');
-		});
+		this.trial = {
+			...this.trial,
+			presenting_index: null,
+		};
+		this.update_status('waiting_for_input');
 	};
 
 	// TODO helpful to have a return value?
 	guess = (note: Midi): void => {
-		if (this.status.peek() !== 'waiting_for_input') return;
-		const $trial = this.trial.peek();
-		const guessing_index = $trial?.guessing_index;
-		if (!$trial || guessing_index == null) return;
-		batch(() => {
-			const actual = get_correct_guess_for_trial($trial);
-			console.log('guess', guessing_index, note, actual);
+		if (this.status !== 'waiting_for_input') return;
+		const trial = this.trial;
+		const guessing_index = trial?.guessing_index;
+		if (!trial || guessing_index == null) return;
+		const actual = get_correct_guess_for_trial(trial);
+		console.log('guess', guessing_index, note, actual);
 
-			this.last_guess.value = note;
+		this.last_guess = note;
 
-			// if incorrect -> FAILURE -> showing_failure_feedback -> REPROMPT
-			if (actual !== note) {
-				console.log('guess incorrect');
-				void play_note(
-					this.ac(),
-					note,
-					this.volume.peek(),
-					DEFAULT_NOTE_DURATION_FAILED,
-					this.instrument.peek(),
-				);
-				if (guessing_index === 0 || !$trial.valid_notes.has(note)) {
-					return; // no penalty or delay if this is the first one
-				}
-				// TODO should this be "on enter showing_failure_feedback state" logic?
-				this.mistakes.value = this.mistakes.peek() + 1;
-				this.update_status('showing_failure_feedback');
-				setTimeout(() => this.retry_trial(), DEFAULT_FEEDBACK_DURATION);
-				return;
+		// if incorrect -> FAILURE -> showing_failure_feedback -> REPROMPT
+		if (actual !== note) {
+			console.log('guess incorrect');
+			void play_note(
+				this.app,
+				this.ac(),
+				note,
+				this.app.volume,
+				DEFAULT_NOTE_DURATION_FAILED,
+				this.app.instrument,
+			);
+			if (guessing_index === 0 || !trial.valid_notes.has(note)) {
+				return; // no penalty or delay if this is the first one
 			}
+			// TODO should this be "on enter showing_failure_feedback state" logic?
+			this.mistakes += 1;
+			this.update_status('showing_failure_feedback');
+			setTimeout(() => this.retry_trial(), DEFAULT_FEEDBACK_DURATION);
+			return;
+		}
 
-			// guess is correct
-			const sequence_length = $trial.sequence.length;
-			const duration =
-				sequence_length < DEFAULT_SEQUENCE_LENGTH ? DEFAULT_NOTE_DURATION_2 : DEFAULT_NOTE_DURATION; // TODO refactor, see elsewhere
-			void play_note(this.ac(), note, this.volume.peek(), duration, this.instrument.peek());
+		// guess is correct
+		const sequence_length = trial.sequence.length;
+		const duration =
+			sequence_length < DEFAULT_SEQUENCE_LENGTH ? DEFAULT_NOTE_DURATION_2 : DEFAULT_NOTE_DURATION; // TODO refactor, see elsewhere
+		void play_note(this.app, this.ac(), note, this.app.volume, duration, this.app.instrument);
 
-			if (guessing_index >= sequence_length - 1) {
-				// if more -> update current response index
-				this.update_status('showing_success_feedback');
-				// TODO should this be "on enter showing_success_feedback state" logic?
-				if ($trial.index < this.level_data.trial_count - 1) {
-					console.log('guess correct and done with trial');
-					setTimeout(() => this.next_trial(), DEFAULT_FEEDBACK_DURATION);
-				} else {
-					console.log('guess correct and done with all trials!');
-					setTimeout(() => this.complete_level(), DEFAULT_FEEDBACK_DURATION); // TODO hacky, the single status mixes completion status and success feedback, seems like this should set complete immediately
-				}
+		if (guessing_index >= sequence_length - 1) {
+			// if more -> update current response index
+			this.update_status('showing_success_feedback');
+			// TODO should this be "on enter showing_success_feedback state" logic?
+			if (trial.index < this.level_data.trial_count - 1) {
+				console.log('guess correct and done with trial');
+				setTimeout(() => this.next_trial(), DEFAULT_FEEDBACK_DURATION);
 			} else {
-				// SUCCESS -> no status change because we show no visible positive feedback to users until the end
-				console.log('guess correct but not done');
-				this.trial.value = {
-					...$trial,
-					guessing_index: guessing_index + 1,
-				};
+				console.log('guess correct and done with all trials!');
+				setTimeout(() => this.complete_level(), DEFAULT_FEEDBACK_DURATION); // TODO hacky, the single status mixes completion status and success feedback, seems like this should set complete immediately
 			}
-		});
+		} else {
+			// SUCCESS -> no status change because we show no visible positive feedback to users until the end
+			console.log('guess correct but not done');
+			this.trial = {
+				...trial,
+				guessing_index: guessing_index + 1,
+			};
+		}
 	};
 
 	retry_trial = (): void => {
-		const $status = this.status.peek();
+		const status = this.status;
 		if (
-			$status !== 'waiting_for_input' &&
-			$status !== 'showing_success_feedback' &&
-			$status !== 'showing_failure_feedback'
+			status !== 'waiting_for_input' &&
+			status !== 'showing_success_feedback' &&
+			status !== 'showing_failure_feedback'
 		) {
 			return;
 		}
-		const $trial = this.trial.peek();
-		if (!$trial) return;
-		batch(() => {
-			// TODO should this be "on enter presenting_prompt state" logic?
-			this.trial.value = {
-				...$trial,
-				retry_count: $trial.retry_count + 1,
-			};
-			this.update_status('presenting_prompt');
-		});
+		const trial = this.trial;
+		if (!trial) return;
+		// TODO should this be "on enter presenting_prompt state" logic?
+		this.trial = {
+			...trial,
+			retry_count: trial.retry_count + 1,
+		};
+		this.update_status('presenting_prompt');
 	};
 
 	next_trial = (): void => {
-		if (this.status.peek() === 'complete') {
+		if (this.status === 'complete') {
 			return;
 		}
-		batch(() => {
-			const next_trial = create_next_trial(this.level_data, this.trial.peek());
-			console.log('next trial', next_trial);
-			// TODO should this be "on enter presenting_prompt state" logic?
-			const $trials = this.trials.peek();
-			if ($trials.length === 0) this.mistakes.value = 0;
-			this.trial.value = next_trial;
-			this.trials.value = [...$trials, next_trial];
-			this.update_status('presenting_prompt');
-		});
+		const next_trial = create_next_trial(this.level_data, this.trial);
+		console.log('next trial', next_trial);
+		// TODO should this be "on enter presenting_prompt state" logic?
+		const trials = this.trials;
+		if (trials.length === 0) this.mistakes = 0;
+		this.trial = next_trial;
+		this.trials = [...trials, next_trial];
+		this.update_status('presenting_prompt');
 	};
 
 	complete_level = (): void => {
-		if (this.status.peek() === 'complete') {
+		if (this.status === 'complete') {
 			return;
 		}
-		batch(() => {
-			this.trial.value = null;
-			this.update_status('complete');
-		});
+		this.trial = null;
+		this.update_status('complete');
 	};
 
 	// dev and debug methods
@@ -257,21 +246,21 @@ export class Level {
 	};
 
 	guess_correctly = (): void => {
-		if (this.status.peek() !== 'waiting_for_input') return;
-		const note = get_correct_guess_for_trial(this.trial.peek());
+		if (this.status !== 'waiting_for_input') return;
+		const note = get_correct_guess_for_trial(this.trial);
 		if (note === null) return;
 		this.guess(note);
 	};
 
 	guess_incorrectly = (): void => {
-		if (this.status.peek() !== 'waiting_for_input') return;
-		const note = get_incorrect_guess_for_trial(this.trial.peek());
+		if (this.status !== 'waiting_for_input') return;
+		const note = get_incorrect_guess_for_trial(this.trial);
 		if (note === null) return;
 		this.guess(note);
 	};
 
 	get_correct_guess = (): void => {
-		get_correct_guess_for_trial(this.trial.peek());
+		get_correct_guess_for_trial(this.trial);
 	};
 }
 
@@ -291,7 +280,7 @@ const get_incorrect_guess_for_trial = (trial: Trial | null): Midi | null => {
 
 const create_next_trial = (def: Level_Data, current_trial: Trial | null): Trial => {
 	const tonic = to_random_tonic(def);
-	const sequence: Midi[] = [tonic];
+	const sequence: Array<Midi> = [tonic];
 
 	const valid_notes = create_valid_notes(tonic, def.min_note, def.max_note, def.intervals);
 
@@ -305,7 +294,7 @@ const create_next_trial = (def: Level_Data, current_trial: Trial | null): Trial 
 	}
 
 	return {
-		index: (current_trial && current_trial.index + 1) || 0,
+		index: (current_trial && current_trial.index + 1) ?? 0,
 		valid_notes: new Set(valid_notes),
 		sequence,
 		presenting_index: null,
@@ -324,9 +313,9 @@ const create_valid_notes = (
 	min_note: Midi,
 	max_note: Midi,
 	intervals: Intervals,
-): Midi[] => {
+): Array<Midi> => {
 	const valid_intervals = new Set([0, ...intervals]); // allow tonic to repeat
-	const valid_notes: Midi[] = [];
+	const valid_notes: Array<Midi> = [];
 	for (let i = min_note; i <= max_note; i++) {
 		const interval = i - tonic;
 		if (valid_intervals.has(interval)) {
@@ -362,7 +351,7 @@ export const to_level_url = (level_data: Level_Data): string => {
 	return `${base}/trainer/level` + serialize_to_hash(data);
 };
 
-export const Mistakes_Level_Stats = z.record(Level_Id, z.array(z.number()));
+export const Mistakes_Level_Stats = z.record(Level_Id, z.array(z.number()).or(z.undefined()));
 export type Mistakes_Level_Stats = z.infer<typeof Mistakes_Level_Stats>;
 
 export const Level_Stats = z.object({
@@ -394,8 +383,8 @@ export const add_mistakes_to_level_stats = (
 // TODO refactor - parameter?
 export const MISTAKE_HISTORY_LENGTH = 4;
 
-const add_mistakes = (data: number[] | undefined, mistakes: number): number[] => {
-	const updated = data?.slice() || [];
+const add_mistakes = (data: Array<number> | undefined, mistakes: number): Array<number> => {
+	const updated = data?.slice() ?? [];
 	if (updated.length >= MISTAKE_HISTORY_LENGTH) {
 		updated.sort((a, b) => a - b).length = MISTAKE_HISTORY_LENGTH;
 		if (mistakes < updated.at(-1)!) {

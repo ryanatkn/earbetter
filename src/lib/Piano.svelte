@@ -1,4 +1,7 @@
 <script lang="ts">
+	import type {Snippet} from 'svelte';
+	import type {SvelteSet} from 'svelte/reactivity';
+
 	import Piano_Key from '$lib/Piano_Key.svelte';
 	import {MIDI_MIN, MIDI_MAX, type Midi} from '$lib/music.js';
 	import {compute_piano} from '$lib/piano.js';
@@ -9,10 +12,20 @@
 		min_note?: Midi;
 		max_note?: Midi;
 		enabled_notes?: Set<Midi> | null;
-		pressed_keys?: Set<Midi> | null;
+		pressed_keys?: SvelteSet<Midi> | null;
 		highlighted_keys?: Set<Midi> | null;
 		emphasized_keys?: Set<Midi> | null;
 		clickable?: boolean;
+		/**
+		 * Adds a label to the middle C key.
+		 */
+		middle_c_label?: string | boolean | Snippet;
+		/**
+		 * If focus exits a key while it's pressed without using the mouse,
+		 * it will by default keep the key stuck down until a mouseleave event, which is kind of fun.
+		 * Set to `false` to disable this quirky behavior.
+		 */
+		allow_sticking?: boolean;
 		onpress?: (note: Midi) => void;
 		onrelease?: (note: Midi) => void;
 	}
@@ -27,6 +40,8 @@
 		highlighted_keys = null,
 		emphasized_keys = null,
 		clickable = true,
+		middle_c_label,
+		allow_sticking,
 		onpress,
 		onrelease,
 	}: Props = $props();
@@ -39,17 +54,17 @@
 		accidental_key_height,
 	} = $derived(compute_piano(width, min_note, max_note, max_height));
 
-	// TODO remove this when converting from `@preact/signals` to runes and reactive collections
-	// this causes a warning but that's alright because we'll fix it in the followup
-	const pressing_any = $state({
-		value: false,
-		// adding this method to avoid the `ownership_invalid_mutation` warning
-		set(v: boolean) {
-			this.value = v;
-		},
-	});
-	// {drag_to_press}
+	/**
+	 * Used to allow dragging across the piano regardless of where the mousedown event occurred.
+	 */
+	let pressing_any = $state(false);
 </script>
+
+<svelte:window
+	onmousedowncapture={() => (pressing_any = true)}
+	onmouseupcapture={() => (pressing_any = false)}
+	onmouseleave={() => (pressing_any = false)}
+/>
 
 <div
 	class="piano"
@@ -71,6 +86,8 @@
 			pressed={pressed_keys?.has(note)}
 			highlighted={highlighted_keys?.has(note)}
 			emphasized={emphasized_keys?.has(note)}
+			{middle_c_label}
+			{allow_sticking}
 			{pressing_any}
 			{onpress}
 			{onrelease}

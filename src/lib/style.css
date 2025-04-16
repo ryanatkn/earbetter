@@ -9,19 +9,22 @@
 	--button_color_dark: var(--lighten_1);
 	--input_fill: var(--button_color);
 
-	/* felt overrides */
+	/* Moss overrides */
 
-	/* dealt style vars */
+	/* TODO a lot of these are hacky, needs cleanup and better patterns for overrides in Moss */
+	--tint_hue: var(--hue_d);
+	--fill: hsl(var(--hue_d) 15% 50%);
+
 	--accent_hue: 210;
 	--primary_hue: 260;
-	--border_color: hsla(var(--primary_hue), 100%, 98%, 0.2);
+	--border_color: hsl(var(--primary_hue) 100% 98% / 0.2);
 	--primary_text_color: hsl(var(--primary_hue), 90%, 70%);
 	--accent_text_color: hsl(var(--accent_hue), 50%, 55%);
 	--light_text_color: hsl(var(--accent_hue), 80%, 60%);
 	/* TODO upstream `accent` stuff */
-	--accent_border_color: hsla(var(--accent_hue), 100%, 58%, 0.5);
-	--accent_border_color_dark: hsla(var(--accent_hue), 100%, 43%, 0.5);
-	--accent_border_color_darker: hsla(var(--accent_hue), 100%, 28%, 0.5);
+	--accent_border_color: hsl(var(--accent_hue) 100% 58% / 0.5);
+	--accent_border_color_dark: hsl(var(--accent_hue) 100% 43% / 0.5);
+	--accent_border_color_darker: hsl(var(--accent_hue) 100% 28% / 0.5);
 
 	--primary_color: hsl(var(--primary_hue), 80%, 52%);
 	--primary_color_dark: hsl(var(--primary_hue), 80%, 36%);
@@ -87,16 +90,16 @@ header {
 	margin-bottom: var(--space_md);
 }
 
-/* TODO use Moss instead */
+/* TODO use Moss instead, "danger"? */
 .error {
 	--border_color: var(--red);
 	--border_color_dark: hsl(var(--red_hue), 60%, 61%);
 }
 
 /* TODO upstream this somehow, maybe as a variable */
-button {
+/* button {
 	background: linear-gradient(var(--button_color), var(--button_color_dark));
-}
+} */
 
 /* cards include padding for layout so they can be seamlessly animated in/out (is janky with margin) */
 .card {
@@ -109,7 +112,7 @@ button {
 	width: 100%;
 }
 
-.section_title {
+:where(.section_title) {
 	padding: var(--space_lg);
 	display: flex;
 	align-items: center;
@@ -117,6 +120,13 @@ button {
 	background: var(--lighten_1);
 	width: 100%;
 	margin-bottom: var(--space_md);
+}
+
+.pane {
+	--shadow_color: var(--shadow_color_h);
+	box-shadow: var(--shadow_bottom_xl)
+		color-mix(in hsl, var(--shadow_color) var(--shadow_alpha_2), transparent);
+	border-radius: 0;
 }
 
 .section_body {

@@ -11,7 +11,7 @@
 	interface Props {
 		realm_data: Realm_Data;
 		editing?: boolean;
-		onsubmit: (realm_data: Realm_Data) => void;
+		onsubmit: (realm_data: Realm_Data | Array<Realm_Data>) => void;
 		onremove?: (realm_id: Realm_Id) => void;
 		onduplicate?: (realm_id: Realm_Id) => void;
 		onclose?: (realm_id: Realm_Id) => void;
@@ -31,7 +31,7 @@
 			levels: realm_data.levels,
 		});
 
-	// TODO review this effect to try to remove it
+	// TODO @many review this effect to try to remove it
 	$effect(() => {
 		console.log(`set_realm_data`, realm_data);
 		updated_name = realm_data.name;
@@ -45,7 +45,7 @@
 	let updated = $state('');
 	const changed_serialized = $derived(serialized !== updated);
 	let parse_error_message = $state('');
-	// TODO review this effect to try to remove it
+	// TODO @many review this effect to try to remove it
 	$effect(() => {
 		realm_data;
 		parse_error_message = '';
@@ -53,7 +53,7 @@
 	let realm_data_el: HTMLTextAreaElement | undefined = $state();
 	let start_importing_el: HTMLButtonElement | undefined = $state();
 
-	const import_data = async (): Promise<void> => {
+	const import_data = (): void => {
 		parse_error_message = '';
 		try {
 			const json = JSON.parse(updated);
@@ -85,7 +85,7 @@
 			start_importing_el?.focus();
 		}}
 	>
-		<div class="importing bg shadow_d_xl p_xl width_md box">
+		<div class="importing pane shadow_d_xl p_xl width_md mx_auto">
 			<h2 class="my_0">import realm data</h2>
 			<Copy_To_Clipboard
 				text={updated}
@@ -137,23 +137,21 @@
 	{#if onremove && editing}
 		<button type="button" onclick={() => (removing = !removing)}> remove realm </button>
 		{#if removing}
-			<div transition:slide>
+			<div transition:slide class="pb_md">
 				<button
 					type="button"
-					class="w_100"
+					class="color_c w_100"
 					onclick={() => {
 						removing = false;
 						onremove(realm_data.id);
 					}}
 				>
-					✖ confirm remove
+					✕ confirm remove
 				</button>
 			</div>
 		{/if}
 		{#if onduplicate}
-			<button type="button" class="mt_lg" onclick={() => onduplicate(realm_data.id)}>
-				duplicate realm
-			</button>
+			<button type="button" onclick={() => onduplicate(realm_data.id)}> duplicate realm </button>
 		{/if}
 	{/if}
 	<button type="button" onclick={start_importing_data} bind:this={start_importing_el}>
@@ -173,9 +171,7 @@
 					class="w_100"
 					onclick={() => {
 						toggle_create_default_realms = false;
-						for (const realm_data of default_project_data().realms) {
-							onsubmit(realm_data);
-						}
+						onsubmit(default_project_data().realms);
 					}}
 				>
 					create {default_realms.length} new realms
@@ -205,5 +201,8 @@
 
 	button {
 		width: 100%;
+	}
+	button:not(:last-child) {
+		margin-bottom: var(--space_md);
 	}
 </style>

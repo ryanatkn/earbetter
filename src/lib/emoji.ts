@@ -5,7 +5,7 @@ export const Emoji = z.object({
 });
 export type Emoji = z.infer<typeof Emoji>;
 
-export const emojis: Emoji[] = [
+export const emojis: Array<Emoji> = [
 	{glyph: '🐵'},
 	{glyph: '🐶'},
 	{glyph: '🐺'},

@@ -1,15 +1,16 @@
 <script lang="ts">
 	import {plural} from '@ryanatkn/belt/string.js';
-	import {swallow} from '@ryanatkn/belt/dom.js';
+	import type {Snippet} from 'svelte';
+	import type {SvelteSet} from 'svelte/reactivity';
+	import {innerWidth} from 'svelte/reactivity/window';
 
 	import Piano from '$lib/Piano.svelte';
-	import {get_audio_context} from '$lib/audio_context.js';
-	import {midi_access} from '$lib/midi_access.js';
+	import {audio_context_context} from '$lib/audio_context.js';
 	import Midi_Input from '$lib/Midi_Input.svelte';
-	import {playing_notes, start_playing, stop_playing} from '$lib/play_note.js';
+	import {start_playing, stop_playing} from '$lib/play_note.js';
 	import Init_Midi_Button from '$lib/Init_Midi_Button.svelte';
 	import Volume_Control from '$lib/Volume_Control.svelte';
-	import {get_instrument, get_volume, with_velocity} from '$lib/helpers.js';
+	import {Instrument, Volume, with_velocity} from '$lib/audio_helpers.js';
 	import Instrument_Control from '$lib/Instrument_Control.svelte';
 	import {
 		Midi,
@@ -21,22 +22,32 @@
 		pitch_classes,
 		to_notes_in_scale,
 	} from '$lib/music.js';
+	import type {MIDIAccess} from '$lib/WebMIDI.js';
 
-	// TODO @multiple naming convention between `Intervals_Input`/`Notes_Input`/`Select_Notes_Control`?
+	// TODO @many naming convention between `Intervals_Input`/`Notes_Input`/`Select_Notes_Control`?
 
 	interface Props {
+		audio_state: {
+			volume: Volume;
+			instrument: Instrument;
+			playing_notes: SvelteSet<Midi>;
+			midi_access: MIDIAccess | null;
+		};
 		notes: Set<Midi>;
 		min_note: Midi;
 		max_note: Midi;
-		oninput?: (notes: Midi[] | null) => void; // TODO @multiple set reactivity - API is strange returning an array but taking a set (maybe return both?)
+		before_buttons: Snippet;
+		oninput?: (notes: Array<Midi> | null) => void; // TODO @many set reactivity - API is strange returning an array but taking a set (maybe return both?)
 	}
 
-	const {notes, min_note, max_note, oninput}: Props = $props();
+	const {audio_state, notes, min_note, max_note, before_buttons, oninput}: Props = $props();
 
-	// TODO @multiple set reactivity - refactor these collections to use `svelte/reactivity` sets instead of cloning, upstream and downstream where appropriate
+	const {playing_notes} = audio_state;
+
+	// TODO @many set reactivity - refactor these collections to use `svelte/reactivity` sets instead of cloning, upstream and downstream where appropriate
 
 	let updated_notes: Set<Midi> | undefined = $state();
-	const updated_notes_array: Midi[] | undefined = $derived(
+	const updated_notes_array: Array<Midi> | undefined = $derived(
 		updated_notes && Array.from(updated_notes).sort((a, b) => a - b),
 	);
 
@@ -63,23 +74,24 @@
 		updated_notes = updated;
 	};
 
-	$inspect(`notes`, current_notes);
+	// $inspect(`notes`, current_notes);
 
 	// TODO lots of copypasta below
 
 	let key = $state(DEFAULT_PITCH_CLASS);
 
-	const ac = get_audio_context();
-	const volume = get_volume();
-	const instrument = get_instrument();
-
-	// TODO hacky
-	let innerWidth: number | undefined = $state();
+	const ac = audio_context_context.get();
 
 	const piano_padding = 20;
 
 	const play = (note: Midi, velocity: number | null = null): void => {
-		start_playing(ac(), note, with_velocity($volume, velocity), $instrument);
+		start_playing(
+			audio_state,
+			ac(),
+			note,
+			with_velocity(audio_state.volume, velocity),
+			audio_state.instrument,
+		);
 	};
 
 	const toggle_scale = (scale: Scale): void => {
@@ -104,10 +116,8 @@
 	};
 </script>
 
-<svelte:window bind:innerWidth />
-
 <Midi_Input
-	{midi_access}
+	midi_access={audio_state.midi_access}
 	onnotestart={(note, velocity) => play(note, velocity)}
 	onnotestop={(note) => stop_playing(note)}
 />
@@ -115,15 +125,17 @@
 <div class="notes_input pt_lg">
 	{@render buttons()}
 	<div class="piano_wrapper" style:padding="{piano_padding}px">
-		{#if innerWidth}
-			<!-- TODO @multiple hacky width -->
+		{#if innerWidth.current}
+			<!-- TODO @many hacky width -->
 			<Piano
-				width={innerWidth - piano_padding * 5}
+				width={innerWidth.current - piano_padding * 5}
 				{min_note}
 				{max_note}
 				max_height={300}
-				pressed_keys={$playing_notes}
+				pressed_keys={playing_notes}
 				highlighted_keys={current_notes}
+				middle_c_label
+				allow_sticking
 				onpress={(note) => {
 					toggle_note(note);
 					play(note);
@@ -145,7 +157,7 @@
 		>
 		<div class="scales mb_lg">
 			{#each scales as scale (scale.name)}
-				<button onclick={() => toggle_scale(scale)}>{scale.name}</button>
+				<button type="button" onclick={() => toggle_scale(scale)}>{scale.name}</button>
 			{/each}
 		</div>
 		{@render buttons()}
@@ -161,21 +173,21 @@
 	</section>
 	<form class="width_sm panel p_md">
 		<fieldset>
-			<Instrument_Control {instrument} />
-			<Volume_Control {volume} />
+			<Instrument_Control bind:instrument={audio_state.instrument} />
+			<Volume_Control bind:volume={audio_state.volume} />
 		</fieldset>
 		<fieldset>
-			<Init_Midi_Button />
+			<Init_Midi_Button midi_state={audio_state} />
 		</fieldset>
 	</form>
 </div>
 
 {#snippet buttons()}
+	{@render before_buttons()}
 	<button
 		class="mb_lg"
 		type="button"
-		onclick={(e) => {
-			swallow(e);
+		onclick={() => {
 			updated_notes = new Set();
 		}}
 		disabled={notes_count === 0}
@@ -186,8 +198,7 @@
 		type="button"
 		class="accent"
 		disabled={!changed}
-		onclick={(e) => {
-			swallow(e);
+		onclick={() => {
 			oninput?.(updated_notes_array!);
 		}}
 	>
@@ -197,8 +208,8 @@
 
 <style>
 	.notes_input {
-		width: var(--notes_input_width, auto); /* TODO @multiple hacky width */
-		max-width: calc(100vw - 120px); /* TODO @multiple hacky width */
+		width: var(--notes_input_width, auto); /* TODO @many hacky width */
+		max-width: calc(100vw - 120px); /* TODO @many hacky width */
 		display: flex;
 		align-items: center;
 		flex-direction: column;

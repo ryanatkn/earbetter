@@ -1,6 +1,5 @@
 <script lang="ts">
 	import {onDestroy} from 'svelte';
-	import type {Signal} from '@preact/signals-core';
 
 	import {type MIDIMessageEvent, MIDICommand, type MIDIAccess} from '$lib/WebMIDI.js';
 	import {parse_midi_message} from '$lib/midi_helpers.js';
@@ -9,7 +8,7 @@
 	const log = console.log.bind(console);
 
 	interface Props {
-		midi_access: Signal<MIDIAccess | null>;
+		midi_access: MIDIAccess | null;
 		onnotestart?: (note: Midi, velocity: number) => void;
 		onnotestop?: (note: Midi, velocity: number) => void;
 		onpadstart?: (note: Midi, velocity: number) => void;
@@ -19,7 +18,7 @@
 
 	const {midi_access, onnotestart, onnotestop, onpadstart, onpadstop, onmodwheel}: Props = $props();
 
-	$inspect('midi_access', midi_access);
+	// $inspect('midi_access', midi_access);
 
 	const onmidimessage = (event: MIDIMessageEvent): void => {
 		const message = parse_midi_message(event);
@@ -75,6 +74,7 @@
 		}
 	};
 
+	// TODO clean up
 	const unsubscribers: Array<() => void> = [];
 	const unsubscribe = (): void => {
 		for (const u of unsubscribers) u();
@@ -93,5 +93,5 @@
 		}
 	};
 
-	$effect(() => subscribe($midi_access));
+	$effect(() => subscribe(midi_access));
 </script>

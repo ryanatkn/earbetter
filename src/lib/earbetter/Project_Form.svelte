@@ -36,7 +36,7 @@
 			level_stats: project_data.level_stats,
 		});
 
-	// TODO review this effect to try to remove it
+	// TODO @many review this effect to try to remove it
 	$effect(() => {
 		console.log(`set_project_data`, project_data);
 		updated_name = project_data.name;
@@ -50,7 +50,7 @@
 	let updated = $state('');
 	const changed_serialized = $derived(serialized !== updated);
 	let parse_error_message = $state('');
-	// TODO review this effect to try to remove it
+	// TODO @many review this effect to try to remove it
 	$effect(() => {
 		project_data;
 		parse_error_message = '';
@@ -58,7 +58,7 @@
 	let project_data_el: HTMLTextAreaElement | undefined = $state();
 	let start_importing_el: HTMLButtonElement | undefined = $state();
 
-	const import_data = async (): Promise<void> => {
+	const import_data = (): void => {
 		parse_error_message = '';
 		try {
 			const json = JSON.parse(updated);
@@ -86,7 +86,7 @@
 			start_importing_el?.focus();
 		}}
 	>
-		<div class="importing bg shadow_d_xl p_xl width_md box">
+		<div class="importing pane shadow_d_xl p_xl width_md mx_auto">
 			<h2 class="my_0">import project data</h2>
 			<Copy_To_Clipboard
 				text={updated}
@@ -96,6 +96,7 @@
 			/>
 			<textarea bind:value={updated} bind:this={project_data_el}></textarea>
 			<button
+				type="button"
 				onclick={import_data}
 				disabled={!changed_serialized}
 				title={changed_serialized ? undefined : 'data has not changed'}
@@ -138,16 +139,16 @@
 			remove project
 		</button>
 		{#if removing}
-			<div transition:slide>
+			<div transition:slide class="pb_md">
 				<button
 					type="button"
-					class="w_100"
+					class="color_c w_100"
 					onclick={() => {
 						removing = false;
 						onremove(project_data.id);
 					}}
 				>
-					✖ confirm remove
+					✕ confirm remove
 				</button>
 			</div>
 		{/if}
@@ -175,5 +176,9 @@
 <style>
 	.importing textarea {
 		height: calc(var(--input_height) * 3);
+	}
+
+	button:not(:last-child) {
+		margin-bottom: var(--space_md);
 	}
 </style>

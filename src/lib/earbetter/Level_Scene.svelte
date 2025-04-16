@@ -2,20 +2,20 @@
 	import {is_editable, swallow} from '@ryanatkn/belt/dom.js';
 	import {scale, fly} from 'svelte/transition';
 	import {plural} from '@ryanatkn/belt/string.js';
-	import {untrack} from 'svelte';
+	import {onMount, untrack} from 'svelte';
 
-	import {Level_Stats, type Level} from '$lib/earbetter/level.js';
+	import {Level_Stats, type Level} from '$lib/earbetter/level.svelte.js';
 	import Piano from '$lib/Piano.svelte';
 	import Level_Progress_Indicator from '$lib/earbetter/Level_Progress_Indicator.svelte';
 	import Trial_Progress_Indicator from '$lib/earbetter/Trial_Progress_Indicator.svelte';
-	import {get_audio_context} from '$lib/audio_context.js';
+	import {audio_context_context} from '$lib/audio_context.js';
 	import Midi_Input from '$lib/Midi_Input.svelte';
 	import type {Midi} from '$lib/music.js';
-	import {playing_notes, start_playing, stop_playing} from '$lib/play_note.js';
-	import {get_instrument, get_volume, with_velocity} from '$lib/helpers.js';
-	import {midi_access} from '$lib/midi_access.js';
+	import {start_playing, stop_playing} from '$lib/play_note.js';
+	import {with_velocity} from '$lib/audio_helpers.js';
 	import Level_Stats_Summary from '$lib/earbetter/Level_Stats_Summary.svelte';
 	import Text_Burst from '$lib/Text_Burst.svelte';
+	import {app_context} from '$lib/earbetter/app.svelte.js';
 
 	interface Props {
 		level: Level;
@@ -25,19 +25,21 @@
 
 	const {level, level_stats, exit_level}: Props = $props();
 
-	const ac = get_audio_context();
-	const volume = get_volume();
-	const instrument = get_instrument();
+	const app = app_context.get();
+
+	const ac = audio_context_context.get();
 
 	let clientWidth: number | undefined = $state();
 
-	const {level_data, mistakes, status, trial, last_guess} = $derived(level);
-	const guessing_index = $derived($trial?.guessing_index);
+	// TODO `level_data` is not reactive, so we can destructure, but should we?
+	const {level_data} = $derived(level);
+	const guessing_index = $derived(level.trial?.guessing_index);
 
-	const pressed_keys = $derived($status === 'presenting_prompt' ? null : $playing_notes);
-	const highlighted_keys = $derived($trial && new Set([$trial.sequence[0]]));
+	const pressed_keys = $derived(level.status === 'presenting_prompt' ? null : app.playing_notes);
+	const highlighted_keys = $derived(level.trial && new Set([level.trial.sequence[0]]));
 
-	$effect(() => {
+	// TODO `onMount` makes this not reactive to `level` changing, need to rethink starting it anyway for the audio context init
+	onMount(() => {
 		level.start(); // TODO problem here is the audio context needs to be resumed, so if it's not ready maybe have a start button
 	});
 
@@ -50,10 +52,10 @@
 
 	let last_feedback_status: null | 'success' | 'failure' = $state(null);
 
-	const waiting = $derived($status === 'waiting_for_input');
-	const success = $derived($status === 'showing_success_feedback');
-	const failure = $derived($status === 'showing_failure_feedback');
-	const complete = $derived($status === 'complete');
+	const waiting = $derived(level.status === 'waiting_for_input');
+	const success = $derived(level.status === 'showing_success_feedback');
+	const failure = $derived(level.status === 'showing_failure_feedback');
+	const complete = $derived(level.status === 'complete');
 
 	// TODO better way to do these? callback to `level`?
 	$effect(() => {
@@ -78,7 +80,7 @@
 	let text_burst_offset_y = $state(0);
 	const update_text_burst_position = () => {
 		if (!piano_wrapper_el) return;
-		const guessed = $last_guess;
+		const guessed = level.last_guess;
 		if (guessed === null) return;
 		const note_el = piano_wrapper_el.querySelector(`[data-note="${guessed}"]`);
 		if (!note_el) return;
@@ -95,7 +97,6 @@
 
 	const click = (e: MouseEvent) => {
 		if (e.target === el) {
-			swallow(e);
 			level.retry_trial();
 		}
 	};
@@ -110,7 +111,7 @@
 				return;
 			}
 			case ' ': {
-				switch ($status) {
+				switch (level.status) {
 					case 'complete': {
 						swallow(e);
 						exit_level();
@@ -144,13 +145,13 @@
 
 <svelte:window onkeydowncapture={keydown} />
 <Midi_Input
-	{midi_access}
+	midi_access={app.midi_access}
 	onnotestart={(note, velocity) => {
 		// TODO should this be ignored if it's not an enabled key? should the level itself ignore the guess?
-		if ($status === 'complete') {
-			start_playing(ac(), note, with_velocity($volume, velocity), $instrument);
+		if (level.status === 'complete') {
+			start_playing(app, ac(), note, with_velocity(app.volume, velocity), app.instrument);
 		} else {
-			console.log(`guessing $status`, $status);
+			console.log(`guessing level.status`, level.status);
 			// TODO should we intercept here if disabled, and just play the blip with no penalty? or should that be a param to `guess`?
 			level.guess(note);
 		}
@@ -173,15 +174,16 @@
 				width={clientWidth - piano_padding * 2}
 				min_note={level_data.min_note}
 				max_note={level_data.max_note}
-				enabled_notes={$trial?.valid_notes}
+				enabled_notes={level.trial?.valid_notes}
 				{pressed_keys}
 				{highlighted_keys}
-				onpress={$status === 'waiting_for_input'
+				onpress={level.status === 'waiting_for_input'
 					? (note) => on_press_key(note)
-					: $status === 'complete'
-						? (note) => start_playing(ac(), note, with_velocity($volume, null), $instrument)
+					: level.status === 'complete'
+						? (note) =>
+								start_playing(app, ac(), note, with_velocity(app.volume, null), app.instrument)
 						: undefined}
-				onrelease={$status === 'complete' ? (note) => stop_playing(note) : undefined}
+				onrelease={level.status === 'complete' ? (note) => stop_playing(note) : undefined}
 			/>
 		{/if}
 	</div>
@@ -196,14 +198,14 @@
 					<!-- TODO buggy in Svelte 5 -   -->
 					<div class="panel p_md mb_md box w_100">
 						<div class="panel p_md mb_md box">
-							{#if $mistakes === 0}
+							{#if level.mistakes === 0}
 								<div class="size_xl3 text_align_center">flawless run!</div>
 							{:else}
 								<div class="size_xl3">
-									{$mistakes}
+									{level.mistakes}
 								</div>
 								<div>
-									mistake{plural($mistakes)} this run
+									mistake{plural(level.mistakes)} this run
 								</div>
 							{/if}
 						</div>
@@ -212,11 +214,11 @@
 						</div>
 					</div>
 					<!-- TODO buggy in Svelte 5 - in:scale={{delay: 500}} -->
-					<button class="big mb_md" onclick={() => exit_level()}>
+					<button type="button" class="big mb_md" onclick={() => exit_level()}>
 						go back to the map &nbsp;<code>Space</code></button
 					>
 					<!-- TODO buggy in Svelte 5 - in:scale={{delay: 750}} -->
-					<button class="big" onclick={() => level.reset()}>
+					<button type="button" class="big" onclick={() => level.reset()}>
 						replay level &nbsp;<code>r</code>
 					</button>
 				</div>

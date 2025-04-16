@@ -23,7 +23,7 @@ const key_left_offset_pct: Record<Chroma, number> = {
 };
 
 export interface Piano {
-	piano_keys: Piano_Key[];
+	piano_keys: Array<Piano_Key>;
 	natural_key_height: number;
 	natural_key_width: number;
 	accidental_key_height: number;
@@ -72,7 +72,7 @@ export const compute_piano = (
 	const accidental_key_height = (natural_key_height * ACCIDENTAL_KEY_HEIGHT_MULT) | 0;
 
 	let natural_index = 0;
-	const piano_keys: Piano_Key[] = [];
+	const piano_keys: Array<Piano_Key> = [];
 	for (let i = 0; i < note_count; i++) {
 		const note = (i + min_note) as Midi;
 		let key_width: number;

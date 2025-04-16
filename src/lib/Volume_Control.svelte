@@ -1,33 +1,25 @@
 <script lang="ts">
-	import type {Signal} from '@preact/signals-core';
-
-	import type {Volume} from '$lib/helpers.js';
+	import {DEFAULT_VOLUME, type Volume} from '$lib/audio_helpers.js';
 
 	interface Props {
-		volume: Signal<Volume>;
+		volume: Volume;
 	}
 
-	const {volume}: Props = $props();
-
-	// TODO use bind:value when signals adds `set`
+	// TODO add an `oninput` callback unless the `bind` restriction is lifted
+	let {volume = $bindable(DEFAULT_VOLUME)}: Props = $props();
 </script>
 
 <label class="text_align_center">
 	<div class="title">volume</div>
-	<input
-		type="number"
-		oninput={(e) => (volume.value = Number(e.currentTarget.value))}
-		step={0.01}
-		min={0}
-		max={1}
-		value={$volume}
-	/>
-	<input
-		type="range"
-		oninput={(e) => (volume.value = Number(e.currentTarget.value))}
-		step={0.01}
-		min={0}
-		max={1}
-		value={$volume}
-	/>
+	<div class="row">
+		<input type="number" bind:value={volume} step={0.01} min={0} max={1} />
+		<input type="range" bind:value={volume} step={0.01} min={0} max={1} />
+	</div>
 </label>
+
+<style>
+	input[type='number'] {
+		width: 75px;
+		max-width: 75px;
+	}
+</style>

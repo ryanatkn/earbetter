@@ -27,7 +27,7 @@
 
 	let removing = $state(false);
 
-	const level_stats = $derived(project_data?.level_stats);
+	const level_stats = $derived(project_data.level_stats);
 </script>
 
 <li class="realm_item" transition:slide class:selected>
@@ -35,22 +35,27 @@
 		<Realm_Stats_Summary {realm_data} {level_stats} />
 	{/if}
 	{#if select}
-		<button class="realm_button" onclick={() => select?.(realm_data.id)} class:selected>
+		<button type="button" class="realm_button" onclick={() => select(realm_data.id)} class:selected>
 			{realm_data.name}
 		</button>
 	{/if}
+	<!-- TODO this is a bug in the eslint plugin -->
+	<!-- eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing -->
 	{#if (removing && remove) || (!removing && edit)}
 		<button
+			type="button"
 			class="icon_button plain_button size_xl deselectable"
 			class:selected={selected && !removing && editing}
+			class:color_c={removing}
 			title={removing ? 'remove realm' : editing ? 'stop editing realm' : 'edit realm'}
 			onclick={() => (removing ? remove?.(realm_data.id) : edit?.(realm_data))}
 		>
-			{#if removing}✖{:else}✎{/if}
+			{#if removing}✕{:else}✎{/if}
 		</button>
 	{/if}
 	{#if remove}
 		<button
+			type="button"
 			class="icon_button plain_button size_xl"
 			onclick={() => (removing = !removing)}
 			title={removing ? 'cancel removing' : 'remove realm'}
@@ -63,7 +68,9 @@
 <style>
 	.realm_item {
 		display: flex;
+		align-items: center;
 		width: 100%;
+		margin-bottom: var(--space_md);
 	}
 	.plain_button:not(.selected) {
 		visibility: hidden;

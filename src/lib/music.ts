@@ -1,10 +1,8 @@
 import {z} from 'zod';
 import type {Flavored} from '@ryanatkn/belt/types.js';
-import {signal, type Signal} from '@preact/signals-core';
-import {getContext, setContext} from 'svelte';
 import {type Hsl, hsl_to_string, type Hue} from '@ryanatkn/belt/colors.js';
 
-import type {Frequency} from '$lib/helpers.js';
+import type {Frequency} from '$lib/audio_helpers.js';
 
 // ♩ ♪ ♫ ♬ ♯ ♮ ♭ 𝄪 𝄫 ø7 o o7 Δ 𝄐 𝄑 𝄞 𝄢 𝄡 𝆒 𝆓 𝄀 𝄁 𝄂 𝄃 𝄆 𝄇
 
@@ -86,26 +84,31 @@ export type Octave = Flavored<z.infer<typeof Octave>, 'Octave'>;
  * @see https://wikipedia.org/wiki/Semitone
  */
 export const Semitones = z.number().int();
-export type Semitones = Flavored<z.infer<typeof Semitones>, 'Semitones'>; // TODO @multiple this doesn't work when used as a schema, use z.brand() instead? or are the egonomics too bad?
+export type Semitones = Flavored<z.infer<typeof Semitones>, 'Semitones'>; // TODO @many this doesn't work when used as a schema, use z.brand() instead? or are the egonomics too bad?
 
 /**
  * @see https://wikipedia.org/wiki/Interval_(music)
  */
-export const Intervals = z.array(Semitones);
-export type Intervals = Flavored<z.infer<typeof Intervals>, 'Intervals'>; // TODO @multiple this doesn't work when used as a schema, use z.brand() instead? or are the egonomics too bad?
-// TODO replace with zod
+export const Intervals = z.array(Semitones).readonly();
+export type Intervals = Flavored<z.infer<typeof Intervals>, 'Intervals'>; // TODO @many this doesn't work when used as a schema, use z.brand() instead? or are the egonomics too bad?
+// TODO replace with zod, also probably add a min/max
 export const serialize_intervals = (intervals: Intervals): string => intervals.join(', ');
 export const parse_intervals = (value: string): Intervals =>
-	value
-		.split(',')
-		.map((v) => Number(v.trim()) | 0)
-		.filter(Boolean); // exclude 0 intentionally
+	// TODO use a real `unique` helper
+	Array.from(
+		new Set(
+			value
+				.split(',')
+				.map((v) => parseInt(v, 10))
+				.filter((v) => !!v && v <= MIDI_MAX && v >= -MIDI_MAX), // exclude 0 intentionally
+		),
+	);
 
 /**
  * @see https://wikipedia.org/wiki/Natural_(music)
  */
-export const compute_naturals = (min: Midi, max: Midi): Midi[] => {
-	const naturals: Midi[] = [];
+export const compute_naturals = (min: Midi, max: Midi): Array<Midi> => {
+	const naturals: Array<Midi> = [];
 	for (let i = min; i <= max; i++) {
 		if (midi_naturals.has(i)) naturals.push(i);
 	}
@@ -178,17 +181,11 @@ export const interval_names = Object.freeze([
 export const Interval_Names = z.enum(interval_names);
 export type Interval_Names = z.infer<typeof Interval_Names>;
 
-const ENABLED_NOTES_KEY = Symbol('enabled_notes');
-export const get_enabled_notes = (): Signal<Set<Midi> | null> => getContext(ENABLED_NOTES_KEY);
-export const set_enabled_notes = (
-	store: Signal<Set<Midi> | null> = signal(null),
-): Signal<Set<Midi> | null> => setContext(ENABLED_NOTES_KEY, store);
-
 /**
  * @see https://wikipedia.org/wiki/Scale_(music)
  */
 export const Scale_Name = z.string();
-export type Scale_Name = Flavored<z.infer<typeof Scale_Name>, 'Scale_Name'>; // TODO @multiple this doesn't work when used as a schema, use z.brand() instead? or are the egonomics too bad?
+export type Scale_Name = Flavored<z.infer<typeof Scale_Name>, 'Scale_Name'>; // TODO @many this doesn't work when used as a schema, use z.brand() instead? or are the egonomics too bad?
 
 /**
  * @see https://wikipedia.org/wiki/Scale_(music)
@@ -203,7 +200,7 @@ export type Scale = z.infer<typeof Scale>;
  * @see https://wikipedia.org/wiki/Scale_(music)
  * @see https://wikipedia.org/wiki/Mode_(music)
  */
-export const scales: Scale[] = [
+export const scales: Array<Scale> = [
 	{name: 'chromatic', notes: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11]},
 	{name: 'major', notes: [2, 4, 5, 7, 9, 11]},
 	{name: 'minor', notes: [2, 3, 5, 7, 8, 10]},
@@ -225,7 +222,7 @@ export const lookup_scale = (name: Scale_Name): Scale => {
 };
 
 export const to_scale_notes = (scale: Scale, octaves: number): Intervals => {
-	const notes: number[] = [];
+	const notes: Array<number> = [];
 	for (let i = 0; i < octaves; i++) {
 		const up = i % 2 === 0;
 		const direction = up ? 1 : -1;
@@ -239,24 +236,13 @@ export const to_scale_notes = (scale: Scale, octaves: number): Intervals => {
 	return notes;
 };
 
-const SCALE_KEY = Symbol('scale');
-export const get_scale = (): Signal<Scale> => getContext(SCALE_KEY);
-export const set_scale = (store: Signal<Scale> = signal(DEFAULT_SCALE)): Signal<Scale> =>
-	setContext(SCALE_KEY, store);
-
-const KEY_KEY = Symbol('key');
-export const get_key = (): Signal<Pitch_Class> => getContext(KEY_KEY);
-export const set_key = (
-	store: Signal<Pitch_Class> = signal(pitch_classes[0]),
-): Signal<Pitch_Class> => setContext(KEY_KEY, store);
-
 export const to_notes_in_scale = (
 	scale: Scale,
 	key: Pitch_Class = 'C',
 	min_note: Midi = MIDI_MIN,
 	max_note: Midi = MIDI_MAX,
 ): Set<Midi> => {
-	const notes: Midi[] = [];
+	const notes: Array<Midi> = [];
 	const pitch_class_offset = pitch_classes.indexOf(key);
 	const note_offset_min = pitch_classes.indexOf(midi_pitch_classes[min_note]);
 	const initial_offset = pitch_class_offset - note_offset_min;
@@ -284,11 +270,11 @@ export const MIDI_MAX = 127;
  * @see https://wikipedia.org/wiki/MIDI
  */
 export const Midi = z.number().int().min(MIDI_MIN).max(MIDI_MAX);
-export type Midi = Flavored<z.infer<typeof Midi>, 'Midi'>; // TODO @multiple this doesn't work when used as a schema, use z.brand() instead? or are the egonomics too bad?
+export type Midi = Flavored<z.infer<typeof Midi>, 'Midi'>; // TODO @many this doesn't work when used as a schema, use z.brand() instead? or are the egonomics too bad?
 
-export const midis: Midi[] = Object.freeze(
+export const midis: Array<Midi> = Object.freeze(
 	Array.from({length: MIDI_MAX + 1}, (_, i) => i),
-) as Midi[];
+) as Array<Midi>;
 
 export const is_midi = (n: number): n is Midi =>
 	n >= MIDI_MIN && n <= MIDI_MAX && Number.isInteger(n);
@@ -318,21 +304,21 @@ export const freq_to_midi_safe = (freq: Frequency, tuning: Frequency): Midi | nu
 // TODO consider converting all of these to `Map`s
 // TODO do we want to remove the `midi` part of these data array names, or otherwise rename them? maybe instead of `midi_*`, rename to `note_*`?
 
-export const midi_chromas: Chroma[] & Record<Midi, Chroma> = Object.freeze(
+export const midi_chromas: Array<Chroma> & Record<Midi, Chroma> = Object.freeze(
 	midis.map((m) => (m % 12) + 1),
-) as Chroma[];
+) as Array<Chroma>;
 
-export const midi_pitch_classes: Pitch_Class[] & Record<Midi, Pitch_Class> = Object.freeze(
+export const midi_pitch_classes: Array<Pitch_Class> & Record<Midi, Pitch_Class> = Object.freeze(
 	midis.map((m) => pitch_classes[midi_chromas[m] - 1]),
-) as Pitch_Class[];
+) as Array<Pitch_Class>;
 
-export const midi_octaves: Octave[] & Record<Midi, Octave> = Object.freeze(
+export const midi_octaves: Array<Octave> & Record<Midi, Octave> = Object.freeze(
 	midis.map((m) => Math.floor(m / 12) - 1),
-) as Octave[];
+) as Array<Octave>;
 
-export const midi_names: Note_Name[] & Record<Midi, Note_Name> = Object.freeze(
+export const midi_names: Array<Note_Name> & Record<Midi, Note_Name> = Object.freeze(
 	midis.map((m) => midi_pitch_classes[m] + midi_octaves[m]),
-) as Note_Name[];
+) as Array<Note_Name>;
 
 /**
  * @see https://wikipedia.org/wiki/Natural_(music)
@@ -342,8 +328,9 @@ export const midi_naturals: Set<Midi> = new Set(
 );
 
 // TODO replace with zod
-export const serialize_notes = (notes: Midi[] | null): string => (notes ? notes.join(', ') : '');
-export const parse_notes = (value: string): Midi[] =>
+export const serialize_notes = (notes: ReadonlyArray<Midi> | null): string =>
+	notes ? notes.join(', ') : '';
+export const parse_notes = (value: string): Array<Midi> =>
 	value
 		.split(',')
 		.map((v) => Number(v.trim()) | 0)

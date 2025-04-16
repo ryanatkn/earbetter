@@ -1,71 +1,106 @@
 <script lang="ts">
-	import {Intervals, Scale, scales, to_scale_notes} from '$lib/music.js';
+	import {dequal} from 'dequal';
 
-	// TODO @multiple naming convention between `Intervals_Input`/`Notes_Input`/`Select_Notes_Control`?
+	import {
+		DEFAULT_SCALE,
+		Intervals,
+		lookup_scale,
+		parse_intervals,
+		Scale,
+		scales,
+		serialize_intervals,
+		to_scale_notes,
+	} from '$lib/music.js';
+
+	// TODO @many naming convention between `Intervals_Input`/`Notes_Input`/`Select_Notes_Control`?
 
 	interface Props {
+		intervals: Intervals; // TODO maybe make bindable? gets tricky because of the 2 sources of truth
 		scale?: Scale;
 		octaves?: number;
-		onscale?: (scale: Scale) => void;
-		onoctaves?: (octaves: number) => void;
-		oninput?: (intervals: Intervals, scale: Scale, octaves: number) => void;
+		oninput?: (intervals: Intervals, from?: {scale: Scale; octaves: number}) => void;
 	}
 
-	const {scale = scales[0], octaves = 1, onscale, onoctaves, oninput}: Props = $props();
-
-	let updated_scale: Scale = $state.frozen(scale);
-
-	let updated_octaves: number = $state(octaves);
+	let {
+		intervals,
+		scale = $bindable(DEFAULT_SCALE),
+		octaves = $bindable(1),
+		oninput,
+	}: Props = $props();
 
 	// TODO visualize the intervals with a piano
-	const intervals: Intervals = $derived(to_scale_notes(updated_scale, updated_octaves));
+	const intervals_from_scale_and_octave = $derived(to_scale_notes(scale, octaves));
+	const serialized_intervals_from_scale_and_octave = $derived(
+		serialize_intervals(intervals_from_scale_and_octave),
+	);
 
-	// TODO hacky
-	$effect(() => {
-		updated_scale = scale;
+	const serialized_intervals = $state(serialize_intervals(intervals));
+	let input_intervals_str = $state(serialized_intervals);
+
+	// TODO this is experimental - is it a good pattern? the point is to share the textarea with 2 sources of truth, this makes it declarative
+	// TODO maybe on init, we should figure out a way to use the intervals from the scale and octave when appropriate, but I can't think of when that is right now
+	// The order here matters, on init we want the prop intervals to be the source of truth.
+	const last_time_intervals_from_scale_and_octave_changed = $derived.by(() => {
+		intervals_from_scale_and_octave;
+		return Date.now();
 	});
-	$effect(() => {
-		updated_octaves = octaves;
+	const last_time_intervals_changed = $derived.by(() => {
+		intervals;
+		input_intervals_str;
+		return Date.now();
 	});
-	// TODO hacky, could use oninput handlers but
-	// the scale select needs to wait a tick to get `updated_scale`,
-	// unlike the octave range input, maybe a bug?
-	$effect(() => {
-		if (scale !== updated_scale) {
-			console.log('onscale', updated_scale);
-			onscale?.(updated_scale);
-		}
-		if (octaves !== updated_octaves) {
-			console.log('onoctaves', updated_octaves);
-			onoctaves?.(updated_octaves);
-		}
-	});
+
+	const current_is_from_scale_and_octaves = $derived(
+		last_time_intervals_from_scale_and_octave_changed > last_time_intervals_changed, // tie goes to `intervals`
+	);
+
+	const current_str = $derived(
+		current_is_from_scale_and_octaves
+			? serialized_intervals_from_scale_and_octave
+			: input_intervals_str,
+	);
+	const current_intervals = $derived(parse_intervals(current_str));
+
+	const changed = $derived(!dequal(intervals, current_intervals));
+	const valid = $derived(!!current_intervals.length);
 </script>
 
+<small
+	><textarea
+		value={current_str}
+		oninput={(e) => (input_intervals_str = e.currentTarget.value)}
+		class="preview width_sm panel"
+	></textarea></small
+>
+<button
+	type="button"
+	class="accent mb_lg"
+	disabled={!changed || !valid}
+	onclick={() =>
+		oninput?.(current_intervals, current_is_from_scale_and_octaves ? {scale, octaves} : undefined)}
+>
+	use these intervals
+</button>
 <label>
 	<div class="title text_align_center">scale</div>
-	<select bind:value={updated_scale}>
+	<!-- TODO bind the objects not the names to simplify -->
+	<select value={scale.name} onchange={(e) => (scale = lookup_scale(e.currentTarget.value))}>
 		{#each scales as s (s)}
-			<option value={s}>{s.name}</option>
+			<option value={s.name}>{s.name}</option>
 		{/each}
 	</select>
 </label>
 <label>
 	<div class="title text_align_center">octaves</div>
-	<div class="text_align_center">{updated_octaves}</div>
-	<input type="range" min={1} max={6} bind:value={updated_octaves} />
+	<div class="text_align_center">{octaves}</div>
+	<input type="range" min={1} max={6} bind:value={octaves} />
 </label>
-<small class="preview width_sm panel">{intervals.join(', ')}</small>
-<button type="button" onclick={() => oninput?.(intervals, updated_scale, updated_octaves)}>
-	use these intervals
-</button>
 
 <style>
 	/* TODO this is hacky, extract or reuse something? */
 	.preview {
 		padding: var(--space_md);
-		margin-bottom: var(--space_lg);
-		text-align: center;
+		margin: var(--space_lg) 0;
 		font-family: var(--font_mono);
 	}
 </style>

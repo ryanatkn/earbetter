@@ -1,5 +1,6 @@
 <script lang="ts">
 	import {swallow} from '@ryanatkn/belt/dom.js';
+	import type {Snippet} from 'svelte';
 
 	import {type Midi, midi_naturals} from '$lib/music.js';
 	import {find_next_sibling, find_previous_sibling} from '$lib/dom.js';
@@ -12,8 +13,18 @@
 		pressed?: boolean;
 		highlighted?: boolean;
 		emphasized?: boolean;
-		show_middle_c?: boolean;
-		pressing_any?: {value: boolean; set: (v: boolean) => void};
+		/**
+		 * Adds a label to the middle C key.
+		 * Defaults to `C4` if `true`.
+		 */
+		middle_c_label?: string | boolean | Snippet;
+		/**
+		 * If focus exits a key while it's pressed without using the mouse,
+		 * it will by default keep the key stuck down until a mouseleave event, which is kind of fun.
+		 * Set to `false` to disable this quirky behavior.
+		 */
+		allow_sticking?: boolean;
+		pressing_any?: boolean;
 		onpress?: (note: Midi) => void;
 		onrelease?: (note: Midi) => void;
 	}
@@ -26,7 +37,8 @@
 		pressed = false,
 		highlighted = false,
 		emphasized = false,
-		show_middle_c = true,
+		middle_c_label = true,
+		allow_sticking = false,
 		pressing_any,
 		onpress,
 		onrelease,
@@ -103,29 +115,28 @@
 	onkeyup={interactive ? keyup : undefined}
 	onmousedown={interactive
 		? (e) => {
-				swallow(e);
 				onpress?.(note);
-				if (pressing_any) pressing_any.set(true);
 				e.currentTarget.focus();
 			}
 		: undefined}
 	onmouseup={interactive
-		? (e) => {
-				swallow(e);
+		? () => {
 				onrelease?.(note);
-				if (pressing_any) pressing_any.set(false);
 			}
 		: undefined}
-	onmouseenter={interactive && pressing_any?.value
+	onmouseenter={interactive && pressing_any
 		? (e) => {
-				swallow(e);
 				onpress?.(note);
 				e.currentTarget.focus();
 			}
 		: undefined}
 	onmouseleave={interactive
-		? (e) => {
-				swallow(e);
+		? () => {
+				onrelease?.(note);
+			}
+		: undefined}
+	onfocusout={interactive && !allow_sticking
+		? () => {
 				onrelease?.(note);
 			}
 		: undefined}
@@ -133,8 +144,16 @@
 	data-note={note}
 	style:left="{left_offset}px"
 >
-	{#if is_middle_c && show_middle_c}
-		<span class="middle_c">C4</span>
+	{#if is_middle_c && middle_c_label}
+		<div class="middle_c">
+			{#if typeof middle_c_label === 'string'}
+				{middle_c_label}
+			{:else if typeof middle_c_label === 'boolean'}
+				C4
+			{:else}
+				{@render middle_c_label()}
+			{/if}
+		</div>
 	{/if}
 </button>
 
@@ -234,7 +253,7 @@
 		text-shadow: var(--text_shadow);
 		position: absolute;
 		left: calc(50% - var(--emphasized_marker_width) / 2);
-		bottom: calc(var(--emphasized_marker_width) / 2);
+		bottom: 0;
 		width: var(--emphasized_marker_width);
 		height: var(--emphasized_marker_width);
 		user-select: none;

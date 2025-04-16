@@ -1,10 +1,9 @@
 // https://webaudio.github.io/web-midi-api
 
-// TODO extract into a standalone package?
+// TODO there's now partial support for these, but it's not complete,
+// e.g. `MIDIMessageEvent` lacks properties except `data`
 
-export interface requestMIDIAccess {
-	(options?: MIDIOptions): Promise<MIDIAccess>;
-}
+export type requestMIDIAccess = (options?: MIDIOptions) => Promise<MIDIAccess>;
 export interface MIDIOptions {
 	sysex?: boolean;
 	software?: boolean;
