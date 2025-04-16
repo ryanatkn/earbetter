@@ -107,9 +107,6 @@ a.chip {
 .text_align_center {
 	text-align: center;
 }
-.bg {
-	background-color: var(--bg);
-}
 .color_c_5 {
 	color: var(--color_c_5);
 }
@@ -161,6 +158,10 @@ a.chip {
 }
 .ml_lg {
 	margin-left: var(--space_lg);
+}
+.mx_auto {
+	margin-left: auto;
+	margin-right: auto;
 }
 .my_0 {
 	margin-top: 0;

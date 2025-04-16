@@ -143,7 +143,11 @@
 
 	{#if main_menu.opened}
 		<Dialog onclose={() => main_menu.close()}>
-			<Main_Menu />
+			<div class="box width_md mx_auto">
+				<div class="pane">
+					<Main_Menu />
+				</div>
+			</div>
 		</Dialog>
 	{/if}
 </Themed>

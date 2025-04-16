@@ -86,7 +86,7 @@
 			start_importing_el?.focus();
 		}}
 	>
-		<div class="importing bg shadow_d_xl p_xl width_md box">
+		<div class="importing pane shadow_d_xl p_xl width_md mx_auto">
 			<h2 class="my_0">import project data</h2>
 			<Copy_To_Clipboard
 				text={updated}

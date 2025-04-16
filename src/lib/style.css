@@ -112,7 +112,7 @@ header {
 	width: 100%;
 }
 
-.section_title {
+:where(.section_title) {
 	padding: var(--space_lg);
 	display: flex;
 	align-items: center;
@@ -120,6 +120,13 @@ header {
 	background: var(--lighten_1);
 	width: 100%;
 	margin-bottom: var(--space_md);
+}
+
+.pane {
+	--shadow_color: var(--shadow_color_h);
+	box-shadow: var(--shadow_bottom_xl)
+		color-mix(in hsl, var(--shadow_color) var(--shadow_alpha_2), transparent);
+	border-radius: 0;
 }
 
 .section_body {
