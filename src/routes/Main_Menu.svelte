@@ -108,7 +108,7 @@
 			This website collects no data - the only server it talks to is <a
 				href="https://pages.github.com/">GitHub Pages</a
 			>
-			to serve static files, and I don't use a DNS proxy. See
+			to serve static files, and it doesn't use a DNS proxy. See
 			<a href="https://github.com/ryanatkn/earbetter">the source code</a> for more.
 		</p>
 	</section>
