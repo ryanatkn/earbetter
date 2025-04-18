@@ -105,10 +105,10 @@
 	<section>
 		<h2 class="section_title">privacy</h2>
 		<p class="section_body">
-			This website collects no data - the only server it talks to is <a
-				href="https://pages.github.com/">GitHub Pages</a
+			This website collects no data - it sends requests to only <a href="https://pages.github.com/"
+				>GitHub Pages</a
 			>
-			to serve static files, and it doesn't use a DNS proxy. See
+			for static files. See
 			<a href="https://github.com/ryanatkn/earbetter">the source code</a> for more.
 		</p>
 	</section>
