@@ -7,7 +7,7 @@
 	import Themed from '@ryanatkn/fuz/Themed.svelte';
 	import {is_editable, swallow} from '@ryanatkn/belt/dom.js';
 	import Dialog from '@ryanatkn/fuz/Dialog.svelte';
-	import {sync_color_scheme, Themer} from '@ryanatkn/fuz/theme.svelte.js';
+	import {sync_color_scheme, Themer} from '@ryanatkn/fuz/themer.svelte.js';
 	import {untrack, type Snippet} from 'svelte';
 	import {page} from '$app/stores';
 	import {BROWSER} from 'esm-env';
@@ -138,7 +138,7 @@
 
 <Init_Audio_Context />
 
-<Themed {themer} color_scheme_fallback={themer.color_scheme}>
+<Themed {themer}>
 	{@render children()}
 
 	{#if main_menu.opened}
