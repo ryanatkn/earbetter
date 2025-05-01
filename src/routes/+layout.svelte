@@ -9,7 +9,7 @@
 	import Dialog from '@ryanatkn/fuz/Dialog.svelte';
 	import {sync_color_scheme, Themer} from '@ryanatkn/fuz/themer.svelte.js';
 	import {untrack, type Snippet} from 'svelte';
-	import {page} from '$app/stores';
+	import {page} from '$app/state';
 	import {BROWSER} from 'esm-env';
 
 	import {audio_context_context} from '$lib/audio_context.js';
@@ -49,7 +49,7 @@
 	const main_menu = main_menu_context.set();
 
 	const current_level_hash_data = $derived.by(() => {
-		const parsed = Level_Hash_Data.safeParse(parse_from_hash($page.url.hash));
+		const parsed = Level_Hash_Data.safeParse(parse_from_hash(page.url.hash));
 		return parsed.success ? parsed.data : null;
 	});
 	$effect(() => {

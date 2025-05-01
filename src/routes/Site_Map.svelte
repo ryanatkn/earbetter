@@ -1,11 +1,11 @@
 <script lang="ts">
 	import {base} from '$app/paths';
-	import {page} from '$app/stores';
+	import {page} from '$app/state';
 	import {strip_start} from '@ryanatkn/belt/string.js';
 
 	import {pages} from '$routes/page_data.js';
 
-	const selected_slug = $derived(strip_start($page.url.pathname, base));
+	const selected_slug = $derived(strip_start(page.url.pathname, base));
 </script>
 
 <!-- TODO styling is messed  -->
