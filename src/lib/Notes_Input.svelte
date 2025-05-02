@@ -227,7 +227,7 @@
 	.scales {
 		display: flex;
 		flex-wrap: wrap;
-		max-width: var(--width_md);
+		max-width: var(--distance_md);
 		justify-content: center;
 	}
 </style>

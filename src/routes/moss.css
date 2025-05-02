@@ -14,14 +14,14 @@
 	align-items: center;
 }
 
-.width_md {
-	width: 100%;
-	max-width: var(--width_md);
-}
-
 .width_sm {
 	width: 100%;
-	max-width: var(--width_sm);
+	max-width: var(--distance_sm);
+}
+
+.width_md {
+	width: 100%;
+	max-width: var(--distance_md);
 }
 
 .clickable {
@@ -76,7 +76,8 @@
 
 .chip {
 	font-weight: 600;
-	padding: var(--space_xs5) var(--space_sm); /* maybe different inside `p`? using `calc` with `--size`? */
+	padding-left: var(--space_xs);
+	padding-right: var(--space_xs);
 	background-color: var(--fg_1);
 	border-radius: var(--radius_xs);
 }
