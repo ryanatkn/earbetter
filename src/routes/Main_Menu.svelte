@@ -38,8 +38,8 @@
 		<div class="section_title box">
 			<Svg data={earbetter_logo} size="var(--icon_size_xl2)" />
 			<h1 class="mb_md">earbetter</h1>
-			<!-- TODO switch to `class="size_xl"` when Fuz changes to use vb/vi -->
-			<div style:--size="var(--size_xl)"><Site_Breadcrumb hide_main_menu_button /></div>
+			<!-- TODO switch to `class="font_size_xl"` when Fuz changes to use vb/vi -->
+			<div style:--font_size="var(--font_size_xl)"><Site_Breadcrumb hide_main_menu_button /></div>
 		</div>
 		<div class="section_body">
 			<p>
@@ -93,7 +93,7 @@
 							location.reload();
 						}}
 					>
-						<div class="size_xl3">✕</div>
+						<div class="font_size_xl3">✕</div>
 						<div class="ml_lg text_align_left">
 							permanently delete<br />all locally saved data
 						</div>

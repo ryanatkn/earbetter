@@ -42,7 +42,7 @@
 	{#if (removing && remove) || (!removing && edit)}
 		<button
 			type="button"
-			class="icon_button plain_button size_xl deselectable"
+			class="icon_button plain_button font_size_xl deselectable"
 			title={removing ? 'remove project' : 'edit project'}
 			class:selected={selected && !removing && editing}
 			class:color_c={removing}
@@ -54,7 +54,7 @@
 	{#if remove}
 		<button
 			type="button"
-			class="icon_button plain_button size_xl"
+			class="icon_button plain_button font_size_xl"
 			onclick={() => (removing = !removing)}
 			title={removing ? 'cancel removing' : 'remove project'}
 		>

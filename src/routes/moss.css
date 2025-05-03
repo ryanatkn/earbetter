@@ -51,12 +51,12 @@
 			var(--shadow_bottom_md)
 			color-mix(in hsl, var(--shadow_color) var(--shadow_alpha_3), transparent)
 	);
-	border-radius: var(--radius_xs);
+	border-radius: var(--border_radius_xs);
 }
 
 /* A panel is a box embedded into the page, useful for visually isolating content. */
 .panel {
-	border-radius: var(--radius_xs);
+	border-radius: var(--border_radius_xs);
 	background-color: var(--panel_bg, var(--fg_1));
 }
 
@@ -79,28 +79,32 @@
 	padding-left: var(--space_xs);
 	padding-right: var(--space_xs);
 	background-color: var(--fg_1);
-	border-radius: var(--radius_xs);
+	border-radius: var(--border_radius_xs);
 }
 a.chip {
 	font-weight: 700;
 }
 
+.relative {
+	position: relative;
+}
 .overflow_x_auto {
 	overflow-x: auto;
 }
-.inline {
-	display: inline;
+/** Same as `display: inline flow-root`. */
+.display_inline_block {
+	display: inline-block;
 }
 .flex_1 {
 	flex: 1;
 }
-.size_xl {
-	font-size: var(--size_xl);
-	--size: var(--size_xl);
+.font_size_xl {
+	font-size: var(--font_size_xl);
+	--font_size: var(--font_size_xl);
 }
-.size_xl3 {
-	font-size: var(--size_xl3);
-	--size: var(--size_xl3);
+.font_size_xl3 {
+	font-size: var(--font_size_xl3);
+	--font_size: var(--font_size_xl3);
 }
 .text_align_left {
 	text-align: left;

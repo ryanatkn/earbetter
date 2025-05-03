@@ -171,7 +171,7 @@
 
 		position: absolute;
 		top: 0;
-		border-radius: var(--radius_xs);
+		border-radius: var(--border_radius_xs);
 		padding: 0;
 		min-height: 0;
 		z-index: var(--z_index_offset);

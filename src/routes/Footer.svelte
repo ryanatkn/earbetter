@@ -12,7 +12,7 @@
 </script>
 
 <footer>
-	<div class="mb_lg" style:--size="var(--size_xl)">
+	<div class="mb_lg" style:--font_size="var(--font_size_xl)">
 		<Site_Breadcrumb {hide_main_menu_button} />
 	</div>
 	<div class="box">
@@ -21,12 +21,12 @@
 			source code
 		</a>
 	</div>
-	<!-- TODO switch to `class="size_xl"` when Fuz changes to use vb/vi -->
+	<!-- TODO switch to `class="font_size_xl"` when Fuz changes to use vb/vi -->
 </footer>
 
 <style>
 	footer {
-		padding: var(--size_md);
+		padding: var(--font_size_md);
 		margin: var(--space_xl3) auto;
 		text-align: center;
 	}

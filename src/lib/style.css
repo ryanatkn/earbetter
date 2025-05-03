@@ -57,7 +57,7 @@ a:active {
 }
 
 button.big {
-	font-size: var(--size_xl);
+	font-size: var(--font_size_xl);
 	padding: var(--space_md) var(--space_xl3);
 }
 
@@ -85,7 +85,7 @@ td {
 }
 
 header {
-	font-size: var(--size_xl);
+	font-size: var(--font_size_xl);
 	text-align: center;
 	margin-bottom: var(--space_md);
 }

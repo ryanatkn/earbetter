@@ -32,7 +32,7 @@
 	}
 	ul a {
 		display: block;
-		font-size: var(--size_xl);
+		font-size: var(--font_size_xl);
 		padding: var(--space_xl);
 	}
 </style>

@@ -40,7 +40,7 @@
 	</button>
 	<button
 		type="button"
-		class="icon_button plain_button size_xl"
+		class="icon_button plain_button font_size_xl"
 		class:selected={!removing && editing}
 		class:color_c={removing}
 		title={removing ? 'remove level' : editing ? 'stop editing level' : 'edit level'}
@@ -62,7 +62,7 @@
 	</button>
 	<button
 		type="button"
-		class="icon_button plain_button size_xl"
+		class="icon_button plain_button font_size_xl"
 		onclick={() => (removing = !removing)}
 		title={removing ? 'cancel removing' : 'remove level'}
 	>

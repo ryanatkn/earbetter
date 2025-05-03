@@ -199,9 +199,9 @@
 					<div class="panel p_md mb_md box w_100">
 						<div class="panel p_md mb_md box">
 							{#if level.mistakes === 0}
-								<div class="size_xl3 text_align_center">flawless run!</div>
+								<div class="font_size_xl3 text_align_center">flawless run!</div>
 							{:else}
-								<div class="size_xl3">
+								<div class="font_size_xl3">
 									{level.mistakes}
 								</div>
 								<div>
@@ -262,7 +262,7 @@
 		--highlighted_animation: highlighting;
 	}
 	/* .debug {
-		font-size: var(--size_xl);
+		font-size: var(--font_size_xl);
 		height: 100%;
 		width: 100%;
 		position: absolute;
@@ -318,7 +318,7 @@
 		pointer-events: none;
 	}
 	.feedback_text_bursts {
-		font-size: var(--size_xl3);
+		font-size: var(--font_size_xl3);
 		position: fixed;
 		inset: 0;
 		z-index: 115;

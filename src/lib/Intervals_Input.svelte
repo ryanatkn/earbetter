@@ -101,6 +101,6 @@
 	.preview {
 		padding: var(--space_md);
 		margin: var(--space_lg) 0;
-		font-family: var(--font_mono);
+		font-family: var(--font_family_mono);
 	}
 </style>
