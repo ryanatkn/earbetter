@@ -17,7 +17,7 @@ import {noop_ssr} from '$lib/util.js';
 // WebMIDI helpers specific to cosmicplayground
 
 export interface Midi_Message {
-	command: MIDICommand;
+	command: (typeof MIDICommand)[number];
 	channel: MIDIChannel;
 	note: Midi;
 	velocity: number; // [0, 1]

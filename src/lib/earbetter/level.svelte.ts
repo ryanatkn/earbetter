@@ -73,12 +73,22 @@ const DEFAULT_TRIAL: Trial | null = null;
 export class Level {
 	seq_id = 0; // used to track the async note playing sequence for cancellation
 
+	readonly app: App;
+	readonly level_data: Level_Data; // TODO maybe make optional?
+	readonly ac: Get_Audio_Context;
+	register_success: (id: Level_Id, mistake_count: number) => void;
+
 	constructor(
-		public readonly app: App,
-		public readonly level_data: Level_Data, // TODO maybe make optional?
-		public readonly ac: Get_Audio_Context,
-		protected register_success: (id: Level_Id, mistake_count: number) => void,
-	) {}
+		app: App,
+		level_data: Level_Data, // TODO maybe make optional?
+		ac: Get_Audio_Context,
+		register_success: (id: Level_Id, mistake_count: number) => void,
+	) {
+		this.app = app;
+		this.level_data = level_data;
+		this.ac = ac;
+		this.register_success = register_success;
+	}
 
 	status: Status = $state(DEFAULT_STATUS);
 	mistakes: number = $state(0);

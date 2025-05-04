@@ -128,11 +128,16 @@ export class App {
 	editing_level: boolean = $state(false);
 	draft_level_data: Level_Data | null = $state.raw(null);
 
+	readonly get_audio_context: () => AudioContext;
+	readonly storage_key: string;
+
 	constructor(
-		public readonly get_audio_context: () => AudioContext,
+		get_audio_context: () => AudioContext,
 		initial_site_data: Site_Data | null = null,
-		public readonly storage_key = 'app',
+		storage_key = 'app',
 	) {
+		this.get_audio_context = get_audio_context;
+		this.storage_key = storage_key;
 		this.app_data = this.load();
 		console.log(`app_data`, this.app_data);
 

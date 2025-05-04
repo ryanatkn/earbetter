@@ -67,10 +67,15 @@ export interface MIDIConnectionEventInit extends EventInit {
 	port: MIDIPort;
 }
 
-export enum MIDICommand { // TODO add others
-	Stop = 8,
-	Start = 9,
-	Knob = 11,
-	PitchBend = 14,
-}
+export const MIDICommand = {
+	// TODO add others
+	Stop: 8,
+	Start: 9,
+	Knob: 11,
+	PitchBend: 14,
+	8: 'Stop',
+	9: 'Start',
+	11: 'Knob',
+	14: 'PitchBend',
+} as Record<string | number, any>; // TODO was enum, just hacking it for now
 export type MIDIChannel = number; // TODO enumerate? 0-15 or 1-16?
