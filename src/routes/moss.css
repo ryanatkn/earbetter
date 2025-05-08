@@ -85,15 +85,15 @@ a.chip {
 	font-weight: 700;
 }
 
-.relative {
+.position_relative {
 	position: relative;
-}
-.overflow_x_auto {
-	overflow-x: auto;
 }
 /** Same as `display: inline flow-root`. */
 .display_inline_block {
 	display: inline-block;
+}
+.overflow_x_auto {
+	overflow-x: auto;
 }
 .flex_1 {
 	flex: 1;
