@@ -242,17 +242,17 @@ export const to_notes_in_scale = (
 	min_note: Midi = MIDI_MIN,
 	max_note: Midi = MIDI_MAX,
 ): Set<Midi> => {
-	const notes: Array<Midi> = [];
+	const notes: Set<Midi> = new Set();
 	const pitch_class_offset = pitch_classes.indexOf(key);
 	const note_offset_min = pitch_classes.indexOf(midi_pitch_classes[min_note]);
 	const initial_offset = pitch_class_offset - note_offset_min;
 	for (let i = min_note; i <= max_note; i++) {
 		const offset = (i - initial_offset) % 12;
 		if (offset === 0 || scale.notes.includes(offset)) {
-			notes.push(i);
+			notes.add(i);
 		}
 	}
-	return new Set(notes);
+	return notes;
 };
 
 export const MIDI_MIN = 0;
