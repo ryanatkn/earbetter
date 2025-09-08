@@ -3,7 +3,7 @@
 	import '@ryanatkn/moss/theme.css';
 	import '$lib/style.css';
 
-	import {base} from '$app/paths';
+	import {resolve} from '$app/paths';
 	import {slide} from 'svelte/transition';
 	import {afterNavigate} from '$app/navigation';
 	import Svg from '@ryanatkn/fuz/Svg.svelte';
@@ -45,7 +45,7 @@
 			<p>
 				Earbetter is an <a href="https://wikipedia.org/wiki/Ear_training">ear trainer</a>. The
 				website also has some other music tools like
-				<a href="{base}/piano">a virtual piano</a>. More planned, stay tuned.
+				<a href={resolve('/piano')}>a virtual piano</a>. More planned, stay tuned.
 			</p>
 			<p>
 				It's made with Svelte and TypeScript. <a href="https://github.com/ryanatkn/earbetter"

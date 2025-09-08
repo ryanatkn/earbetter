@@ -1,6 +1,6 @@
 <script lang="ts">
 	import {goto} from '$app/navigation';
-	import {base} from '$app/paths';
+	import {resolve} from '$app/paths';
 
 	import Header from '$routes/Header.svelte';
 	import Footer from '$routes/Footer.svelte';
@@ -16,7 +16,7 @@
 </svelte:head>
 
 <main>
-	<Back_Button onclick={() => goto(base + '/')} />
+	<Back_Button onclick={() => goto(resolve('/'))} />
 	<Header />
 	<Level_Map {app} />
 	<div class="box"><Footer /></div>

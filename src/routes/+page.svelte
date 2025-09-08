@@ -1,5 +1,5 @@
 <script lang="ts">
-	import {base} from '$app/paths';
+	import {resolve} from '$app/paths';
 
 	import Header from '$routes/Header.svelte';
 	import Footer from '$routes/Footer.svelte';
@@ -13,8 +13,8 @@
 	<section>
 		<nav>
 			<ul class="unstyled">
-				<li><a class="panel" href="{base}/trainer">train your ear!</a></li>
-				<li><a class="panel" href="{base}/piano">play piano!</a></li>
+				<li><a class="panel" href={resolve('/trainer')}>train your ear!</a></li>
+				<li><a class="panel" href={resolve('/piano')}>play piano!</a></li>
 			</ul>
 		</nav>
 	</section>
