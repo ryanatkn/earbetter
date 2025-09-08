@@ -65,7 +65,7 @@
 	const changed = $derived(!!updated_notes_array && serialized_updated_notes !== serialized_notes);
 
 	const toggle_note = (note: Midi): void => {
-		const updated = new Set(current_notes);
+		const updated = new Set(current_notes); // eslint-disable-line svelte/prefer-svelte-reactivity
 		if (updated.has(note)) {
 			updated.delete(note);
 		} else {

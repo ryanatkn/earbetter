@@ -1,7 +1,7 @@
 <script lang="ts">
 	import {z} from 'zod';
 	import {goto} from '$app/navigation';
-	import {base} from '$app/paths';
+	import {resolve} from '$app/paths';
 
 	import Piano from '$lib/Piano.svelte';
 	import {audio_context_context} from '$lib/audio_context.js';
@@ -67,7 +67,7 @@
 	onnotestop={(note) => stop_playing(note)}
 />
 <main bind:clientWidth>
-	<Back_Button onclick={() => goto(base + '/')} />
+	<Back_Button onclick={() => goto(resolve('/'))} />
 	<Header />
 	<div class="piano_wrapper" style:padding="{piano_padding}px">
 		{#if clientWidth}

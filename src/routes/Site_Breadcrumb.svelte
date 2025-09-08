@@ -1,7 +1,7 @@
 <script lang="ts">
 	import Breadcrumb from '@ryanatkn/fuz/Breadcrumb.svelte';
 	import {page} from '$app/state';
-	import {base} from '$app/paths';
+	import {resolve} from '$app/paths';
 
 	import {main_menu_context} from '$routes/main_menu_state.svelte.js';
 
@@ -12,7 +12,7 @@
 	const {hide_main_menu_button = false}: Props = $props();
 
 	const pathname = $derived(page.url.pathname);
-	const home = $derived(pathname === base + '/');
+	const home = $derived(pathname === resolve('/'));
 
 	const main_menu = main_menu_context.get();
 </script>

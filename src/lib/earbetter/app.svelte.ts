@@ -2,7 +2,7 @@ import {goto} from '$app/navigation';
 import {z} from 'zod';
 import {untrack} from 'svelte';
 import {create_context} from '@ryanatkn/fuz/context_helpers.js';
-import {base} from '$app/paths';
+import {resolve} from '$app/paths';
 import {SvelteSet} from 'svelte/reactivity';
 
 import {
@@ -637,6 +637,6 @@ export class App {
 	 * @returns `true` if the active level was exited or `false` if there was no active level
 	 */
 	exit_level = async (): Promise<void> => {
-		await goto(`${base}/trainer`);
+		await goto(resolve(`/trainer`));
 	};
 }

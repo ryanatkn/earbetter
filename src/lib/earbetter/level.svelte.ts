@@ -1,7 +1,7 @@
 import {random_item, random_int} from '@ryanatkn/belt/random.js';
 import {z} from 'zod';
 import type {Flavored} from '@ryanatkn/belt/types.js';
-import {base} from '$app/paths';
+import {resolve} from '$app/paths';
 
 import {Midi, Intervals} from '$lib/music.js';
 import {play_note} from '$lib/play_note.js';
@@ -358,7 +358,7 @@ const to_fallback_tonic = (min_note: Midi, max_note: Midi): Midi => {
 
 export const to_level_url = (level_data: Level_Data): string => {
 	const data: Level_Hash_Data = {level: level_data};
-	return `${base}/trainer/level` + serialize_to_hash(data);
+	return resolve((`/trainer/level` + serialize_to_hash(data)) as any);
 };
 
 export const Mistakes_Level_Stats = z.record(Level_Id, z.array(z.number()).or(z.undefined()));
