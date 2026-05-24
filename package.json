@@ -49,6 +49,7 @@
     "@sveltejs/adapter-static": "^3.0.9",
     "@sveltejs/kit": "^2.37.1",
     "@sveltejs/vite-plugin-svelte": "^6.1.4",
+    "@types/node": "^24.12.4",
     "dequal": "^2.0.3",
     "eslint": "^9.35.0",
     "eslint-plugin-svelte": "^3.12.2",
