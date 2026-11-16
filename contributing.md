@@ -13,15 +13,12 @@ Hey thanks for your interest
 1. We use GitHub [issues](https://github.com/ryanatkn/earbetter/issues) and
    [discussions](https://github.com/ryanatkn/earbetter/discussions).
 1. Earbetter makes it easy to create and share challenges
-   but for now the only official way to share content is through PRs on GitHub -
-   for now, please submit projects, realms, and levels
-   like `$lib/projects/{your_name}/my_cool_project.ts`
-   or `$lib/projects/{your_name}/my_challenging_level.ts`.
+   but for now the only official way to share content is to post your exported
+   projects, realms, and levels in a
+   [discussion](https://github.com/ryanatkn/earbetter/discussions).
    (as an example see [the default project](src/lib//projects/default_project.ts))
-   (TODO link to discussions for improving this situation)
-1. Other [PRs](https://github.com/ryanatkn/earbetter/pulls)
-   are welcome but they may be declined if they don't fit the project's goals,
-   which are currently unclear and open for
+1. PRs are open to collaborators only; get in touch if you're interested.
+   The project's goals are currently unclear and open for
    [discussion](https://github.com/ryanatkn/earbetter/discussions),
-   but everything is public domain and forking is encouraged.
+   and everything is public domain and forking is encouraged.
 1. Please be courteous and curious and help us make the thing better.

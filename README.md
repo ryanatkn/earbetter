@@ -12,10 +12,6 @@
 
 play at [earbetter.ryanatkn.com](https://earbetter.ryanatkn.com/)
 
-3 minute [video intro on YouTube](https://www.youtube.com/watch?v=zW2zI1A_Ikw)
-
-raw programming vods [YouTube playlist](https://www.youtube.com/playlist?list=PLio_5jgyVNVnamRztrGFag4XihZNmLKZT)
-
 Feedback is super welcome,
 please open any [discussions](https://github.com/ryanatkn/earbetter/discussions)
 or issues. For more see [contributing.md](contributing.md).
@@ -31,8 +27,6 @@ import Piano from '@ryanatkn/earbetter/Piano.svelte';
 ```
 
 ## About
-
-3 minute [video intro on YouTube](https://www.youtube.com/watch?v=zW2zI1A_Ikw)
 
 In 2016 I made a simple ear trainer named
 [Ear Sharpener](https://github.com/ryanatkn/ear-sharpener)
@@ -70,9 +64,9 @@ but that requires some kind of server infrastructure.
 For now I'm accepting content submissions in this repo,
 so we get the benefit having a lot of static content without needing a server.
 I'm open to input but I'm hesitant to operate any kind of service or add non-static dependencies --
-for now, you're invited to open PRs with your exported data
-following the [default example](src/lib//projects/default_project.ts),
-or email me if you don't use GitHub.
+for now, you're invited to post your exported data in a
+[discussion](https://github.com/ryanatkn/earbetter/discussions)
+following the [default example](src/lib//projects/default_project.ts).
 
 For more please see [contributing.md](contributing.md)
 and the GitHub [discussions](https://github.com/ryanatkn/earbetter/discussions)
