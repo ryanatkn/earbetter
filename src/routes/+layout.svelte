@@ -6,6 +6,7 @@
 
 	import Themed from '@ryanatkn/fuz/Themed.svelte';
 	import {is_editable, swallow} from '@ryanatkn/belt/dom.js';
+	import {noop} from '@ryanatkn/belt/function.js';
 	import Dialog from '@ryanatkn/fuz/Dialog.svelte';
 	import {sync_color_scheme, Themer} from '@ryanatkn/fuz/themer.svelte.js';
 	import {untrack, type Snippet} from 'svelte';
@@ -39,8 +40,6 @@
 		() => Site_Data.parse({}),
 		Site_Data.parse,
 	);
-	console.log(`initial_site_data`, initial_site_data);
-
 	const get_audio_context = audio_context_context.set();
 
 	const app = app_context.set(new App(get_audio_context, initial_site_data));
@@ -96,7 +95,7 @@
 		switch (e.key) {
 			case 'c': {
 				swallow(e);
-				void request_access(app);
+				request_access(app).catch(noop); // the shortcut has no UI for failures, the button reports them
 				return;
 			}
 			case '1': {

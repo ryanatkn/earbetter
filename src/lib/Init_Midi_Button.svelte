@@ -33,7 +33,6 @@
 	type="button"
 	class="big"
 	onclick={async () => {
-		console.log('requesting midi access');
 		request_status = 'pending';
 		try {
 			// TODO @many source from `audio` in context, makes this convoluted
@@ -41,7 +40,6 @@
 			await request_access(midi_state);
 			request_status = 'success';
 		} catch (err) {
-			console.error('failed to request midi access', err);
 			request_status = 'failure';
 			request_error = err.message;
 		}

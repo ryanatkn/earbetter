@@ -3,7 +3,7 @@ import {z} from 'zod';
 import type {Flavored} from '@ryanatkn/belt/types.js';
 import {resolve} from '$app/paths';
 
-import {Midi, Intervals} from '$lib/music.js';
+import {Midi, Intervals, midi_names} from '$lib/music.js';
 import {play_note} from '$lib/play_note.js';
 import type {Milliseconds} from '$lib/audio_helpers.js';
 import {serialize_to_hash} from '$lib/url.js';
@@ -35,7 +35,7 @@ export type Level_Name = Flavored<z.infer<typeof Level_Name>, 'Level_Name'>; // 
 export const Level_Data = z.object({
 	id: Level_Id.default(create_level_id),
 	name: Level_Name.default(DEFAULT_LEVEL_NAME),
-	intervals: Intervals.default(DEFAULT_INTERVALS),
+	intervals: Intervals.default(() => DEFAULT_INTERVALS.slice()),
 	tonics: z.array(Midi).nullable().default(DEFAULT_TONICS),
 	trial_count: z.number().default(DEFAULT_TRIAL_COUNT),
 	sequence_length: z.number().default(DEFAULT_SEQUENCE_LENGTH),
@@ -57,6 +57,11 @@ export type Status =
 	| 'showing_failure_feedback'
 	| 'complete';
 
+/**
+ * The subset of `App` that a `Level` plays notes with.
+ */
+export type Level_Audio_State = Pick<App, 'playing_notes' | 'volume' | 'instrument'>;
+
 // TODO extract into its own module? decompose into signals?
 export interface Trial {
 	index: number;
@@ -72,22 +77,31 @@ const DEFAULT_TRIAL: Trial | null = null;
 
 export class Level {
 	seq_id = 0; // used to track the async note playing sequence for cancellation
+	feedback_timeout: ReturnType<typeof setTimeout> | undefined; // the pending transition after showing feedback
 
-	readonly app: App;
+	readonly app: Level_Audio_State;
 	readonly level_data: Level_Data; // TODO maybe make optional?
 	readonly ac: Get_Audio_Context;
 	register_success: (id: Level_Id, mistake_count: number) => void;
+	readonly random: () => number;
+	/**
+	 * Why the level can't be played, if it can't. A level with an error never starts.
+	 */
+	readonly error: string | null;
 
 	constructor(
-		app: App,
+		app: Level_Audio_State,
 		level_data: Level_Data, // TODO maybe make optional?
 		ac: Get_Audio_Context,
 		register_success: (id: Level_Id, mistake_count: number) => void,
+		random: () => number = Math.random,
 	) {
 		this.app = app;
 		this.level_data = level_data;
 		this.ac = ac;
 		this.register_success = register_success;
+		this.random = random;
+		this.error = to_level_data_error(level_data);
 	}
 
 	status: Status = $state(DEFAULT_STATUS);
@@ -97,6 +111,7 @@ export class Level {
 	last_guess: Midi | null = $state(null);
 
 	reset = (): void => {
+		this.cancel();
 		this.trial = DEFAULT_TRIAL;
 		this.trials = [];
 		this.update_status(DEFAULT_STATUS);
@@ -104,17 +119,36 @@ export class Level {
 	};
 
 	start = (): void => {
-		console.log('start level');
-		if (this.status !== 'initial') return;
+		if (this.error || this.status !== 'initial') return;
 		this.next_trial();
 	};
 
 	dispose = (): void => {
-		this.seq_id++; // cancels anything that's playing
+		this.cancel();
 	};
 
+	/**
+	 * Cancels the playing prompt and any pending feedback transition,
+	 * so a stale transition can't act on a reset or disposed level.
+	 */
+	cancel(): void {
+		this.seq_id++; // cancels anything that's playing
+		clearTimeout(this.feedback_timeout);
+		this.feedback_timeout = undefined;
+	}
+
+	/**
+	 * Schedules the transition out of a feedback status, replacing any pending one.
+	 */
+	schedule_feedback(cb: () => void): void {
+		clearTimeout(this.feedback_timeout);
+		this.feedback_timeout = setTimeout(() => {
+			this.feedback_timeout = undefined;
+			cb();
+		}, DEFAULT_FEEDBACK_DURATION);
+	}
+
 	update_status(value: Status): void {
-		console.log(`update_status`, value);
 		this.status = value;
 		// TODO maybe a wait a tick here or refactor? is dependent on being called after changes to e.g. `this.trial`
 		if (value === 'presenting_prompt') {
@@ -127,7 +161,6 @@ export class Level {
 	present_trial_prompt = async (): Promise<void> => {
 		const trial = this.trial;
 		if (!trial) return;
-		console.log('present_trial_prompt', trial.sequence);
 		this.trial = {...trial, guessing_index: 0};
 		const current_seq_id = ++this.seq_id;
 		const sequence_length = trial.sequence.length;
@@ -137,10 +170,15 @@ export class Level {
 				...this.trial,
 				presenting_index: i,
 			};
-			const duration =
-				sequence_length < DEFAULT_SEQUENCE_LENGTH ? DEFAULT_NOTE_DURATION_2 : DEFAULT_NOTE_DURATION; // TODO refactor, see elsewhere
 			// eslint-disable-next-line no-await-in-loop
-			await play_note(this.app, this.ac(), note, this.app.volume, duration, this.app.instrument);
+			await play_note(
+				this.app,
+				this.ac(),
+				note,
+				this.app.volume,
+				to_note_duration(sequence_length),
+				this.app.instrument,
+			);
 			if (current_seq_id !== this.seq_id) return; // cancel
 		}
 		this.trial = {
@@ -157,13 +195,10 @@ export class Level {
 		const guessing_index = trial?.guessing_index;
 		if (!trial || guessing_index == null) return;
 		const actual = get_correct_guess_for_trial(trial);
-		console.log('guess', guessing_index, note, actual);
-
 		this.last_guess = note;
 
 		// if incorrect -> FAILURE -> showing_failure_feedback -> REPROMPT
 		if (actual !== note) {
-			console.log('guess incorrect');
 			void play_note(
 				this.app,
 				this.ac(),
@@ -178,30 +213,32 @@ export class Level {
 			// TODO should this be "on enter showing_failure_feedback state" logic?
 			this.mistakes += 1;
 			this.update_status('showing_failure_feedback');
-			setTimeout(() => this.retry_trial(), DEFAULT_FEEDBACK_DURATION);
+			this.schedule_feedback(this.retry_trial);
 			return;
 		}
 
 		// guess is correct
 		const sequence_length = trial.sequence.length;
-		const duration =
-			sequence_length < DEFAULT_SEQUENCE_LENGTH ? DEFAULT_NOTE_DURATION_2 : DEFAULT_NOTE_DURATION; // TODO refactor, see elsewhere
-		void play_note(this.app, this.ac(), note, this.app.volume, duration, this.app.instrument);
+		void play_note(
+			this.app,
+			this.ac(),
+			note,
+			this.app.volume,
+			to_note_duration(sequence_length),
+			this.app.instrument,
+		);
 
 		if (guessing_index >= sequence_length - 1) {
 			// if more -> update current response index
 			this.update_status('showing_success_feedback');
 			// TODO should this be "on enter showing_success_feedback state" logic?
 			if (trial.index < this.level_data.trial_count - 1) {
-				console.log('guess correct and done with trial');
-				setTimeout(() => this.next_trial(), DEFAULT_FEEDBACK_DURATION);
+				this.schedule_feedback(this.next_trial);
 			} else {
-				console.log('guess correct and done with all trials!');
-				setTimeout(() => this.complete_level(), DEFAULT_FEEDBACK_DURATION); // TODO hacky, the single status mixes completion status and success feedback, seems like this should set complete immediately
+				this.schedule_feedback(this.complete_level); // TODO hacky, the single status mixes completion status and success feedback, seems like this should set complete immediately
 			}
 		} else {
 			// SUCCESS -> no status change because we show no visible positive feedback to users until the end
-			console.log('guess correct but not done');
 			this.trial = {
 				...trial,
 				guessing_index: guessing_index + 1,
@@ -220,6 +257,8 @@ export class Level {
 		}
 		const trial = this.trial;
 		if (!trial) return;
+		// a manual retry replaces the one scheduled by the failure, which would otherwise replay again
+		if (status === 'showing_failure_feedback') clearTimeout(this.feedback_timeout);
 		// TODO should this be "on enter presenting_prompt state" logic?
 		this.trial = {
 			...trial,
@@ -232,9 +271,7 @@ export class Level {
 		if (this.status === 'complete') {
 			return;
 		}
-		const next_trial = create_next_trial(this.level_data, this.trial);
-		console.log('next trial', next_trial);
-		// TODO should this be "on enter presenting_prompt state" logic?
+		const next_trial = create_next_trial(this.level_data, this.trial, this.random);
 		const trials = this.trials;
 		if (trials.length === 0) this.mistakes = 0;
 		this.trial = next_trial;
@@ -264,32 +301,41 @@ export class Level {
 
 	guess_incorrectly = (): void => {
 		if (this.status !== 'waiting_for_input') return;
-		const note = get_incorrect_guess_for_trial(this.trial);
+		const note = get_incorrect_guess_for_trial(this.trial, this.random);
 		if (note === null) return;
 		this.guess(note);
 	};
-
-	get_correct_guess = (): void => {
-		get_correct_guess_for_trial(this.trial);
-	};
 }
 
-const get_correct_guess_for_trial = (trial: Trial | null): Midi | null => {
+/**
+ * Shorter sequences play each note longer.
+ */
+export const to_note_duration = (sequence_length: number): Milliseconds =>
+	sequence_length < DEFAULT_SEQUENCE_LENGTH ? DEFAULT_NOTE_DURATION_2 : DEFAULT_NOTE_DURATION;
+
+export const get_correct_guess_for_trial = (trial: Trial | null): Midi | null => {
 	if (trial?.guessing_index == null) return null;
 	return trial.sequence[trial.guessing_index];
 };
 
-const get_incorrect_guess_for_trial = (trial: Trial | null): Midi | null => {
+export const get_incorrect_guess_for_trial = (
+	trial: Trial | null,
+	random: () => number = Math.random,
+): Midi | null => {
 	if (!trial) return null;
 	const correct_guess = get_correct_guess_for_trial(trial);
 	if (correct_guess === null) return null;
 	const incorrect_notes = Array.from(trial.valid_notes).filter((n) => n !== correct_guess);
 	if (!incorrect_notes.length) return null;
-	return random_item(incorrect_notes);
+	return random_item(incorrect_notes, random);
 };
 
-const create_next_trial = (def: Level_Data, current_trial: Trial | null): Trial => {
-	const tonic = to_random_tonic(def);
+export const create_next_trial = (
+	def: Level_Data,
+	current_trial: Trial | null,
+	random: () => number = Math.random,
+): Trial => {
+	const tonic = to_random_tonic(def, random);
 	const sequence: Array<Midi> = [tonic];
 
 	const valid_notes = create_valid_notes(tonic, def.min_note, def.max_note, def.intervals);
@@ -298,7 +344,7 @@ const create_next_trial = (def: Level_Data, current_trial: Trial | null): Trial 
 	for (let i = 0; i < def.sequence_length - 1; i++) {
 		let next_note: Midi;
 		do {
-			next_note = random_item(valid_notes);
+			next_note = random_item(valid_notes, random);
 		} while (next_note === sequence.at(-1)); // disallow sequential repeats
 		sequence.push(next_note);
 	}
@@ -318,7 +364,7 @@ const create_next_trial = (def: Level_Data, current_trial: Trial | null): Trial 
  * for a given tonic, note range, and intervals.
  * A trial's sequence of notes can be constructed from these.
  */
-const create_valid_notes = (
+export const create_valid_notes = (
 	tonic: Midi,
 	min_note: Midi,
 	max_note: Midi,
@@ -338,22 +384,86 @@ const create_valid_notes = (
 	return valid_notes;
 };
 
-const to_random_tonic = (def: Level_Data): Midi => {
-	const {tonics} = def;
-	if (tonics?.length) return random_item(tonics);
-	const {min_note, max_note} = def;
-	const interval_max = def.intervals.reduce((max, v) => Math.max(max, v));
-	const interval_min = def.intervals.reduce((max, v) => Math.min(max, v));
-	const tonic_max = Math.min(max_note - interval_max, max_note);
-	const tonic_min = Math.max(min_note - interval_min, min_note);
-	return tonic_min < tonic_max
-		? random_int(tonic_min, tonic_max)
-		: to_fallback_tonic(min_note, max_note);
+/**
+ * Picks a trial's tonic, preferring one that leaves room for every interval.
+ * @throws Error if no tonic is usable, which `to_level_data_error` reports ahead of time
+ */
+export const to_random_tonic = (def: Level_Data, random: () => number = Math.random): Midi => {
+	const {tonics, min_note, max_note, intervals} = def;
+	if (tonics?.length) return random_item(tonics, random);
+	if (!intervals.length) throw Error('a level needs at least one interval');
+	const tonic_max = Math.min(max_note - Math.max(...intervals), max_note);
+	const tonic_min = Math.max(min_note - Math.min(...intervals), min_note);
+	return tonic_min <= tonic_max
+		? random_int(tonic_min, tonic_max, random)
+		: to_fallback_tonic(def, random);
 };
 
-const to_fallback_tonic = (min_note: Midi, max_note: Midi): Midi => {
+/**
+ * Picks a usable tonic when none fits every interval,
+ * preferring the middle half of the range so both directions have room.
+ * @throws Error if no tonic is usable
+ */
+export const to_fallback_tonic = (def: Level_Data, random: () => number = Math.random): Midi => {
+	const usable = to_usable_tonics(def);
+	if (!usable.length) throw Error('no tonic has an interval within the note range');
+	const {min_note, max_note} = def;
 	const offset = ((max_note - min_note) / 4) | 0;
-	return random_int(min_note + offset, max_note - offset);
+	const middle = usable.filter((t) => t >= min_note + offset && t <= max_note - offset);
+	return random_item(middle.length ? middle : usable, random);
+};
+
+/**
+ * Whether a trial starting on `tonic` has a note to guess besides the tonic.
+ */
+export const is_usable_tonic = (
+	tonic: Midi,
+	min_note: Midi,
+	max_note: Midi,
+	intervals: Intervals,
+): boolean =>
+	tonic >= min_note &&
+	tonic <= max_note &&
+	intervals.some((i) => i !== 0 && tonic + i >= min_note && tonic + i <= max_note);
+
+/**
+ * Returns the tonics a level can start a trial on: its `tonics` if set, otherwise its whole range,
+ * keeping only those with an interval inside the range.
+ */
+export const to_usable_tonics = (level_data: Level_Data): Array<Midi> => {
+	const {tonics, min_note, max_note, intervals} = level_data;
+	const candidates: ReadonlyArray<Midi> = tonics?.length
+		? tonics
+		: Array.from({length: Math.max(0, max_note - min_note + 1)}, (_, i) => min_note + i);
+	return candidates.filter((t) => is_usable_tonic(t, min_note, max_note, intervals));
+};
+
+/**
+ * Returns why a level can't be played, or `null` if it can.
+ * This isn't a schema refinement because a failed parse discards the whole stored project.
+ */
+export const to_level_data_error = (level_data: Level_Data): string | null => {
+	const {min_note, max_note, intervals, tonics, trial_count, sequence_length} = level_data;
+	if (min_note >= max_note) return 'the lowest note must be lower than the highest';
+	if (!intervals.some((i) => i !== 0)) return 'add at least one interval';
+	if (!Number.isInteger(trial_count) || trial_count < 1) {
+		return 'the trial count must be a whole number of at least 1';
+	}
+	if (!Number.isInteger(sequence_length) || sequence_length < 2) {
+		return 'the sequence length must be a whole number of at least 2';
+	}
+	if (tonics?.length) {
+		const unusable = tonics.filter((t) => !is_usable_tonic(t, min_note, max_note, intervals));
+		if (unusable.length) {
+			const names = unusable.map((t) => midi_names[t] ?? t).join(', ');
+			return unusable.length === 1
+				? `the tonic ${names} has no intervals within the note range`
+				: `the tonics ${names} have no intervals within the note range`;
+		}
+	} else if (!to_usable_tonics(level_data).length) {
+		return 'none of the intervals fit within the note range';
+	}
+	return null;
 };
 
 export const to_level_url = (level_data: Level_Data): string => {
@@ -385,7 +495,7 @@ export const add_mistakes_to_level_stats = (
 // TODO refactor - parameter?
 export const MISTAKE_HISTORY_LENGTH = 4;
 
-const add_mistakes = (data: Array<number> | undefined, mistakes: number): Array<number> => {
+export const add_mistakes = (data: Array<number> | undefined, mistakes: number): Array<number> => {
 	const updated = data?.slice() ?? [];
 	if (updated.length >= MISTAKE_HISTORY_LENGTH) {
 		updated.sort((a, b) => a - b).length = MISTAKE_HISTORY_LENGTH;

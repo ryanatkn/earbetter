@@ -16,7 +16,6 @@
 	const init = async () => {
 		if (inited) return;
 		inited = true;
-		console.log('initing audio context');
 		await ac().resume();
 	};
 </script>

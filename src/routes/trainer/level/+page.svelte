@@ -1,4 +1,6 @@
 <script lang="ts">
+	import Alert from '@ryanatkn/fuz/Alert.svelte';
+
 	import Level_Scene from '$lib/earbetter/Level_Scene.svelte';
 	import {app_context} from '$lib/earbetter/app.svelte.js';
 	import Back_Button from '$routes/Back_Button.svelte';
@@ -14,7 +16,14 @@
 
 <main>
 	<Back_Button onclick={app.exit_level} />
-	{#if app.level && level_stats}
+	{#if app.level?.error}
+		<div class="box h_100">
+			<Alert status="error">this level can't be played: {app.level.error}</Alert>
+			<p>
+				<button type="button" onclick={app.exit_level}>go back</button> to the map to edit it.
+			</p>
+		</div>
+	{:else if app.level && level_stats}
 		<div class="level">
 			<Level_Scene level={app.level} {level_stats} exit_level={app.exit_level} />
 		</div>

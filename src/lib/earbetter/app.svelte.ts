@@ -39,7 +39,7 @@ import type {Site_Data} from '$routes/site_data.js';
 // TODO refactor all storage calls, and rethink in signals instead of all top-level orchestration (that's less reusable)
 
 export const App_Data = z.object({
-	projects: z.array(z.object({id: Project_Id, name: Project_Name})).default([]),
+	projects: z.array(z.object({id: Project_Id, name: Project_Name})).default(() => []),
 	selected_project_id: z.union([Project_Id, z.null()]).default(null),
 	selected_realm_id: z.union([Realm_Id, z.null()]).default(null),
 	show_trainer_help: z.boolean().default(true),
@@ -118,7 +118,6 @@ export class App {
 	active_level_data: Level_Data | null = $state.raw(null);
 
 	level: Level | null = $derived.by(() => {
-		console.log('computing level', this.active_level_data);
 		return this.active_level_data
 			? new Level(this, this.active_level_data, this.get_audio_context, this.register_success)
 			: null;
@@ -139,8 +138,6 @@ export class App {
 		this.get_audio_context = get_audio_context;
 		this.storage_key = storage_key;
 		this.app_data = this.load();
-		console.log(`app_data`, this.app_data);
-
 		if (initial_site_data) {
 			this.volume = initial_site_data.volume;
 			this.instrument = initial_site_data.instrument;
@@ -183,7 +180,6 @@ export class App {
 		let ids_to_delete: Array<Project_Id> | null = null;
 		for (const p of loaded.projects) {
 			if (localStorage.getItem(p.id) === null) {
-				console.warn('deleting unknown id', p);
 				(ids_to_delete ??= []).push(p.id);
 			}
 		}
@@ -194,12 +190,10 @@ export class App {
 	}
 
 	save(data: App_Data): void {
-		console.log('save');
 		set_in_storage(this.storage_key, data);
 	}
 
 	save_project = (id: Project_Id): void => {
-		console.log('save_project', id);
 		const project_data = this.project_datas.find((p) => p.id === id);
 		set_in_storage(id, project_data); // correctly deletes the storage key if `undefined`
 		const app_data = this.app_data;
@@ -219,35 +213,38 @@ export class App {
 	};
 
 	load_project = (id: Project_Id | null): Project_Data | null => {
-		console.log('load_project', id);
+		// a project created this session is already loaded, so don't add it twice
+		const existing = id ? this.project_datas.find((p) => p.id === id) : undefined;
+		if (existing) return existing;
 		const loaded = id ? load_from_storage(id, null, Project_Data.parse) : null;
-		console.log(`loaded`, loaded);
 		if (loaded) {
 			// TODO batch if this code stays imperative like this
 			this.project_datas = this.project_datas.concat(loaded);
 			return loaded;
-		} else {
-			console.log(`load_project failed, creating new`, id);
-			const project_data = Project_Data.parse({});
-			this.create_project(project_data);
-			return project_data;
 		}
+		// the project is missing or failed to parse, so stop listing it and replace it with a new one
+		if (id && this.app_data.projects.some((p) => p.id === id)) {
+			this.app_data = {
+				...this.app_data,
+				projects: this.app_data.projects.filter((p) => p.id !== id),
+			};
+		}
+		const project_data = Project_Data.parse({});
+		this.create_project(project_data);
+		return project_data;
 	};
 
 	select_project = (id: Project_Id | null): void => {
-		console.log('select_project', id);
 		if (!id) {
 			this.selected_project_id = null;
 			return;
 		}
 		const project_data = this.project_datas.find((d) => d.id === id) ?? this.load_project(id);
-		if (!project_data) console.error('failed to find or load def', id);
 		this.selected_project_id = project_data?.id ?? null;
 		this.selected_realm_id = project_data?.realms[0]?.id ?? null;
 	};
 
 	edit_project = (project_data: Project_Data | null): void => {
-		console.log('edit_project', project_data);
 		if (!project_data) {
 			this.editing_project = false;
 			this.draft_project_data = null;
@@ -268,7 +265,6 @@ export class App {
 	};
 
 	remove_project = (id: Project_Id): void => {
-		console.log('remove_project', id);
 		const {projects} = this.app_data;
 		const existing = projects.find((d) => d.id === id);
 		if (!existing) return;
@@ -288,12 +284,10 @@ export class App {
 	};
 
 	create_project = (project_data: Project_Data): Project_Data => {
-		console.log('create_project', project_data);
 		const projects = this.project_datas;
 		const {id} = project_data;
 		const existing = projects.find((d) => d.id === id);
 		if (existing) {
-			console.log('project already exists', project_data, existing);
 			return existing;
 		}
 		// TODO syncing `app_data` with `projects` is awkward
@@ -312,11 +306,9 @@ export class App {
 	};
 
 	duplicate_project = (id: Project_Id): void => {
-		console.log('duplicate_project_data', id);
 		const projects = this.project_datas;
 		const project_data = projects.find((d) => d.id === id);
 		if (!project_data) {
-			console.error('cannot find project_data with id', id);
 			return;
 		}
 		const {id: _, name, ...rest} = project_data;
@@ -332,12 +324,10 @@ export class App {
 	};
 
 	update_project = (project_data: Project_Data): void => {
-		console.log('update_project', project_data);
 		const projects = this.project_datas;
 		const {id} = project_data;
 		const index = projects.findIndex((p) => p.id === id);
 		if (index === -1) {
-			console.error('cannot find project_data to update', id, projects);
 			return; // no active project
 		}
 		const existing = projects[index];
@@ -358,7 +348,6 @@ export class App {
 	};
 
 	select_realm = (id: Realm_Id | null): void => {
-		console.log('select_realm', id);
 		if (!id) {
 			this.selected_realm_id = null;
 			return;
@@ -374,7 +363,6 @@ export class App {
 	};
 
 	edit_realm = (realm_data: Realm_Data | null): void => {
-		console.log('edit_realm', realm_data);
 		if (!realm_data) {
 			this.editing_realm = false;
 			this.draft_realm_data = null;
@@ -395,16 +383,13 @@ export class App {
 	};
 
 	remove_realm = (id: Realm_Id): void => {
-		console.log('remove_realm_data', id);
 		const project_data = this.selected_project_data;
 		if (!project_data) {
-			console.error('cannot remove realm_data without a project', project_data, id);
 			return; // no active project
 		}
 		const {realms} = project_data;
 		const realm_data = realms.find((d) => d.id === id);
 		if (!realm_data) {
-			console.error('cannot find realm_data with id', id);
 			return;
 		}
 		if (id === this.editing_realm_id) {
@@ -420,30 +405,31 @@ export class App {
 	};
 
 	duplicate_realm = (id: Realm_Id): void => {
-		console.log('duplicate_realm_data', id);
 		const project_data = this.selected_project_data;
 		if (!project_data) {
-			console.error('cannot duplicate realm_data without a project', project_data, id);
 			return; // no active project
 		}
 		const {realms} = project_data;
 		const realm_data = realms.find((d) => d.id === id);
 		if (!realm_data) {
-			console.error('cannot find realm_data with id', id);
 			return;
 		}
-		const {id: _, name, ...rest} = realm_data;
-		const new_realm_data = Realm_Data.parse({...rest, name: to_next_name(name, realms)});
+		const {id: _, name, levels, ...rest} = realm_data;
+		// the copied levels get new ids, because level ids must be unique across the project's realms
+		// for lookups like `update_level` and for `level_stats`
+		const new_realm_data = Realm_Data.parse({
+			...rest,
+			name: to_next_name(name, realms),
+			levels: levels.map(({id: _, ...level}) => level),
+		});
 		this.create_realm(new_realm_data);
 		this.draft_realm_data = new_realm_data; // TODO move to component?
 		this.selected_realm_id = new_realm_data.id;
 	};
 
 	create_realm = (realm_data: Realm_Data, select = true): void => {
-		console.log('create_realm', realm_data);
 		const project_data = this.selected_project_data;
 		if (!project_data) {
-			console.error('cannot create a realm_data without a project', project_data, realm_data);
 			return; // no active project
 		}
 		const {realms} = project_data;
@@ -451,7 +437,6 @@ export class App {
 		// or would it be better to always go through the `project_data`?
 		const existing = realms.find((d) => d.id === realm_data.id);
 		if (existing) {
-			console.error('realm_data already exists', realm_data, existing);
 			return;
 		}
 
@@ -464,17 +449,14 @@ export class App {
 	};
 
 	update_realm = (realm_data: Realm_Data): void => {
-		console.log('update_realm_data', realm_data);
 		const project_data = this.selected_project_data;
 		if (!project_data) {
-			console.error('cannot update realm_data without a project', project_data, realm_data);
 			return; // no active project
 		}
 		const {realms} = project_data;
 		const {id} = realm_data;
 		const index = realms.findIndex((d) => d.id === id);
 		if (index === -1) {
-			console.error('cannot find realm_data to update', id, realms);
 			return;
 		}
 		const updated = realms.slice();
@@ -484,10 +466,8 @@ export class App {
 	};
 
 	play_level = async (id: Level_Id): Promise<void> => {
-		console.log('play_level', id);
 		const level_data = this.levels?.find((d) => d.id === id);
 		if (!level_data) {
-			console.error('cannot find level_data with id', id);
 			return;
 		}
 		this.draft_level_data = level_data; // for better UX, so when the user navigates back it's still being edited
@@ -495,16 +475,13 @@ export class App {
 	};
 
 	edit_level = (level_data: Level_Data | null): void => {
-		console.log('edit_level', level_data);
 		this.editing_level = !!level_data;
 		this.draft_level_data = level_data;
 	};
 
 	remove_level = (id: Level_Id): void => {
-		console.log('remove_level', id);
 		const project_data = this.selected_project_data;
 		if (!project_data) {
-			console.error('cannot remove level_data without a project', project_data, id);
 			return; // no active project
 		}
 		const {realms} = project_data;
@@ -523,35 +500,29 @@ export class App {
 			this.update_project({...project_data, realms: next_realms});
 			return;
 		}
-		console.error('cannot find level_data with id', id);
 	};
 
 	// TODO inconsistent naming with `realm` having the `_def` prefix here
 	create_level = (level_data: Level_Data): void => {
-		console.log('create_level', level_data);
 		const project_data = this.selected_project_data;
 		if (!project_data) {
-			console.error('cannot create level_data without a project', project_data, level_data);
 			return; // no active project
 		}
 		const {realms} = project_data;
 		const realm_data = this.selected_realm_data;
 		if (!realm_data) {
-			console.error('cannot create level_data without a selected realm');
 			return;
 		}
 		const {levels} = realm_data;
 
 		const existing = levels.find((d) => d.id === level_data.id);
 		if (existing) {
-			console.log('level_data already exists', level_data, existing);
 			return;
 		}
 
 		const next_realms = realms.slice();
 		const realm_data_index = realms.indexOf(realm_data);
 		if (realm_data_index === -1) {
-			console.error('expected selected realm def to be in array', realm_data, realms);
 			return;
 		}
 		next_realms[realm_data_index] = {
@@ -567,16 +538,13 @@ export class App {
 	};
 
 	duplicate_level = (id: Level_Id): void => {
-		console.log('duplicate_level_data', id);
 		const realm_data = this.selected_realm_data;
 		if (!realm_data) {
-			console.error('cannot duplicate level_data without a realm', realm_data, id);
 			return; // no active realm
 		}
 		const {levels} = realm_data;
 		const level_data = levels.find((d) => d.id === id);
 		if (!level_data) {
-			console.error('cannot find level_data with id', id);
 			return;
 		}
 		const {id: _, name, ...rest} = level_data;
@@ -587,10 +555,8 @@ export class App {
 	};
 
 	update_level = (level_data: Level_Data): void => {
-		console.log('update_level', level_data);
 		const project_data = this.selected_project_data;
 		if (!project_data) {
-			console.error('cannot update level_data without a project', project_data, level_data);
 			return; // no active project
 		}
 		const {realms} = project_data;
@@ -608,7 +574,6 @@ export class App {
 			this.draft_level_data = level_data; // TODO maybe push to the component?
 			return;
 		}
-		console.error('cannot find level_data with id', id);
 	};
 
 	register_success = (id: Level_Id, mistakes: number): void => {
@@ -627,7 +592,6 @@ export class App {
 		if (this.active_level_data === value) {
 			return;
 		}
-		console.log('setting `active_level_data`', value);
 		this.level?.dispose(); // TODO better way to do this? doing it in the `this.level` derived is hacky
 		this.active_level_data = value;
 	}

@@ -27,7 +27,7 @@ export type Project_Metadata = z.infer<typeof Project_Metadata>;
 export const Project_Data = z.object({
 	id: Project_Id.default(create_project_id),
 	name: Project_Name.default(random_project_name),
-	realms: z.array(Realm_Data).default([]),
-	level_stats: Level_Stats.default(DEFAULT_LEVEL_STATS),
+	realms: z.array(Realm_Data).default(() => []),
+	level_stats: Level_Stats.default(() => structuredClone(DEFAULT_LEVEL_STATS)),
 });
 export type Project_Data = z.infer<typeof Project_Data>;

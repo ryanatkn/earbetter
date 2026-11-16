@@ -40,9 +40,8 @@
 
 	let done = $state(false);
 
-	let timeout: number;
 	onMount(() => {
-		timeout = setTimeout(() => (done = true), duration);
+		const timeout = setTimeout(() => (done = true), duration);
 		return () => clearTimeout(timeout);
 	});
 </script>

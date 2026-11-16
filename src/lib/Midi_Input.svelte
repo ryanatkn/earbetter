@@ -5,8 +5,6 @@
 	import {parse_midi_message} from '$lib/midi_helpers.js';
 	import type {Midi} from '$lib/music.js';
 
-	const log = console.log.bind(console);
-
 	interface Props {
 		midi_access: MIDIAccess | null;
 		onnotestart?: (note: Midi, velocity: number) => void;
@@ -21,9 +19,7 @@
 	// $inspect('midi_access', midi_access);
 
 	const onmidimessage = (event: MIDIMessageEvent): void => {
-		const message = parse_midi_message(event);
-		const {command, channel, note, velocity} = message;
-		log('midimessage', command, message);
+		const {command, channel, note, velocity} = parse_midi_message(event);
 
 		switch (command) {
 			case MIDICommand.Stop: {
@@ -31,8 +27,6 @@
 					onnotestop?.(note, velocity);
 				} else if (channel === 9) {
 					onpadstop?.(note, velocity);
-				} else {
-					log('unknown MIDI stop command', message);
 				}
 				break;
 			}
@@ -51,26 +45,16 @@
 					} else {
 						onpadstart?.(note, velocity);
 					}
-				} else {
-					log('unknown MIDI start command', message);
 				}
 				break;
 			}
 			case MIDICommand.Knob: {
 				if (note === 1) {
 					onmodwheel?.(velocity);
-				} else {
-					log('unknown MIDI knob command', message);
 				}
 				break;
 			}
-			case MIDICommand.PitchBend: {
-				log('unhandled MIDI pitch bend', message);
-				break;
-			}
-			default: {
-				log('unrecognized MIDI command', message);
-			}
+			// other commands like pitch bend are unhandled
 		}
 	};
 

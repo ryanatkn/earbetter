@@ -15,7 +15,6 @@ export const load_from_storage = <T>(
 	parse: (value: unknown) => T,
 ): T => {
 	const fn = typeof default_value === 'function';
-	console.log(`load_from_storage key`, key);
 	if (!BROWSER) return fn ? (default_value as any)() : default_value;
 	const stored = localStorage.getItem(key);
 	if (!stored) return fn ? (default_value as any)() : default_value;
@@ -39,7 +38,6 @@ export const set_in_storage = (key: string, value: any): void => {
 	if (value === undefined) {
 		localStorage.removeItem(key);
 	} else {
-		console.log(`set_in_storage`, key, value);
 		localStorage.setItem(key, JSON.stringify(value));
 	}
 };

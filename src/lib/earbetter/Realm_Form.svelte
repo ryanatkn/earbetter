@@ -21,7 +21,7 @@
 
 	let removing = $state(false);
 
-	let updated_name: Realm_Name = $state(realm_data.name); // TODO name? `changed`?
+	let updated_name: Realm_Name = $derived(realm_data.name); // TODO name? `changed`?
 	const normalized_updated_name = $derived((updated_name as any)?.trim());
 
 	const to_data = (): Realm_Data =>
@@ -30,12 +30,6 @@
 			name: normalized_updated_name,
 			levels: realm_data.levels,
 		});
-
-	// TODO @many review this effect to try to remove it
-	$effect(() => {
-		console.log(`set_realm_data`, realm_data);
-		updated_name = realm_data.name;
-	});
 
 	const changed = $derived(normalized_updated_name !== realm_data.name);
 
@@ -62,7 +56,6 @@
 			const parsed = Realm_Data.parse(json);
 			onsubmit(parsed);
 		} catch (err) {
-			console.error('failed to import data', err);
 			parse_error_message = err.message || 'unknown error';
 		}
 		importing = false;

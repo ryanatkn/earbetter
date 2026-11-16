@@ -44,7 +44,6 @@
 	});
 
 	const on_press_key = (note: Midi): void => {
-		console.log('press note key', note);
 		level.guess(note);
 	};
 
@@ -151,8 +150,6 @@
 		if (level.status === 'complete') {
 			start_playing(app, ac(), note, with_velocity(app.volume, velocity), app.instrument);
 		} else {
-			console.log(`guessing level.status`, level.status);
-			// TODO should we intercept here if disabled, and just play the blip with no penalty? or should that be a param to `guess`?
 			level.guess(note);
 		}
 	}}

@@ -25,7 +25,7 @@
 
 	let removing = $state(false);
 
-	let updated_name: Project_Name = $state(project_data.name); // TODO name? `changed`?
+	let updated_name: Project_Name = $derived(project_data.name); // TODO name? `changed`?
 	const normalized_updated_name = $derived(updated_name.trim());
 
 	const to_data = (): Project_Data =>
@@ -35,12 +35,6 @@
 			realms: project_data.realms,
 			level_stats: project_data.level_stats,
 		});
-
-	// TODO @many review this effect to try to remove it
-	$effect(() => {
-		console.log(`set_project_data`, project_data);
-		updated_name = project_data.name;
-	});
 
 	const changed = $derived(normalized_updated_name !== project_data.name);
 
@@ -67,7 +61,6 @@
 			const parsed = Project_Data.parse(json);
 			onsubmit(parsed);
 		} catch (err) {
-			console.error('failed to import data', err);
 			parse_error_message = err.message || 'unknown error';
 		}
 		importing = false;

@@ -4,7 +4,12 @@
 	import Alert from '@ryanatkn/fuz/Alert.svelte';
 	import {dequal} from 'dequal';
 
-	import {create_level_id, Level_Data, type Level_Id} from '$lib/earbetter/level.svelte.js';
+	import {
+		create_level_id,
+		Level_Data,
+		to_level_data_error,
+		type Level_Id,
+	} from '$lib/earbetter/level.svelte.js';
 	import {
 		parse_intervals,
 		serialize_intervals,
@@ -61,17 +66,29 @@
 	let updated_min_note: Midi = $state(level_data.min_note);
 	let updated_max_note: Midi = $state(level_data.max_note);
 
-	const to_data = (): Level_Data =>
-		Level_Data.parse({
-			id: level_data.id,
-			name: normalized_updated_name,
-			intervals: updated_intervals, // TODO filter out the invalid intervals
-			tonics: normalized_updated_tonics, // select only the valid tonics
-			trial_count: updated_trial_count,
-			sequence_length: updated_sequence_length,
-			min_note: updated_min_note,
-			max_note: updated_max_note,
-		});
+	const to_raw_data = () => ({
+		id: level_data.id,
+		name: normalized_updated_name,
+		intervals: updated_intervals, // TODO filter out the invalid intervals
+		tonics: normalized_updated_tonics, // select only the valid tonics
+		trial_count: updated_trial_count,
+		sequence_length: updated_sequence_length,
+		min_note: updated_min_note,
+		max_note: updated_max_note,
+	});
+	const to_data = (): Level_Data => Level_Data.parse(to_raw_data());
+
+	// the form's inputs can hold values the schema rejects, like an empty name or a cleared number,
+	// so validate instead of letting `to_data` throw on submit
+	const level_data_error: string | null = $derived.by(() => {
+		if (!normalized_updated_name) return 'the level needs a name';
+		const parsed = Level_Data.safeParse(to_raw_data());
+		if (!parsed.success) {
+			const issue = parsed.error.issues[0];
+			return `invalid ${issue.path.join('.') || 'level'}: ${issue.message}`;
+		}
+		return to_level_data_error(parsed.data);
+	});
 
 	// TODO @many review this effect to try to remove it
 	$effect(() => {
@@ -120,9 +137,10 @@
 			// add an `id` if there is none
 			if (json && !json.id) json.id = create_level_id();
 			const parsed = Level_Data.parse(json);
+			const error = to_level_data_error(parsed);
+			if (error) throw Error(error);
 			onsubmit(parsed);
 		} catch (err) {
-			console.error('failed to import data', err);
 			parse_error_message = err.message || 'unknown error';
 		}
 		importing = false;
@@ -257,11 +275,14 @@
 				</p>
 			</details>
 		</fieldset>
+		{#if level_data_error && !lowest_note_error}
+			<Alert status="error">{level_data_error}</Alert>
+		{/if}
 		<button
 			type="button"
 			class="accent"
 			onclick={() => onsubmit(to_data())}
-			disabled={(editing && !changed) || lowest_note_error}
+			disabled={(editing && !changed) || !!level_data_error}
 		>
 			{#if editing}save changes to level{:else}create level{/if}
 		</button>
@@ -294,7 +315,11 @@
 			</div>
 		{/if}
 		{#if onplay && editing}
-			<button type="button" onclick={() => onplay(changed ? to_data() : level_data, changed)}>
+			<button
+				type="button"
+				onclick={() => onplay(changed ? to_data() : level_data, changed)}
+				disabled={changed && !!level_data_error}
+			>
 				play!
 			</button>
 		{/if}

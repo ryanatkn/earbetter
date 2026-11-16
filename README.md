@@ -14,7 +14,7 @@ play at [earbetter.ryanatkn.com](https://earbetter.ryanatkn.com/)
 
 Feedback is super welcome,
 please open any [discussions](https://github.com/ryanatkn/earbetter/discussions)
-or issues. For more see [contributing.md](contributing.md).
+or issues.
 
 ## Usage
 
@@ -68,8 +68,7 @@ for now, you're invited to post your exported data in a
 [discussion](https://github.com/ryanatkn/earbetter/discussions)
 following the [default example](src/lib//projects/default_project.ts).
 
-For more please see [contributing.md](contributing.md)
-and the GitHub [discussions](https://github.com/ryanatkn/earbetter/discussions)
+For more please see the GitHub [discussions](https://github.com/ryanatkn/earbetter/discussions)
 and [issues](https://github.com/ryanatkn/earbetter/issues).
 
 ## Develop

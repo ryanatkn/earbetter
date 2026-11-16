@@ -53,8 +53,6 @@ export const start_playing_note = (
 	instrument: Instrument = 'sine',
 ): Stop_Playing => {
 	const freq = midi_to_freq(note);
-	console.log('start playing note', note, freq, volume, instrument);
-
 	const gain = ac.createGain();
 	gain.gain.value = volume_to_gain(volume);
 	gain.connect(ac.destination);
@@ -70,8 +68,6 @@ export const start_playing_note = (
 	return () => {
 		if (disposed) return;
 		disposed = true;
-
-		console.log(`stop playing note`, note);
 		stop_osc(ac, 10, gain, osc);
 
 		state.playing_notes.delete(note);

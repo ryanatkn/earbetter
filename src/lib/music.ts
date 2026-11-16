@@ -243,11 +243,10 @@ export const to_notes_in_scale = (
 	max_note: Midi = MIDI_MAX,
 ): Set<Midi> => {
 	const notes: Set<Midi> = new Set();
-	const pitch_class_offset = pitch_classes.indexOf(key);
-	const note_offset_min = pitch_classes.indexOf(midi_pitch_classes[min_note]);
-	const initial_offset = pitch_class_offset - note_offset_min;
+	// midi 0 is a C, so a note's distance from the key is relative to the key's pitch class index
+	const key_offset = pitch_classes.indexOf(key);
 	for (let i = min_note; i <= max_note; i++) {
-		const offset = (i - initial_offset) % 12;
+		const offset = (i - key_offset + 12) % 12;
 		if (offset === 0 || scale.notes.includes(offset)) {
 			notes.add(i);
 		}
@@ -331,9 +330,12 @@ export const midi_naturals: Set<Midi> = new Set(
 export const serialize_notes = (notes: ReadonlyArray<Midi> | null): string =>
 	notes ? notes.join(', ') : '';
 export const parse_notes = (value: string): Array<Midi> =>
-	value
-		.split(',')
-		.map((v) => Number(v.trim()) | 0)
-		// TODO this is way less efficient that it could be because of `safeParse`'s overhead
-		.filter((v) => !!v && Midi.safeParse(v).success) // exclude 0 intentionally because it's not a MIDI value
-		.sort((a, b) => a - b);
+	Array.from(
+		new Set(
+			value
+				.split(',')
+				.map((v) => Number(v.trim()) | 0)
+				// TODO this is way less efficient that it could be because of `safeParse`'s overhead
+				.filter((v) => !!v && Midi.safeParse(v).success), // exclude 0 because empty and non-numeric input parses to it
+		),
+	).sort((a, b) => a - b);
