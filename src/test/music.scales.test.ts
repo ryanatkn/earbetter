@@ -10,7 +10,7 @@ import {
 	scales,
 	to_notes_in_scale,
 	to_scale_notes,
-	type Pitch_Class,
+	type PitchClass,
 } from '$lib/music.js';
 
 describe('scales', () => {
@@ -91,7 +91,7 @@ describe('to_notes_in_scale', () => {
 
 	// regression: the key offset was computed relative to `min_note`,
 	// so a range not starting on C shifted the whole scale
-	const range_cases: Array<[label: string, key: Pitch_Class, min: number, max: number]> = [
+	const range_cases: Array<[label: string, key: PitchClass, min: number, max: number]> = [
 		['C major starting on C♯', 'C', 1, 14],
 		['C major starting on B', 'C', 59, 72],
 		['D major starting on F', 'D', 5, 20],

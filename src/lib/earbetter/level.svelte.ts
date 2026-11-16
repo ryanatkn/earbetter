@@ -8,7 +8,7 @@ import {play_note} from '$lib/play_note.js';
 import type {Milliseconds} from '$lib/audio_helpers.js';
 import {serialize_to_hash} from '$lib/url.js';
 import {to_random_id} from '$lib/id.js';
-import type {Get_Audio_Context} from '$lib/audio_context.js';
+import type {GetAudioContext} from '$lib/audio_context.js';
 import type {App} from '$lib/earbetter/app.svelte.js';
 
 // TODO this isn't idiomatic signals code yet, uses `peek` too much
@@ -25,16 +25,16 @@ export const DEFAULT_TONICS: Array<Midi> | null = null;
 export const DEFAULT_MIN_NOTE: Midi = 48;
 export const DEFAULT_MAX_NOTE: Midi = 84;
 
-export const Level_Id = z.string();
-export type Level_Id = Flavored<z.infer<typeof Level_Id>, 'Level_Id'>; // TODO @many this doesn't work when used as a schema, use z.brand() instead? or are the egonomics too bad?
-export const create_level_id = (): Level_Id => to_random_id();
+export const LevelId = z.string();
+export type LevelId = Flavored<z.infer<typeof LevelId>, 'LevelId'>; // TODO @many this doesn't work when used as a schema, use z.brand() instead? or are the egonomics too bad?
+export const create_level_id = (): LevelId => to_random_id();
 
-export const Level_Name = z.string().min(1).max(1000);
-export type Level_Name = Flavored<z.infer<typeof Level_Name>, 'Level_Name'>; // TODO @many this doesn't work when used as a schema, use z.brand() instead? or are the egonomics too bad?
+export const LevelName = z.string().min(1).max(1000);
+export type LevelName = Flavored<z.infer<typeof LevelName>, 'LevelName'>; // TODO @many this doesn't work when used as a schema, use z.brand() instead? or are the egonomics too bad?
 
-export const Level_Data = z.object({
-	id: Level_Id.default(create_level_id),
-	name: Level_Name.default(DEFAULT_LEVEL_NAME),
+export const LevelData = z.object({
+	id: LevelId.default(create_level_id),
+	name: LevelName.default(DEFAULT_LEVEL_NAME),
 	intervals: Intervals.default(() => DEFAULT_INTERVALS.slice()),
 	tonics: z.array(Midi).nullable().default(DEFAULT_TONICS),
 	trial_count: z.number().default(DEFAULT_TRIAL_COUNT),
@@ -42,12 +42,12 @@ export const Level_Data = z.object({
 	min_note: Midi.default(DEFAULT_MIN_NOTE),
 	max_note: Midi.default(DEFAULT_MAX_NOTE),
 });
-export type Level_Data = z.infer<typeof Level_Data>;
+export type LevelData = z.infer<typeof LevelData>;
 
-export const Level_Hash_Data = z.object({
-	level: Level_Data,
+export const LevelHashData = z.object({
+	level: LevelData,
 });
-export type Level_Hash_Data = z.infer<typeof Level_Hash_Data>;
+export type LevelHashData = z.infer<typeof LevelHashData>;
 
 export type Status =
 	| 'initial'
@@ -60,7 +60,7 @@ export type Status =
 /**
  * The subset of `App` that a `Level` plays notes with.
  */
-export type Level_Audio_State = Pick<App, 'playing_notes' | 'volume' | 'instrument'>;
+export type LevelAudioState = Pick<App, 'playing_notes' | 'volume' | 'instrument'>;
 
 // TODO extract into its own module? decompose into signals?
 export interface Trial {
@@ -79,10 +79,10 @@ export class Level {
 	seq_id = 0; // used to track the async note playing sequence for cancellation
 	feedback_timeout: ReturnType<typeof setTimeout> | undefined; // the pending transition after showing feedback
 
-	readonly app: Level_Audio_State;
-	readonly level_data: Level_Data; // TODO maybe make optional?
-	readonly ac: Get_Audio_Context;
-	register_success: (id: Level_Id, mistake_count: number) => void;
+	readonly app: LevelAudioState;
+	readonly level_data: LevelData; // TODO maybe make optional?
+	readonly ac: GetAudioContext;
+	register_success: (id: LevelId, mistake_count: number) => void;
 	readonly random: () => number;
 	/**
 	 * Why the level can't be played, if it can't. A level with an error never starts.
@@ -90,10 +90,10 @@ export class Level {
 	readonly error: string | null;
 
 	constructor(
-		app: Level_Audio_State,
-		level_data: Level_Data, // TODO maybe make optional?
-		ac: Get_Audio_Context,
-		register_success: (id: Level_Id, mistake_count: number) => void,
+		app: LevelAudioState,
+		level_data: LevelData, // TODO maybe make optional?
+		ac: GetAudioContext,
+		register_success: (id: LevelId, mistake_count: number) => void,
 		random: () => number = Math.random,
 	) {
 		this.app = app;
@@ -331,7 +331,7 @@ export const get_incorrect_guess_for_trial = (
 };
 
 export const create_next_trial = (
-	def: Level_Data,
+	def: LevelData,
 	current_trial: Trial | null,
 	random: () => number = Math.random,
 ): Trial => {
@@ -388,7 +388,7 @@ export const create_valid_notes = (
  * Picks a trial's tonic, preferring one that leaves room for every interval.
  * @throws Error if no tonic is usable, which `to_level_data_error` reports ahead of time
  */
-export const to_random_tonic = (def: Level_Data, random: () => number = Math.random): Midi => {
+export const to_random_tonic = (def: LevelData, random: () => number = Math.random): Midi => {
 	const {tonics, min_note, max_note, intervals} = def;
 	if (tonics?.length) return random_item(tonics, random);
 	if (!intervals.length) throw Error('a level needs at least one interval');
@@ -404,7 +404,7 @@ export const to_random_tonic = (def: Level_Data, random: () => number = Math.ran
  * preferring the middle half of the range so both directions have room.
  * @throws Error if no tonic is usable
  */
-export const to_fallback_tonic = (def: Level_Data, random: () => number = Math.random): Midi => {
+export const to_fallback_tonic = (def: LevelData, random: () => number = Math.random): Midi => {
 	const usable = to_usable_tonics(def);
 	if (!usable.length) throw Error('no tonic has an interval within the note range');
 	const {min_note, max_note} = def;
@@ -430,7 +430,7 @@ export const is_usable_tonic = (
  * Returns the tonics a level can start a trial on: its `tonics` if set, otherwise its whole range,
  * keeping only those with an interval inside the range.
  */
-export const to_usable_tonics = (level_data: Level_Data): Array<Midi> => {
+export const to_usable_tonics = (level_data: LevelData): Array<Midi> => {
 	const {tonics, min_note, max_note, intervals} = level_data;
 	const candidates: ReadonlyArray<Midi> = tonics?.length
 		? tonics
@@ -442,7 +442,7 @@ export const to_usable_tonics = (level_data: Level_Data): Array<Midi> => {
  * Returns why a level can't be played, or `null` if it can.
  * This isn't a schema refinement because a failed parse discards the whole stored project.
  */
-export const to_level_data_error = (level_data: Level_Data): string | null => {
+export const to_level_data_error = (level_data: LevelData): string | null => {
 	const {min_note, max_note, intervals, tonics, trial_count, sequence_length} = level_data;
 	if (min_note >= max_note) return 'the lowest note must be lower than the highest';
 	if (!intervals.some((i) => i !== 0)) return 'add at least one interval';
@@ -466,26 +466,26 @@ export const to_level_data_error = (level_data: Level_Data): string | null => {
 	return null;
 };
 
-export const to_level_url = (level_data: Level_Data): string => {
-	const data: Level_Hash_Data = {level: level_data};
+export const to_level_url = (level_data: LevelData): string => {
+	const data: LevelHashData = {level: level_data};
 	return resolve((`/trainer/level` + serialize_to_hash(data)) as any);
 };
 
-export const Mistakes_Level_Stats = z.record(Level_Id, z.array(z.number()).or(z.undefined()));
-export type Mistakes_Level_Stats = z.infer<typeof Mistakes_Level_Stats>;
+export const MistakesLevelStats = z.record(LevelId, z.array(z.number()).or(z.undefined()));
+export type MistakesLevelStats = z.infer<typeof MistakesLevelStats>;
 
-export const Level_Stats = z.object({
-	mistakes: Mistakes_Level_Stats,
+export const LevelStats = z.object({
+	mistakes: MistakesLevelStats,
 });
-export type Level_Stats = z.infer<typeof Level_Stats>;
+export type LevelStats = z.infer<typeof LevelStats>;
 
-export const DEFAULT_LEVEL_STATS: Level_Stats = {mistakes: {}};
+export const DEFAULT_LEVEL_STATS: LevelStats = {mistakes: {}};
 
 export const add_mistakes_to_level_stats = (
-	level_stats: Level_Stats,
-	id: Level_Id,
+	level_stats: LevelStats,
+	id: LevelId,
 	mistakes: number,
-): Level_Stats => {
+): LevelStats => {
 	const s = {...level_stats};
 	s.mistakes = {...s.mistakes}; // preserves key order
 	s.mistakes[id] = add_mistakes(s.mistakes[id], mistakes);

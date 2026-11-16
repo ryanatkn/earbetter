@@ -1,7 +1,7 @@
 <script lang="ts">
-	import Realm_Form from '$lib/earbetter/Realm_Form.svelte';
+	import RealmForm from '$lib/earbetter/RealmForm.svelte';
 	import type {App} from '$lib/earbetter/app.svelte.js';
-	import {Realm_Data} from '$lib/earbetter/realm.js';
+	import {RealmData} from '$lib/earbetter/realm.js';
 
 	interface Props {
 		app: App; // TODO maybe change to be more granular objects?
@@ -11,14 +11,14 @@
 
 	const {remove_realm, duplicate_realm, update_realm, create_realm} = $derived(app);
 
-	const realm_data = $derived(app.editing_realm_data ?? Realm_Data.parse({}));
+	const realm_data = $derived(app.editing_realm_data ?? RealmData.parse({}));
 
 	const editing = $derived(app.realms ? app.realms.some((d) => d.id === realm_data.id) : false);
 
 	// $inspect(`app.selected_realm_data`, app.selected_realm_data);
 	// $inspect(`app.realms`, app.realms);
 
-	const update_or_create = (r: Realm_Data, select: boolean) => {
+	const update_or_create = (r: RealmData, select: boolean) => {
 		if (app.realms?.some((d) => d.id === r.id)) {
 			update_realm(r);
 		} else {
@@ -28,7 +28,7 @@
 </script>
 
 <div class="panel p_md">
-	<Realm_Form
+	<RealmForm
 		{editing}
 		{realm_data}
 		onsubmit={(data) => {

@@ -1,16 +1,16 @@
 <script lang="ts">
-	import type {Project_Data, Project_Id, Project_Metadata} from '$lib/earbetter/project.js';
-	import Project_Item from '$lib/earbetter/Project_Item.svelte';
+	import type {ProjectData, ProjectId, ProjectMetadata} from '$lib/earbetter/project.js';
+	import ProjectItem from '$lib/earbetter/ProjectItem.svelte';
 
 	interface Props {
-		selected_project_id?: Project_Id | null;
-		editing_project_id?: Project_Id | null;
-		projects?: Array<Project_Metadata>;
-		project_datas?: ReadonlyArray<Project_Data>;
-		load_project: (id: Project_Id) => Project_Data | null;
-		select_project: (id: Project_Id) => void;
-		edit_project: (project_data: Project_Data | null) => void;
-		remove_project: (id: Project_Id) => void;
+		selected_project_id?: ProjectId | null;
+		editing_project_id?: ProjectId | null;
+		projects?: Array<ProjectMetadata>;
+		project_datas?: ReadonlyArray<ProjectData>;
+		load_project: (id: ProjectId) => ProjectData | null;
+		select_project: (id: ProjectId) => void;
+		edit_project: (project_data: ProjectData | null) => void;
+		remove_project: (id: ProjectId) => void;
 	}
 
 	const {
@@ -27,7 +27,7 @@
 
 <menu class="unstyled width_sm mb_0">
 	{#each projects as project (project.id)}
-		<Project_Item
+		<ProjectItem
 			{project}
 			project_data={project_datas.find((p) => p.id === project.id)}
 			load={load_project}

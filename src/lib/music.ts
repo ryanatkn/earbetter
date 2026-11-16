@@ -17,7 +17,7 @@ export const NOTE_SHARP_SYMBOL = '♯';
 /**
  * @see https://wikipedia.org/wiki/Musical_note
  */
-export type Note_Name =
+export type NoteName =
   | 'C-1' | 'C♯-1' | 'D-1' | 'D♯-1' | 'E-1' | 'F-1' | 'F♯-1' | 'G-1' | 'G♯-1' | 'A-1' | 'A♯-1' | 'B-1'
   | 'C0'  | 'C♯0'  | 'D0'  | 'D♯0'  | 'E0'  | 'F0'  | 'F♯0'  | 'G0'  | 'G♯0'  | 'A0'  | 'A♯0'  | 'B0'
   | 'C1'  | 'C♯1'  | 'D1'  | 'D♯1'  | 'E1'  | 'F1'  | 'F♯1'  | 'G1'  | 'G♯1'  | 'A1'  | 'A♯1'  | 'B1'
@@ -35,7 +35,7 @@ export type Note_Name =
  */
 export const chromas = Object.freeze([1,  2,  3,  4,  5,  6,  7,  8,  9,  10,  11, 12] as const); // prettier-ignore
 /**
- * The numerical equivalent to `Pitch_Class`.
+ * The numerical equivalent to `PitchClass`.
  * Corresponds to indices of `pitch_classes` + 1.
  *
  * @see https://wikipedia.org/wiki/Pitch_class
@@ -49,30 +49,17 @@ export type Chroma = z.infer<typeof Chroma>; // TODO doesn't use `Flavored` beca
  *
  * @see https://wikipedia.org/wiki/Pitch_class
  */
-export const Pitch_Class = z.enum([
-	'C',
-	'C♯',
-	'D',
-	'D♯',
-	'E',
-	'F',
-	'F♯',
-	'G',
-	'G♯',
-	'A',
-	'A♯',
-	'B',
-]);
-export type Pitch_Class = z.infer<typeof Pitch_Class>;
-export const pitch_classes = Pitch_Class.options;
+export const PitchClass = z.enum(['C', 'C♯', 'D', 'D♯', 'E', 'F', 'F♯', 'G', 'G♯', 'A', 'A♯', 'B']);
+export type PitchClass = z.infer<typeof PitchClass>;
+export const pitch_classes = PitchClass.options;
 export const DEFAULT_PITCH_CLASS = pitch_classes[0];
-export const pitch_class_aliases: Record<Pitch_Class, string> = {
+export const pitch_class_aliases: Record<PitchClass, string> = {
 	'C♯': 'D♭',
 	'D♯': 'E♭',
 	'F♯': 'G♭',
 	'G♯': 'A♭',
 	'A♯': 'B♭',
-} as Record<Pitch_Class, string>; // TODO the `♯` appear to cause TS to bug out? try to remove this later
+} as Record<PitchClass, string>; // TODO the `♯` appear to cause TS to bug out? try to remove this later
 
 /**
  * @see https://wikipedia.org/wiki/Octave
@@ -154,8 +141,8 @@ export const interval_short_names = Object.freeze(['P1', 'm2', 'M2', 'm3', 'M3',
 /**
  * @see https://wikipedia.org/wiki/Interval_(music)
  */
-export const Interval_Short_Names = z.enum(interval_short_names);
-export type Interval_Short_Names = z.infer<typeof Interval_Short_Names>;
+export const IntervalShortNames = z.enum(interval_short_names);
+export type IntervalShortNames = z.infer<typeof IntervalShortNames>;
 
 /**
  * @see https://wikipedia.org/wiki/Interval_(music)
@@ -178,20 +165,20 @@ export const interval_names = Object.freeze([
 /**
  * @see https://wikipedia.org/wiki/Interval_(music)
  */
-export const Interval_Names = z.enum(interval_names);
-export type Interval_Names = z.infer<typeof Interval_Names>;
+export const IntervalNames = z.enum(interval_names);
+export type IntervalNames = z.infer<typeof IntervalNames>;
 
 /**
  * @see https://wikipedia.org/wiki/Scale_(music)
  */
-export const Scale_Name = z.string();
-export type Scale_Name = Flavored<z.infer<typeof Scale_Name>, 'Scale_Name'>; // TODO @many this doesn't work when used as a schema, use z.brand() instead? or are the egonomics too bad?
+export const ScaleName = z.string();
+export type ScaleName = Flavored<z.infer<typeof ScaleName>, 'ScaleName'>; // TODO @many this doesn't work when used as a schema, use z.brand() instead? or are the egonomics too bad?
 
 /**
  * @see https://wikipedia.org/wiki/Scale_(music)
  */
 export const Scale = z.object({
-	name: Scale_Name,
+	name: ScaleName,
 	notes: z.array(Semitones),
 });
 export type Scale = z.infer<typeof Scale>;
@@ -214,8 +201,8 @@ export const scales: Array<Scale> = [
 ];
 export const DEFAULT_SCALE = scales[0];
 
-export const scale_by_name: Map<Scale_Name, Scale> = new Map(scales.map((s) => [s.name, s]));
-export const lookup_scale = (name: Scale_Name): Scale => {
+export const scale_by_name: Map<ScaleName, Scale> = new Map(scales.map((s) => [s.name, s]));
+export const lookup_scale = (name: ScaleName): Scale => {
 	const found = scale_by_name.get(name);
 	if (!found) throw Error('unknown scale ' + name);
 	return found;
@@ -238,7 +225,7 @@ export const to_scale_notes = (scale: Scale, octaves: number): Intervals => {
 
 export const to_notes_in_scale = (
 	scale: Scale,
-	key: Pitch_Class = 'C',
+	key: PitchClass = 'C',
 	min_note: Midi = MIDI_MIN,
 	max_note: Midi = MIDI_MAX,
 ): Set<Midi> => {
@@ -307,17 +294,17 @@ export const midi_chromas: Array<Chroma> & Record<Midi, Chroma> = Object.freeze(
 	midis.map((m) => (m % 12) + 1),
 ) as Array<Chroma>;
 
-export const midi_pitch_classes: Array<Pitch_Class> & Record<Midi, Pitch_Class> = Object.freeze(
+export const midi_pitch_classes: Array<PitchClass> & Record<Midi, PitchClass> = Object.freeze(
 	midis.map((m) => pitch_classes[midi_chromas[m] - 1]),
-) as Array<Pitch_Class>;
+) as Array<PitchClass>;
 
 export const midi_octaves: Array<Octave> & Record<Midi, Octave> = Object.freeze(
 	midis.map((m) => Math.floor(m / 12) - 1),
 ) as Array<Octave>;
 
-export const midi_names: Array<Note_Name> & Record<Midi, Note_Name> = Object.freeze(
+export const midi_names: Array<NoteName> & Record<Midi, NoteName> = Object.freeze(
 	midis.map((m) => midi_pitch_classes[m] + midi_octaves[m]),
-) as Array<Note_Name>;
+) as Array<NoteName>;
 
 /**
  * @see https://wikipedia.org/wiki/Natural_(music)

@@ -1,7 +1,7 @@
 import {test, assert} from 'vitest';
 
 import {to_default_scale_realm} from '$lib/earbetter/realm_helpers.js';
-import {Realm_Data} from '$lib/earbetter/realm.js';
+import {RealmData} from '$lib/earbetter/realm.js';
 import {lookup_scale, scales} from '$lib/music.js';
 
 test('names the realm after the scale by default', () => {
@@ -25,7 +25,7 @@ test('builds the same level shapes for every scale', () => {
 		const realm = to_default_scale_realm(scale.name);
 		const pairs = scale.notes.length - 1;
 		assert.strictEqual(realm.levels.length, pairs * 2 + 9, scale.name);
-		assert.deepEqual(Realm_Data.parse(realm), realm, scale.name);
+		assert.deepEqual(RealmData.parse(realm), realm, scale.name);
 	}
 });
 

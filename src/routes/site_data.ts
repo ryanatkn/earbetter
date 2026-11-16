@@ -1,14 +1,14 @@
 import {z} from 'zod';
 
 import {Volume, Instrument, DEFAULT_VOLUME, DEFAULT_INSTRUMENT} from '$lib/audio_helpers.js';
-import {DEFAULT_PITCH_CLASS, DEFAULT_SCALE, Pitch_Class, Scale} from '$lib/music.js';
+import {DEFAULT_PITCH_CLASS, DEFAULT_SCALE, PitchClass, Scale} from '$lib/music.js';
 
-// TODO name for this? `Site_Data`, `Global_State`, `User_Settings`, something else?
+// TODO name for this? `SiteData`, `GlobalState`, `UserSettings`, something else?
 
-export const Site_Data = z.object({
+export const SiteData = z.object({
 	volume: Volume.default(DEFAULT_VOLUME),
 	instrument: Instrument.default(DEFAULT_INSTRUMENT),
 	scale: Scale.default(DEFAULT_SCALE),
-	key: Pitch_Class.default(DEFAULT_PITCH_CLASS),
+	key: PitchClass.default(DEFAULT_PITCH_CLASS),
 });
-export type Site_Data = z.infer<typeof Site_Data>;
+export type SiteData = z.infer<typeof SiteData>;

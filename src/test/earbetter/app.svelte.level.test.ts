@@ -1,13 +1,13 @@
 import {test, assert, vi, beforeEach, afterEach} from 'vitest';
 import {goto} from '$app/navigation';
 
-import {Level_Data, to_level_url} from '$lib/earbetter/level.svelte.js';
+import {LevelData, to_level_url} from '$lib/earbetter/level.svelte.js';
 import {create_memory_storage} from '../test_helpers.js';
-import {create_app, type App_Harness} from './app_test_helpers.svelte.js';
+import {create_app, type AppHarness} from './app_test_helpers.svelte.js';
 
 vi.mock('$app/navigation', () => ({goto: vi.fn()}));
 
-let harness: App_Harness;
+let harness: AppHarness;
 
 beforeEach(() => {
 	vi.stubGlobal('localStorage', create_memory_storage());
@@ -25,7 +25,7 @@ test('no level without active level data', () => {
 
 test('active level data creates a level', () => {
 	const {app} = harness;
-	const data = Level_Data.parse({});
+	const data = LevelData.parse({});
 	app.set_active_level_data(data);
 	const {level} = app;
 	assert.ok(level);
@@ -35,7 +35,7 @@ test('active level data creates a level', () => {
 
 test('the same active level data keeps the level', () => {
 	const {app} = harness;
-	const data = Level_Data.parse({});
+	const data = LevelData.parse({});
 	app.set_active_level_data(data);
 	const {level} = app;
 	app.set_active_level_data(data);
@@ -44,7 +44,7 @@ test('the same active level data keeps the level', () => {
 
 test('replacing the active level disposes the previous one', () => {
 	const {app} = harness;
-	app.set_active_level_data(Level_Data.parse({}));
+	app.set_active_level_data(LevelData.parse({}));
 	const previous = app.level!;
 	const seq_id = previous.seq_id;
 	app.set_active_level_data(null);

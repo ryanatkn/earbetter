@@ -6,7 +6,7 @@ import {
 	create_valid_notes,
 	get_correct_guess_for_trial,
 	get_incorrect_guess_for_trial,
-	Level_Data,
+	LevelData,
 	to_fallback_tonic,
 	to_random_tonic,
 	to_note_duration,
@@ -39,26 +39,26 @@ describe('create_valid_notes', () => {
 
 describe('to_random_tonic', () => {
 	test('picks from explicit tonics', () => {
-		const level = Level_Data.parse({tonics: [50, 55, 62]});
+		const level = LevelData.parse({tonics: [50, 55, 62]});
 		assert.strictEqual(to_random_tonic(level, create_scripted_random([0.5])), 55);
 		assert.strictEqual(to_random_tonic(level, create_scripted_random([0.99])), 62);
 	});
 
 	test('leaves room for every interval', () => {
-		const level = Level_Data.parse({intervals: [-5, 7], min_note: 48, max_note: 84});
+		const level = LevelData.parse({intervals: [-5, 7], min_note: 48, max_note: 84});
 		assert.strictEqual(to_random_tonic(level, create_scripted_random([0])), 53);
 		assert.strictEqual(to_random_tonic(level, create_scripted_random([0.9999])), 77);
 	});
 
 	test('upward intervals can start at the bottom of the range', () => {
-		const level = Level_Data.parse({intervals: [2, 7], min_note: 48, max_note: 84});
+		const level = LevelData.parse({intervals: [2, 7], min_note: 48, max_note: 84});
 		assert.strictEqual(to_random_tonic(level, create_scripted_random([0])), 48);
 	});
 
 	// regression: a range with exactly one tonic fitting every interval
 	// fell back to a middle tonic, which has no room and failed with 'invalid notes'
 	test('uses the one tonic that fits', () => {
-		const level = Level_Data.parse({intervals: [12], min_note: 48, max_note: 60});
+		const level = LevelData.parse({intervals: [12], min_note: 48, max_note: 60});
 		for (const r of [0, 0.5, 0.9999]) {
 			assert.strictEqual(to_random_tonic(level, create_scripted_random([r])), 48);
 		}
@@ -67,7 +67,7 @@ describe('to_random_tonic', () => {
 	});
 
 	test('falls back to the middle of the range when no tonic fits every interval', () => {
-		const level = Level_Data.parse({intervals: [-12, 12], min_note: 48, max_note: 70});
+		const level = LevelData.parse({intervals: [-12, 12], min_note: 48, max_note: 70});
 		assert.strictEqual(to_random_tonic(level, create_scripted_random([0])), 53);
 		assert.strictEqual(to_random_tonic(level, create_scripted_random([0.9999])), 65);
 	});
@@ -76,7 +76,7 @@ describe('to_random_tonic', () => {
 describe('to_fallback_tonic', () => {
 	test('prefers usable tonics in the middle half', () => {
 		// 59 is in the middle but has no interval in range
-		const level = Level_Data.parse({intervals: [-12, 12], min_note: 48, max_note: 70});
+		const level = LevelData.parse({intervals: [-12, 12], min_note: 48, max_note: 70});
 		const middle = [53, 54, 55, 56, 57, 58, 60, 61, 62, 63, 64, 65];
 		for (let i = 0; i < middle.length; i++) {
 			const r = to_random_for_int(0, middle.length - 1, i);
@@ -86,7 +86,7 @@ describe('to_fallback_tonic', () => {
 
 	// regression: the fallback picked a middle tonic even when none there was usable
 	test('falls back to any usable tonic', () => {
-		const level = Level_Data.parse({intervals: [-30, 30], min_note: 48, max_note: 84});
+		const level = LevelData.parse({intervals: [-30, 30], min_note: 48, max_note: 84});
 		assert.strictEqual(to_fallback_tonic(level, create_scripted_random([0])), 48);
 		assert.strictEqual(to_fallback_tonic(level, create_scripted_random([0.9999])), 84);
 		const random = create_random_alea('wide');
@@ -97,7 +97,7 @@ describe('to_fallback_tonic', () => {
 	});
 
 	test('throws when no tonic is usable', () => {
-		const level = Level_Data.parse({intervals: [24], min_note: 48, max_note: 60});
+		const level = LevelData.parse({intervals: [24], min_note: 48, max_note: 60});
 		assert.throws(() => to_fallback_tonic(level), 'no tonic has an interval');
 	});
 });
@@ -120,18 +120,18 @@ describe('is_usable_tonic', () => {
 
 describe('to_usable_tonics', () => {
 	test('filters the whole range without explicit tonics', () => {
-		const level = Level_Data.parse({intervals: [10], min_note: 48, max_note: 60});
+		const level = LevelData.parse({intervals: [10], min_note: 48, max_note: 60});
 		assert.deepEqual(to_usable_tonics(level), [48, 49, 50]);
 	});
 
 	test('filters explicit tonics', () => {
-		const level = Level_Data.parse({intervals: [10], tonics: [49, 55], min_note: 48, max_note: 60});
+		const level = LevelData.parse({intervals: [10], tonics: [49, 55], min_note: 48, max_note: 60});
 		assert.deepEqual(to_usable_tonics(level), [49]);
 	});
 });
 
 describe('to_level_data_error', () => {
-	const cases: Array<[label: string, input: Partial<Level_Data>, expected: string | null]> = [
+	const cases: Array<[label: string, input: Partial<LevelData>, expected: string | null]> = [
 		['the defaults', {}, null],
 		['inverted range', {min_note: 60, max_note: 48}, 'the lowest note must be lower than the highest'],
 		['empty range', {min_note: 60, max_note: 60}, 'the lowest note must be lower than the highest'],
@@ -148,14 +148,14 @@ describe('to_level_data_error', () => {
 		['empty tonics means all', {tonics: []}, null],
 	]; // prettier-ignore
 	test.each(cases)('%s', (_label, input, expected) => {
-		assert.strictEqual(to_level_data_error(Level_Data.parse(input)), expected);
+		assert.strictEqual(to_level_data_error(LevelData.parse(input)), expected);
 	});
 
 	test('a level without an error can always start a trial', () => {
 		const random = create_random_alea('playable');
 		for (let i = 0; i < 500; i++) {
 			const min_note = 30 + Math.floor(random() * 40);
-			const level = Level_Data.parse({
+			const level = LevelData.parse({
 				min_note,
 				max_note: min_note + 1 + Math.floor(random() * 30),
 				intervals: [Math.floor(random() * 49) - 24, Math.floor(random() * 49) - 24],
@@ -168,7 +168,7 @@ describe('to_level_data_error', () => {
 
 describe('create_next_trial', () => {
 	test('starts on the tonic with scripted notes', () => {
-		const level = Level_Data.parse({intervals: [5, 7], sequence_length: 3, tonics: [60]});
+		const level = LevelData.parse({intervals: [5, 7], sequence_length: 3, tonics: [60]});
 		// valid notes are [60, 65, 67]: the tonic, then index 2, then index 1
 		const random = create_scripted_random([0, to_random_for_int(0, 2, 2), to_random_for_int(0, 2, 1)]); // prettier-ignore
 		const trial = create_next_trial(level, null, random);
@@ -181,20 +181,20 @@ describe('create_next_trial', () => {
 	});
 
 	test('redraws a note that repeats the previous one', () => {
-		const level = Level_Data.parse({intervals: [5, 7], sequence_length: 2, tonics: [60]});
+		const level = LevelData.parse({intervals: [5, 7], sequence_length: 2, tonics: [60]});
 		const random = create_scripted_random([0, to_random_for_int(0, 2, 0), to_random_for_int(0, 2, 0), to_random_for_int(0, 2, 1)]); // prettier-ignore
 		assert.deepEqual(create_next_trial(level, null, random).sequence, [60, 65]);
 	});
 
 	test('increments the index from the current trial', () => {
-		const level = Level_Data.parse({tonics: [60]});
+		const level = LevelData.parse({tonics: [60]});
 		const first = create_next_trial(level, null, create_random_alea(1));
 		const second = create_next_trial(level, first, create_random_alea(2));
 		assert.strictEqual(second.index, 1);
 	});
 
 	test('is deterministic for a seed', () => {
-		const level = Level_Data.parse({intervals: [2, 4, 5, 7, 9, 11, 12], sequence_length: 8});
+		const level = LevelData.parse({intervals: [2, 4, 5, 7, 9, 11, 12], sequence_length: 8});
 		const a = create_next_trial(level, null, create_random_alea('seed'));
 		const b = create_next_trial(level, null, create_random_alea('seed'));
 		assert.deepEqual(a, b);
@@ -203,10 +203,10 @@ describe('create_next_trial', () => {
 	test('invariants hold across many random trials', () => {
 		const random = create_random_alea('invariants');
 		const levels = [
-			Level_Data.parse({}),
-			Level_Data.parse({intervals: [-12, -5, 7, 12], sequence_length: 6}),
-			Level_Data.parse({intervals: [1], sequence_length: 8, min_note: 60, max_note: 62}),
-			Level_Data.parse({intervals: [2, 7], tonics: [40, 50, 60], min_note: 36, max_note: 72}),
+			LevelData.parse({}),
+			LevelData.parse({intervals: [-12, -5, 7, 12], sequence_length: 6}),
+			LevelData.parse({intervals: [1], sequence_length: 8, min_note: 60, max_note: 62}),
+			LevelData.parse({intervals: [2, 7], tonics: [40, 50, 60], min_note: 36, max_note: 72}),
 		];
 		for (const level of levels) {
 			const allowed = new Set([0, ...level.intervals]);

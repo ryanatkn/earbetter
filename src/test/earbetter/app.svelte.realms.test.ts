@@ -1,13 +1,13 @@
 import {describe, test, assert, vi, beforeEach, afterEach} from 'vitest';
 
-import {Realm_Data} from '$lib/earbetter/realm.js';
-import {Level_Data} from '$lib/earbetter/level.svelte.js';
+import {RealmData} from '$lib/earbetter/realm.js';
+import {LevelData} from '$lib/earbetter/level.svelte.js';
 import {create_memory_storage} from '../test_helpers.js';
-import {create_app, read_stored, type App_Harness} from './app_test_helpers.svelte.js';
+import {create_app, read_stored, type AppHarness} from './app_test_helpers.svelte.js';
 
 vi.mock('$app/navigation', () => ({goto: vi.fn()}));
 
-let harness: App_Harness;
+let harness: AppHarness;
 
 beforeEach(() => {
 	vi.stubGlobal('localStorage', create_memory_storage());
@@ -24,7 +24,7 @@ const all_level_ids = (): Array<string> =>
 describe('realms', () => {
 	test('create_realm appends, selects, and persists', () => {
 		const {app} = harness;
-		const realm = Realm_Data.parse({name: 'new'});
+		const realm = RealmData.parse({name: 'new'});
 		app.create_realm(realm);
 		assert.strictEqual(app.realms!.at(-1), realm);
 		assert.strictEqual(app.selected_realm_id, realm.id);
@@ -34,7 +34,7 @@ describe('realms', () => {
 	test('create_realm can skip selecting', () => {
 		const {app} = harness;
 		const selected = app.selected_realm_id;
-		app.create_realm(Realm_Data.parse({}), false);
+		app.create_realm(RealmData.parse({}), false);
 		assert.strictEqual(app.selected_realm_id, selected);
 	});
 
@@ -116,7 +116,7 @@ describe('realms', () => {
 		assert.strictEqual(app.selected_realm_id, realm.id);
 		assert.strictEqual(app.editing_realm_data, realm);
 
-		const draft = Realm_Data.parse({});
+		const draft = RealmData.parse({});
 		app.edit_realm(draft);
 		assert.strictEqual(app.editing_realm_draft, true);
 		assert.strictEqual(app.editing_realm_data, draft);
@@ -129,7 +129,7 @@ describe('realms', () => {
 describe('levels', () => {
 	test('create_level appends to the selected realm', () => {
 		const {app} = harness;
-		const level = Level_Data.parse({name: 'new'});
+		const level = LevelData.parse({name: 'new'});
 		app.edit_level(level);
 		app.create_level(level);
 		assert.strictEqual(app.levels!.at(-1), level);
@@ -141,7 +141,7 @@ describe('levels', () => {
 		const {app} = harness;
 		app.select_realm(null);
 		const count = all_level_ids().length;
-		app.create_level(Level_Data.parse({}));
+		app.create_level(LevelData.parse({}));
 		assert.strictEqual(all_level_ids().length, count);
 	});
 

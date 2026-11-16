@@ -1,8 +1,8 @@
 <script lang="ts">
 	import {slide} from 'svelte/transition';
 
-	import {Realm_Data} from '$lib/earbetter/realm.js';
-	import Realm_Items from '$lib/earbetter/Realm_Items.svelte';
+	import {RealmData} from '$lib/earbetter/realm.js';
+	import RealmItems from '$lib/earbetter/RealmItems.svelte';
 	import type {App} from '$lib/earbetter/app.svelte.js';
 
 	interface Props {
@@ -29,7 +29,7 @@
 		} else if (creating) {
 			app.editing_realm = false;
 		} else {
-			edit_realm(Realm_Data.parse({}));
+			edit_realm(RealmData.parse({}));
 		}
 	};
 </script>
@@ -40,7 +40,7 @@
 	</header>
 	{#if app.realms && app.selected_project_data}
 		<div transition:slide>
-			<Realm_Items
+			<RealmItems
 				project_data={app.selected_project_data}
 				selected_realm_data={app.selected_realm_data}
 				realms={app.realms}

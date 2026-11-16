@@ -5,40 +5,40 @@
 
 	import Piano from '$lib/Piano.svelte';
 	import {audio_context_context} from '$lib/audio_context.js';
-	import Midi_Input from '$lib/Midi_Input.svelte';
+	import MidiInput from '$lib/MidiInput.svelte';
 	import {start_playing, stop_playing} from '$lib/play_note.js';
-	import Init_Midi_Button from '$lib/Init_Midi_Button.svelte';
-	import Volume_Control from '$lib/Volume_Control.svelte';
+	import InitMidiButton from '$lib/InitMidiButton.svelte';
+	import VolumeControl from '$lib/VolumeControl.svelte';
 	import Header from '$routes/Header.svelte';
 	import Footer from '$routes/Footer.svelte';
 	import {with_velocity} from '$lib/audio_helpers.js';
-	import Instrument_Control from '$lib/Instrument_Control.svelte';
-	import Midi_Range_Control from '$lib/Midi_Range_Control.svelte';
+	import InstrumentControl from '$lib/InstrumentControl.svelte';
+	import MidiRangeControl from '$lib/MidiRangeControl.svelte';
 	import {Midi} from '$lib/music.js';
-	import Select_Notes_Control from '$lib/Select_Notes_Control.svelte';
+	import SelectNotesControl from '$lib/SelectNotesControl.svelte';
 	import {load_from_storage, set_in_storage} from '$lib/storage.js';
-	import Back_Button from '$routes/Back_Button.svelte';
+	import BackButton from '$routes/BackButton.svelte';
 	import {app_context} from '$lib/earbetter/app.svelte.js';
 
 	const app = app_context.get();
 
 	// TODO extract? is pretty specific - and Svelte is erroring without the `_Schema`
-	const Piano_Settings_Schema = z.object({
+	const PianoSettingsSchema = z.object({
 		min_note: Midi.default(36),
 		max_note: Midi.default(96),
 	});
-	type Piano_Settings = z.infer<typeof Piano_Settings_Schema>;
+	type PianoSettings = z.infer<typeof PianoSettingsSchema>;
 	const SITE_DATA_STORAGE_KEY = 'piano';
 	const initial_piano_settings = load_from_storage(
 		SITE_DATA_STORAGE_KEY,
-		() => Piano_Settings_Schema.parse({}),
-		Piano_Settings_Schema.parse,
+		() => PianoSettingsSchema.parse({}),
+		PianoSettingsSchema.parse,
 	);
 
 	let min_note = $state(initial_piano_settings.min_note);
 	let max_note = $state(initial_piano_settings.max_note);
 
-	const to_piano_data = (): Piano_Settings => ({min_note, max_note});
+	const to_piano_data = (): PianoSettings => ({min_note, max_note});
 	const save_piano_data = () => set_in_storage(SITE_DATA_STORAGE_KEY, to_piano_data());
 	$effect(save_piano_data);
 
@@ -61,13 +61,13 @@
 	<title>Earbetter: piano</title>
 </svelte:head>
 
-<Midi_Input
+<MidiInput
 	midi_access={app.midi_access}
 	onnotestart={(note, velocity) => play(note, velocity)}
 	onnotestop={(note) => stop_playing(note)}
 />
 <main bind:clientWidth>
-	<Back_Button onclick={() => goto(resolve('/'))} />
+	<BackButton onclick={() => goto(resolve('/'))} />
 	<Header />
 	<div class="piano_wrapper" style:padding="{piano_padding}px">
 		{#if clientWidth}
@@ -86,17 +86,17 @@
 	</div>
 	<form class="width_sm panel p_md">
 		<fieldset>
-			<Instrument_Control bind:instrument={app.instrument} />
+			<InstrumentControl bind:instrument={app.instrument} />
 			<div class="row mb_lg">
-				<Select_Notes_Control bind:scale={app.scale} bind:key={app.key} />
+				<SelectNotesControl bind:scale={app.scale} bind:key={app.key} />
 			</div>
-			<Volume_Control bind:volume={app.volume} />
+			<VolumeControl bind:volume={app.volume} />
 		</fieldset>
 		<fieldset>
-			<Init_Midi_Button midi_state={app} />
+			<InitMidiButton midi_state={app} />
 		</fieldset>
 		<fieldset class="row">
-			<Midi_Range_Control bind:min_note bind:max_note />
+			<MidiRangeControl bind:min_note bind:max_note />
 		</fieldset>
 	</form>
 	<Footer />

@@ -16,7 +16,7 @@ import {noop_ssr} from '$lib/util.js';
 
 // WebMIDI helpers specific to cosmicplayground
 
-export interface Midi_Message {
+export interface MidiMessage {
 	command: (typeof MIDICommand)[number];
 	channel: MIDIChannel;
 	note: Midi;
@@ -27,7 +27,7 @@ export interface Midi_Message {
  * Parse basic information out of a MIDI message.
  * https://stackoverflow.com/questions/40902864/how-to-parse-web-midi-api-input-messages-onmidimessage
  */
-export const parse_midi_message = (e: MIDIMessageEvent): Midi_Message => {
+export const parse_midi_message = (e: MIDIMessageEvent): MidiMessage => {
 	return {
 		command: e.data[0] >> 4,
 		channel: e.data[0] & 0xf,
@@ -42,7 +42,7 @@ export const parse_midi_message = (e: MIDIMessageEvent): Midi_Message => {
  * @param opts - WebMIDI options - https://developer.mozilla.org/en-US/docs/Web/API/WebMIDI_API
  */
 export const request_midi_access = async (opts?: Partial<MIDIOptions>): Promise<MIDIAccess> => {
-	if (!BROWSER) return new Midi_Access_Stub();
+	if (!BROWSER) return new MidiAccessStub();
 	const n = navigator as any;
 	const request_access: requestMIDIAccess | undefined = n.requestMIDIAccess?.bind(n);
 	if (!request_access) {
@@ -56,7 +56,7 @@ export const request_midi_access = async (opts?: Partial<MIDIOptions>): Promise<
 	return request_access(options);
 };
 
-class Midi_Access_Stub extends EventTarget implements MIDIAccess {
+class MidiAccessStub extends EventTarget implements MIDIAccess {
 	readonly inputs: MIDIInputMap = new Map();
 	readonly outputs: MIDIOutputMap = new Map();
 	onstatechange: (event: MIDIConnectionEvent) => void = noop_ssr;

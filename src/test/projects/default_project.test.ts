@@ -7,7 +7,7 @@ import {
 	create_valid_notes,
 	to_level_data_error,
 } from '$lib/earbetter/level.svelte.js';
-import {Project_Data} from '$lib/earbetter/project.js';
+import {ProjectData} from '$lib/earbetter/project.js';
 
 const project = default_project();
 const levels = project.realms.flatMap((realm) =>
@@ -21,7 +21,7 @@ test('creates fresh ids each call', () => {
 });
 
 test('parses as project data', () => {
-	assert.deepEqual(Project_Data.parse(JSON.parse(JSON.stringify(project))), project);
+	assert.deepEqual(ProjectData.parse(JSON.parse(JSON.stringify(project))), project);
 });
 
 test('ids are unique across the project', () => {

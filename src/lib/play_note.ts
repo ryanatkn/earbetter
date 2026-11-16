@@ -43,7 +43,7 @@ const stop_osc = (
 	osc.stop(endTime + SMOOTH_GAIN_TIME_CONSTANT * 2);
 };
 
-export type Stop_Playing = () => void;
+export type StopPlaying = () => void;
 
 export const start_playing_note = (
 	state: {playing_notes: SvelteSet<Midi>},
@@ -51,7 +51,7 @@ export const start_playing_note = (
 	note: Midi,
 	volume: Volume = DEFAULT_VOLUME,
 	instrument: Instrument = 'sine',
-): Stop_Playing => {
+): StopPlaying => {
 	const freq = midi_to_freq(note);
 	const gain = ac.createGain();
 	gain.gain.value = volume_to_gain(volume);
@@ -78,7 +78,7 @@ export const start_playing_note = (
 // Maybe this should be put in the main context and wrap `ac` so it's not accessed directly?
 
 // TODO is redundant with `playing_notes` and manually updated
-const playing: Map<Midi, Stop_Playing> = new Map(); // global cache used to enforce that at most one of each note plays
+const playing: Map<Midi, StopPlaying> = new Map(); // global cache used to enforce that at most one of each note plays
 
 export const start_playing = (
 	state: {playing_notes: SvelteSet<Midi>},

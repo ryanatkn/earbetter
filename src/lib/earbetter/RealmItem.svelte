@@ -1,16 +1,16 @@
 <script lang="ts">
 	import {slide} from 'svelte/transition';
 
-	import type {Realm_Data, Realm_Id} from '$lib/earbetter/realm.js';
-	import Realm_Stats_Summary from '$lib/earbetter/Realm_Stats_Summary.svelte';
-	import type {Project_Data} from '$lib/earbetter/project.js';
+	import type {RealmData, RealmId} from '$lib/earbetter/realm.js';
+	import RealmStatsSummary from '$lib/earbetter/RealmStatsSummary.svelte';
+	import type {ProjectData} from '$lib/earbetter/project.js';
 
 	interface Props {
-		realm_data: Realm_Data;
-		project_data: Project_Data;
-		select?: ((id: Realm_Id) => void) | null; // TODO event? or is the ability to have a return value for ephemeral state desired?
-		edit?: ((realm_data: Realm_Data | null) => void) | null; // TODO event? or is the ability to have a return value for ephemeral state desired?
-		remove?: ((id: Realm_Id) => void) | null; // TODO event? or is the ability to have a return value for ephemeral state desired?
+		realm_data: RealmData;
+		project_data: ProjectData;
+		select?: ((id: RealmId) => void) | null; // TODO event? or is the ability to have a return value for ephemeral state desired?
+		edit?: ((realm_data: RealmData | null) => void) | null; // TODO event? or is the ability to have a return value for ephemeral state desired?
+		remove?: ((id: RealmId) => void) | null; // TODO event? or is the ability to have a return value for ephemeral state desired?
 		selected: boolean;
 		editing: boolean;
 	}
@@ -32,7 +32,7 @@
 
 <li class="realm_item" transition:slide class:selected>
 	{#if level_stats}
-		<Realm_Stats_Summary {realm_data} {level_stats} />
+		<RealmStatsSummary {realm_data} {level_stats} />
 	{/if}
 	{#if select}
 		<button type="button" class="realm_button" onclick={() => select(realm_data.id)} class:selected>

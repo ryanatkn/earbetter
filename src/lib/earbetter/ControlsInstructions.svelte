@@ -36,7 +36,7 @@
 		</tr>
 		<tr>
 			<td><code>c</code></td>
-			<!-- TODO make this a button like the above, need to refactor `Init_Midi_Button` into a reusable class instance -->
+			<!-- TODO make this a button like the above, need to refactor `InitMidiButton` into a reusable class instance -->
 			<td>connect MIDI</td>
 		</tr>
 		<tr>

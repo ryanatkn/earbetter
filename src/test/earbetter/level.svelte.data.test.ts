@@ -8,17 +8,17 @@ import {
 	DEFAULT_LEVEL_STATS,
 	DEFAULT_MAX_NOTE,
 	DEFAULT_MIN_NOTE,
-	Level_Data,
-	Level_Hash_Data,
-	Level_Stats,
+	LevelData,
+	LevelHashData,
+	LevelStats,
 	MISTAKE_HISTORY_LENGTH,
 	to_level_url,
 } from '$lib/earbetter/level.svelte.js';
 import {parse_from_hash} from '$lib/url.js';
 
-describe('Level_Data', () => {
+describe('LevelData', () => {
 	test('fills defaults', () => {
-		const level = Level_Data.parse({});
+		const level = LevelData.parse({});
 		assert.ok(level.id.length > 0);
 		assert.strictEqual(level.name, DEFAULT_LEVEL_NAME);
 		assert.deepEqual(level.intervals, DEFAULT_INTERVALS);
@@ -28,12 +28,12 @@ describe('Level_Data', () => {
 	});
 
 	test('generates distinct ids', () => {
-		assert.notStrictEqual(Level_Data.parse({}).id, Level_Data.parse({}).id);
+		assert.notStrictEqual(LevelData.parse({}).id, LevelData.parse({}).id);
 	});
 
 	test('parsing is idempotent through JSON', () => {
-		const level = Level_Data.parse({name: 'x', intervals: [3, -4], tonics: [60, 62]});
-		assert.deepEqual(Level_Data.parse(JSON.parse(JSON.stringify(level))), level);
+		const level = LevelData.parse({name: 'x', intervals: [3, -4], tonics: [60, 62]});
+		assert.deepEqual(LevelData.parse(JSON.parse(JSON.stringify(level))), level);
 	});
 
 	const invalid: Array<[label: string, input: object]> = [
@@ -44,17 +44,17 @@ describe('Level_Data', () => {
 		['tonic out of range', {tonics: [200]}],
 	];
 	test.each(invalid)('rejects %s', (_label, input) => {
-		assert.ok(!Level_Data.safeParse(input).success);
+		assert.ok(!LevelData.safeParse(input).success);
 	});
 });
 
 describe('to_level_url', () => {
 	test('round-trips the level through the hash', () => {
-		const level = Level_Data.parse({name: 'C♯ & friends', intervals: [1, 6]});
+		const level = LevelData.parse({name: 'C♯ & friends', intervals: [1, 6]});
 		const url = to_level_url(level);
 		const hash_index = url.indexOf('#');
 		assert.ok(url.slice(0, hash_index).endsWith('/trainer/level'));
-		const parsed = Level_Hash_Data.parse(parse_from_hash(url.slice(hash_index)));
+		const parsed = LevelHashData.parse(parse_from_hash(url.slice(hash_index)));
 		assert.deepEqual(parsed.level, level);
 	});
 });
@@ -100,7 +100,7 @@ describe('add_mistakes', () => {
 
 describe('add_mistakes_to_level_stats', () => {
 	test('adds to the level and leaves the input untouched', () => {
-		const stats: Level_Stats = {mistakes: {a: [1]}};
+		const stats: LevelStats = {mistakes: {a: [1]}};
 		const updated = add_mistakes_to_level_stats(stats, 'b', 2);
 		assert.deepEqual(updated, {mistakes: {a: [1], b: [2]}});
 		assert.deepEqual(stats, {mistakes: {a: [1]}});
@@ -115,6 +115,6 @@ describe('add_mistakes_to_level_stats', () => {
 
 	test('the result parses as stats', () => {
 		const updated = add_mistakes_to_level_stats(DEFAULT_LEVEL_STATS, 'a', 3);
-		assert.deepEqual(Level_Stats.parse(updated), updated);
+		assert.deepEqual(LevelStats.parse(updated), updated);
 	});
 });

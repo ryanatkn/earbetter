@@ -6,9 +6,9 @@
 
 	import {
 		create_level_id,
-		Level_Data,
+		LevelData,
 		to_level_data_error,
-		type Level_Id,
+		type LevelId,
 	} from '$lib/earbetter/level.svelte.js';
 	import {
 		parse_intervals,
@@ -22,20 +22,20 @@
 		parse_notes,
 		DEFAULT_SCALE,
 	} from '$lib/music.js';
-	import Intervals_Input from '$lib/Intervals_Input.svelte';
-	import Notes_Input from '$lib/Notes_Input.svelte';
+	import IntervalsInput from '$lib/IntervalsInput.svelte';
+	import NotesInput from '$lib/NotesInput.svelte';
 	import Piano from '$lib/Piano.svelte';
-	import Copy_To_Clipboard from '$lib/earbetter/Copy_To_Clipboard.svelte';
+	import CopyToClipboard from '$lib/earbetter/CopyToClipboard.svelte';
 	import {app_context} from '$lib/earbetter/app.svelte.js';
 
 	interface Props {
-		level_data: Level_Data;
+		level_data: LevelData;
 		editing?: boolean;
-		onsubmit: (level_data: Level_Data) => void;
-		onremove?: (level_id: Level_Id) => void;
-		onduplicate?: (level_id: Level_Id) => void;
-		onplay?: (level_data: Level_Data, changed: boolean) => void;
-		onclose?: (level_id: Level_Id) => void;
+		onsubmit: (level_data: LevelData) => void;
+		onremove?: (level_id: LevelId) => void;
+		onduplicate?: (level_id: LevelId) => void;
+		onplay?: (level_data: LevelData, changed: boolean) => void;
+		onclose?: (level_id: LevelId) => void;
 	}
 
 	const {
@@ -76,13 +76,13 @@
 		min_note: updated_min_note,
 		max_note: updated_max_note,
 	});
-	const to_data = (): Level_Data => Level_Data.parse(to_raw_data());
+	const to_data = (): LevelData => LevelData.parse(to_raw_data());
 
 	// the form's inputs can hold values the schema rejects, like an empty name or a cleared number,
 	// so validate instead of letting `to_data` throw on submit
 	const level_data_error: string | null = $derived.by(() => {
 		if (!normalized_updated_name) return 'the level needs a name';
-		const parsed = Level_Data.safeParse(to_raw_data());
+		const parsed = LevelData.safeParse(to_raw_data());
 		if (!parsed.success) {
 			const issue = parsed.error.issues[0];
 			return `invalid ${issue.path.join('.') || 'level'}: ${issue.message}`;
@@ -111,7 +111,7 @@
 			!dequal(normalized_updated_tonics, level_data.tonics),
 	);
 
-	// TODO lots of similarity with `Project_Form`
+	// TODO lots of similarity with `ProjectForm`
 	let importing = $state(false);
 	let picking_intervals = $state(false);
 	let picking_tonics = $state(false);
@@ -136,7 +136,7 @@
 			const json = JSON.parse(updated);
 			// add an `id` if there is none
 			if (json && !json.id) json.id = create_level_id();
-			const parsed = Level_Data.parse(json);
+			const parsed = LevelData.parse(json);
 			const error = to_level_data_error(parsed);
 			if (error) throw Error(error);
 			onsubmit(parsed);
@@ -339,7 +339,7 @@
 	>
 		<div class="importing pane shadow_d_xl p_xl width_md mx_auto">
 			<h2 class="my_0">import level data</h2>
-			<Copy_To_Clipboard
+			<CopyToClipboard
 				text={updated}
 				oncopy={() => {
 					level_data_el?.select();
@@ -367,7 +367,7 @@
 		{#snippet children(close)}
 			<div class="pane mx_auto shadow_d_xl p_xl width_md box">
 				<h2 class="my_0">pick intervals</h2>
-				<Intervals_Input
+				<IntervalsInput
 					intervals={updated_intervals}
 					bind:scale
 					bind:octaves
@@ -392,7 +392,7 @@
 			<div class="pane mx_auto shadow_d_xl py_xl box">
 				<h2 class="my_0">pick tonics</h2>
 				<!-- TODO @many set reactivity - this `new Set` is a hack, probably change the data structure to a set, need serialization for storage -->
-				<Notes_Input
+				<NotesInput
 					audio_state={app}
 					notes={new Set(updated_tonics)}
 					min_note={updated_min_note}
@@ -405,7 +405,7 @@
 					{#snippet before_buttons()}
 						<button type="button" class="mb_lg" onclick={close}>cancel</button>
 					{/snippet}
-				</Notes_Input>
+				</NotesInput>
 			</div>
 		{/snippet}
 	</Dialog>

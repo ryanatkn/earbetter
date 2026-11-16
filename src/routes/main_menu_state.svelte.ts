@@ -5,7 +5,7 @@ import {create_context} from '@ryanatkn/fuz/context_helpers.js';
 /**
  * Designed as a singleton to be used in the entire application. Maybe make more general?
  */
-export class Main_Menu_State {
+export class MainMenuState {
 	opened = $state(false);
 
 	open(): void {
@@ -21,4 +21,4 @@ export class Main_Menu_State {
 	}
 }
 
-export const main_menu_context = create_context(() => new Main_Menu_State());
+export const main_menu_context = create_context(() => new MainMenuState());

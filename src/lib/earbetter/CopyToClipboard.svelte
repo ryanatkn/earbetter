@@ -1,7 +1,7 @@
 <script lang="ts">
 	import type {Snippet} from 'svelte';
 
-	// TODO refactor with `Copy_To_Clipboard.svelte` from Fuz
+	// TODO refactor with `CopyToClipboard.svelte` from Fuz
 
 	interface Props {
 		text: string;

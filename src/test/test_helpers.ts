@@ -3,9 +3,9 @@ import {assert, vi} from 'vitest';
 
 import {DEFAULT_INSTRUMENT, DEFAULT_VOLUME} from '$lib/audio_helpers.js';
 import {freq_to_midi, DEFAULT_TUNING, type Midi} from '$lib/music.js';
-import type {Level_Audio_State} from '$lib/earbetter/level.svelte.js';
+import type {LevelAudioState} from '$lib/earbetter/level.svelte.js';
 
-export interface Fake_Audio_Context {
+export interface FakeAudioContext {
 	ac: AudioContext;
 	/**
 	 * Every note started on an oscillator, in order, recovered from its frequency.
@@ -17,7 +17,7 @@ export interface Fake_Audio_Context {
  * Creates the slice of `AudioContext` that `play_note` touches,
  * recording each started note so tests can assert what the player heard.
  */
-export const create_fake_audio_context = (): Fake_Audio_Context => {
+export const create_fake_audio_context = (): FakeAudioContext => {
 	const played: Array<Midi> = [];
 	const create_param = () => ({value: 0, setTargetAtTime: vi.fn(), setValueAtTime: vi.fn()});
 	const ac = {
@@ -41,7 +41,7 @@ export const create_fake_audio_context = (): Fake_Audio_Context => {
 	return {ac: ac as unknown as AudioContext, played};
 };
 
-export const create_level_audio_state = (): Level_Audio_State => ({
+export const create_level_audio_state = (): LevelAudioState => ({
 	playing_notes: new SvelteSet(),
 	volume: DEFAULT_VOLUME,
 	instrument: DEFAULT_INSTRUMENT,

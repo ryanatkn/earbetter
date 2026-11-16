@@ -2,13 +2,13 @@
 	import {slide} from 'svelte/transition';
 	import {tick} from 'svelte';
 
-	import type {Level_Data} from '$lib/earbetter/level.svelte.js';
+	import type {LevelData} from '$lib/earbetter/level.svelte.js';
 	import type {App} from '$lib/earbetter/app.svelte.js';
-	import Level_Stats_Summary from '$lib/earbetter/Level_Stats_Summary.svelte';
+	import LevelStatsSummary from '$lib/earbetter/LevelStatsSummary.svelte';
 
 	interface Props {
 		app: App;
-		level_data: Level_Data;
+		level_data: LevelData;
 	}
 
 	const {app, level_data}: Props = $props();
@@ -27,7 +27,7 @@
 
 <li class="level_map_item" transition:slide class:selected>
 	{#if level_stats}
-		<Level_Stats_Summary {level_data} {level_stats} />
+		<LevelStatsSummary {level_data} {level_stats} />
 	{/if}
 	<button
 		type="button"

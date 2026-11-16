@@ -17,11 +17,11 @@
 	import {request_access} from '$lib/midi_access.js';
 	import {App, app_context} from '$lib/earbetter/app.svelte.js';
 	import {load_from_storage, set_in_storage} from '$lib/storage.js';
-	import {Site_Data} from '$routes/site_data.js';
-	import Init_Audio_Context from '$lib/Init_Audio_Context.svelte';
-	import Main_Menu from '$routes/Main_Menu.svelte';
+	import {SiteData} from '$routes/site_data.js';
+	import InitAudioContext from '$lib/InitAudioContext.svelte';
+	import MainMenu from '$routes/MainMenu.svelte';
 	import {main_menu_context} from '$routes/main_menu_state.svelte.js';
-	import {Level_Hash_Data} from '$lib/earbetter/level.svelte.js';
+	import {LevelHashData} from '$lib/earbetter/level.svelte.js';
 	import {parse_from_hash} from '$lib/url.js';
 
 	interface Props {
@@ -37,8 +37,8 @@
 	const SITE_DATA_STORAGE_KEY = 'site';
 	const initial_site_data = load_from_storage(
 		SITE_DATA_STORAGE_KEY,
-		() => Site_Data.parse({}),
-		Site_Data.parse,
+		() => SiteData.parse({}),
+		SiteData.parse,
 	);
 	const get_audio_context = audio_context_context.set();
 
@@ -48,7 +48,7 @@
 	const main_menu = main_menu_context.set();
 
 	const current_level_hash_data = $derived.by(() => {
-		const parsed = Level_Hash_Data.safeParse(parse_from_hash(page.url.hash));
+		const parsed = LevelHashData.safeParse(parse_from_hash(page.url.hash));
 		return parsed.success ? parsed.data : null;
 	});
 	$effect(() => {
@@ -57,7 +57,7 @@
 	});
 
 	// save site data
-	const to_site_data = (): Site_Data => ({
+	const to_site_data = (): SiteData => ({
 		// note these have to use `.value`, the `$`-prefix doesn't work for reactivity
 		volume: app.volume,
 		instrument: app.instrument,
@@ -135,7 +135,7 @@
 
 <svelte:window onkeydown={keydown} />
 
-<Init_Audio_Context />
+<InitAudioContext />
 
 <Themed {themer}>
 	{@render children()}
@@ -144,7 +144,7 @@
 		<Dialog onclose={() => main_menu.close()}>
 			<div class="box width_md mx_auto">
 				<div class="pane">
-					<Main_Menu />
+					<MainMenu />
 				</div>
 			</div>
 		</Dialog>

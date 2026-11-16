@@ -4,28 +4,28 @@
 	import Dialog from '@ryanatkn/fuz/Dialog.svelte';
 	import Alert from '@ryanatkn/fuz/Alert.svelte';
 
-	import {create_realm_id, Realm_Data, Realm_Name, type Realm_Id} from '$lib/earbetter/realm.js';
+	import {create_realm_id, RealmData, RealmName, type RealmId} from '$lib/earbetter/realm.js';
 	import default_project_data from '$lib/projects/default_project.js';
-	import Copy_To_Clipboard from '$lib/earbetter/Copy_To_Clipboard.svelte';
+	import CopyToClipboard from '$lib/earbetter/CopyToClipboard.svelte';
 
 	interface Props {
-		realm_data: Realm_Data;
+		realm_data: RealmData;
 		editing?: boolean;
-		onsubmit: (realm_data: Realm_Data | Array<Realm_Data>) => void;
-		onremove?: (realm_id: Realm_Id) => void;
-		onduplicate?: (realm_id: Realm_Id) => void;
-		onclose?: (realm_id: Realm_Id) => void;
+		onsubmit: (realm_data: RealmData | Array<RealmData>) => void;
+		onremove?: (realm_id: RealmId) => void;
+		onduplicate?: (realm_id: RealmId) => void;
+		onclose?: (realm_id: RealmId) => void;
 	}
 
 	const {realm_data, editing = false, onsubmit, onremove, onduplicate, onclose}: Props = $props();
 
 	let removing = $state(false);
 
-	let updated_name: Realm_Name = $derived(realm_data.name); // TODO name? `changed`?
+	let updated_name: RealmName = $derived(realm_data.name); // TODO name? `changed`?
 	const normalized_updated_name = $derived((updated_name as any)?.trim());
 
-	const to_data = (): Realm_Data =>
-		Realm_Data.parse({
+	const to_data = (): RealmData =>
+		RealmData.parse({
 			id: realm_data.id,
 			name: normalized_updated_name,
 			levels: realm_data.levels,
@@ -33,7 +33,7 @@
 
 	const changed = $derived(normalized_updated_name !== realm_data.name);
 
-	// TODO lots of similarity with `Level_Form`
+	// TODO lots of similarity with `LevelForm`
 	let importing = $state(false);
 	let serialized = $state('');
 	let updated = $state('');
@@ -53,7 +53,7 @@
 			const json = JSON.parse(updated);
 			// add an `id` if there is none
 			if (json && !json.id) json.id = create_realm_id();
-			const parsed = Realm_Data.parse(json);
+			const parsed = RealmData.parse(json);
 			onsubmit(parsed);
 		} catch (err) {
 			parse_error_message = err.message || 'unknown error';
@@ -80,7 +80,7 @@
 	>
 		<div class="importing pane shadow_d_xl p_xl width_md mx_auto">
 			<h2 class="my_0">import realm data</h2>
-			<Copy_To_Clipboard
+			<CopyToClipboard
 				text={updated}
 				oncopy={() => {
 					realm_data_el?.select();

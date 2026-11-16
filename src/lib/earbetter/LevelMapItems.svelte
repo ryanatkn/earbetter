@@ -1,11 +1,11 @@
 <script lang="ts">
-	import Level_Map_Item from '$lib/earbetter/Level_Map_Item.svelte';
+	import LevelMapItem from '$lib/earbetter/LevelMapItem.svelte';
 	import type {App} from '$lib/earbetter/app.svelte.js';
-	import {Level_Data} from '$lib/earbetter/level.svelte.js';
+	import {LevelData} from '$lib/earbetter/level.svelte.js';
 
 	interface Props {
 		app: App;
-		levels: Array<Level_Data>; // TODO making this a prop here, but using `app` most places, maybe change it to context?
+		levels: Array<LevelData>; // TODO making this a prop here, but using `app` most places, maybe change it to context?
 	}
 
 	const {app, levels}: Props = $props();
@@ -24,7 +24,7 @@
 			// eslint-disable-next-line @typescript-eslint/no-unnecessary-type-assertion
 			(document.querySelector('.level_def_form input') as HTMLInputElement | null)?.focus(); // TODO hacky using the selector
 		} else {
-			app.edit_level(editing_draft ? null : Level_Data.parse({}));
+			app.edit_level(editing_draft ? null : LevelData.parse({}));
 		}
 	};
 </script>
@@ -36,7 +36,7 @@
 	</header>
 	<menu class="levels unstyled mb_0">
 		{#each levels as d (d.id)}
-			<Level_Map_Item {app} level_data={d} />
+			<LevelMapItem {app} level_data={d} />
 		{/each}
 	</menu>
 	<button

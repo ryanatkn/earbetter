@@ -4,15 +4,15 @@
 		type Scale,
 		pitch_classes,
 		pitch_class_aliases,
-		type Pitch_Class,
+		type PitchClass,
 		lookup_scale,
 	} from '$lib/music.js';
 
-	// TODO @many naming convention between `Intervals_Input`/`Notes_Input`/`Select_Notes_Control`?
+	// TODO @many naming convention between `IntervalsInput`/`NotesInput`/`SelectNotesControl`?
 
 	interface Props {
 		scale: Scale;
-		key: Pitch_Class;
+		key: PitchClass;
 	}
 
 	let {scale = $bindable(), key = $bindable()}: Props = $props();

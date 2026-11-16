@@ -1,16 +1,16 @@
 <script lang="ts">
-	import type {Realm_Data, Realm_Id} from '$lib/earbetter/realm.js';
-	import Realm_Item from '$lib/earbetter/Realm_Item.svelte';
-	import type {Project_Data} from '$lib/earbetter/project.js';
+	import type {RealmData, RealmId} from '$lib/earbetter/realm.js';
+	import RealmItem from '$lib/earbetter/RealmItem.svelte';
+	import type {ProjectData} from '$lib/earbetter/project.js';
 
 	interface Props {
-		selected_realm_data?: Realm_Data | null;
-		editing_realm_id?: Realm_Id | null;
-		realms?: Array<Realm_Data>;
-		project_data: Project_Data;
-		select_realm: (id: Realm_Id) => void;
-		edit_realm: (realm_data: Realm_Data | null) => void;
-		remove_realm: (id: Realm_Id) => void;
+		selected_realm_data?: RealmData | null;
+		editing_realm_id?: RealmId | null;
+		realms?: Array<RealmData>;
+		project_data: ProjectData;
+		select_realm: (id: RealmId) => void;
+		edit_realm: (realm_data: RealmData | null) => void;
+		remove_realm: (id: RealmId) => void;
 	}
 
 	const {
@@ -25,12 +25,12 @@
 
 	// TODO refactor
 	const realms_by_id = $derived(new Map(realms.map((r) => [r.id, r])));
-	const lookup_realm_data = (id: Realm_Id): Realm_Data => realms_by_id.get(id)!;
+	const lookup_realm_data = (id: RealmId): RealmData => realms_by_id.get(id)!;
 </script>
 
 <menu class="unstyled width_sm mb_0">
 	{#each realms as realm (realm.id)}
-		<Realm_Item
+		<RealmItem
 			realm_data={lookup_realm_data(realm.id)}
 			{project_data}
 			select={select_realm}

@@ -6,30 +6,30 @@
 
 	import {
 		create_project_id,
-		Project_Data,
-		Project_Name,
-		type Project_Id,
+		ProjectData,
+		ProjectName,
+		type ProjectId,
 	} from '$lib/earbetter/project.js';
-	import Copy_To_Clipboard from '$lib/earbetter/Copy_To_Clipboard.svelte';
+	import CopyToClipboard from '$lib/earbetter/CopyToClipboard.svelte';
 
 	interface Props {
-		project_data: Project_Data;
+		project_data: ProjectData;
 		editing?: boolean;
-		onsubmit: (project_data: Project_Data) => void;
-		onremove?: (project_id: Project_Id) => void;
-		onduplicate?: (project_id: Project_Id) => void;
-		onclose?: (project_id: Project_Id) => void;
+		onsubmit: (project_data: ProjectData) => void;
+		onremove?: (project_id: ProjectId) => void;
+		onduplicate?: (project_id: ProjectId) => void;
+		onclose?: (project_id: ProjectId) => void;
 	}
 
 	const {project_data, editing = false, onsubmit, onremove, onduplicate, onclose}: Props = $props();
 
 	let removing = $state(false);
 
-	let updated_name: Project_Name = $derived(project_data.name); // TODO name? `changed`?
+	let updated_name: ProjectName = $derived(project_data.name); // TODO name? `changed`?
 	const normalized_updated_name = $derived(updated_name.trim());
 
-	const to_data = (): Project_Data =>
-		Project_Data.parse({
+	const to_data = (): ProjectData =>
+		ProjectData.parse({
 			id: project_data.id,
 			name: normalized_updated_name,
 			realms: project_data.realms,
@@ -38,7 +38,7 @@
 
 	const changed = $derived(normalized_updated_name !== project_data.name);
 
-	// TODO lots of similarity with `Level_Form`
+	// TODO lots of similarity with `LevelForm`
 	let importing = $state(false);
 	let serialized = $state('');
 	let updated = $state('');
@@ -58,7 +58,7 @@
 			const json = JSON.parse(updated);
 			// add an `id` if there is none
 			if (json && !json.id) json.id = create_project_id();
-			const parsed = Project_Data.parse(json);
+			const parsed = ProjectData.parse(json);
 			onsubmit(parsed);
 		} catch (err) {
 			parse_error_message = err.message || 'unknown error';
@@ -81,7 +81,7 @@
 	>
 		<div class="importing pane shadow_d_xl p_xl width_md mx_auto">
 			<h2 class="my_0">import project data</h2>
-			<Copy_To_Clipboard
+			<CopyToClipboard
 				text={updated}
 				oncopy={() => {
 					project_data_el?.select();

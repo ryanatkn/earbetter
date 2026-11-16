@@ -3,13 +3,13 @@
 
 	import {
 		MISTAKE_HISTORY_LENGTH,
-		type Level_Data,
-		type Level_Stats,
+		type LevelData,
+		type LevelStats,
 	} from '$lib/earbetter/level.svelte.js';
 
 	interface Props {
-		level_data: Level_Data;
-		level_stats: Level_Stats;
+		level_data: LevelData;
+		level_stats: LevelStats;
 	}
 
 	const {level_data, level_stats}: Props = $props();

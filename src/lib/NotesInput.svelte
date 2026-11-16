@@ -6,12 +6,12 @@
 
 	import Piano from '$lib/Piano.svelte';
 	import {audio_context_context} from '$lib/audio_context.js';
-	import Midi_Input from '$lib/Midi_Input.svelte';
+	import MidiInput from '$lib/MidiInput.svelte';
 	import {start_playing, stop_playing} from '$lib/play_note.js';
-	import Init_Midi_Button from '$lib/Init_Midi_Button.svelte';
-	import Volume_Control from '$lib/Volume_Control.svelte';
+	import InitMidiButton from '$lib/InitMidiButton.svelte';
+	import VolumeControl from '$lib/VolumeControl.svelte';
 	import {Instrument, Volume, with_velocity} from '$lib/audio_helpers.js';
-	import Instrument_Control from '$lib/Instrument_Control.svelte';
+	import InstrumentControl from '$lib/InstrumentControl.svelte';
 	import {
 		Midi,
 		serialize_notes,
@@ -24,7 +24,7 @@
 	} from '$lib/music.js';
 	import type {MIDIAccess} from '$lib/WebMIDI.js';
 
-	// TODO @many naming convention between `Intervals_Input`/`Notes_Input`/`Select_Notes_Control`?
+	// TODO @many naming convention between `IntervalsInput`/`NotesInput`/`SelectNotesControl`?
 
 	interface Props {
 		audio_state: {
@@ -116,7 +116,7 @@
 	};
 </script>
 
-<Midi_Input
+<MidiInput
 	midi_access={audio_state.midi_access}
 	onnotestart={(note, velocity) => play(note, velocity)}
 	onnotestop={(note) => stop_playing(note)}
@@ -173,11 +173,11 @@
 	</section>
 	<form class="width_sm panel p_md">
 		<fieldset>
-			<Instrument_Control bind:instrument={audio_state.instrument} />
-			<Volume_Control bind:volume={audio_state.volume} />
+			<InstrumentControl bind:instrument={audio_state.instrument} />
+			<VolumeControl bind:volume={audio_state.volume} />
 		</fieldset>
 		<fieldset>
-			<Init_Midi_Button midi_state={audio_state} />
+			<InitMidiButton midi_state={audio_state} />
 		</fieldset>
 	</form>
 </div>

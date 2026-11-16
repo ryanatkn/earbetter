@@ -1,12 +1,12 @@
 import {flushSync} from 'svelte';
 
 import {App} from '$lib/earbetter/app.svelte.js';
-import type {Site_Data} from '$routes/site_data.js';
+import type {SiteData} from '$routes/site_data.js';
 import {create_fake_audio_context} from '../test_helpers.js';
 
 export const TEST_STORAGE_KEY = 'app';
 
-export interface App_Harness {
+export interface AppHarness {
 	app: App;
 	/**
 	 * Tears down the app's effects.
@@ -19,7 +19,7 @@ export interface App_Harness {
  * and flushes its initial effects. Callers stub `localStorage` and mock `esm-env`
  * so storage behaves like the browser.
  */
-export const create_app = (initial_site_data: Site_Data | null = null): App_Harness => {
+export const create_app = (initial_site_data: SiteData | null = null): AppHarness => {
 	const {ac} = create_fake_audio_context();
 	let app!: App;
 	const destroy = $effect.root(() => {

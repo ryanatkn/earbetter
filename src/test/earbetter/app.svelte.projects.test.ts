@@ -1,20 +1,20 @@
 import {describe, test, assert, vi, beforeEach, afterEach} from 'vitest';
 import {flushSync} from 'svelte';
 
-import {App_Data} from '$lib/earbetter/app.svelte.js';
-import {Project_Data} from '$lib/earbetter/project.js';
+import {AppData} from '$lib/earbetter/app.svelte.js';
+import {ProjectData} from '$lib/earbetter/project.js';
 import {create_memory_storage} from '../test_helpers.js';
 import {
 	create_app,
 	read_stored,
 	TEST_STORAGE_KEY,
-	type App_Harness,
+	type AppHarness,
 } from './app_test_helpers.svelte.js';
 
 vi.mock('$app/navigation', () => ({goto: vi.fn()}));
 
-let harnesses: Array<App_Harness> = [];
-const create = (...args: Parameters<typeof create_app>): App_Harness => {
+let harnesses: Array<AppHarness> = [];
+const create = (...args: Parameters<typeof create_app>): AppHarness => {
 	const harness = create_app(...args);
 	harnesses.push(harness);
 	return harness;
@@ -32,7 +32,7 @@ afterEach(() => {
 /**
  * Persists app data the way the root layout does.
  */
-const save = ({app}: App_Harness): void => {
+const save = ({app}: AppHarness): void => {
 	app.save(app.toJSON());
 };
 
@@ -109,12 +109,12 @@ describe('persistence', () => {
 	});
 
 	test('drops projects whose data is missing', () => {
-		const project = Project_Data.parse({});
+		const project = ProjectData.parse({});
 		localStorage.setItem(project.id, JSON.stringify(project));
 		localStorage.setItem(
 			TEST_STORAGE_KEY,
 			JSON.stringify(
-				App_Data.parse({
+				AppData.parse({
 					projects: [
 						{id: 'missing', name: 'gone'},
 						{id: project.id, name: project.name},
@@ -137,7 +137,7 @@ describe('persistence', () => {
 		localStorage.setItem(
 			TEST_STORAGE_KEY,
 			JSON.stringify(
-				App_Data.parse({
+				AppData.parse({
 					projects: [{id: 'corrupt', name: 'c'}],
 					selected_project_id: 'corrupt',
 				}),
@@ -163,7 +163,7 @@ describe('persistence', () => {
 describe('projects', () => {
 	test('create_project adds, selects, and persists', () => {
 		const {app} = create();
-		const project = Project_Data.parse({name: 'new'});
+		const project = ProjectData.parse({name: 'new'});
 		assert.strictEqual(app.create_project(project), project);
 		assert.strictEqual(app.selected_project_id, project.id);
 		assert.deepEqual(app.app_data.projects.at(-1), {id: project.id, name: 'new'});
@@ -179,7 +179,7 @@ describe('projects', () => {
 
 	test('select_project loads a stored project', () => {
 		const first = create();
-		const other = Project_Data.parse({name: 'other'});
+		const other = ProjectData.parse({name: 'other'});
 		first.app.create_project(other);
 		const [original] = first.app.project_datas;
 		first.app.select_project(original.id);
@@ -213,7 +213,7 @@ describe('projects', () => {
 	test('update_project ignores an unknown project', () => {
 		const {app} = create();
 		const before = app.project_datas;
-		app.update_project(Project_Data.parse({}));
+		app.update_project(ProjectData.parse({}));
 		assert.strictEqual(app.project_datas, before);
 	});
 
@@ -232,7 +232,7 @@ describe('projects', () => {
 	test('remove_project selects another project and deletes the stored data', () => {
 		const {app} = create();
 		const [first] = app.project_datas;
-		const second = app.create_project(Project_Data.parse({}));
+		const second = app.create_project(ProjectData.parse({}));
 		app.remove_project(second.id);
 		assert.strictEqual(app.selected_project_id, first.id);
 		assert.deepEqual(
@@ -262,7 +262,7 @@ describe('projects', () => {
 		assert.strictEqual(app.editing_project_draft, false);
 		assert.strictEqual(app.editing_project_data, project);
 
-		const draft = Project_Data.parse({});
+		const draft = ProjectData.parse({});
 		app.edit_project(draft);
 		assert.strictEqual(app.editing_project_draft, true);
 		assert.strictEqual(app.editing_project_data, draft);

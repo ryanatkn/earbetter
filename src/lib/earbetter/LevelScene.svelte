@@ -4,22 +4,22 @@
 	import {plural} from '@ryanatkn/belt/string.js';
 	import {onMount, untrack} from 'svelte';
 
-	import {Level_Stats, type Level} from '$lib/earbetter/level.svelte.js';
+	import {LevelStats, type Level} from '$lib/earbetter/level.svelte.js';
 	import Piano from '$lib/Piano.svelte';
-	import Level_Progress_Indicator from '$lib/earbetter/Level_Progress_Indicator.svelte';
-	import Trial_Progress_Indicator from '$lib/earbetter/Trial_Progress_Indicator.svelte';
+	import LevelProgressIndicator from '$lib/earbetter/LevelProgressIndicator.svelte';
+	import TrialProgressIndicator from '$lib/earbetter/TrialProgressIndicator.svelte';
 	import {audio_context_context} from '$lib/audio_context.js';
-	import Midi_Input from '$lib/Midi_Input.svelte';
+	import MidiInput from '$lib/MidiInput.svelte';
 	import type {Midi} from '$lib/music.js';
 	import {start_playing, stop_playing} from '$lib/play_note.js';
 	import {with_velocity} from '$lib/audio_helpers.js';
-	import Level_Stats_Summary from '$lib/earbetter/Level_Stats_Summary.svelte';
-	import Text_Burst from '$lib/Text_Burst.svelte';
+	import LevelStatsSummary from '$lib/earbetter/LevelStatsSummary.svelte';
+	import TextBurst from '$lib/TextBurst.svelte';
 	import {app_context} from '$lib/earbetter/app.svelte.js';
 
 	interface Props {
 		level: Level;
-		level_stats: Level_Stats;
+		level_stats: LevelStats;
 		exit_level: () => void;
 	}
 
@@ -143,7 +143,7 @@
 </script>
 
 <svelte:window onkeydowncapture={keydown} />
-<Midi_Input
+<MidiInput
 	midi_access={app.midi_access}
 	onnotestart={(note, velocity) => {
 		// TODO should this be ignored if it's not an enabled key? should the level itself ignore the guess?
@@ -160,10 +160,10 @@
 <!-- hide from screen readers, see keyboard commands -->
 <div class="level" class:initial bind:clientWidth onclick={click} bind:this={el} aria-hidden="true">
 	<div class="level_progress" title="level progress">
-		<Level_Progress_Indicator {level} />
+		<LevelProgressIndicator {level} />
 	</div>
 	<div class="trial_progress" title="trial progress">
-		<Trial_Progress_Indicator {level} />
+		<TrialProgressIndicator {level} />
 	</div>
 	<div class="piano_wrapper" style:padding="{piano_padding}px" bind:this={piano_wrapper_el}>
 		{#if clientWidth}
@@ -207,7 +207,7 @@
 							{/if}
 						</div>
 						<div class="panel p_md">
-							<Level_Stats_Summary {level_data} {level_stats} />
+							<LevelStatsSummary {level_data} {level_stats} />
 						</div>
 					</div>
 					<!-- TODO buggy in Svelte 5 - in:scale={{delay: 500}} -->
@@ -226,13 +226,13 @@
 				<div style:transform="translate3d({text_burst_offset_x}px, {text_burst_offset_y}px, 0)">
 					{#if last_feedback_status === 'success'}
 						{#key feedback_count}
-							<Text_Burst count={11} items={['🎵', '🎶', '🌸', '🌻', '🌼', '🍀']} />
+							<TextBurst count={11} items={['🎵', '🎶', '🌸', '🌻', '🌼', '🍀']} />
 						{/key}
 					{/if}
 					{#if last_feedback_status === 'failure'}
 						<!-- TODO grayscale? -->
 						{#key feedback_count}
-							<Text_Burst count={5} items={['🦜', '⁉', '❔', '❌']} />
+							<TextBurst count={5} items={['🦜', '⁉', '❔', '❌']} />
 						{/key}
 					{/if}
 				</div>

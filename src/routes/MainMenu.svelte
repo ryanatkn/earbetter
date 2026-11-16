@@ -9,12 +9,12 @@
 	import Svg from '@ryanatkn/fuz/Svg.svelte';
 	import {earbetter_logo} from '@ryanatkn/fuz/logos.js';
 
-	import Site_Map from '$routes/Site_Map.svelte';
-	import Volume_Control from '$lib/Volume_Control.svelte';
-	import Instrument_Control from '$lib/Instrument_Control.svelte';
-	import Init_Midi_Button from '$lib/Init_Midi_Button.svelte';
+	import SiteMap from '$routes/SiteMap.svelte';
+	import VolumeControl from '$lib/VolumeControl.svelte';
+	import InstrumentControl from '$lib/InstrumentControl.svelte';
+	import InitMidiButton from '$lib/InitMidiButton.svelte';
 	import Footer from '$routes/Footer.svelte';
-	import Site_Breadcrumb from '$routes/Site_Breadcrumb.svelte';
+	import SiteBreadcrumb from '$routes/SiteBreadcrumb.svelte';
 	import {main_menu_context} from '$routes/main_menu_state.svelte.js';
 	import {app_context} from '$lib/earbetter/app.svelte.js';
 
@@ -39,7 +39,7 @@
 			<Svg data={earbetter_logo} size="var(--icon_size_xl2)" />
 			<h1 class="mb_md">earbetter</h1>
 			<!-- TODO switch to `class="font_size_xl"` when Fuz changes to use vb/vi -->
-			<div style:--font_size="var(--font_size_xl)"><Site_Breadcrumb hide_main_menu_button /></div>
+			<div style:--font_size="var(--font_size_xl)"><SiteBreadcrumb hide_main_menu_button /></div>
 		</div>
 		<div class="section_body">
 			<p>
@@ -59,15 +59,15 @@
 		<h2 class="section_title">settings</h2>
 		<form class="section_body">
 			<div class="mb_lg">
-				<Volume_Control bind:volume={app.volume} />
+				<VolumeControl bind:volume={app.volume} />
 			</div>
-			<Instrument_Control bind:instrument={app.instrument} />
+			<InstrumentControl bind:instrument={app.instrument} />
 			<aside>Earbetter supports MIDI devices like piano keyboards, connect and click:</aside>
-			<Init_Midi_Button midi_state={app} />
+			<InitMidiButton midi_state={app} />
 		</form>
 	</section>
 	<section>
-		<Site_Map />
+		<SiteMap />
 	</section>
 	<section>
 		<h2 class="section_title">data</h2>

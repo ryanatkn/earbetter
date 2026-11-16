@@ -2,7 +2,7 @@
 	import Svg from '@ryanatkn/fuz/Svg.svelte';
 	import {github_logo} from '@ryanatkn/fuz/logos.js';
 
-	import Site_Breadcrumb from '$routes/Site_Breadcrumb.svelte';
+	import SiteBreadcrumb from '$routes/SiteBreadcrumb.svelte';
 
 	interface Props {
 		hide_main_menu_button?: boolean;
@@ -13,7 +13,7 @@
 
 <footer>
 	<div class="mb_lg" style:--font_size="var(--font_size_xl)">
-		<Site_Breadcrumb {hide_main_menu_button} />
+		<SiteBreadcrumb {hide_main_menu_button} />
 	</div>
 	<div class="box">
 		<a class="box chip p_md" href="https://github.com/ryanatkn/earbetter">

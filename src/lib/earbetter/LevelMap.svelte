@@ -3,21 +3,21 @@
 	import {BROWSER} from 'esm-env';
 
 	import {audio_context_context} from '$lib/audio_context.js';
-	import Init_Midi_Button from '$lib/Init_Midi_Button.svelte';
-	import Level_Form from '$lib/earbetter/Level_Form.svelte';
+	import InitMidiButton from '$lib/InitMidiButton.svelte';
+	import LevelForm from '$lib/earbetter/LevelForm.svelte';
 	import Projects from '$lib/earbetter/Projects.svelte';
-	import Volume_Control from '$lib/Volume_Control.svelte';
+	import VolumeControl from '$lib/VolumeControl.svelte';
 	import {with_velocity} from '$lib/audio_helpers.js';
-	import Instrument_Control from '$lib/Instrument_Control.svelte';
+	import InstrumentControl from '$lib/InstrumentControl.svelte';
 	import type {App} from '$lib/earbetter/app.svelte.js';
-	import Controls_Instructions from '$lib/earbetter/Controls_Instructions.svelte';
-	import Midi_Input from '$lib/Midi_Input.svelte';
+	import ControlsInstructions from '$lib/earbetter/ControlsInstructions.svelte';
+	import MidiInput from '$lib/MidiInput.svelte';
 	import {start_playing, stop_playing} from '$lib/play_note.js';
 	import Realms from '$lib/earbetter/Realms.svelte';
-	import {Level_Data, MISTAKE_HISTORY_LENGTH} from '$lib/earbetter/level.svelte.js';
-	import Realm_Editor from '$lib/earbetter/Realm_Editor.svelte';
-	import Level_Map_Items from '$lib/earbetter/Level_Map_Items.svelte';
-	import Project_Editor from '$lib/earbetter/Project_Editor.svelte';
+	import {LevelData, MISTAKE_HISTORY_LENGTH} from '$lib/earbetter/level.svelte.js';
+	import RealmEditor from '$lib/earbetter/RealmEditor.svelte';
+	import LevelMapItems from '$lib/earbetter/LevelMapItems.svelte';
+	import ProjectEditor from '$lib/earbetter/ProjectEditor.svelte';
 
 	interface Props {
 		app: App;
@@ -39,14 +39,14 @@
 	if (BROWSER) (window as any).ac = ac;
 
 	// TODO review the draft/editing data properties of `app`, some inconsistencies between levels/realms/projects
-	const level_data = $derived(app.draft_level_data ?? Level_Data.parse({}));
+	const level_data = $derived(app.draft_level_data ?? LevelData.parse({}));
 
 	const editing = $derived(app.levels ? app.levels.some((d) => d.id === level_data.id) : false);
 
 	const no_realms = $derived(!app.realms?.length);
 </script>
 
-<Midi_Input
+<MidiInput
 	midi_access={app.midi_access}
 	onnotestart={(note, velocity) => {
 		start_playing(app, ac(), note, with_velocity(app.volume, velocity), app.instrument);
@@ -67,7 +67,7 @@
 			<!-- eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing -->
 			{#if (app.editing_project && app.editing_project_data) || !app.selected_project_data}
 				<section class="card" transition:slide>
-					<Project_Editor {app} />
+					<ProjectEditor {app} />
 				</section>
 			{/if}
 			<section class="card" transition:slide>
@@ -75,13 +75,13 @@
 					<header>
 						<h2 class="my_0">controls</h2>
 					</header>
-					<Controls_Instructions />
+					<ControlsInstructions />
 					<div class="mb_lg">
-						<Volume_Control bind:volume={app.volume} />
+						<VolumeControl bind:volume={app.volume} />
 					</div>
-					<Instrument_Control bind:instrument={app.instrument} />
+					<InstrumentControl bind:instrument={app.instrument} />
 					<aside>Earbetter supports MIDI devices like piano keyboards, connect and click:</aside>
-					<Init_Midi_Button midi_state={app} />
+					<InitMidiButton midi_state={app} />
 				</div>
 			</section>
 		</div>
@@ -130,7 +130,7 @@
 		<!-- eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing -->
 		{#if (app.editing_realm && app.editing_realm_data) || no_realms}
 			<section class="card" transition:slide>
-				<Realm_Editor {app} />
+				<RealmEditor {app} />
 			</section>
 		{/if}
 	</div>
@@ -138,7 +138,7 @@
 		<div class="width_sm">
 			{#if app.levels}
 				<section class="card" transition:slide>
-					<Level_Map_Items {app} levels={app.levels} />
+					<LevelMapItems {app} levels={app.levels} />
 				</section>
 			{/if}
 			<!-- TODO bug, maybe in eslint-plugin-svelte? -->
@@ -147,7 +147,7 @@
 				<!-- TODO transition only out, so we can scroll to it - but ideally we'd open a column to the right if there's space -->
 				<section class="card" out:slide>
 					<div class="panel p_md">
-						<Level_Form
+						<LevelForm
 							{editing}
 							{level_data}
 							onsubmit={editing ? update_level : create_level}

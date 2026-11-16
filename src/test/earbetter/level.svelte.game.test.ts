@@ -5,27 +5,27 @@ import {
 	DEFAULT_FEEDBACK_DURATION,
 	DEFAULT_NOTE_DURATION,
 	Level,
-	Level_Data,
-	type Level_Id,
+	LevelData,
+	type LevelId,
 } from '$lib/earbetter/level.svelte.js';
 import {
 	create_fake_audio_context,
 	create_level_audio_state,
-	type Fake_Audio_Context,
+	type FakeAudioContext,
 } from '../test_helpers.js';
 
-interface Level_Harness {
+interface LevelHarness {
 	level: Level;
-	audio: Fake_Audio_Context;
-	successes: Array<[id: Level_Id, mistakes: number]>;
+	audio: FakeAudioContext;
+	successes: Array<[id: LevelId, mistakes: number]>;
 }
 
-const create_level = (data: Partial<Level_Data> = {}): Level_Harness => {
+const create_level = (data: Partial<LevelData> = {}): LevelHarness => {
 	const audio = create_fake_audio_context();
-	const successes: Level_Harness['successes'] = [];
+	const successes: LevelHarness['successes'] = [];
 	const level = new Level(
 		create_level_audio_state(),
-		Level_Data.parse({id: 'level', tonics: [60], intervals: [5, 7], trial_count: 2, ...data}),
+		LevelData.parse({id: 'level', tonics: [60], intervals: [5, 7], trial_count: 2, ...data}),
 		() => audio.ac,
 		(id, mistakes) => successes.push([id, mistakes]),
 		create_random_alea('level'),

@@ -1,6 +1,6 @@
 <script lang="ts">
-	import {Project_Data} from '$lib/earbetter/project.js';
-	import Project_Items from '$lib/earbetter/Project_Items.svelte';
+	import {ProjectData} from '$lib/earbetter/project.js';
+	import ProjectItems from '$lib/earbetter/ProjectItems.svelte';
 	import type {App} from '$lib/earbetter/app.svelte.js';
 
 	interface Props {
@@ -22,7 +22,7 @@
 	<header>
 		<h2 class="my_0">projects</h2>
 	</header>
-	<Project_Items
+	<ProjectItems
 		selected_project_id={app.selected_project_id}
 		editing_project_id={app.editing_project ? app.editing_project_id : null}
 		{projects}
@@ -41,7 +41,7 @@
 			if (creating) {
 				app.editing_project = false;
 			} else {
-				edit_project(Project_Data.parse({}));
+				edit_project(ProjectData.parse({}));
 			}
 		}}
 	>

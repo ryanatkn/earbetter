@@ -2,7 +2,7 @@
 	import type {Snippet} from 'svelte';
 	import type {SvelteSet} from 'svelte/reactivity';
 
-	import Piano_Key from '$lib/Piano_Key.svelte';
+	import PianoKey from '$lib/PianoKey.svelte';
 	import {MIDI_MIN, MIDI_MAX, type Midi} from '$lib/music.js';
 	import {compute_piano} from '$lib/piano.js';
 
@@ -78,7 +78,7 @@
 	style:--piano_accidental_key_height="{accidental_key_height}px"
 >
 	{#each piano_keys as { note, left_offset } (note)}
-		<Piano_Key
+		<PianoKey
 			{note}
 			{left_offset}
 			{clickable}
