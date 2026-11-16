@@ -1,4 +1,4 @@
-import {describe, test, assert} from 'vitest';
+import { describe, test, assert } from 'vitest';
 
 import {
 	DEFAULT_SCALE,
@@ -10,17 +10,17 @@ import {
 	scales,
 	to_notes_in_scale,
 	to_scale_notes,
-	type PitchClass,
-} from '$lib/music.js';
+	type PitchClass
+} from '#lib/music.ts';
 
 describe('scales', () => {
 	test('notes are ascending semitones within one octave', () => {
 		for (const scale of scales) {
-			const {notes} = scale;
+			const { notes } = scale;
 			assert.ok(notes.length > 0, scale.name);
 			for (let i = 0; i < notes.length; i++) {
-				assert.ok(notes[i] > 0 && notes[i] < 12, scale.name);
-				if (i > 0) assert.ok(notes[i] > notes[i - 1], scale.name);
+				assert.ok(notes[i]! > 0 && notes[i]! < 12, scale.name);
+				if (i > 0) assert.ok(notes[i]! > notes[i - 1]!, scale.name);
 			}
 		}
 	});
@@ -38,7 +38,7 @@ describe('scales', () => {
 			'Phrygian',
 			'Lydian',
 			'Mixolydian',
-			'Locrian',
+			'Locrian'
 		]) {
 			assert.strictEqual(lookup_scale(name).notes.length + 1, 7, name);
 		}
@@ -53,12 +53,30 @@ describe('to_scale_notes', () => {
 	const cases: Array<[scale: string, octaves: number, expected: Array<number>]> = [
 		['major pentatonic', 1, [2, 4, 7, 9, 12]],
 		['major pentatonic', 2, [2, 4, 7, 9, 12, -10, -8, -5, -3, -12]],
-		['major pentatonic', 4, [2, 4, 7, 9, 12, -10, -8, -5, -3, -12, 14, 16, 19, 21, 24, -22, -20, -17, -15, -24]], // prettier-ignore
+		[
+			'major pentatonic',
+			4,
+			[2, 4, 7, 9, 12, -10, -8, -5, -3, -12, 14, 16, 19, 21, 24, -22, -20, -17, -15, -24]
+		],
 		['major', 2, [2, 4, 5, 7, 9, 11, 12, -10, -8, -7, -5, -3, -1, -12]],
-		['major', 4, [2, 4, 5, 7, 9, 11, 12, -10, -8, -7, -5, -3, -1, -12, 14, 16, 17, 19, 21, 23, 24, -22, -20, -19, -17, -15, -13, -24]], // prettier-ignore
+		[
+			'major',
+			4,
+			[
+				2, 4, 5, 7, 9, 11, 12, -10, -8, -7, -5, -3, -1, -12, 14, 16, 17, 19, 21, 23, 24, -22, -20,
+				-19, -17, -15, -13, -24
+			]
+		],
 		['minor', 1, [2, 3, 5, 7, 8, 10, 12]],
 		['minor', 2, [2, 3, 5, 7, 8, 10, 12, -10, -9, -7, -5, -4, -2, -12]],
-		['minor', 4, [2, 3, 5, 7, 8, 10, 12, -10, -9, -7, -5, -4, -2, -12, 14, 15, 17, 19, 20, 22, 24, -22, -21, -19, -17, -16, -14, -24]], // prettier-ignore
+		[
+			'minor',
+			4,
+			[
+				2, 3, 5, 7, 8, 10, 12, -10, -9, -7, -5, -4, -2, -12, 14, 15, 17, 19, 20, 22, 24, -22, -21,
+				-19, -17, -16, -14, -24
+			]
+		]
 	];
 	test.each(cases)('%s over %s octaves', (scale, octaves, expected) => {
 		assert.deepEqual(to_scale_notes(lookup_scale(scale), octaves), expected);
@@ -96,14 +114,14 @@ describe('to_notes_in_scale', () => {
 		['C major starting on B', 'C', 59, 72],
 		['D major starting on F', 'D', 5, 20],
 		['B♭ major starting on E', 'A♯', 40, 64],
-		['G major starting on A♯', 'G', 70, 95],
+		['G major starting on A♯', 'G', 70, 95]
 	];
 	test.each(range_cases)('%s matches the full-range scale', (_label, key, min, max) => {
 		const full = to_notes_in_scale(major, key);
 		const ranged = [...to_notes_in_scale(major, key, min, max)];
 		assert.deepEqual(
 			ranged,
-			[...full].filter((n) => n >= min && n <= max),
+			[...full].filter((n) => n >= min && n <= max)
 		);
 	});
 
@@ -113,9 +131,12 @@ describe('to_notes_in_scale', () => {
 				const key_index = pitch_classes.indexOf(key);
 				const allowed = new Set([0, ...scale.notes]);
 				const notes = to_notes_in_scale(scale, key, 17, 100);
-				assert.strictEqual(notes.size, [...range(17, 100)].filter((n) => allowed.has((n - key_index + 12) % 12)).length); // prettier-ignore
+				assert.strictEqual(
+					notes.size,
+					[...range(17, 100)].filter((n) => allowed.has((n - key_index + 12) % 12)).length
+				);
 				for (const n of notes) {
-					const degree = (pitch_classes.indexOf(midi_pitch_classes[n]) - key_index + 12) % 12;
+					const degree = (pitch_classes.indexOf(midi_pitch_classes[n]!) - key_index + 12) % 12;
 					assert.ok(allowed.has(degree), `${scale.name} in ${key}: ${n}`);
 				}
 			}

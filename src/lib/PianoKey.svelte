@@ -1,9 +1,9 @@
 <script lang="ts">
-	import {swallow} from '@ryanatkn/belt/dom.js';
-	import type {Snippet} from 'svelte';
+	import { swallow } from '@fuzdev/fuz_util/dom.ts';
+	import type { Snippet } from 'svelte';
 
-	import {type Midi, midi_naturals} from '$lib/music.js';
-	import {find_next_sibling, find_previous_sibling} from '$lib/dom.js';
+	import { type Midi, midi_naturals } from './music.ts';
+	import { find_next_sibling, find_previous_sibling } from './dom.ts';
 
 	interface Props {
 		note: Midi;
@@ -41,7 +41,7 @@
 		allow_sticking = false,
 		pressing_any,
 		onpress,
-		onrelease,
+		onrelease
 	}: Props = $props();
 
 	const natural = $derived(midi_naturals.has(note));
@@ -60,9 +60,9 @@
 	const keydown = (
 		e: KeyboardEvent & {
 			currentTarget: EventTarget & HTMLButtonElement;
-		},
+		}
 	): void => {
-		const {key} = e;
+		const { key } = e;
 		switch (key) {
 			case ' ':
 			case 'Enter': {
@@ -84,9 +84,9 @@
 	const keyup = (
 		e: KeyboardEvent & {
 			currentTarget: EventTarget & HTMLButtonElement;
-		},
+		}
 	): void => {
-		const {key} = e;
+		const { key } = e;
 		switch (key) {
 			case ' ':
 			case 'Enter': {

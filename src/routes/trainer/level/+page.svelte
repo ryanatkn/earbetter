@@ -1,9 +1,9 @@
 <script lang="ts">
-	import Alert from '@ryanatkn/fuz/Alert.svelte';
+	import Alert from '@fuzdev/fuz_ui/Alert.svelte';
 
-	import LevelScene from '$lib/earbetter/LevelScene.svelte';
-	import {app_context} from '$lib/earbetter/app.svelte.js';
-	import BackButton from '$routes/BackButton.svelte';
+	import LevelScene from '#lib/earbetter/LevelScene.svelte';
+	import { app_context } from '#lib/earbetter/app.svelte.ts';
+	import BackButton from '#routes/BackButton.svelte';
 
 	const app = app_context.get();
 
@@ -17,7 +17,7 @@
 <main>
 	<BackButton onclick={app.exit_level} />
 	{#if app.level?.error}
-		<div class="box h_100">
+		<div class="box height:100%">
 			<Alert status="error">this level can't be played: {app.level.error}</Alert>
 			<p>
 				<button type="button" onclick={app.exit_level}>go back</button> to the map to edit it.
@@ -28,7 +28,7 @@
 			<LevelScene level={app.level} {level_stats} exit_level={app.exit_level} />
 		</div>
 	{:else}
-		<div class="box h_100">
+		<div class="box height:100%">
 			<p>
 				No level found, <button type="button" onclick={app.exit_level}>go back</button> to the map.
 			</p>

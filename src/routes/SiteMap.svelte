@@ -1,9 +1,9 @@
 <script lang="ts">
-	import {resolve} from '$app/paths';
-	import {page} from '$app/state';
-	import {strip_start} from '@ryanatkn/belt/string.js';
+	import { resolve } from '$app/paths';
+	import { page } from '$app/state';
+	import { strip_start } from '@fuzdev/fuz_util/string.ts';
 
-	import {pages} from '$routes/page_data.js';
+	import { pages } from './page_data.ts';
 
 	const selected_slug = $derived(strip_start(page.url.pathname, resolve('/').slice(-1))); // TODO hacky with resolve
 </script>
@@ -14,9 +14,9 @@
 	<ul class="unstyled">
 		{#each pages as p (p.slug)}
 			<li>
-				<a class="panel" href={resolve(p.slug as any)} class:selected={p.slug === selected_slug}
-					>{p.slug}</a
-				>
+				<a class="panel" href={resolve(p.slug as any)} class:selected={p.slug === selected_slug}>
+					{p.slug}
+				</a>
 			</li>
 		{/each}
 	</ul>

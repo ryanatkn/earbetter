@@ -1,9 +1,9 @@
 <script lang="ts">
-	import {onDestroy} from 'svelte';
+	import { onDestroy } from 'svelte';
 
-	import {type MIDIMessageEvent, MIDICommand, type MIDIAccess} from '$lib/WebMIDI.js';
-	import {parse_midi_message} from '$lib/midi_helpers.js';
-	import type {Midi} from '$lib/music.js';
+	import { type MIDIMessageEvent, MIDICommand, type MIDIAccess } from './WebMIDI.ts';
+	import { parse_midi_message } from './midi_helpers.ts';
+	import type { Midi } from './music.ts';
 
 	interface Props {
 		midi_access: MIDIAccess | null;
@@ -14,12 +14,13 @@
 		onmodwheel?: (velocity: number) => void;
 	}
 
-	const {midi_access, onnotestart, onnotestop, onpadstart, onpadstop, onmodwheel}: Props = $props();
+	const { midi_access, onnotestart, onnotestop, onpadstart, onpadstop, onmodwheel }: Props =
+		$props();
 
 	// $inspect('midi_access', midi_access);
 
 	const onmidimessage = (event: MIDIMessageEvent): void => {
-		const {command, channel, note, velocity} = parse_midi_message(event);
+		const { command, channel, note, velocity } = parse_midi_message(event);
 
 		switch (command) {
 			case MIDICommand.Stop: {

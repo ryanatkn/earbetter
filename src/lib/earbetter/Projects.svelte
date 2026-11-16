@@ -1,21 +1,22 @@
 <script lang="ts">
-	import {ProjectData} from '$lib/earbetter/project.js';
-	import ProjectItems from '$lib/earbetter/ProjectItems.svelte';
-	import type {App} from '$lib/earbetter/app.svelte.js';
+	import * as s from '@fuzdev/fuz_schema/schema.ts';
+	import { ProjectData } from './project.ts';
+	import ProjectItems from './ProjectItems.svelte';
+	import type { App } from './app.svelte.ts';
 
 	interface Props {
 		app: App; // TODO maybe change to be more granular objects?
 	}
 
-	const {app}: Props = $props();
+	const { app }: Props = $props();
 
-	const {load_project, select_project, edit_project, remove_project} = $derived(app);
+	const { load_project, select_project, edit_project, remove_project } = $derived(app);
 
 	const creating = $derived(
-		app.editing_project && app.selected_project_id !== app.editing_project_id,
+		app.editing_project && app.selected_project_id !== app.editing_project_id
 	);
 
-	const {projects} = $derived(app.app_data);
+	const { projects } = $derived(app.app_data);
 </script>
 
 <div class="panel p_md">
@@ -35,13 +36,13 @@
 	/>
 	<button
 		type="button"
-		class="w_100 mt_md deselectable"
+		class="width:100% mt_md deselectable"
 		class:selected={creating}
 		onclick={() => {
 			if (creating) {
 				app.editing_project = false;
 			} else {
-				edit_project(ProjectData.parse({}));
+				edit_project(s.parse_or_throw(ProjectData, {}));
 			}
 		}}
 	>

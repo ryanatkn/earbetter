@@ -1,44 +1,50 @@
 <script lang="ts">
-	import '@ryanatkn/moss/style.css';
-	import '@ryanatkn/moss/theme.css';
-	import '$routes/moss.css';
-	import '$lib/style.css';
+	import * as s from '@fuzdev/fuz_schema/schema.ts';
+	import 'virtual:fuz.css';
+	import './style.css';
 
-	import Themed from '@ryanatkn/fuz/Themed.svelte';
-	import {is_editable, swallow} from '@ryanatkn/belt/dom.js';
-	import {noop} from '@ryanatkn/belt/function.js';
-	import Dialog from '@ryanatkn/fuz/Dialog.svelte';
-	import {sync_color_scheme, Themer} from '@ryanatkn/fuz/themer.svelte.js';
-	import {untrack, type Snippet} from 'svelte';
-	import {page} from '$app/state';
-	import {BROWSER} from 'esm-env';
+	import ThemeRoot from '@fuzdev/fuz_ui/ThemeRoot.svelte';
+	import { load_color_scheme, load_theme, ThemeState } from '@fuzdev/fuz_ui/theme_state.svelte.ts';
+	import { SiteState, site_context } from '@fuzdev/fuz_ui/site.svelte.ts';
+	import pkg_json from 'virtual:pkg.json';
+	import { is_editable, swallow } from '@fuzdev/fuz_util/dom.ts';
+	import { noop } from '@fuzdev/fuz_util/function.ts';
+	import Dialog from '@fuzdev/fuz_ui/Dialog.svelte';
+	import { untrack, type Snippet } from 'svelte';
+	import { page } from '$app/state';
+	import { BROWSER } from 'esm-env';
 
-	import {audio_context_context} from '$lib/audio_context.js';
-	import {request_access} from '$lib/midi_access.js';
-	import {App, app_context} from '$lib/earbetter/app.svelte.js';
-	import {load_from_storage, set_in_storage} from '$lib/storage.js';
-	import {SiteData} from '$routes/site_data.js';
-	import InitAudioContext from '$lib/InitAudioContext.svelte';
-	import MainMenu from '$routes/MainMenu.svelte';
-	import {main_menu_context} from '$routes/main_menu_state.svelte.js';
-	import {LevelHashData} from '$lib/earbetter/level.svelte.js';
-	import {parse_from_hash} from '$lib/url.js';
+	import { audio_context_context } from '#lib/audio_context.ts';
+	import { request_access } from '#lib/midi_access.ts';
+	import { App, app_context } from '#lib/earbetter/app.svelte.ts';
+	import { load_from_storage, set_in_storage } from '#lib/storage.ts';
+	import { SiteData } from './site_data.ts';
+	import InitAudioContext from '#lib/InitAudioContext.svelte';
+	import MainMenu from './MainMenu.svelte';
+	import { main_menu_context } from './main_menu_state.svelte.ts';
+	import { LevelHashData } from '#lib/earbetter/level.svelte.ts';
+	import { parse_from_hash } from '#lib/url.ts';
+	import { logo_earbetter } from '#lib/logos.ts';
 
 	interface Props {
 		children: Snippet;
 	}
 
-	const {children}: Props = $props();
+	const { children }: Props = $props();
 
-	const themer = new Themer(undefined, 'dark');
-	sync_color_scheme(themer.color_scheme); // TODO probably shouldn't be needed
+	const theme_state = new ThemeState({
+		theme: load_theme(),
+		color_scheme: load_color_scheme('dark')
+	});
+
+	site_context.set(new SiteState({ icon: logo_earbetter, pkg_json }));
 
 	// load site data
 	const SITE_DATA_STORAGE_KEY = 'site';
 	const initial_site_data = load_from_storage(
 		SITE_DATA_STORAGE_KEY,
-		() => SiteData.parse({}),
-		SiteData.parse,
+		() => s.parse_or_throw(SiteData, {}),
+		(v) => s.parse_or_throw(SiteData, v)
 	);
 	const get_audio_context = audio_context_context.set();
 
@@ -48,8 +54,8 @@
 	const main_menu = main_menu_context.set();
 
 	const current_level_hash_data = $derived.by(() => {
-		const parsed = LevelHashData.safeParse(parse_from_hash(page.url.hash));
-		return parsed.success ? parsed.data : null;
+		const parsed = s.parse(LevelHashData, parse_from_hash(page.url.hash));
+		return parsed.ok ? parsed.value : null;
 	});
 	$effect(() => {
 		const d = current_level_hash_data;
@@ -62,7 +68,7 @@
 		volume: app.volume,
 		instrument: app.instrument,
 		scale: app.scale,
-		key: app.key,
+		key: app.key
 	});
 
 	// TODO @many probably refactor, maybe combining the two into one piece of state
@@ -137,16 +143,16 @@
 
 <InitAudioContext />
 
-<Themed {themer}>
+<ThemeRoot {theme_state}>
 	{@render children()}
 
 	{#if main_menu.opened}
 		<Dialog onclose={() => main_menu.close()}>
-			<div class="box width_md mx_auto">
+			<div class="box width_atmost_md mx_auto">
 				<div class="pane">
 					<MainMenu />
 				</div>
 			</div>
 		</Dialog>
 	{/if}
-</Themed>
+</ThemeRoot>

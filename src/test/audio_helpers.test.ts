@@ -1,4 +1,5 @@
-import {describe, test, assert} from 'vitest';
+import * as s from '@fuzdev/fuz_schema/schema.ts';
+import { describe, test, assert } from 'vitest';
 
 import {
 	adjust_volume,
@@ -7,24 +8,24 @@ import {
 	instruments,
 	Volume,
 	volume_to_gain,
-	with_velocity,
-} from '$lib/audio_helpers.js';
+	with_velocity
+} from '#lib/audio_helpers.ts';
 
 describe('Volume', () => {
 	test('rounds to two decimals', () => {
-		assert.strictEqual(Volume.parse(0.123456), 0.12);
-		assert.strictEqual(Volume.parse(0.59 + 0.01), 0.6);
+		assert.strictEqual(s.parse_or_throw(Volume, 0.123456), 0.12);
+		assert.strictEqual(s.parse_or_throw(Volume, 0.59 + 0.01), 0.6);
 	});
 
 	test('rejects out of range', () => {
-		assert.ok(!Volume.safeParse(-0.01).success);
-		assert.ok(!Volume.safeParse(1.01).success);
+		assert.ok(!s.parse(Volume, -0.01).ok);
+		assert.ok(!s.parse(Volume, 1.01).ok);
 	});
 });
 
 describe('adjust_volume', () => {
 	test('steps by the increment', () => {
-		const state = {volume: DEFAULT_VOLUME};
+		const state = { volume: DEFAULT_VOLUME };
 		adjust_volume(state);
 		assert.strictEqual(state.volume, 0.6);
 		adjust_volume(state, -2);
@@ -32,22 +33,22 @@ describe('adjust_volume', () => {
 	});
 
 	test('accumulates without float drift', () => {
-		const state = {volume: 0};
+		const state = { volume: 0 };
 		for (let i = 0; i < 100; i++) adjust_volume(state);
 		assert.strictEqual(state.volume, 1);
 	});
 
 	test('stays put at the bounds', () => {
-		const max = {volume: 1};
+		const max = { volume: 1 };
 		adjust_volume(max);
 		assert.strictEqual(max.volume, 1);
-		const min = {volume: 0};
+		const min = { volume: 0 };
 		adjust_volume(min, -1);
 		assert.strictEqual(min.volume, 0);
 	});
 
 	test('a custom amount', () => {
-		const state = {volume: 0.5};
+		const state = { volume: 0.5 };
 		adjust_volume(state, 1, 0.25);
 		assert.strictEqual(state.volume, 0.75);
 	});

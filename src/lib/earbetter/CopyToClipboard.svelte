@@ -1,5 +1,5 @@
 <script lang="ts">
-	import type {Snippet} from 'svelte';
+	import type { Snippet } from 'svelte';
 
 	// TODO refactor with `CopyToClipboard.svelte` from Fuz
 
@@ -9,7 +9,7 @@
 		children?: Snippet;
 	}
 
-	const {text, oncopy, children}: Props = $props();
+	const { text, oncopy, children }: Props = $props();
 </script>
 
 <button

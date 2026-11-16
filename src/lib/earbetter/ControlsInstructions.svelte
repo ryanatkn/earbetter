@@ -1,13 +1,12 @@
 <script lang="ts">
-	import {main_menu_context} from '$routes/main_menu_state.svelte.js';
+	import { main_menu_context } from '../../routes/main_menu_state.svelte.ts';
 
 	const main_menu = main_menu_context.get();
 </script>
 
 <aside>
-	devices with smaller screens aren't well supported yet, see <a
-		href="https://github.com/ryanatkn/earbetter/issues/2">issue #2</a
-	>
+	devices with smaller screens aren't well supported yet, see
+	<a href="https://github.com/ryanatkn/earbetter/issues/2">issue #2</a>
 </aside>
 <table>
 	<tbody>
@@ -21,14 +20,16 @@
 		</tr>
 		<tr>
 			<td><code>Escape</code></td>
-			<td
-				><button
+			<td>
+				<button
 					type="button"
 					class="inline"
 					style:min-width="172px"
-					onclick={() => main_menu.toggle()}>toggle main menu</button
-				></td
-			>
+					onclick={() => main_menu.toggle()}
+				>
+					toggle main menu
+				</button>
+			</td>
 		</tr>
 		<tr>
 			<td><code>1 to 4</code></td>

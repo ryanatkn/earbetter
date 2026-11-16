@@ -76,6 +76,6 @@ export const MIDICommand = {
 	8: 'Stop',
 	9: 'Start',
 	11: 'Knob',
-	14: 'PitchBend',
+	14: 'PitchBend'
 } as Record<string | number, any>; // TODO was enum, just hacking it for now
 export type MIDIChannel = number; // TODO enumerate? 0-15 or 1-16?

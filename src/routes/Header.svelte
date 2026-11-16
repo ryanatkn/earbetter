@@ -1,11 +1,11 @@
 <script lang="ts">
-	import Svg from '@ryanatkn/fuz/Svg.svelte';
-	import {earbetter_logo} from '@ryanatkn/fuz/logos.js';
+	import Svg from '@fuzdev/fuz_ui/Svg.svelte';
+	import { logo_earbetter } from '#lib/logos.ts';
 </script>
 
 <header>
 	<div class="box panel p_md pt_xl2">
-		<Svg data={earbetter_logo} size="var(--icon_size_xl3)" />
+		<Svg data={logo_earbetter} size="var(--icon_size_xl3)" />
 		<h1 class="my_md">earbetter</h1>
 	</div>
 </header>

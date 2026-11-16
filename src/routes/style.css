@@ -1,19 +1,19 @@
-/* TODO a lot of this can be deleted or cleaned up, especially using the new Moss colors */
-:root:root:root.dark {
-	/* TODO force dark mode and remove these when Moss supports it */
-	--bg: hsl(var(--primary_hue), 63%, 11%);
+/* TODO a lot of this can be deleted or cleaned up, especially using fuz_css's palette and themes */
+:root.dark {
+	/* TODO force dark mode and remove these with a fuz_css theme */
+	--shade_00: hsl(var(--primary_hue), 63%, 11%);
 	--text_color: hsl(var(--primary_hue), 8%, 85%);
 	--text_color_dark: hsl(var(--primary_hue), 8%, 91%);
 	--link_color: var(--primary_text_color);
-	--button_color: var(--lighten_2);
-	--button_color_dark: var(--lighten_1);
+	--button_color: var(--lighten_20);
+	--button_color_dark: var(--lighten_10);
 	--input_fill: var(--button_color);
 
-	/* Moss overrides */
+	/* fuz_css overrides */
 
-	/* TODO a lot of these are hacky, needs cleanup and better patterns for overrides in Moss */
-	--tint_hue: var(--hue_d);
-	--fill: hsl(var(--hue_d) 15% 50%);
+	/* TODO a lot of these are hacky, needs cleanup and better patterns for overrides in fuz_css */
+	--hue_neutral: var(--hue_d); /* an OKLCH angle */
+	--fill: oklch(55% 0.04 var(--hue_d));
 
 	--accent_hue: 210;
 	--primary_hue: 260;
@@ -40,7 +40,7 @@ a:active {
 	--text_color: var(--primary_text_color);
 }
 
-/* TODO probably upstream to Moss as `.pressable` */
+/* TODO maybe use fuz_css's `.clickable` hooks */
 .clickable {
 	cursor: pointer;
 	transition: transform var(--duration_1) ease;
@@ -62,7 +62,7 @@ button.big {
 }
 
 code {
-	background-color: var(--lighten_2);
+	background-color: var(--lighten_20);
 }
 
 /* TODO this hack shouldn't be needed */
@@ -77,10 +77,10 @@ td {
 
 @keyframes highlighting {
 	from {
-		filter: drop-shadow(1px 1px 15px var(--lighten_5));
+		filter: drop-shadow(1px 1px 15px var(--lighten_50));
 	}
 	to {
-		filter: drop-shadow(1px 1px 25px var(--lighten_7));
+		filter: drop-shadow(1px 1px 25px var(--lighten_70));
 	}
 }
 
@@ -90,10 +90,10 @@ header {
 	margin-bottom: var(--space_md);
 }
 
-/* TODO use Moss instead, "danger"? */
+/* TODO use fuz_css's negative intent instead? */
 .error {
-	--border_color: var(--red);
-	--border_color_dark: hsl(var(--red_hue), 60%, 61%);
+	--border_color: var(--palette_c_50);
+	--border_color_dark: var(--palette_c_60);
 }
 
 /* TODO upstream this somehow, maybe as a variable */
@@ -117,15 +117,15 @@ header {
 	display: flex;
 	align-items: center;
 	justify-content: center;
-	background: var(--lighten_1);
+	background: var(--lighten_10);
 	width: 100%;
 	margin-bottom: var(--space_md);
 }
 
 .pane {
-	--shadow_color: var(--shadow_color_h);
+	--shadow_color: var(--palette_h_60);
 	box-shadow: var(--shadow_bottom_xl)
-		color-mix(in hsl, var(--shadow_color) var(--shadow_alpha_2), transparent);
+		color-mix(in hsl, var(--shadow_color) var(--shadow_alpha_30), transparent);
 	border-radius: 0;
 }
 
@@ -134,7 +134,7 @@ header {
 	width: 100%;
 }
 
-/* TODO replace with Moss */
+/* TODO replace with fuz_css */
 .accent {
 	--text_color: var(--accent_text_color);
 	--border_color: var(--accent_border_color);
@@ -155,7 +155,7 @@ header {
 	top: var(--progress_bar_top, calc(50% - var(--progress_bar_height, var(--space_md)) / 2));
 	width: calc(var(--progress_bar_percent, 0) * 100%);
 	height: var(--progress_bar_height, var(--space_md));
-	background-color: var(--progress_bar_bg, var(--lighten_4));
+	background-color: var(--progress_bar_bg, var(--lighten_40));
 	border-radius: var(--border_radius);
 	transition: var(
 		--progress_bar_transition,

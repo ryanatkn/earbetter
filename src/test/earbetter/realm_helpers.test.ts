@@ -1,8 +1,9 @@
-import {test, assert} from 'vitest';
+import * as s from '@fuzdev/fuz_schema/schema.ts';
+import { test, assert } from 'vitest';
 
-import {to_default_scale_realm} from '$lib/earbetter/realm_helpers.js';
-import {RealmData} from '$lib/earbetter/realm.js';
-import {lookup_scale, scales} from '$lib/music.js';
+import { to_default_scale_realm } from '#lib/earbetter/realm_helpers.ts';
+import { RealmData } from '#lib/earbetter/realm.ts';
+import { lookup_scale, scales } from '#lib/music.ts';
 
 test('names the realm after the scale by default', () => {
 	assert.strictEqual(to_default_scale_realm('major').name, 'major');
@@ -25,20 +26,20 @@ test('builds the same level shapes for every scale', () => {
 		const realm = to_default_scale_realm(scale.name);
 		const pairs = scale.notes.length - 1;
 		assert.strictEqual(realm.levels.length, pairs * 2 + 9, scale.name);
-		assert.deepEqual(RealmData.parse(realm), realm, scale.name);
+		assert.deepEqual(s.parse_or_throw(RealmData, realm), realm, scale.name);
 	}
 });
 
 test('level ids and names are unique within a realm', () => {
 	for (const scale of scales) {
-		const {levels} = to_default_scale_realm(scale.name);
+		const { levels } = to_default_scale_realm(scale.name);
 		assert.strictEqual(new Set(levels.map((l) => l.id)).size, levels.length, scale.name);
 		assert.strictEqual(new Set(levels.map((l) => l.name)).size, levels.length, scale.name);
 	}
 });
 
 test('the octave levels use the scale notes', () => {
-	const {levels} = to_default_scale_realm('minor');
+	const { levels } = to_default_scale_realm('minor');
 	const one_octave = levels.find((l) => l.name === 'one octave');
 	assert.deepEqual(one_octave?.intervals, lookup_scale('minor').notes);
 });

@@ -1,15 +1,15 @@
 <script lang="ts">
-	import Breadcrumb from '@ryanatkn/fuz/Breadcrumb.svelte';
-	import {page} from '$app/state';
-	import {resolve} from '$app/paths';
+	import Breadcrumb from '@fuzdev/fuz_ui/Breadcrumb.svelte';
+	import { page } from '$app/state';
+	import { resolve } from '$app/paths';
 
-	import {main_menu_context} from '$routes/main_menu_state.svelte.js';
+	import { main_menu_context } from './main_menu_state.svelte.ts';
 
 	interface Props {
 		hide_main_menu_button?: boolean;
 	}
 
-	const {hide_main_menu_button = false}: Props = $props();
+	const { hide_main_menu_button = false }: Props = $props();
 
 	const pathname = $derived(page.url.pathname);
 	const home = $derived(pathname === resolve('/'));

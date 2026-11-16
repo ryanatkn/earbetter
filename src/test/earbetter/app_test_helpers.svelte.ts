@@ -1,8 +1,8 @@
-import {flushSync} from 'svelte';
+import { flushSync } from 'svelte';
 
-import {App} from '$lib/earbetter/app.svelte.js';
-import type {SiteData} from '$routes/site_data.js';
-import {create_fake_audio_context} from '../test_helpers.js';
+import { App } from '#lib/earbetter/app.svelte.ts';
+import type { SiteData } from '#routes/site_data.ts';
+import { create_fake_audio_context } from '../test_helpers.ts';
 
 export const TEST_STORAGE_KEY = 'app';
 
@@ -20,13 +20,13 @@ export interface AppHarness {
  * so storage behaves like the browser.
  */
 export const create_app = (initial_site_data: SiteData | null = null): AppHarness => {
-	const {ac} = create_fake_audio_context();
+	const { ac } = create_fake_audio_context();
 	let app!: App;
 	const destroy = $effect.root(() => {
 		app = new App(() => ac, initial_site_data, TEST_STORAGE_KEY);
 	});
 	flushSync();
-	return {app, destroy};
+	return { app, destroy };
 };
 
 /**

@@ -1,27 +1,28 @@
-import {describe, test, assert} from 'vitest';
-import {create_random_alea} from '@ryanatkn/belt/random_alea.js';
+import * as s from '@fuzdev/fuz_schema/schema.ts';
+import { describe, test, assert } from 'vitest';
+import { create_random_alea } from '@fuzdev/fuz_util/random_alea.ts';
 
-import default_project from '$lib/projects/default_project.js';
+import default_project from '#lib/projects/default_project.ts';
 import {
 	create_next_trial,
 	create_valid_notes,
-	to_level_data_error,
-} from '$lib/earbetter/level.svelte.js';
-import {ProjectData} from '$lib/earbetter/project.js';
+	to_level_data_error
+} from '#lib/earbetter/level.svelte.ts';
+import { ProjectData } from '#lib/earbetter/project.ts';
 
 const project = default_project();
 const levels = project.realms.flatMap((realm) =>
-	realm.levels.map((level) => ({label: `${realm.name} / ${level.name}`, level})),
+	realm.levels.map((level) => ({ label: `${realm.name} / ${level.name}`, level }))
 );
 
 test('creates fresh ids each call', () => {
 	const other = default_project();
 	assert.notStrictEqual(other.id, project.id);
-	assert.notStrictEqual(other.realms[0].id, project.realms[0].id);
+	assert.notStrictEqual(other.realms[0]!.id, project.realms[0]!.id);
 });
 
 test('parses as project data', () => {
-	assert.deepEqual(ProjectData.parse(JSON.parse(JSON.stringify(project))), project);
+	assert.deepEqual(s.parse_or_throw(ProjectData, JSON.parse(JSON.stringify(project))), project);
 });
 
 test('ids are unique across the project', () => {
@@ -30,7 +31,7 @@ test('ids are unique across the project', () => {
 });
 
 describe('every shipped level is playable', () => {
-	test.each(levels)('$label', ({level}) => {
+	test.each(levels)('$label', ({ level }) => {
 		assert.strictEqual(to_level_data_error(level), null);
 		assert.ok(level.min_note < level.max_note);
 		assert.ok(level.sequence_length >= 2);
@@ -46,7 +47,7 @@ describe('every shipped level is playable', () => {
 		}
 	});
 
-	test.each(levels)('$label has every tonic in a usable range', ({level}) => {
+	test.each(levels)('$label has every tonic in a usable range', ({ level }) => {
 		// the tonics a trial can draw from must each leave at least one interval to guess
 		const usable = [];
 		for (let tonic = level.min_note; tonic <= level.max_note; tonic++) {

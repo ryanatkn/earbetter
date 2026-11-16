@@ -1,13 +1,13 @@
 <script lang="ts">
-	import type {RealmData} from '$lib/earbetter/realm.js';
-	import {MISTAKE_HISTORY_LENGTH, type LevelStats} from '$lib/earbetter/level.svelte.js';
+	import type { RealmData } from './realm.ts';
+	import { MISTAKE_HISTORY_LENGTH, type LevelStats } from './level.svelte.ts';
 
 	interface Props {
 		realm_data: RealmData;
 		level_stats: LevelStats;
 	}
 
-	const {realm_data, level_stats}: Props = $props();
+	const { realm_data, level_stats }: Props = $props();
 
 	const mistakes = $derived(realm_data.levels.map((l) => level_stats.mistakes[l.id] ?? []));
 	const length = $derived(mistakes.reduce((sum, v) => sum + v.length, 0));
@@ -16,7 +16,7 @@
 	const sum = $derived(
 		full_history
 			? mistakes.reduce((sum, v) => sum + v.reduce((sum2, v2) => sum2 + v2, 0), 0)
-			: undefined,
+			: undefined
 	);
 	const perfect = $derived(sum === 0);
 	// $inspect((`mistakes, length, target, sum, perfect`, mistakes, length, target, sum, perfect));

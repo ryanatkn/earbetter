@@ -1,29 +1,30 @@
 <script lang="ts">
-	import {slide} from 'svelte/transition';
-	import {BROWSER} from 'esm-env';
+	import * as s from '@fuzdev/fuz_schema/schema.ts';
+	import { slide } from 'svelte/transition';
+	import { BROWSER } from 'esm-env';
 
-	import {audio_context_context} from '$lib/audio_context.js';
-	import InitMidiButton from '$lib/InitMidiButton.svelte';
-	import LevelForm from '$lib/earbetter/LevelForm.svelte';
-	import Projects from '$lib/earbetter/Projects.svelte';
-	import VolumeControl from '$lib/VolumeControl.svelte';
-	import {with_velocity} from '$lib/audio_helpers.js';
-	import InstrumentControl from '$lib/InstrumentControl.svelte';
-	import type {App} from '$lib/earbetter/app.svelte.js';
-	import ControlsInstructions from '$lib/earbetter/ControlsInstructions.svelte';
-	import MidiInput from '$lib/MidiInput.svelte';
-	import {start_playing, stop_playing} from '$lib/play_note.js';
-	import Realms from '$lib/earbetter/Realms.svelte';
-	import {LevelData, MISTAKE_HISTORY_LENGTH} from '$lib/earbetter/level.svelte.js';
-	import RealmEditor from '$lib/earbetter/RealmEditor.svelte';
-	import LevelMapItems from '$lib/earbetter/LevelMapItems.svelte';
-	import ProjectEditor from '$lib/earbetter/ProjectEditor.svelte';
+	import { audio_context_context } from '../audio_context.ts';
+	import InitMidiButton from '../InitMidiButton.svelte';
+	import LevelForm from './LevelForm.svelte';
+	import Projects from './Projects.svelte';
+	import VolumeControl from '../VolumeControl.svelte';
+	import { with_velocity } from '../audio_helpers.ts';
+	import InstrumentControl from '../InstrumentControl.svelte';
+	import type { App } from './app.svelte.ts';
+	import ControlsInstructions from './ControlsInstructions.svelte';
+	import MidiInput from '../MidiInput.svelte';
+	import { start_playing, stop_playing } from '../play_note.ts';
+	import Realms from './Realms.svelte';
+	import { LevelData, MISTAKE_HISTORY_LENGTH } from './level.svelte.ts';
+	import RealmEditor from './RealmEditor.svelte';
+	import LevelMapItems from './LevelMapItems.svelte';
+	import ProjectEditor from './ProjectEditor.svelte';
 
 	interface Props {
 		app: App;
 	}
 
-	const {app}: Props = $props();
+	const { app }: Props = $props();
 
 	const {
 		toggle_trainer_help,
@@ -32,14 +33,14 @@
 		remove_level,
 		duplicate_level,
 		create_level,
-		update_level,
+		update_level
 	} = $derived(app);
 
 	const ac = audio_context_context.get();
 	if (BROWSER) (window as any).ac = ac;
 
 	// TODO review the draft/editing data properties of `app`, some inconsistencies between levels/realms/projects
-	const level_data = $derived(app.draft_level_data ?? LevelData.parse({}));
+	const level_data = $derived(app.draft_level_data ?? s.parse_or_throw(LevelData, {}));
 
 	const editing = $derived(app.levels ? app.levels.some((d) => d.id === level_data.id) : false);
 
@@ -57,7 +58,7 @@
 />
 <div class="map">
 	{#if app.project_datas.length}
-		<div class="width_sm">
+		<div class="width_atmost_sm">
 			{#if app.selected_project_data}
 				<section class="card" transition:slide>
 					<Projects {app} />
@@ -86,7 +87,7 @@
 			</section>
 		</div>
 	{/if}
-	<div class="width_sm">
+	<div class="width_atmost_sm">
 		{#if BROWSER && app.show_trainer_help}
 			<section class="card" transition:slide>
 				<div class="panel p_md">
@@ -96,29 +97,27 @@
 					<ul>
 						<li>each level is a standalone challenge that's a series of trials</li>
 						<li>
-							your level score is the sum of mistakes in your best {MISTAKE_HISTORY_LENGTH}
-							runs, win a ★ at 0
+							your level score is the sum of mistakes in your best {MISTAKE_HISTORY_LENGTH} runs,
+							win a ★ at 0
 						</li>
 						<li>realms group levels into bigger challenges</li>
 						<li>projects group realms so you can customize various experiences</li>
 						<li>levels can be shared via their links or exporting/importing data</li>
 					</ul>
 					<p>
-						See also the 3 minute <a href="https://www.youtube.com/watch?v=zW2zI1A_Ikw"
-							>video intro on YouTube</a
-						>
-						and <a href="https://github.com/ryanatkn/earbetter">the readme</a>.
+						See also the 3 minute
+						<a href="https://www.youtube.com/watch?v=zW2zI1A_Ikw">video intro on YouTube</a> and
+						<a href="https://github.com/ryanatkn/earbetter">the readme</a>.
 					</p>
 					<aside>
 						Earbetter is in early development, and many things are unfinished and unknown - feedback
-						is appreciated on <a href="https://github.com/ryanatkn/earbetter"
-							>the GitHub discussions and issues</a
-						>.
+						is appreciated on
+						<a href="https://github.com/ryanatkn/earbetter">the GitHub discussions and issues</a>.
 					</aside>
 					<div class="box row">
-						<button type="button" class="m_0" onclick={() => toggle_trainer_help()}
-							>ok, hide this</button
-						>
+						<button type="button" class="m_0" onclick={() => toggle_trainer_help()}>
+							ok, hide this
+						</button>
 					</div>
 				</div>
 			</section>
@@ -135,7 +134,7 @@
 		{/if}
 	</div>
 	{#if app.project_datas.length}
-		<div class="width_sm">
+		<div class="width_atmost_sm">
 			{#if app.levels}
 				<section class="card" transition:slide>
 					<LevelMapItems {app} levels={app.levels} />
@@ -179,7 +178,7 @@
 		flex-direction: column;
 		align-items: center;
 	}
-	.width_sm {
+	.width_atmost_sm {
 		margin: 0 var(--space_xl);
 	}
 	@media (max-width: 1111px) {
@@ -187,7 +186,7 @@
 			flex-direction: column;
 			align-items: center;
 		}
-		.width_sm {
+		.width_atmost_sm {
 			margin-left: 0;
 			margin-right: 0;
 		}

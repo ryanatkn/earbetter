@@ -1,18 +1,19 @@
-import {describe, test, assert, vi, beforeEach, afterEach} from 'vitest';
-import {create_random_alea} from '@ryanatkn/belt/random_alea.js';
+import * as s from '@fuzdev/fuz_schema/schema.ts';
+import { describe, test, assert, vi, beforeEach, afterEach } from 'vitest';
+import { create_random_alea } from '@fuzdev/fuz_util/random_alea.ts';
 
 import {
 	DEFAULT_FEEDBACK_DURATION,
 	DEFAULT_NOTE_DURATION,
 	Level,
 	LevelData,
-	type LevelId,
-} from '$lib/earbetter/level.svelte.js';
+	type LevelId
+} from '#lib/earbetter/level.svelte.ts';
 import {
 	create_fake_audio_context,
 	create_level_audio_state,
-	type FakeAudioContext,
-} from '../test_helpers.js';
+	type FakeAudioContext
+} from '../test_helpers.ts';
 
 interface LevelHarness {
 	level: Level;
@@ -25,12 +26,18 @@ const create_level = (data: Partial<LevelData> = {}): LevelHarness => {
 	const successes: LevelHarness['successes'] = [];
 	const level = new Level(
 		create_level_audio_state(),
-		LevelData.parse({id: 'level', tonics: [60], intervals: [5, 7], trial_count: 2, ...data}),
+		s.parse_or_throw(LevelData, {
+			id: 'level',
+			tonics: [60],
+			intervals: [5, 7],
+			trial_count: 2,
+			...data
+		}),
 		() => audio.ac,
 		(id, mistakes) => successes.push([id, mistakes]),
-		create_random_alea('level'),
+		create_random_alea('level')
 	);
-	return {level, audio, successes};
+	return { level, audio, successes };
 };
 
 /**
@@ -47,7 +54,7 @@ const guess_all = (level: Level): void => {
 };
 
 const wrong_note = (level: Level, index: number): number => {
-	const {sequence, valid_notes} = level.trial!;
+	const { sequence, valid_notes } = level.trial!;
 	return [...valid_notes].find((n) => n !== sequence[index])!;
 };
 
@@ -61,7 +68,7 @@ afterEach(() => {
 
 describe('Level', () => {
 	test('starts by presenting the first trial', async () => {
-		const {level, audio} = create_level();
+		const { level, audio } = create_level();
 		assert.strictEqual(level.status, 'initial');
 		level.start();
 		assert.strictEqual(level.status, 'presenting_prompt');
@@ -74,11 +81,11 @@ describe('Level', () => {
 	});
 
 	test('a level with an error never starts', () => {
-		const {level, audio} = create_level({
+		const { level, audio } = create_level({
 			intervals: [24],
 			tonics: null,
 			min_note: 48,
-			max_note: 60,
+			max_note: 60
 		});
 		assert.strictEqual(level.error, 'none of the intervals fit within the note range');
 		level.start();
@@ -92,22 +99,22 @@ describe('Level', () => {
 	});
 
 	test('start is a no-op once started', () => {
-		const {level} = create_level();
+		const { level } = create_level();
 		level.start();
 		level.start();
 		assert.strictEqual(level.trials.length, 1);
 	});
 
 	test('ignores guesses while presenting', () => {
-		const {level} = create_level();
+		const { level } = create_level();
 		level.start();
-		level.guess(level.trial!.sequence[0]);
+		level.guess(level.trial!.sequence[0]!);
 		assert.strictEqual(level.trial?.guessing_index, 0);
 		assert.strictEqual(level.last_guess, null);
 	});
 
 	test('correct guesses complete the level without mistakes', async () => {
-		const {level, successes} = create_level();
+		const { level, successes } = create_level();
 		level.start();
 		await finish_prompt(level);
 		guess_all(level);
@@ -125,17 +132,17 @@ describe('Level', () => {
 	});
 
 	test('a correct guess advances the guessing index', async () => {
-		const {level} = create_level({sequence_length: 3});
+		const { level } = create_level({ sequence_length: 3 });
 		level.start();
 		await finish_prompt(level);
-		level.guess(level.trial!.sequence[0]);
-		level.guess(level.trial!.sequence[1]);
+		level.guess(level.trial!.sequence[0]!);
+		level.guess(level.trial!.sequence[1]!);
 		assert.strictEqual(level.trial?.guessing_index, 2);
 		assert.strictEqual(level.status, 'waiting_for_input');
 	});
 
 	test('a wrong first note is free', async () => {
-		const {level} = create_level();
+		const { level } = create_level();
 		level.start();
 		await finish_prompt(level);
 		const wrong = wrong_note(level, 0);
@@ -146,21 +153,21 @@ describe('Level', () => {
 	});
 
 	test('a note outside the valid notes is free', async () => {
-		const {level} = create_level();
+		const { level } = create_level();
 		level.start();
 		await finish_prompt(level);
-		level.guess(level.trial!.sequence[0]);
+		level.guess(level.trial!.sequence[0]!);
 		level.guess(61);
 		assert.strictEqual(level.mistakes, 0);
 		assert.strictEqual(level.status, 'waiting_for_input');
 	});
 
 	test('a wrong later note counts a mistake and replays the trial', async () => {
-		const {level, audio, successes} = create_level({trial_count: 1});
+		const { level, audio, successes } = create_level({ trial_count: 1 });
 		level.start();
 		await finish_prompt(level);
-		const {sequence} = level.trial!;
-		level.guess(sequence[0]);
+		const { sequence } = level.trial!;
+		level.guess(sequence[0]!);
 		level.guess(wrong_note(level, 1));
 		assert.strictEqual(level.mistakes, 1);
 		assert.strictEqual(level.status, 'showing_failure_feedback');
@@ -175,7 +182,7 @@ describe('Level', () => {
 	});
 
 	test('retry replays the current trial', async () => {
-		const {level, audio} = create_level();
+		const { level, audio } = create_level();
 		level.start();
 		await finish_prompt(level);
 		const played = audio.played.length;
@@ -187,7 +194,7 @@ describe('Level', () => {
 	});
 
 	test('retry is ignored while presenting', () => {
-		const {level} = create_level();
+		const { level } = create_level();
 		level.start();
 		level.retry_trial();
 		assert.strictEqual(level.trial?.retry_count, 0);
@@ -195,10 +202,10 @@ describe('Level', () => {
 
 	// regression: the scheduled retry also fired after a manual one, replaying twice
 	test('a manual retry during failure feedback replaces the scheduled one', async () => {
-		const {level} = create_level();
+		const { level } = create_level();
 		level.start();
 		await finish_prompt(level);
-		level.guess(level.trial!.sequence[0]);
+		level.guess(level.trial!.sequence[0]!);
 		level.guess(wrong_note(level, 1));
 		level.retry_trial();
 		await finish_prompt(level);
@@ -209,7 +216,7 @@ describe('Level', () => {
 
 	// regression: the pending transition from before the reset added a stale trial
 	test('reset during success feedback starts over cleanly', async () => {
-		const {level} = create_level({trial_count: 3});
+		const { level } = create_level({ trial_count: 3 });
 		level.start();
 		await finish_prompt(level);
 		guess_all(level);
@@ -223,10 +230,10 @@ describe('Level', () => {
 	});
 
 	test('reset clears mistakes from the previous run', async () => {
-		const {level} = create_level();
+		const { level } = create_level();
 		level.start();
 		await finish_prompt(level);
-		level.guess(level.trial!.sequence[0]);
+		level.guess(level.trial!.sequence[0]!);
 		level.guess(wrong_note(level, 1));
 		assert.strictEqual(level.mistakes, 1);
 		level.reset();
@@ -234,7 +241,7 @@ describe('Level', () => {
 	});
 
 	test('reset after completing plays again', async () => {
-		const {level, successes} = create_level({trial_count: 1});
+		const { level, successes } = create_level({ trial_count: 1 });
 		level.start();
 		level.win();
 		assert.strictEqual(level.status, 'complete');
@@ -247,14 +254,14 @@ describe('Level', () => {
 	});
 
 	test('dispose stops the prompt and pending transitions', async () => {
-		const {level, audio, successes} = create_level({trial_count: 1});
+		const { level, audio, successes } = create_level({ trial_count: 1 });
 		level.start();
 		level.dispose();
 		await vi.advanceTimersByTimeAsync(DEFAULT_NOTE_DURATION * 4);
 		assert.strictEqual(audio.played.length, 1);
 		assert.strictEqual(level.status, 'presenting_prompt');
 
-		const finished = create_level({trial_count: 1});
+		const finished = create_level({ trial_count: 1 });
 		finished.level.start();
 		await finish_prompt(finished.level);
 		guess_all(finished.level);
@@ -266,7 +273,7 @@ describe('Level', () => {
 	});
 
 	test('win completes once', () => {
-		const {level, successes} = create_level();
+		const { level, successes } = create_level();
 		level.start();
 		level.win();
 		level.win();
@@ -275,7 +282,7 @@ describe('Level', () => {
 	});
 
 	test('the debug guesses steer the outcome', async () => {
-		const {level} = create_level();
+		const { level } = create_level();
 		level.start();
 		await finish_prompt(level);
 		level.guess_correctly();

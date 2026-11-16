@@ -1,50 +1,51 @@
 <script lang="ts">
-	import {z} from 'zod';
-	import {goto} from '$app/navigation';
-	import {resolve} from '$app/paths';
+	import * as s from '@fuzdev/fuz_schema/schema.ts';
+	import { goto } from '$app/navigation';
+	import { resolve } from '$app/paths';
 
-	import Piano from '$lib/Piano.svelte';
-	import {audio_context_context} from '$lib/audio_context.js';
-	import MidiInput from '$lib/MidiInput.svelte';
-	import {start_playing, stop_playing} from '$lib/play_note.js';
-	import InitMidiButton from '$lib/InitMidiButton.svelte';
-	import VolumeControl from '$lib/VolumeControl.svelte';
-	import Header from '$routes/Header.svelte';
-	import Footer from '$routes/Footer.svelte';
-	import {with_velocity} from '$lib/audio_helpers.js';
-	import InstrumentControl from '$lib/InstrumentControl.svelte';
-	import MidiRangeControl from '$lib/MidiRangeControl.svelte';
-	import {Midi} from '$lib/music.js';
-	import SelectNotesControl from '$lib/SelectNotesControl.svelte';
-	import {load_from_storage, set_in_storage} from '$lib/storage.js';
-	import BackButton from '$routes/BackButton.svelte';
-	import {app_context} from '$lib/earbetter/app.svelte.js';
+	import Piano from '#lib/Piano.svelte';
+	import { audio_context_context } from '#lib/audio_context.ts';
+	import MidiInput from '#lib/MidiInput.svelte';
+	import { start_playing, stop_playing } from '#lib/play_note.ts';
+	import InitMidiButton from '#lib/InitMidiButton.svelte';
+	import VolumeControl from '#lib/VolumeControl.svelte';
+	import Header from '#routes/Header.svelte';
+	import Footer from '#routes/Footer.svelte';
+	import { with_velocity } from '#lib/audio_helpers.ts';
+	import InstrumentControl from '#lib/InstrumentControl.svelte';
+	import MidiRangeControl from '#lib/MidiRangeControl.svelte';
+	import { Midi } from '#lib/music.ts';
+	import SelectNotesControl from '#lib/SelectNotesControl.svelte';
+	import { load_from_storage, set_in_storage } from '#lib/storage.ts';
+	import BackButton from '#routes/BackButton.svelte';
+	import { app_context } from '#lib/earbetter/app.svelte.ts';
 
 	const app = app_context.get();
 
 	// TODO extract? is pretty specific - and Svelte is erroring without the `_Schema`
-	const PianoSettingsSchema = z.object({
-		min_note: Midi.default(36),
-		max_note: Midi.default(96),
+	// strips unknown keys because it's persisted across versions
+	const PianoSettingsSchema = s.strip_object({
+		min_note: s.with_default(Midi, 36),
+		max_note: s.with_default(Midi, 96)
 	});
-	type PianoSettings = z.infer<typeof PianoSettingsSchema>;
+	type PianoSettings = s.Infer<typeof PianoSettingsSchema>;
 	const SITE_DATA_STORAGE_KEY = 'piano';
 	const initial_piano_settings = load_from_storage(
 		SITE_DATA_STORAGE_KEY,
-		() => PianoSettingsSchema.parse({}),
-		PianoSettingsSchema.parse,
+		() => s.parse_or_throw(PianoSettingsSchema, {}),
+		(v) => s.parse_or_throw(PianoSettingsSchema, v)
 	);
 
 	let min_note = $state(initial_piano_settings.min_note);
 	let max_note = $state(initial_piano_settings.max_note);
 
-	const to_piano_data = (): PianoSettings => ({min_note, max_note});
+	const to_piano_data = (): PianoSettings => ({ min_note, max_note });
 	const save_piano_data = () => set_in_storage(SITE_DATA_STORAGE_KEY, to_piano_data());
 	$effect(save_piano_data);
 
 	const ac = audio_context_context.get();
 
-	const {playing_notes} = app;
+	const { playing_notes } = app;
 
 	let clientWidth: number | undefined = $state();
 
@@ -84,7 +85,7 @@
 			/>
 		{/if}
 	</div>
-	<form class="width_sm panel p_md">
+	<form class="width_atmost_sm panel p_md">
 		<fieldset>
 			<InstrumentControl bind:instrument={app.instrument} />
 			<div class="row mb_lg">

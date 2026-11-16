@@ -1,13 +1,15 @@
 # Deps
-node_modules
+node_modules/
 
 # Output
-/.svelte-kit
-/build
-/dist
-/dist_*
-/.gro
-/.zzz
+.svelte-kit/
+build/
+dist/
+dist_*/
+target/
+.gro/
+.fuz/
+.zzz/
 
 # Env
 .env*
@@ -20,10 +22,23 @@ node_modules
 *.pem
 id_rsa
 
+# Local (per-machine, never shared)
+*.local
+*.local.*
+
 # Ignore
 *.ignore
 *.ignore.*
 ignore
+
+# Temporary files
+tmp/
+*.tmp
+.tmp*
+*.bak
+
+# Log files
+*.log
 
 # Workflow
 /worktree
@@ -31,8 +46,3 @@ ignore
 # Os
 .DS_Store
 Thumbs.db
-
-# LLMs
-.github/copilot-instructions.md
-CLAUDE.md
-.claude

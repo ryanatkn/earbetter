@@ -1,12 +1,12 @@
-import type {MIDIAccess} from '$lib/WebMIDI.js';
-import {request_midi_access} from '$lib/midi_helpers.js';
+import type { MIDIAccess } from './WebMIDI.ts';
+import { request_midi_access } from './midi_helpers.ts';
 
 // TODO handle disconnections
 
 let requesting: Promise<MIDIAccess | null> | undefined;
 
 // TODO @many source from `audio` in context, delete this or heavily refactor
-export const reset_midi_access = (state: {midi_access: MIDIAccess | null}): void => {
+export const reset_midi_access = (state: { midi_access: MIDIAccess | null }): void => {
 	requesting = undefined;
 	state.midi_access = null;
 };
@@ -20,7 +20,7 @@ export const request_access = async (
 	state: {
 		midi_access: MIDIAccess | null;
 	},
-	request: () => Promise<MIDIAccess> = request_midi_access,
+	request: () => Promise<MIDIAccess> = request_midi_access
 ): Promise<MIDIAccess | null> => {
 	const existing = state.midi_access;
 	if (existing) {

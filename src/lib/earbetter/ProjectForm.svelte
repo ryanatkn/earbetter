@@ -1,16 +1,12 @@
 <script lang="ts">
-	import {slide} from 'svelte/transition';
-	import {swallow} from '@ryanatkn/belt/dom.js';
-	import Dialog from '@ryanatkn/fuz/Dialog.svelte';
-	import Alert from '@ryanatkn/fuz/Alert.svelte';
+	import * as s from '@fuzdev/fuz_schema/schema.ts';
+	import { slide } from 'svelte/transition';
+	import { swallow } from '@fuzdev/fuz_util/dom.ts';
+	import Dialog from '@fuzdev/fuz_ui/Dialog.svelte';
+	import Alert from '@fuzdev/fuz_ui/Alert.svelte';
 
-	import {
-		create_project_id,
-		ProjectData,
-		ProjectName,
-		type ProjectId,
-	} from '$lib/earbetter/project.js';
-	import CopyToClipboard from '$lib/earbetter/CopyToClipboard.svelte';
+	import { create_project_id, ProjectData, ProjectName, type ProjectId } from './project.ts';
+	import CopyToClipboard from './CopyToClipboard.svelte';
 
 	interface Props {
 		project_data: ProjectData;
@@ -21,7 +17,14 @@
 		onclose?: (project_id: ProjectId) => void;
 	}
 
-	const {project_data, editing = false, onsubmit, onremove, onduplicate, onclose}: Props = $props();
+	const {
+		project_data,
+		editing = false,
+		onsubmit,
+		onremove,
+		onduplicate,
+		onclose
+	}: Props = $props();
 
 	let removing = $state(false);
 
@@ -29,11 +32,11 @@
 	const normalized_updated_name = $derived(updated_name.trim());
 
 	const to_data = (): ProjectData =>
-		ProjectData.parse({
+		s.parse_or_throw(ProjectData, {
 			id: project_data.id,
 			name: normalized_updated_name,
 			realms: project_data.realms,
-			level_stats: project_data.level_stats,
+			level_stats: project_data.level_stats
 		});
 
 	const changed = $derived(normalized_updated_name !== project_data.name);
@@ -58,7 +61,7 @@
 			const json = JSON.parse(updated);
 			// add an `id` if there is none
 			if (json && !json.id) json.id = create_project_id();
-			const parsed = ProjectData.parse(json);
+			const parsed = s.parse_or_throw(ProjectData, json);
 			onsubmit(parsed);
 		} catch (err) {
 			parse_error_message = err.message || 'unknown error';
@@ -79,7 +82,7 @@
 			start_importing_el?.focus();
 		}}
 	>
-		<div class="importing pane shadow_d_xl p_xl width_md mx_auto">
+		<div class="importing pane shadow_xl shadow_d_50 p_xl width_atmost_md mx_auto">
 			<h2 class="my_0">import project data</h2>
 			<CopyToClipboard
 				text={updated}
@@ -121,21 +124,21 @@
 	</fieldset>
 	<button
 		type="button"
-		class="accent w_100"
+		class="accent width:100%"
 		onclick={() => onsubmit(to_data())}
 		disabled={editing && !changed}
 	>
 		{#if editing}save changes to project{:else}create project{/if}
 	</button>
 	{#if onremove && editing}
-		<button class="w_100" type="button" onclick={() => (removing = !removing)}>
+		<button class="width:100%" type="button" onclick={() => (removing = !removing)}>
 			remove project
 		</button>
 		{#if removing}
 			<div transition:slide class="pb_md">
 				<button
 					type="button"
-					class="color_c w_100"
+					class="palette_c width:100%"
 					onclick={() => {
 						removing = false;
 						onremove(project_data.id);
@@ -146,21 +149,26 @@
 			</div>
 		{/if}
 		{#if onduplicate}
-			<button type="button" class="w_100" onclick={() => onduplicate(project_data.id)}>
+			<button type="button" class="width:100%" onclick={() => onduplicate(project_data.id)}>
 				duplicate project
 			</button>
 		{/if}
 	{/if}
-	<button type="button" class="w_100" onclick={start_importing_data} bind:this={start_importing_el}>
+	<button
+		type="button"
+		class="width:100%"
+		onclick={start_importing_data}
+		bind:this={start_importing_el}
+	>
 		{#if editing}import/export data{:else}import data{/if}
 	</button>
 	{#if parse_error_message}
-		<div class="overflow_x_auto">
+		<div class="overflow-x:auto">
 			<Alert status="error"><pre>{parse_error_message}</pre></Alert>
 		</div>
 	{/if}
 	{#if onclose && editing}
-		<button type="button" class="w_100" onclick={() => onclose(project_data.id)}>
+		<button type="button" class="width:100%" onclick={() => onclose(project_data.id)}>
 			{#if changed}discard changes and stop editing{:else}close project editor{/if}
 		</button>
 	{/if}

@@ -1,21 +1,17 @@
 <script lang="ts">
-	import {plural} from '@ryanatkn/belt/string.js';
+	import { plural } from '@fuzdev/fuz_util/string.ts';
 
-	import {
-		MISTAKE_HISTORY_LENGTH,
-		type LevelData,
-		type LevelStats,
-	} from '$lib/earbetter/level.svelte.js';
+	import { MISTAKE_HISTORY_LENGTH, type LevelData, type LevelStats } from './level.svelte.ts';
 
 	interface Props {
 		level_data: LevelData;
 		level_stats: LevelStats;
 	}
 
-	const {level_data, level_stats}: Props = $props();
+	const { level_data, level_stats }: Props = $props();
 
 	const mistakes = $derived(level_stats.mistakes[level_data.id] ?? []);
-	const {length} = $derived(mistakes);
+	const { length } = $derived(mistakes);
 	const remainder = $derived(Math.max(0, MISTAKE_HISTORY_LENGTH - length));
 	const full_history = $derived(length >= MISTAKE_HISTORY_LENGTH);
 	const sum = $derived(full_history ? mistakes.reduce((s, v) => s + v, 0) : undefined);
@@ -28,7 +24,7 @@
 		? `you performed flawlessly in your best ${MISTAKE_HISTORY_LENGTH} runs!`
 		: full_history
 			? `you made a total of ${sum} mistake${plural(
-					sum,
+					sum
 				)} in your best ${MISTAKE_HISTORY_LENGTH} runs`
 			: `you've completed ${length || 'no'} run${plural(length)} of this level, do ${
 					MISTAKE_HISTORY_LENGTH - length

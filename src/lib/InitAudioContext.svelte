@@ -1,5 +1,5 @@
 <script lang="ts">
-	import {audio_context_context} from '$lib/audio_context.js';
+	import { audio_context_context } from './audio_context.ts';
 
 	/**
 	 * This component transparently initializes the audio context to work around

@@ -1,17 +1,17 @@
 <script lang="ts">
-	import {slide} from 'svelte/transition';
-	import {tick} from 'svelte';
+	import { slide } from 'svelte/transition';
+	import { tick } from 'svelte';
 
-	import type {LevelData} from '$lib/earbetter/level.svelte.js';
-	import type {App} from '$lib/earbetter/app.svelte.js';
-	import LevelStatsSummary from '$lib/earbetter/LevelStatsSummary.svelte';
+	import type { LevelData } from './level.svelte.ts';
+	import type { App } from './app.svelte.ts';
+	import LevelStatsSummary from './LevelStatsSummary.svelte';
 
 	interface Props {
 		app: App;
 		level_data: LevelData;
 	}
 
-	const {app, level_data}: Props = $props();
+	const { app, level_data }: Props = $props();
 
 	// TODO hacky - the `editing_this_level` is needed when clicking into a level and going back,
 	// the `draft_level_data` is set but `editing_level` may be false,
@@ -42,7 +42,7 @@
 		type="button"
 		class="icon_button plain_button font_size_xl"
 		class:selected={!removing && editing}
-		class:color_c={removing}
+		class:palette_c={removing}
 		title={removing ? 'remove level' : editing ? 'stop editing level' : 'edit level'}
 		onclick={async () => {
 			if (removing) {
@@ -53,7 +53,7 @@
 				if (opening) {
 					await tick();
 					const el = document.querySelector('.level_def_form');
-					el?.scrollIntoView({behavior: 'smooth', block: 'center'});
+					el?.scrollIntoView({ behavior: 'smooth', block: 'center' });
 				}
 			}
 		}}

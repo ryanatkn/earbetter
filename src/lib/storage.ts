@@ -1,4 +1,4 @@
-import {BROWSER} from 'esm-env';
+import { BROWSER } from 'esm-env';
 
 // TODO upstream to belt?
 
@@ -12,7 +12,7 @@ import {BROWSER} from 'esm-env';
 export const load_from_storage = <T>(
 	key: string,
 	default_value: T | (() => T),
-	parse: (value: unknown) => T,
+	parse: (value: unknown) => T
 ): T => {
 	const fn = typeof default_value === 'function';
 	if (!BROWSER) return fn ? (default_value as any)() : default_value;

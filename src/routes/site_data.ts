@@ -1,14 +1,15 @@
-import {z} from 'zod';
+import * as s from '@fuzdev/fuz_schema/schema.ts';
 
-import {Volume, Instrument, DEFAULT_VOLUME, DEFAULT_INSTRUMENT} from '$lib/audio_helpers.js';
-import {DEFAULT_PITCH_CLASS, DEFAULT_SCALE, PitchClass, Scale} from '$lib/music.js';
+import { Volume, Instrument, DEFAULT_VOLUME, DEFAULT_INSTRUMENT } from '#lib/audio_helpers.ts';
+import { DEFAULT_PITCH_CLASS, DEFAULT_SCALE, PitchClass, Scale } from '#lib/music.ts';
 
 // TODO name for this? `SiteData`, `GlobalState`, `UserSettings`, something else?
 
-export const SiteData = z.object({
-	volume: Volume.default(DEFAULT_VOLUME),
-	instrument: Instrument.default(DEFAULT_INSTRUMENT),
-	scale: Scale.default(DEFAULT_SCALE),
-	key: PitchClass.default(DEFAULT_PITCH_CLASS),
+// strips unknown keys because it's persisted across versions
+export const SiteData = s.strip_object({
+	volume: s.with_default(Volume, DEFAULT_VOLUME),
+	instrument: s.with_default(Instrument, DEFAULT_INSTRUMENT),
+	scale: s.with_default(Scale, DEFAULT_SCALE),
+	key: s.with_default(PitchClass, DEFAULT_PITCH_CLASS)
 });
-export type SiteData = z.infer<typeof SiteData>;
+export type SiteData = s.Infer<typeof SiteData>;

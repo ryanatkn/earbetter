@@ -1,4 +1,4 @@
-import type {SvelteSet} from 'svelte/reactivity';
+import type { SvelteSet } from 'svelte/reactivity';
 
 import {
 	DEFAULT_VOLUME,
@@ -6,9 +6,9 @@ import {
 	volume_to_gain,
 	type Instrument,
 	type Milliseconds,
-	type Volume,
-} from '$lib/audio_helpers.js';
-import {type Midi, midi_to_freq} from '$lib/music.js';
+	type Volume
+} from './audio_helpers.ts';
+import { type Midi, midi_to_freq } from './music.ts';
 
 // TODO this API is haphazard and somewhat bad, in particular `play_note` versus `start_playing` and `stop_playing`,
 // and we need to support more options like `velocity`, should probably have a single options object.
@@ -16,19 +16,19 @@ import {type Midi, midi_to_freq} from '$lib/music.js';
 // Needs a full rethink with the `Audio` class idea.
 
 export const play_note = (
-	state: {playing_notes: SvelteSet<Midi>},
+	state: { playing_notes: SvelteSet<Midi> },
 	ac: AudioContext,
 	note: Midi,
 	volume: Volume,
 	duration: Milliseconds,
-	instrument?: Instrument,
+	instrument?: Instrument
 ): Promise<void> => {
 	const stop = start_playing_note(state, ac, note, volume, instrument);
 	return new Promise((resolve) =>
 		setTimeout(() => {
 			stop();
 			resolve();
-		}, duration),
+		}, duration)
 	);
 };
 
@@ -36,7 +36,7 @@ const stop_osc = (
 	ac: AudioContext,
 	duration: Milliseconds,
 	gain: GainNode,
-	osc: OscillatorNode,
+	osc: OscillatorNode
 ) => {
 	const endTime = ac.currentTime + duration / 1000;
 	gain.gain.setTargetAtTime(0, endTime, SMOOTH_GAIN_TIME_CONSTANT);
@@ -46,11 +46,11 @@ const stop_osc = (
 export type StopPlaying = () => void;
 
 export const start_playing_note = (
-	state: {playing_notes: SvelteSet<Midi>},
+	state: { playing_notes: SvelteSet<Midi> },
 	ac: AudioContext,
 	note: Midi,
 	volume: Volume = DEFAULT_VOLUME,
-	instrument: Instrument = 'sine',
+	instrument: Instrument = 'sine'
 ): StopPlaying => {
 	const freq = midi_to_freq(note);
 	const gain = ac.createGain();
@@ -81,11 +81,11 @@ export const start_playing_note = (
 const playing: Map<Midi, StopPlaying> = new Map(); // global cache used to enforce that at most one of each note plays
 
 export const start_playing = (
-	state: {playing_notes: SvelteSet<Midi>},
+	state: { playing_notes: SvelteSet<Midi> },
 	ac: AudioContext,
 	note: Midi,
 	volume?: Volume,
-	instrument?: Instrument,
+	instrument?: Instrument
 ): void => {
 	const current = playing.get(note);
 	if (current) return;

@@ -1,10 +1,21 @@
 <!doctype html>
-<html lang="en" class="dark">
+<html lang="en">
 	<head>
 		<meta charset="utf-8" />
 		<link rel="icon" href="%sveltekit.assets%/favicon.png" />
 		<link rel="icon" href="%sveltekit.assets%/logo.svg" sizes="any" type="image/svg+xml" />
 		<meta name="viewport" content="width=device-width, initial-scale=1" />
+
+		<script>
+			// defaults to dark, unlike fuz_ui's `auto`, matching `src/routes/+layout.svelte`
+			document.documentElement.classList.add(
+				((c) =>
+					c === 'light' || (c === 'auto' && !matchMedia('(prefers-color-scheme:dark)').matches)
+						? 'light'
+						: 'dark')(localStorage.getItem('fuz:color-scheme'))
+			);
+		</script>
+
 		%sveltekit.head%
 	</head>
 	<body data-sveltekit-preload-data="hover">

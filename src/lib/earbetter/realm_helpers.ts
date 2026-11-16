@@ -1,6 +1,7 @@
-import {interval_names, lookup_scale, to_scale_notes, type ScaleName} from '$lib/music.js';
-import {RealmData, RealmName} from '$lib/earbetter/realm.js';
-import type {LevelData} from '$lib/earbetter/level.svelte.js';
+import * as s from '@fuzdev/fuz_schema/schema.ts';
+import { interval_names, lookup_scale, to_scale_notes, type ScaleName } from '../music.ts';
+import { RealmData, RealmName } from './realm.ts';
+import type { LevelData } from './level.svelte.ts';
 
 // TODO expand the default levels
 // variants that go down, not just up
@@ -9,78 +10,78 @@ import type {LevelData} from '$lib/earbetter/level.svelte.js';
 
 export const to_default_scale_realm = (
 	scale_name: ScaleName,
-	realm_name: RealmName = scale_name as string,
+	realm_name: RealmName = scale_name as string
 ): RealmData => {
 	const levels: Array<Partial<LevelData>> = [];
 
 	const scale = lookup_scale(scale_name);
-	const {notes} = scale;
+	const { notes } = scale;
 
 	// compare adjacent pairs
 	for (let i = 0; i < notes.length - 1; i++) {
-		const note1 = notes[i];
-		const note2 = notes[i + 1];
+		const note1 = notes[i]!;
+		const note2 = notes[i + 1]!;
 		levels.push({
 			name: interval_names[note1] + ' vs ' + interval_names[note2],
-			intervals: [note1, note2],
+			intervals: [note1, note2]
 		});
 	}
 	// compare adjacent pairs downward
 	for (let i = 0; i < notes.length - 1; i++) {
-		const note1 = notes[i];
-		const note2 = notes[i + 1];
+		const note1 = notes[i]!;
+		const note2 = notes[i + 1]!;
 		levels.push({
 			name: interval_names[note1] + ' vs ' + interval_names[note2] + ' (downward)',
-			intervals: [note1 - 12, note2 - 12],
+			intervals: [note1 - 12, note2 - 12]
 		});
 	}
 	levels.push({
 		name: 'one octave',
-		intervals: notes,
+		intervals: notes
 	});
 	// TODO for the 4 note variants, maybe include the note at the start of the next octave?
 	levels.push({
 		name: 'one octave (4 notes)',
 		intervals: notes,
-		sequence_length: 4,
+		sequence_length: 4
 	});
 	levels.push({
 		name: 'one octave (8 notes)',
 		intervals: notes,
-		sequence_length: 8,
+		sequence_length: 8
 	});
 	levels.push({
 		name: 'two octaves',
-		intervals: to_scale_notes(scale, 2),
+		intervals: to_scale_notes(scale, 2)
 	});
 	levels.push({
 		name: 'two octaves (4 notes)',
 		intervals: to_scale_notes(scale, 2),
-		sequence_length: 4,
+		sequence_length: 4
 	});
 	levels.push({
 		name: 'two octaves (8 notes)',
 		intervals: to_scale_notes(scale, 2),
-		sequence_length: 8,
+		sequence_length: 8
 	});
 	levels.push({
 		name: 'four octaves',
-		intervals: to_scale_notes(scale, 4),
+		intervals: to_scale_notes(scale, 4)
 	});
 	levels.push({
 		name: 'four octaves (4 notes)',
 		intervals: to_scale_notes(scale, 4),
 		sequence_length: 4,
 		min_note: 41,
-		max_note: 96,
+		max_note: 96
 	});
 	levels.push({
 		name: 'four octaves (8 notes)',
 		intervals: to_scale_notes(scale, 4),
 		sequence_length: 8,
 		min_note: 41,
-		max_note: 96,
+		max_note: 96
 	});
 
-	return RealmData.parse({name: realm_name, levels});
+	return s.parse_or_throw(RealmData, { name: realm_name, levels });
 };

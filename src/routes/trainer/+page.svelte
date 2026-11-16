@@ -1,12 +1,12 @@
 <script lang="ts">
-	import {goto} from '$app/navigation';
-	import {resolve} from '$app/paths';
+	import { goto } from '$app/navigation';
+	import { resolve } from '$app/paths';
 
-	import Header from '$routes/Header.svelte';
-	import Footer from '$routes/Footer.svelte';
-	import {app_context} from '$lib/earbetter/app.svelte.js';
-	import LevelMap from '$lib/earbetter/LevelMap.svelte';
-	import BackButton from '$routes/BackButton.svelte';
+	import Header from '#routes/Header.svelte';
+	import Footer from '#routes/Footer.svelte';
+	import { app_context } from '#lib/earbetter/app.svelte.ts';
+	import LevelMap from '#lib/earbetter/LevelMap.svelte';
+	import BackButton from '#routes/BackButton.svelte';
 
 	const app = app_context.get();
 </script>

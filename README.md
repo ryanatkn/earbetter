@@ -76,21 +76,21 @@ and [issues](https://github.com/ryanatkn/earbetter/issues).
 This project uses [SvelteKit](https://kit.svelte.dev/) with the static adapter
 and [Vite](https://vitejs.dev/),
 so the normal commands like `vite dev` work as expected.
-I use [`gro`](https://github.com/feltjs/gro)
+I use [`gro`](https://github.com/fuzdev/gro)
 for additional things like deploying - see below for more.
 
-> [Windows is not yet supported](https://github.com/feltjs/gro/issues/319)
+> [Windows is not yet supported](https://github.com/fuzdev/gro/issues/319)
 > (we recommend [WSL](https://docs.microsoft.com/en-us/windows/wsl/about))
 
 ```bash
-gro dev # npm i -g @feltjs/gro
+gro dev # npm i -g @fuzdev/gro
 ```
 
 See [SvelteKit](https://github.com/sveltejs/kit),
 [Vite](https://github.com/vitejs/vite),
 [Svelte](https://github.com/sveltejs/svelte),
-[Fuz](https://github.com/fuz-dev/fuz),
-and [Gro](https://github.com/feltjs/gro) for more.
+[fuz_ui](https://github.com/fuzdev/fuz_ui),
+and [Gro](https://github.com/fuzdev/gro) for more.
 
 ## Build
 
@@ -98,7 +98,7 @@ and [Gro](https://github.com/feltjs/gro) for more.
 gro build
 ```
 
-See [Gro's build docs](https://github.com/feltjs/gro/blob/main/src/docs/build.md) for more.
+See [Gro's build docs](https://github.com/fuzdev/gro/blob/main/src/docs/build.md) for more.
 
 ## Test
 
@@ -106,12 +106,12 @@ See [Gro's build docs](https://github.com/feltjs/gro/blob/main/src/docs/build.md
 gro test
 ```
 
-See [`uvu`](https://github.com/lukeed/uvu)
-and [Gro's test docs](https://github.com/feltjs/gro/blob/main/src/docs/test.md).
+See [Vitest](https://github.com/vitest-dev/vitest)
+and [Gro's test docs](https://github.com/fuzdev/gro/blob/main/src/docs/test.md).
 
 ## Deploy
 
-[Deploy](https://github.com/feltjs/gro/blob/main/src/docs/deploy.md)
+[Deploy](https://github.com/fuzdev/gro/blob/main/src/docs/deploy.md)
 (build, commit, and push) to the `deploy` branch, e.g. for GitHub Pages:
 
 ```bash
@@ -131,12 +131,14 @@ she's a designer and currently looking for work
 [Svelte](https://github.com/sveltejs/svelte) ∙
 [SvelteKit](https://github.com/sveltejs/kit) ∙
 [Vite](https://github.com/vitejs/vite) ∙
-[esbuild](https://github.com/evanw/esbuild) ∙
-[Fuz](https://github.com/feltjs/felt-ui) ∙
-[Gro](https://github.com/feltjs/gro) ∙
-[uvu](https://github.com/lukeed/uvu) ∙
+[fuz_css](https://github.com/fuzdev/fuz_css) ∙
+[fuz_ui](https://github.com/fuzdev/fuz_ui) ∙
+[fuz_util](https://github.com/fuzdev/fuz_util) ∙
+[fuz_schema](https://github.com/fuzdev/fuz_schema) ∙
+[Gro](https://github.com/fuzdev/gro) ∙
+[Vitest](https://github.com/vitest-dev/vitest) ∙
 [ESLint](https://github.com/eslint/eslint) ∙
-[Prettier](https://github.com/prettier/prettier)
+[tsv](https://github.com/fuzdev/tsv)
 & [more](package.json)
 
 ## License [🐦](https://wikipedia.org/wiki/Free_and_open-source_software)

@@ -1,13 +1,13 @@
 <script lang="ts">
-	import {resolve} from '$app/paths';
+	import { resolve } from '$app/paths';
 
-	import Header from '$routes/Header.svelte';
-	import Footer from '$routes/Footer.svelte';
+	import Header from './Header.svelte';
+	import Footer from './Footer.svelte';
 </script>
 
 <main>
 	<Header />
-	<section class="tagline panel text_align_center">
+	<section class="tagline panel text-align:center">
 		<p>ear trainer and tools for<br />playing and programming music and audio</p>
 	</section>
 	<section>

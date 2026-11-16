@@ -1,5 +1,5 @@
 <script lang="ts">
-	import {dequal} from 'dequal';
+	import { deep_equal } from '@fuzdev/fuz_util/deep_equal.ts';
 
 	import {
 		DEFAULT_SCALE,
@@ -9,8 +9,8 @@
 		Scale,
 		scales,
 		serialize_intervals,
-		to_scale_notes,
-	} from '$lib/music.js';
+		to_scale_notes
+	} from './music.ts';
 
 	// TODO @many naming convention between `IntervalsInput`/`NotesInput`/`SelectNotesControl`?
 
@@ -18,20 +18,20 @@
 		intervals: Intervals; // TODO maybe make bindable? gets tricky because of the 2 sources of truth
 		scale?: Scale;
 		octaves?: number;
-		oninput?: (intervals: Intervals, from?: {scale: Scale; octaves: number}) => void;
+		oninput?: (intervals: Intervals, from?: { scale: Scale; octaves: number }) => void;
 	}
 
 	let {
 		intervals,
 		scale = $bindable(DEFAULT_SCALE),
 		octaves = $bindable(1),
-		oninput,
+		oninput
 	}: Props = $props();
 
 	// TODO visualize the intervals with a piano
 	const intervals_from_scale_and_octave = $derived(to_scale_notes(scale, octaves));
 	const serialized_intervals_from_scale_and_octave = $derived(
-		serialize_intervals(intervals_from_scale_and_octave),
+		serialize_intervals(intervals_from_scale_and_octave)
 	);
 
 	const serialized_intervals = $state(serialize_intervals(intervals));
@@ -51,38 +51,40 @@
 	});
 
 	const current_is_from_scale_and_octaves = $derived(
-		last_time_intervals_from_scale_and_octave_changed > last_time_intervals_changed, // tie goes to `intervals`
+		last_time_intervals_from_scale_and_octave_changed > last_time_intervals_changed // tie goes to `intervals`
 	);
 
 	const current_str = $derived(
 		current_is_from_scale_and_octaves
 			? serialized_intervals_from_scale_and_octave
-			: input_intervals_str,
+			: input_intervals_str
 	);
 	const current_intervals = $derived(parse_intervals(current_str));
 
-	const changed = $derived(!dequal(intervals, current_intervals));
+	const changed = $derived(!deep_equal(intervals, current_intervals));
 	const valid = $derived(!!current_intervals.length);
 </script>
 
-<small
-	><textarea
+<small>
+	<textarea
 		value={current_str}
 		oninput={(e) => (input_intervals_str = e.currentTarget.value)}
-		class="preview width_sm panel"
-	></textarea></small
->
+		class="preview width_atmost_sm panel"></textarea>
+</small>
 <button
 	type="button"
 	class="accent mb_lg"
 	disabled={!changed || !valid}
 	onclick={() =>
-		oninput?.(current_intervals, current_is_from_scale_and_octaves ? {scale, octaves} : undefined)}
+		oninput?.(
+			current_intervals,
+			current_is_from_scale_and_octaves ? { scale, octaves } : undefined
+		)}
 >
 	use these intervals
 </button>
 <label>
-	<div class="title text_align_center">scale</div>
+	<div class="title text-align:center">scale</div>
 	<!-- TODO bind the objects not the names to simplify -->
 	<select value={scale.name} onchange={(e) => (scale = lookup_scale(e.currentTarget.value))}>
 		{#each scales as s (s)}
@@ -91,8 +93,8 @@
 	</select>
 </label>
 <label>
-	<div class="title text_align_center">octaves</div>
-	<div class="text_align_center">{octaves}</div>
+	<div class="title text-align:center">octaves</div>
+	<div class="text-align:center">{octaves}</div>
 	<input type="range" min={1} max={6} bind:value={octaves} />
 </label>
 

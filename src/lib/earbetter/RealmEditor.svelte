@@ -1,17 +1,18 @@
 <script lang="ts">
-	import RealmForm from '$lib/earbetter/RealmForm.svelte';
-	import type {App} from '$lib/earbetter/app.svelte.js';
-	import {RealmData} from '$lib/earbetter/realm.js';
+	import * as s from '@fuzdev/fuz_schema/schema.ts';
+	import RealmForm from './RealmForm.svelte';
+	import type { App } from './app.svelte.ts';
+	import { RealmData } from './realm.ts';
 
 	interface Props {
 		app: App; // TODO maybe change to be more granular objects?
 	}
 
-	const {app}: Props = $props();
+	const { app }: Props = $props();
 
-	const {remove_realm, duplicate_realm, update_realm, create_realm} = $derived(app);
+	const { remove_realm, duplicate_realm, update_realm, create_realm } = $derived(app);
 
-	const realm_data = $derived(app.editing_realm_data ?? RealmData.parse({}));
+	const realm_data = $derived(app.editing_realm_data ?? s.parse_or_throw(RealmData, {}));
 
 	const editing = $derived(app.realms ? app.realms.some((d) => d.id === realm_data.id) : false);
 
@@ -33,8 +34,8 @@
 		{realm_data}
 		onsubmit={(data) => {
 			if (Array.isArray(data)) {
-				for (let i = 0; i < data.length; i++) {
-					update_or_create(data[i], i === 0);
+				for (const [i, d] of data.entries()) {
+					update_or_create(d, i === 0);
 				}
 			} else {
 				update_or_create(data, true);

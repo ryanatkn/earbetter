@@ -1,7 +1,7 @@
 <script lang="ts">
-	import {random_int, random_item, random_float} from '@ryanatkn/belt/random.js';
-	import {GR_2} from '@ryanatkn/belt/maths.js';
-	import {onMount} from 'svelte';
+	import { random_int, random_item, random_float } from '@fuzdev/fuz_util/random.ts';
+	import { GR_2 } from '@fuzdev/fuz_util/maths.ts';
+	import { onMount } from 'svelte';
 
 	interface Props {
 		count: number;
@@ -35,7 +35,7 @@
 		start_rotation_min = 0,
 		start_rotation_max = 359,
 		end_rotation_min = 0,
-		end_rotation_max = 359,
+		end_rotation_max = 359
 	}: Props = $props();
 
 	let done = $state(false);
@@ -48,7 +48,7 @@
 
 {#if !done}
 	<div class="burst" style:--animation_timer="{duration}ms">
-		{#each {length: count} as _, index (index)}
+		{#each { length: count } as _, index (index)}
 			<div
 				class="burst-item"
 				style:--target_x="{random_int(-x_radius, x_radius)}px"

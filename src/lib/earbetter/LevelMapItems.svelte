@@ -1,17 +1,18 @@
 <script lang="ts">
-	import LevelMapItem from '$lib/earbetter/LevelMapItem.svelte';
-	import type {App} from '$lib/earbetter/app.svelte.js';
-	import {LevelData} from '$lib/earbetter/level.svelte.js';
+	import * as s from '@fuzdev/fuz_schema/schema.ts';
+	import LevelMapItem from './LevelMapItem.svelte';
+	import type { App } from './app.svelte.ts';
+	import { LevelData } from './level.svelte.ts';
 
 	interface Props {
 		app: App;
 		levels: Array<LevelData>; // TODO making this a prop here, but using `app` most places, maybe change it to context?
 	}
 
-	const {app, levels}: Props = $props();
+	const { app, levels }: Props = $props();
 
 	const editing_draft = $derived(
-		app.editing_level && !levels.some((d) => d === app.draft_level_data),
+		app.editing_level && !levels.some((d) => d === app.draft_level_data)
 	);
 
 	const no_levels = $derived(!levels.length);
@@ -24,7 +25,7 @@
 			// eslint-disable-next-line @typescript-eslint/no-unnecessary-type-assertion
 			(document.querySelector('.level_def_form input') as HTMLInputElement | null)?.focus(); // TODO hacky using the selector
 		} else {
-			app.edit_level(editing_draft ? null : LevelData.parse({}));
+			app.edit_level(editing_draft ? null : s.parse_or_throw(LevelData, {}));
 		}
 	};
 </script>

@@ -1,4 +1,4 @@
-import {BROWSER} from 'esm-env';
+import { BROWSER } from 'esm-env';
 
 import type {
 	MIDICommand,
@@ -9,10 +9,10 @@ import type {
 	requestMIDIAccess,
 	MIDIInputMap,
 	MIDIOutputMap,
-	MIDIConnectionEvent,
-} from '$lib/WebMIDI.js';
-import type {Midi} from '$lib/music.js';
-import {noop_ssr} from '$lib/util.js';
+	MIDIConnectionEvent
+} from './WebMIDI.ts';
+import type { Midi } from './music.ts';
+import { noop_ssr } from './util.ts';
 
 // WebMIDI helpers specific to cosmicplayground
 
@@ -32,7 +32,7 @@ export const parse_midi_message = (e: MIDIMessageEvent): MidiMessage => {
 		command: e.data[0] >> 4,
 		channel: e.data[0] & 0xf,
 		note: e.data[1],
-		velocity: e.data[2] / 127,
+		velocity: e.data[2] / 127
 	};
 };
 
@@ -51,7 +51,7 @@ export const request_midi_access = async (opts?: Partial<MIDIOptions>): Promise<
 	const options: MIDIOptions = {
 		sysex: undefined,
 		software: undefined,
-		...opts,
+		...opts
 	};
 	return request_access(options);
 };

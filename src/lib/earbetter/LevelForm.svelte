@@ -1,15 +1,11 @@
 <script lang="ts">
-	import {slide} from 'svelte/transition';
-	import Dialog from '@ryanatkn/fuz/Dialog.svelte';
-	import Alert from '@ryanatkn/fuz/Alert.svelte';
-	import {dequal} from 'dequal';
+	import * as s from '@fuzdev/fuz_schema/schema.ts';
+	import { slide } from 'svelte/transition';
+	import Dialog from '@fuzdev/fuz_ui/Dialog.svelte';
+	import Alert from '@fuzdev/fuz_ui/Alert.svelte';
+	import { deep_equal } from '@fuzdev/fuz_util/deep_equal.ts';
 
-	import {
-		create_level_id,
-		LevelData,
-		to_level_data_error,
-		type LevelId,
-	} from '$lib/earbetter/level.svelte.js';
+	import { create_level_id, LevelData, to_level_data_error, type LevelId } from './level.svelte.ts';
 	import {
 		parse_intervals,
 		serialize_intervals,
@@ -20,13 +16,13 @@
 		Intervals,
 		serialize_notes,
 		parse_notes,
-		DEFAULT_SCALE,
-	} from '$lib/music.js';
-	import IntervalsInput from '$lib/IntervalsInput.svelte';
-	import NotesInput from '$lib/NotesInput.svelte';
-	import Piano from '$lib/Piano.svelte';
-	import CopyToClipboard from '$lib/earbetter/CopyToClipboard.svelte';
-	import {app_context} from '$lib/earbetter/app.svelte.js';
+		DEFAULT_SCALE
+	} from '../music.ts';
+	import IntervalsInput from '../IntervalsInput.svelte';
+	import NotesInput from '../NotesInput.svelte';
+	import Piano from '../Piano.svelte';
+	import CopyToClipboard from './CopyToClipboard.svelte';
+	import { app_context } from './app.svelte.ts';
 
 	interface Props {
 		level_data: LevelData;
@@ -45,7 +41,7 @@
 		onremove,
 		onduplicate,
 		onplay,
-		onclose,
+		onclose
 	}: Props = $props();
 
 	const app = app_context.get();
@@ -59,7 +55,7 @@
 	const normalized_updated_tonics = $derived(
 		updated_tonics
 			? updated_tonics.filter((t) => t >= updated_min_note && t <= updated_max_note)
-			: updated_tonics,
+			: updated_tonics
 	);
 	let updated_trial_count: number = $state(level_data.trial_count);
 	let updated_sequence_length: number = $state(level_data.sequence_length);
@@ -74,20 +70,20 @@
 		trial_count: updated_trial_count,
 		sequence_length: updated_sequence_length,
 		min_note: updated_min_note,
-		max_note: updated_max_note,
+		max_note: updated_max_note
 	});
-	const to_data = (): LevelData => LevelData.parse(to_raw_data());
+	const to_data = (): LevelData => s.parse_or_throw(LevelData, to_raw_data());
 
 	// the form's inputs can hold values the schema rejects, like an empty name or a cleared number,
 	// so validate instead of letting `to_data` throw on submit
 	const level_data_error: string | null = $derived.by(() => {
 		if (!normalized_updated_name) return 'the level needs a name';
-		const parsed = LevelData.safeParse(to_raw_data());
-		if (!parsed.success) {
-			const issue = parsed.error.issues[0];
+		const parsed = s.parse(LevelData, to_raw_data());
+		if (!parsed.ok) {
+			const issue = parsed.issues[0]!;
 			return `invalid ${issue.path.join('.') || 'level'}: ${issue.message}`;
 		}
-		return to_level_data_error(parsed.data);
+		return to_level_data_error(parsed.value);
 	});
 
 	// TODO @many review this effect to try to remove it
@@ -107,8 +103,8 @@
 			updated_sequence_length !== level_data.sequence_length ||
 			updated_min_note !== level_data.min_note ||
 			updated_max_note !== level_data.max_note ||
-			!dequal(updated_intervals, level_data.intervals) ||
-			!dequal(normalized_updated_tonics, level_data.tonics),
+			!deep_equal(updated_intervals, level_data.intervals) ||
+			!deep_equal(normalized_updated_tonics, level_data.tonics)
 	);
 
 	// TODO lots of similarity with `ProjectForm`
@@ -136,7 +132,7 @@
 			const json = JSON.parse(updated);
 			// add an `id` if there is none
 			if (json && !json.id) json.id = create_level_id();
-			const parsed = LevelData.parse(json);
+			const parsed = s.parse_or_throw(LevelData, json);
 			const error = to_level_data_error(parsed);
 			if (error) throw Error(error);
 			onsubmit(parsed);
@@ -165,7 +161,7 @@
 </script>
 
 <!-- TODO this class `.level_def_form` is used to focus from another component -->
-<form class="level_def_form w_100">
+<form class="level_def_form width:100%">
 	<header>
 		<h2 class="my_0">
 			{#if editing}editing level{:else}create a new level{/if}
@@ -187,24 +183,21 @@
 					onchange={(e) => (updated_intervals = parse_intervals(e.currentTarget.value))}
 				/>
 			</label>
-			<button type="button" onclick={() => (picking_intervals = true)}> pick intervals </button>
+			<button type="button" onclick={() => (picking_intervals = true)}>pick intervals</button>
 			<details>
 				<summary>about <code>intervals</code></summary>
 				<p>
 					<code>intervals</code> is a comma-separated list of numbers representing the
 					<a href="https://wikipedia.org/wiki/Interval_(music)">musical intervals</a> used in the
-					level, aka the number of piano keys (<a href="https://wikipedia.org/wiki/Semitone"
-						>semitones</a
-					>) separating each note from the
-					<a href="https://wikipedia.org/wiki/Tonic_(music)">tonic</a> (see below)
+					level, aka the number of piano keys
+					(<a href="https://wikipedia.org/wiki/Semitone">semitones</a>) separating each note from
+					the <a href="https://wikipedia.org/wiki/Tonic_(music)">tonic</a> (see below)
 				</p>
 				<p>
-					for example, to practice distinguishing between the <a
-						href="https://wikipedia.org/wiki/Perfect_fourth">perfect fourth</a
-					>
-					and <a href="https://wikipedia.org/wiki/Perfect_fifth">perfect fifth</a>, enter "<code
-						>5, 7</code
-					>"
+					for example, to practice distinguishing between the
+					<a href="https://wikipedia.org/wiki/Perfect_fourth">perfect fourth</a> and
+					<a href="https://wikipedia.org/wiki/Perfect_fifth">perfect fifth</a>, enter
+					"<code>5, 7</code>"
 				</p>
 				<p>negative numbers are allowed</p>
 			</details>
@@ -228,13 +221,13 @@
 			</label>
 		</fieldset>
 		<fieldset class="row">
-			<label class="text_align_center">
+			<label class="text-align:center">
 				<div class="title">lowest note</div>
 				<div>{midi_names[updated_min_note]}</div>
 				<input type="number" bind:value={updated_min_note} step={1} min={MIDI_MIN} max={MIDI_MAX} />
 				<input type="range" bind:value={updated_min_note} step={1} min={MIDI_MIN} max={MIDI_MAX} />
 			</label>
-			<label class="text_align_center">
+			<label class="text-align:center">
 				<div class="title">highest note</div>
 				<div>{midi_names[updated_max_note]}</div>
 				<input type="number" bind:value={updated_max_note} step={1} min={MIDI_MIN} max={MIDI_MAX} />
@@ -265,13 +258,13 @@
 					placeholder="all"
 				/>
 			</label>
-			<button type="button" onclick={() => (picking_tonics = true)}> pick tonics </button>
+			<button type="button" onclick={() => (picking_tonics = true)}>pick tonics</button>
 			<details>
 				<summary>about <code>tonics</code></summary>
 				<p>
-					The <a href="https://wikipedia.org/wiki/Tonic_(music)">tonic</a> is like the "base" or "home"
-					note, and for our purposes it's always the first note played in a trial. Other notes in the
-					trial are calculated from the tonic and intervals. (see above)
+					The <a href="https://wikipedia.org/wiki/Tonic_(music)">tonic</a> is like the "base" or
+					"home" note, and for our purposes it's always the first note played in a trial. Other
+					notes in the trial are calculated from the tonic and intervals. (see above)
 				</p>
 			</details>
 		</fieldset>
@@ -287,12 +280,12 @@
 			{#if editing}save changes to level{:else}create level{/if}
 		</button>
 		{#if onremove && editing}
-			<button type="button" onclick={() => (removing = !removing)}> remove level </button>
+			<button type="button" onclick={() => (removing = !removing)}>remove level</button>
 			{#if removing}
 				<div transition:slide class="pb_md">
 					<button
 						type="button"
-						class="color_c w_100"
+						class="palette_c width:100%"
 						onclick={() => {
 							removing = false;
 							onremove(level_data.id);
@@ -303,14 +296,14 @@
 				</div>
 			{/if}
 			{#if onduplicate}
-				<button type="button" onclick={() => onduplicate(level_data.id)}> duplicate level </button>
+				<button type="button" onclick={() => onduplicate(level_data.id)}>duplicate level</button>
 			{/if}
 		{/if}
 		<button type="button" onclick={start_importing_data} bind:this={start_importing_el}>
 			{#if editing}import/export data{:else}import data{/if}
 		</button>
 		{#if parse_error_message}
-			<div class="overflow_x_auto">
+			<div class="overflow-x:auto">
 				<Alert status="error"><pre>{parse_error_message}</pre></Alert>
 			</div>
 		{/if}
@@ -337,7 +330,7 @@
 			start_importing_el?.focus();
 		}}
 	>
-		<div class="importing pane shadow_d_xl p_xl width_md mx_auto">
+		<div class="importing pane shadow_xl shadow_d_50 p_xl width_atmost_md mx_auto">
 			<h2 class="my_0">import level data</h2>
 			<CopyToClipboard
 				text={updated}
@@ -364,8 +357,8 @@
 			intervals_el?.focus();
 		}}
 	>
-		{#snippet children(close)}
-			<div class="pane mx_auto shadow_d_xl p_xl width_md box">
+		{#snippet children(dialog)}
+			<div class="pane mx_auto shadow_xl shadow_d_50 p_xl width_atmost_md box">
 				<h2 class="my_0">pick intervals</h2>
 				<IntervalsInput
 					intervals={updated_intervals}
@@ -373,10 +366,10 @@
 					bind:octaves
 					oninput={(intervals) => {
 						updated_intervals = intervals;
-						close();
+						dialog.close();
 					}}
 				/>
-				<button type="button" onclick={close}>cancel</button>
+				<button type="button" onclick={dialog.close}>cancel</button>
 			</div>
 		{/snippet}
 	</Dialog>
@@ -388,8 +381,8 @@
 			tonics_el?.focus();
 		}}
 	>
-		{#snippet children(close)}
-			<div class="pane mx_auto shadow_d_xl py_xl box">
+		{#snippet children(dialog)}
+			<div class="pane mx_auto shadow_xl shadow_d_50 py_xl box">
 				<h2 class="my_0">pick tonics</h2>
 				<!-- TODO @many set reactivity - this `new Set` is a hack, probably change the data structure to a set, need serialization for storage -->
 				<NotesInput
@@ -399,11 +392,11 @@
 					max_note={updated_max_note}
 					oninput={(notes) => {
 						updated_tonics = notes;
-						close();
+						dialog.close();
 					}}
 				>
 					{#snippet before_buttons()}
-						<button type="button" class="mb_lg" onclick={close}>cancel</button>
+						<button type="button" class="mb_lg" onclick={dialog.close}>cancel</button>
 					{/snippet}
 				</NotesInput>
 			</div>

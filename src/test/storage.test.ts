@@ -1,7 +1,7 @@
-import {describe, test, assert, vi, beforeEach, afterEach} from 'vitest';
+import { describe, test, assert, vi, beforeEach, afterEach } from 'vitest';
 
-import {load_from_storage, set_in_storage} from '$lib/storage.js';
-import {create_memory_storage} from './test_helpers.js';
+import { load_from_storage, set_in_storage } from '#lib/storage.ts';
+import { create_memory_storage } from './test_helpers.ts';
 
 beforeEach(() => {
 	vi.stubGlobal('localStorage', create_memory_storage());
@@ -32,7 +32,7 @@ describe('load_from_storage', () => {
 		localStorage.setItem('k', '{"a":[1]}');
 		assert.deepEqual(
 			load_from_storage('k', null, (v) => v),
-			{a: [1]},
+			{ a: [1] }
 		);
 	});
 

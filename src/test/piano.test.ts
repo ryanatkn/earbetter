@@ -1,14 +1,14 @@
-import {describe, test, assert} from 'vitest';
+import { describe, test, assert } from 'vitest';
 
-import {compute_piano} from '$lib/piano.js';
-import {midi_naturals, type Midi} from '$lib/music.js';
+import { compute_piano } from '#lib/piano.ts';
+import { midi_naturals, type Midi } from '#lib/music.ts';
 
 const ranges: Array<[label: string, min: Midi, max: Midi]> = [
 	['one octave from C', 60, 72],
 	['full 88-key range', 21, 108],
 	['starts and ends on accidentals', 61, 70],
 	['single natural', 60, 60],
-	['single accidental', 61, 61],
+	['single accidental', 61, 61]
 ];
 
 describe('compute_piano', () => {
@@ -16,7 +16,7 @@ describe('compute_piano', () => {
 		const piano = compute_piano(1000, min, max);
 		assert.deepEqual(
 			piano.piano_keys.map((k) => k.note),
-			Array.from({length: max - min + 1}, (_, i) => min + i),
+			Array.from({ length: max - min + 1 }, (_, i) => min + i)
 		);
 	});
 
@@ -41,9 +41,9 @@ describe('compute_piano', () => {
 		const naturals = piano.piano_keys.filter((k) => midi_naturals.has(k.note));
 		for (let i = 1; i < naturals.length; i++) {
 			assert.closeTo(
-				naturals[i].left_offset - naturals[i - 1].left_offset,
+				naturals[i]!.left_offset - naturals[i - 1]!.left_offset,
 				piano.natural_key_width,
-				1e-9,
+				1e-9
 			);
 		}
 		for (const key of piano.piano_keys) {
@@ -75,7 +75,7 @@ describe('compute_piano', () => {
 			piano.natural_key_width,
 			piano.natural_key_height,
 			piano.accidental_key_width,
-			piano.accidental_key_height,
+			piano.accidental_key_height
 		]) {
 			assert.ok(Number.isInteger(n));
 		}

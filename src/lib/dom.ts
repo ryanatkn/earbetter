@@ -1,6 +1,6 @@
 export const find_previous_sibling = <T extends ChildNode>(
 	node: ChildNode,
-	matches: (n: ChildNode) => boolean,
+	matches: (n: ChildNode) => boolean
 ): T | null => {
 	let s: ChildNode | null | undefined = node.previousSibling;
 	while (s) {
@@ -12,7 +12,7 @@ export const find_previous_sibling = <T extends ChildNode>(
 
 export const find_next_sibling = <T extends ChildNode>(
 	node: ChildNode,
-	matches: (n: ChildNode) => boolean,
+	matches: (n: ChildNode) => boolean
 ): T | null => {
 	let s: ChildNode | null | undefined = node.nextSibling;
 	while (s) {

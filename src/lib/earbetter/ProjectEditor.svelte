@@ -1,17 +1,18 @@
 <script lang="ts">
-	import ProjectForm from '$lib/earbetter/ProjectForm.svelte';
-	import type {App} from '$lib/earbetter/app.svelte.js';
-	import {ProjectData} from '$lib/earbetter/project.js';
+	import * as s from '@fuzdev/fuz_schema/schema.ts';
+	import ProjectForm from './ProjectForm.svelte';
+	import type { App } from './app.svelte.ts';
+	import { ProjectData } from './project.ts';
 
 	interface Props {
 		app: App; // TODO maybe change to be more granular objects?
 	}
 
-	const {app}: Props = $props();
+	const { app }: Props = $props();
 
-	const {remove_project, duplicate_project, update_project, create_project} = $derived(app);
+	const { remove_project, duplicate_project, update_project, create_project } = $derived(app);
 
-	const project_data = $derived(app.editing_project_data ?? ProjectData.parse({}));
+	const project_data = $derived(app.editing_project_data ?? s.parse_or_throw(ProjectData, {}));
 
 	const editing = $derived(app.project_datas.some((d) => d.id === project_data.id));
 </script>

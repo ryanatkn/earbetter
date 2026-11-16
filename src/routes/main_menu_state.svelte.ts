@@ -1,4 +1,4 @@
-import {create_context} from '@ryanatkn/fuz/context_helpers.js';
+import { create_context } from '@fuzdev/fuz_ui/context_helpers.ts';
 
 // TODO @many let any routes (and components?) add sections to the menu via snippets
 

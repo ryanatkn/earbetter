@@ -1,6 +1,6 @@
 <script lang="ts">
-	import type {ProjectData, ProjectId, ProjectMetadata} from '$lib/earbetter/project.js';
-	import ProjectItem from '$lib/earbetter/ProjectItem.svelte';
+	import type { ProjectData, ProjectId, ProjectMetadata } from './project.ts';
+	import ProjectItem from './ProjectItem.svelte';
 
 	interface Props {
 		selected_project_id?: ProjectId | null;
@@ -21,11 +21,11 @@
 		load_project,
 		select_project,
 		edit_project,
-		remove_project,
+		remove_project
 	}: Props = $props();
 </script>
 
-<menu class="unstyled width_sm mb_0">
+<menu class="unstyled width_atmost_sm mb_0">
 	{#each projects as project (project.id)}
 		<ProjectItem
 			{project}

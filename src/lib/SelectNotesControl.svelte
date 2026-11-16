@@ -5,8 +5,8 @@
 		pitch_classes,
 		pitch_class_aliases,
 		type PitchClass,
-		lookup_scale,
-	} from '$lib/music.js';
+		lookup_scale
+	} from './music.ts';
 
 	// TODO @many naming convention between `IntervalsInput`/`NotesInput`/`SelectNotesControl`?
 
@@ -15,14 +15,14 @@
 		key: PitchClass;
 	}
 
-	let {scale = $bindable(), key = $bindable()}: Props = $props();
+	let { scale = $bindable(), key = $bindable() }: Props = $props();
 
 	// $inspect('scale', scale);
 
 	// TODO @many event callback or $bindable here and below
 </script>
 
-<label class="text_align_center">
+<label class="text-align:center">
 	<div class="title">scale</div>
 	<!-- TODO bind the objects not the names to simplify -->
 	<select value={scale.name} oninput={(e) => (scale = lookup_scale(e.currentTarget.value))}>
@@ -31,7 +31,7 @@
 		{/each}
 	</select>
 </label>
-<label class="text_align_center">
+<label class="text-align:center">
 	<div class="title">key</div>
 	<select bind:value={key}>
 		{#each pitch_classes as p (p)}

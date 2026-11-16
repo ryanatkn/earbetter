@@ -1,8 +1,8 @@
-import {create_context} from '@ryanatkn/fuz/context_helpers.js';
-import {noop} from '@ryanatkn/belt/function.js';
-import {BROWSER} from 'esm-env';
+import { create_context } from '@fuzdev/fuz_ui/context_helpers.ts';
+import { noop } from '@fuzdev/fuz_util/function.ts';
+import { BROWSER } from 'esm-env';
 
-import {noop_ssr} from '$lib/util.js';
+import { noop_ssr } from './util.ts';
 
 export type GetAudioContext = () => AudioContext;
 

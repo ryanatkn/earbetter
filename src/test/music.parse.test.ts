@@ -1,6 +1,6 @@
-import {describe, test, assert} from 'vitest';
+import { describe, test, assert } from 'vitest';
 
-import {parse_intervals, parse_notes, serialize_intervals, serialize_notes} from '$lib/music.js';
+import { parse_intervals, parse_notes, serialize_intervals, serialize_notes } from '#lib/music.ts';
 
 describe('parse_intervals', () => {
 	const cases: Array<[label: string, input: string, expected: Array<number>]> = [
@@ -13,7 +13,7 @@ describe('parse_intervals', () => {
 		['truncates decimals', '3.7', [3]],
 		['keeps the midi range', '127, -127', [127, -127]],
 		['drops beyond the midi range', '128, -128, 5', [5]],
-		['empty', '', []],
+		['empty', '', []]
 	];
 	test.each(cases)('%s', (_label, input, expected) => {
 		assert.deepEqual(parse_intervals(input), expected);
@@ -34,7 +34,7 @@ describe('parse_notes', () => {
 		['drops out of range', '-1, 128, 72', [72]],
 		['drops non-numbers and blanks', 'C4, , 61', [61]],
 		['truncates decimals', '61.9', [61]],
-		['empty', '', []],
+		['empty', '', []]
 	];
 	test.each(cases)('%s', (_label, input, expected) => {
 		assert.deepEqual(parse_notes(input), expected);

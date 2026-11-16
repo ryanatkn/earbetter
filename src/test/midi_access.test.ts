@@ -1,11 +1,11 @@
-import {test, assert, vi, beforeEach} from 'vitest';
+import { test, assert, vi, beforeEach } from 'vitest';
 
-import {request_access, reset_midi_access} from '$lib/midi_access.js';
-import type {MIDIAccess} from '$lib/WebMIDI.js';
-import {assert_rejects} from './test_helpers.js';
+import { request_access, reset_midi_access } from '#lib/midi_access.ts';
+import type { MIDIAccess } from '#lib/WebMIDI.ts';
+import { assert_rejects } from './test_helpers.ts';
 
-const create_state = (): {midi_access: MIDIAccess | null} => ({midi_access: null});
-const create_access = (): MIDIAccess => ({inputs: new Map()}) as unknown as MIDIAccess;
+const create_state = (): { midi_access: MIDIAccess | null } => ({ midi_access: null });
+const create_access = (): MIDIAccess => ({ inputs: new Map() }) as unknown as MIDIAccess;
 
 beforeEach(() => {
 	reset_midi_access(create_state()); // the pending request is module state
@@ -21,7 +21,7 @@ test('stores the granted access', async () => {
 test('returns existing access without requesting', async () => {
 	const access = create_access();
 	const request = vi.fn(() => Promise.resolve(create_access()));
-	assert.strictEqual(await request_access({midi_access: access}, request), access);
+	assert.strictEqual(await request_access({ midi_access: access }, request), access);
 	assert.strictEqual(request.mock.calls.length, 0);
 });
 
@@ -31,7 +31,7 @@ test('shares one pending request between callers', async () => {
 	const request = vi.fn(() => Promise.resolve(access));
 	const [a, b] = await Promise.all([
 		request_access(state, request),
-		request_access(state, request),
+		request_access(state, request)
 	]);
 	assert.strictEqual(a, access);
 	assert.strictEqual(b, access);
@@ -41,7 +41,10 @@ test('shares one pending request between callers', async () => {
 // regression: a failure was cached, so every later request rejected without retrying
 test('a failed request rejects and the next call retries', async () => {
 	const state = create_state();
-	await assert_rejects(() => request_access(state, () => Promise.reject(new Error('denied'))), /denied/); // prettier-ignore
+	await assert_rejects(
+		() => request_access(state, () => Promise.reject(new Error('denied'))),
+		/denied/
+	);
 	const access = create_access();
 	assert.strictEqual(await request_access(state, () => Promise.resolve(access)), access);
 	assert.strictEqual(state.midi_access, access);

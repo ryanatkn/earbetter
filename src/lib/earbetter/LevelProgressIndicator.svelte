@@ -1,19 +1,19 @@
 <script lang="ts">
-	import type {Level, Status, Trial} from '$lib/earbetter/level.svelte.js';
+	import type { Level, Status, Trial } from './level.svelte.ts';
 
 	interface Props {
 		level: Level;
 	}
 
-	const {level}: Props = $props();
+	const { level }: Props = $props();
 
 	const to_bg_color = (s: Status, t: Trial | null, ts: Array<Trial>, index: number): string => {
 		return s === 'complete'
-			? 'var(--lighten_5)'
+			? 'var(--lighten_50)'
 			: ts[index] // trials are created when needed, not ahead of time
 				? t && index === t.index
-					? 'var(--lighten_4)'
-					: 'var(--lighten_2)'
+					? 'var(--lighten_40)'
+					: 'var(--lighten_20)'
 				: 'transparent';
 	};
 
@@ -22,12 +22,12 @@
 			? 1
 			: level.trial
 				? (level.trial.index + 0.5) / level.level_data.trial_count
-				: 0,
+				: 0
 	);
 </script>
 
 <div class="level_progress_indicator" style:--progress_bar_percent={percent_complete}>
-	{#each {length: level.level_data.trial_count} as _, index (index)}
+	{#each { length: level.level_data.trial_count } as _, index (index)}
 		<div
 			class="level"
 			style:background-color={to_bg_color(level.status, level.trial, level.trials, index)}

@@ -1,17 +1,17 @@
 <script lang="ts">
-	import {plural} from '@ryanatkn/belt/string.js';
-	import type {Snippet} from 'svelte';
-	import type {SvelteSet} from 'svelte/reactivity';
-	import {innerWidth} from 'svelte/reactivity/window';
+	import { plural } from '@fuzdev/fuz_util/string.ts';
+	import type { Snippet } from 'svelte';
+	import type { SvelteSet } from 'svelte/reactivity';
+	import { innerWidth } from 'svelte/reactivity/window';
 
-	import Piano from '$lib/Piano.svelte';
-	import {audio_context_context} from '$lib/audio_context.js';
-	import MidiInput from '$lib/MidiInput.svelte';
-	import {start_playing, stop_playing} from '$lib/play_note.js';
-	import InitMidiButton from '$lib/InitMidiButton.svelte';
-	import VolumeControl from '$lib/VolumeControl.svelte';
-	import {Instrument, Volume, with_velocity} from '$lib/audio_helpers.js';
-	import InstrumentControl from '$lib/InstrumentControl.svelte';
+	import Piano from './Piano.svelte';
+	import { audio_context_context } from './audio_context.ts';
+	import MidiInput from './MidiInput.svelte';
+	import { start_playing, stop_playing } from './play_note.ts';
+	import InitMidiButton from './InitMidiButton.svelte';
+	import VolumeControl from './VolumeControl.svelte';
+	import { Instrument, Volume, with_velocity } from './audio_helpers.ts';
+	import InstrumentControl from './InstrumentControl.svelte';
 	import {
 		Midi,
 		serialize_notes,
@@ -20,9 +20,9 @@
 		parse_notes,
 		DEFAULT_PITCH_CLASS,
 		pitch_classes,
-		to_notes_in_scale,
-	} from '$lib/music.js';
-	import type {MIDIAccess} from '$lib/WebMIDI.js';
+		to_notes_in_scale
+	} from './music.ts';
+	import type { MIDIAccess } from './WebMIDI.ts';
 
 	// TODO @many naming convention between `IntervalsInput`/`NotesInput`/`SelectNotesControl`?
 
@@ -40,22 +40,22 @@
 		oninput?: (notes: Array<Midi> | null) => void; // TODO @many set reactivity - API is strange returning an array but taking a set (maybe return both?)
 	}
 
-	const {audio_state, notes, min_note, max_note, before_buttons, oninput}: Props = $props();
+	const { audio_state, notes, min_note, max_note, before_buttons, oninput }: Props = $props();
 
-	const {playing_notes} = audio_state;
+	const { playing_notes } = audio_state;
 
 	// TODO @many set reactivity - refactor these collections to use `svelte/reactivity` sets instead of cloning, upstream and downstream where appropriate
 
 	let updated_notes: Set<Midi> | undefined = $state();
 	const updated_notes_array: Array<Midi> | undefined = $derived(
-		updated_notes && Array.from(updated_notes).sort((a, b) => a - b),
+		updated_notes && Array.from(updated_notes).sort((a, b) => a - b)
 	);
 
 	const current_notes = $derived(updated_notes ?? notes);
 	const notes_count = $derived(current_notes.size);
 
 	const serialized_updated_notes = $derived(
-		updated_notes_array && serialize_notes(updated_notes_array),
+		updated_notes_array && serialize_notes(updated_notes_array)
 	);
 	const update_serialized_updated_notes = (s: string): void => {
 		updated_notes = new Set(parse_notes(s)); // de-dupes
@@ -90,7 +90,7 @@
 			ac(),
 			note,
 			with_velocity(audio_state.volume, velocity),
-			audio_state.instrument,
+			audio_state.instrument
 		);
 	};
 
@@ -148,30 +148,29 @@
 	</div>
 	<section class="box">
 		<label class="mb_lg">
-			<div class="title text_align_center">key</div>
+			<div class="title text-align:center">key</div>
 			<select bind:value={key}>
 				{#each pitch_classes as pc (pc)}
 					<option value={pc}>{pc}</option>
 				{/each}
-			</select></label
-		>
+			</select>
+		</label>
 		<div class="scales mb_lg">
 			{#each scales as scale (scale.name)}
 				<button type="button" onclick={() => toggle_scale(scale)}>{scale.name}</button>
 			{/each}
 		</div>
 		{@render buttons()}
-		<div class="notes width_sm">
+		<div class="notes width_atmost_sm">
 			<!-- TODO copy button -->
 			<blockquote class="panel my_lg">
 				<textarea
 					value={serialized_updated_notes}
-					onchange={(e) => update_serialized_updated_notes(e.currentTarget.value)}
-				></textarea>
+					onchange={(e) => update_serialized_updated_notes(e.currentTarget.value)}></textarea>
 			</blockquote>
 		</div>
 	</section>
-	<form class="width_sm panel p_md">
+	<form class="width_atmost_sm panel p_md">
 		<fieldset>
 			<InstrumentControl bind:instrument={audio_state.instrument} />
 			<VolumeControl bind:volume={audio_state.volume} />

@@ -1,12 +1,13 @@
 <script lang="ts">
-	import {slide} from 'svelte/transition';
-	import {swallow} from '@ryanatkn/belt/dom.js';
-	import Dialog from '@ryanatkn/fuz/Dialog.svelte';
-	import Alert from '@ryanatkn/fuz/Alert.svelte';
+	import * as s from '@fuzdev/fuz_schema/schema.ts';
+	import { slide } from 'svelte/transition';
+	import { swallow } from '@fuzdev/fuz_util/dom.ts';
+	import Dialog from '@fuzdev/fuz_ui/Dialog.svelte';
+	import Alert from '@fuzdev/fuz_ui/Alert.svelte';
 
-	import {create_realm_id, RealmData, RealmName, type RealmId} from '$lib/earbetter/realm.js';
-	import default_project_data from '$lib/projects/default_project.js';
-	import CopyToClipboard from '$lib/earbetter/CopyToClipboard.svelte';
+	import { create_realm_id, RealmData, RealmName, type RealmId } from './realm.ts';
+	import default_project_data from '../projects/default_project.ts';
+	import CopyToClipboard from './CopyToClipboard.svelte';
 
 	interface Props {
 		realm_data: RealmData;
@@ -17,7 +18,7 @@
 		onclose?: (realm_id: RealmId) => void;
 	}
 
-	const {realm_data, editing = false, onsubmit, onremove, onduplicate, onclose}: Props = $props();
+	const { realm_data, editing = false, onsubmit, onremove, onduplicate, onclose }: Props = $props();
 
 	let removing = $state(false);
 
@@ -25,10 +26,10 @@
 	const normalized_updated_name = $derived((updated_name as any)?.trim());
 
 	const to_data = (): RealmData =>
-		RealmData.parse({
+		s.parse_or_throw(RealmData, {
 			id: realm_data.id,
 			name: normalized_updated_name,
-			levels: realm_data.levels,
+			levels: realm_data.levels
 		});
 
 	const changed = $derived(normalized_updated_name !== realm_data.name);
@@ -53,7 +54,7 @@
 			const json = JSON.parse(updated);
 			// add an `id` if there is none
 			if (json && !json.id) json.id = create_realm_id();
-			const parsed = RealmData.parse(json);
+			const parsed = s.parse_or_throw(RealmData, json);
 			onsubmit(parsed);
 		} catch (err) {
 			parse_error_message = err.message || 'unknown error';
@@ -78,7 +79,7 @@
 			start_importing_el?.focus();
 		}}
 	>
-		<div class="importing pane shadow_d_xl p_xl width_md mx_auto">
+		<div class="importing pane shadow_xl shadow_d_50 p_xl width_atmost_md mx_auto">
 			<h2 class="my_0">import realm data</h2>
 			<CopyToClipboard
 				text={updated}
@@ -128,12 +129,12 @@
 		{#if editing}save changes to realm{:else}create realm{/if}
 	</button>
 	{#if onremove && editing}
-		<button type="button" onclick={() => (removing = !removing)}> remove realm </button>
+		<button type="button" onclick={() => (removing = !removing)}>remove realm</button>
 		{#if removing}
 			<div transition:slide class="pb_md">
 				<button
 					type="button"
-					class="color_c w_100"
+					class="palette_c width:100%"
 					onclick={() => {
 						removing = false;
 						onremove(realm_data.id);
@@ -144,7 +145,7 @@
 			</div>
 		{/if}
 		{#if onduplicate}
-			<button type="button" onclick={() => onduplicate(realm_data.id)}> duplicate realm </button>
+			<button type="button" onclick={() => onduplicate(realm_data.id)}>duplicate realm</button>
 		{/if}
 	{/if}
 	<button type="button" onclick={start_importing_data} bind:this={start_importing_el}>
@@ -161,7 +162,7 @@
 			<div transition:slide>
 				<button
 					type="button"
-					class="w_100"
+					class="width:100%"
 					onclick={() => {
 						toggle_create_default_realms = false;
 						onsubmit(default_project_data().realms);
@@ -178,7 +179,7 @@
 		</div>
 	{/if}
 	{#if onclose && editing}
-		<button class="w_100" type="button" onclick={() => onclose(realm_data.id)}>
+		<button class="width:100%" type="button" onclick={() => onclose(realm_data.id)}>
 			{#if changed}discard changes{:else}close realm editor{/if}
 		</button>
 	{/if}

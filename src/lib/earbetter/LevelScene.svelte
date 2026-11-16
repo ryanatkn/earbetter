@@ -1,21 +1,21 @@
 <script lang="ts">
-	import {is_editable, swallow} from '@ryanatkn/belt/dom.js';
-	import {scale, fly} from 'svelte/transition';
-	import {plural} from '@ryanatkn/belt/string.js';
-	import {onMount, untrack} from 'svelte';
+	import { is_editable, swallow } from '@fuzdev/fuz_util/dom.ts';
+	import { scale, fly } from 'svelte/transition';
+	import { plural } from '@fuzdev/fuz_util/string.ts';
+	import { onMount, untrack } from 'svelte';
 
-	import {LevelStats, type Level} from '$lib/earbetter/level.svelte.js';
-	import Piano from '$lib/Piano.svelte';
-	import LevelProgressIndicator from '$lib/earbetter/LevelProgressIndicator.svelte';
-	import TrialProgressIndicator from '$lib/earbetter/TrialProgressIndicator.svelte';
-	import {audio_context_context} from '$lib/audio_context.js';
-	import MidiInput from '$lib/MidiInput.svelte';
-	import type {Midi} from '$lib/music.js';
-	import {start_playing, stop_playing} from '$lib/play_note.js';
-	import {with_velocity} from '$lib/audio_helpers.js';
-	import LevelStatsSummary from '$lib/earbetter/LevelStatsSummary.svelte';
-	import TextBurst from '$lib/TextBurst.svelte';
-	import {app_context} from '$lib/earbetter/app.svelte.js';
+	import { LevelStats, type Level } from './level.svelte.ts';
+	import Piano from '../Piano.svelte';
+	import LevelProgressIndicator from './LevelProgressIndicator.svelte';
+	import TrialProgressIndicator from './TrialProgressIndicator.svelte';
+	import { audio_context_context } from '../audio_context.ts';
+	import MidiInput from '../MidiInput.svelte';
+	import type { Midi } from '../music.ts';
+	import { start_playing, stop_playing } from '../play_note.ts';
+	import { with_velocity } from '../audio_helpers.ts';
+	import LevelStatsSummary from './LevelStatsSummary.svelte';
+	import TextBurst from '../TextBurst.svelte';
+	import { app_context } from './app.svelte.ts';
 
 	interface Props {
 		level: Level;
@@ -23,7 +23,7 @@
 		exit_level: () => void;
 	}
 
-	const {level, level_stats, exit_level}: Props = $props();
+	const { level, level_stats, exit_level }: Props = $props();
 
 	const app = app_context.get();
 
@@ -32,11 +32,11 @@
 	let clientWidth: number | undefined = $state();
 
 	// TODO `level_data` is not reactive, so we can destructure, but should we?
-	const {level_data} = $derived(level);
+	const { level_data } = $derived(level);
 	const guessing_index = $derived(level.trial?.guessing_index);
 
 	const pressed_keys = $derived(level.status === 'presenting_prompt' ? null : app.playing_notes);
-	const highlighted_keys = $derived(level.trial && new Set([level.trial.sequence[0]]));
+	const highlighted_keys = $derived(level.trial && new Set([level.trial.sequence[0]!]));
 
 	// TODO `onMount` makes this not reactive to `level` changing, need to rethink starting it anyway for the audio context init
 	onMount(() => {
@@ -187,16 +187,18 @@
 	<div class="feedback" class:success class:failure class:complete>
 		{#if complete}
 			<div class="completed_level_feedback">
-				<div class="pane shadow_d_xl p_xl3 pt_0 box" transition:scale>
-					<div class="box row" in:scale={{duration: 3000}}>
-						<div class="completed_header_icon" in:fly={{duration: 4000, x: -200}}>♫</div>
-						<div class="completed_header_icon" in:fly={{duration: 4000, x: 200}}>♩<sup>♪</sup></div>
+				<div class="pane shadow_xl shadow_d_50 p_xl3 pt_0 box" transition:scale>
+					<div class="box row" in:scale={{ duration: 3000 }}>
+						<div class="completed_header_icon" in:fly={{ duration: 4000, x: -200 }}>♫</div>
+						<div class="completed_header_icon" in:fly={{ duration: 4000, x: 200 }}>
+							♩<sup>♪</sup>
+						</div>
 					</div>
 					<!-- TODO buggy in Svelte 5 -   -->
-					<div class="panel p_md mb_md box w_100">
+					<div class="panel p_md mb_md box width:100%">
 						<div class="panel p_md mb_md box">
 							{#if level.mistakes === 0}
-								<div class="font_size_xl3 text_align_center">flawless run!</div>
+								<div class="font_size_xl3 text-align:center">flawless run!</div>
 							{:else}
 								<div class="font_size_xl3">
 									{level.mistakes}
@@ -212,8 +214,8 @@
 					</div>
 					<!-- TODO buggy in Svelte 5 - in:scale={{delay: 500}} -->
 					<button type="button" class="big mb_md" onclick={() => exit_level()}>
-						go back to the map &nbsp;<code>Space</code></button
-					>
+						go back to the map &nbsp;<code>Space</code>
+					</button>
 					<!-- TODO buggy in Svelte 5 - in:scale={{delay: 750}} -->
 					<button type="button" class="big" onclick={() => level.reset()}>
 						replay level &nbsp;<code>r</code>

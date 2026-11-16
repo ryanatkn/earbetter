@@ -1,22 +1,23 @@
 <script lang="ts">
-	import {slide} from 'svelte/transition';
+	import * as s from '@fuzdev/fuz_schema/schema.ts';
+	import { slide } from 'svelte/transition';
 
-	import {RealmData} from '$lib/earbetter/realm.js';
-	import RealmItems from '$lib/earbetter/RealmItems.svelte';
-	import type {App} from '$lib/earbetter/app.svelte.js';
+	import { RealmData } from './realm.ts';
+	import RealmItems from './RealmItems.svelte';
+	import type { App } from './app.svelte.ts';
 
 	interface Props {
 		app: App; // TODO maybe change to be more granular objects?
 	}
 
-	const {app}: Props = $props();
+	const { app }: Props = $props();
 
-	const {select_realm, edit_realm, remove_realm} = $derived(app);
+	const { select_realm, edit_realm, remove_realm } = $derived(app);
 
 	const creating = $derived(
 		app.editing_realm &&
 			!!app.editing_realm_data &&
-			app.selected_realm_data?.id !== app.editing_realm_data.id,
+			app.selected_realm_data?.id !== app.editing_realm_data.id
 	);
 
 	const no_realms = $derived(!app.realms?.length);
@@ -29,7 +30,7 @@
 		} else if (creating) {
 			app.editing_realm = false;
 		} else {
-			edit_realm(RealmData.parse({}));
+			edit_realm(s.parse_or_throw(RealmData, {}));
 		}
 	};
 </script>

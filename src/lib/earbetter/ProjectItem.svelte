@@ -1,7 +1,7 @@
 <script lang="ts">
-	import {slide} from 'svelte/transition';
+	import { slide } from 'svelte/transition';
 
-	import type {ProjectData, ProjectId, ProjectMetadata} from '$lib/earbetter/project.js';
+	import type { ProjectData, ProjectId, ProjectMetadata } from './project.ts';
 
 	interface Props {
 		project: ProjectMetadata;
@@ -25,7 +25,7 @@
 		edit = null,
 		remove = null,
 		selected,
-		editing,
+		editing
 	}: Props = $props();
 
 	let removing = $state(false);
@@ -33,7 +33,7 @@
 
 <li class="project_item" transition:slide class:selected>
 	{#if select}
-		<button type="button" class="flex_1" onclick={() => select(project.id)} class:selected>
+		<button type="button" class="flex:1" onclick={() => select(project.id)} class:selected>
 			{project.name}
 		</button>
 	{/if}
@@ -45,7 +45,7 @@
 			class="icon_button plain_button font_size_xl deselectable"
 			title={removing ? 'remove project' : 'edit project'}
 			class:selected={selected && !removing && editing}
-			class:color_c={removing}
+			class:palette_c={removing}
 			onclick={() => (removing ? remove?.(project.id) : edit?.(project_data ?? load(project.id)))}
 		>
 			{#if removing}✕{:else}✎{/if}

@@ -1,4 +1,4 @@
-import {describe, test, assert} from 'vitest';
+import { describe, test, assert } from 'vitest';
 
 import {
 	chromas,
@@ -20,8 +20,8 @@ import {
 	transpose,
 	chroma_to_hue,
 	chroma_to_hsl_string,
-	type Midi,
-} from '$lib/music.js';
+	type Midi
+} from '#lib/music.ts';
 
 describe('midi tables', () => {
 	test('cover every midi value', () => {
@@ -37,7 +37,7 @@ describe('midi tables', () => {
 		['middle C', 60, 'C4', 4, 1],
 		['A440', 69, 'A4', 4, 10],
 		['B below middle C', 59, 'B3', 3, 12],
-		['highest', 127, 'G9', 9, 8],
+		['highest', 127, 'G9', 9, 8]
 	];
 	test.each(cases)('%s', (_label, midi, name, octave, chroma) => {
 		assert.strictEqual(midi_names[midi], name);
@@ -53,10 +53,10 @@ describe('midi tables', () => {
 	test('naturals are the notes without a sharp', () => {
 		assert.deepEqual(
 			[...midi_naturals].filter((m) => m < 24),
-			[0, 2, 4, 5, 7, 9, 11, 12, 14, 16, 17, 19, 21, 23],
+			[0, 2, 4, 5, 7, 9, 11, 12, 14, 16, 17, 19, 21, 23]
 		);
 		for (const m of midis) {
-			assert.strictEqual(midi_naturals.has(m), !midi_names[m].includes('♯'), midi_names[m]);
+			assert.strictEqual(midi_naturals.has(m), !midi_names[m]!.includes('♯'), midi_names[m]);
 		}
 	});
 });
@@ -84,7 +84,7 @@ describe('is_midi', () => {
 		[128, false],
 		[60.5, false],
 		[NaN, false],
-		[Infinity, false],
+		[Infinity, false]
 	];
 	test.each(cases)('%s → %s', (value, expected) => {
 		assert.strictEqual(is_midi(value), expected);

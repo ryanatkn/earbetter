@@ -1,11 +1,12 @@
-import {test, assert, vi, beforeEach, afterEach} from 'vitest';
-import {goto} from '$app/navigation';
+import * as s from '@fuzdev/fuz_schema/schema.ts';
+import { test, assert, vi, beforeEach, afterEach } from 'vitest';
+import { goto } from '$app/navigation';
 
-import {LevelData, to_level_url} from '$lib/earbetter/level.svelte.js';
-import {create_memory_storage} from '../test_helpers.js';
-import {create_app, type AppHarness} from './app_test_helpers.svelte.js';
+import { LevelData, to_level_url } from '#lib/earbetter/level.svelte.ts';
+import { create_memory_storage } from '../test_helpers.ts';
+import { create_app, type AppHarness } from './app_test_helpers.svelte.ts';
 
-vi.mock('$app/navigation', () => ({goto: vi.fn()}));
+vi.mock('$app/navigation', () => ({ goto: vi.fn() }));
 
 let harness: AppHarness;
 
@@ -24,27 +25,27 @@ test('no level without active level data', () => {
 });
 
 test('active level data creates a level', () => {
-	const {app} = harness;
-	const data = LevelData.parse({});
+	const { app } = harness;
+	const data = s.parse_or_throw(LevelData, {});
 	app.set_active_level_data(data);
-	const {level} = app;
+	const { level } = app;
 	assert.ok(level);
 	assert.strictEqual(level.level_data, data);
 	assert.strictEqual(level.status, 'initial');
 });
 
 test('the same active level data keeps the level', () => {
-	const {app} = harness;
-	const data = LevelData.parse({});
+	const { app } = harness;
+	const data = s.parse_or_throw(LevelData, {});
 	app.set_active_level_data(data);
-	const {level} = app;
+	const { level } = app;
 	app.set_active_level_data(data);
 	assert.strictEqual(app.level, level);
 });
 
 test('replacing the active level disposes the previous one', () => {
-	const {app} = harness;
-	app.set_active_level_data(LevelData.parse({}));
+	const { app } = harness;
+	app.set_active_level_data(s.parse_or_throw(LevelData, {}));
 	const previous = app.level!;
 	const seq_id = previous.seq_id;
 	app.set_active_level_data(null);
@@ -53,18 +54,18 @@ test('replacing the active level disposes the previous one', () => {
 });
 
 test('a completed level records stats on the selected project', () => {
-	const {app} = harness;
-	const data = app.levels![0];
+	const { app } = harness;
+	const data = app.levels![0]!;
 	app.set_active_level_data(data);
 	app.level!.start();
 	app.level!.win();
-	assert.deepEqual(app.selected_project_data!.level_stats.mistakes[data.id], [0]);
+	assert.deepEqual(app.selected_project_data!.level_stats.mistakes[data.id]!, [0]);
 	app.set_active_level_data(null);
 });
 
 test('play_level navigates to the level and keeps it as the draft', async () => {
-	const {app} = harness;
-	const level = app.levels![1];
+	const { app } = harness;
+	const level = app.levels![1]!;
 	await app.play_level(level.id);
 	assert.deepEqual(vi.mocked(goto).mock.calls, [[to_level_url(level)]]);
 	assert.strictEqual(app.draft_level_data, level);
@@ -77,6 +78,6 @@ test('play_level ignores an unknown level', async () => {
 
 test('exit_level navigates to the trainer', async () => {
 	await harness.app.exit_level();
-	const [[url]] = vi.mocked(goto).mock.calls as Array<[string]>;
+	const [[url]] = vi.mocked(goto).mock.calls as [[string]];
 	assert.ok(url.endsWith('/trainer'));
 });

@@ -1,50 +1,54 @@
-import {goto} from '$app/navigation';
-import {z} from 'zod';
-import {untrack} from 'svelte';
-import {create_context} from '@ryanatkn/fuz/context_helpers.js';
-import {resolve} from '$app/paths';
-import {SvelteSet} from 'svelte/reactivity';
+import { goto } from '$app/navigation';
+import * as s from '@fuzdev/fuz_schema/schema.ts';
+import { untrack } from 'svelte';
+import { create_context } from '@fuzdev/fuz_ui/context_helpers.ts';
+import { resolve } from '$app/paths';
+import { SvelteSet } from 'svelte/reactivity';
 
 import {
 	add_mistakes_to_level_stats,
 	to_level_url,
 	Level,
 	LevelData,
-	type LevelId,
-} from '$lib/earbetter/level.svelte.js';
-import {ProjectData, ProjectId, ProjectName} from '$lib/earbetter/project.js';
-import {load_from_storage, set_in_storage} from '$lib/storage.js';
-import {RealmId, RealmData} from '$lib/earbetter/realm.js';
-import default_project_data from '$lib/projects/default_project.js';
-import {to_next_name} from '$lib/entity.js';
+	type LevelId
+} from './level.svelte.ts';
+import { ProjectData, ProjectId, ProjectName } from './project.ts';
+import { load_from_storage, set_in_storage } from '../storage.ts';
+import { RealmId, RealmData } from './realm.ts';
+import default_project_data from '../projects/default_project.ts';
+import { to_next_name } from '../entity.ts';
 import {
 	DEFAULT_INSTRUMENT,
 	DEFAULT_VOLUME,
 	type Instrument,
-	type Volume,
-} from '$lib/audio_helpers.js';
+	type Volume
+} from '../audio_helpers.ts';
 import {
 	DEFAULT_SCALE,
 	pitch_classes,
 	to_notes_in_scale,
 	type Midi,
 	type PitchClass,
-	type Scale,
-} from '$lib/music.js';
-import type {MIDIAccess} from '$lib/WebMIDI.js';
-import type {SiteData} from '$routes/site_data.js';
+	type Scale
+} from '../music.ts';
+import type { MIDIAccess } from '../WebMIDI.ts';
+import type { SiteData } from '../../routes/site_data.ts';
 
 // TODO maybe a `@batched` or `@action` decorator instead of manual `batch`?
 
 // TODO refactor all storage calls, and rethink in signals instead of all top-level orchestration (that's less reusable)
 
-export const AppData = z.object({
-	projects: z.array(z.object({id: ProjectId, name: ProjectName})).default(() => []),
-	selected_project_id: z.union([ProjectId, z.null()]).default(null),
-	selected_realm_id: z.union([RealmId, z.null()]).default(null),
-	show_trainer_help: z.boolean().default(true),
+// strips unknown keys because it's persisted across versions
+export const AppData = s.strip_object({
+	projects: s.with_default_fn(
+		s.array(s.strip_object({ id: ProjectId, name: ProjectName })),
+		() => []
+	),
+	selected_project_id: s.with_default(s.nullable(ProjectId), null),
+	selected_realm_id: s.with_default(s.nullable(RealmId), null),
+	show_trainer_help: s.with_default(s.boolean, true)
 });
-export type AppData = z.infer<typeof AppData>;
+export type AppData = s.Infer<typeof AppData>;
 
 export const app_context = create_context<App>();
 
@@ -60,7 +64,7 @@ export class App {
 	scale: Scale = $state.raw(DEFAULT_SCALE);
 	key: PitchClass = $state(pitch_classes[0]);
 	enabled_notes: Set<Midi> | null = $derived(
-		this.scale.name === 'chromatic' ? null : to_notes_in_scale(this.scale, this.key),
+		this.scale.name === 'chromatic' ? null : to_notes_in_scale(this.scale, this.key)
 	);
 	playing_notes: SvelteSet<Midi> = new SvelteSet();
 
@@ -73,7 +77,7 @@ export class App {
 	toggle_trainer_help = (): void => {
 		this.app_data = {
 			...this.app_data,
-			show_trainer_help: !this.show_trainer_help,
+			show_trainer_help: !this.show_trainer_help
 		};
 	};
 
@@ -81,7 +85,7 @@ export class App {
 
 	selected_project_id: ProjectId | null = $state(null);
 	selected_project_data: ProjectData | null = $derived(
-		this.project_datas.find((p) => p.id === this.selected_project_id) ?? null,
+		this.project_datas.find((p) => p.id === this.selected_project_id) ?? null
 	);
 	realms: Array<RealmData> | null = $derived(this.selected_project_data?.realms ?? null);
 	editing_project: boolean = $state(false);
@@ -90,15 +94,15 @@ export class App {
 	editing_project_id: ProjectId | null = $derived(
 		this.editing_project_draft
 			? (this.draft_project_data?.id ?? null)
-			: (this.selected_project_data?.id ?? null),
+			: (this.selected_project_data?.id ?? null)
 	); // this may be `selected_project_data`, or a new project def draft that hasn't been created yet
 	editing_project_data: ProjectData | null = $derived(
-		this.editing_project_draft ? this.draft_project_data : this.selected_project_data,
+		this.editing_project_draft ? this.draft_project_data : this.selected_project_data
 	);
 
 	selected_realm_id: RealmId | null = $state(null);
 	selected_realm_data: RealmData | null = $derived(
-		this.realms?.find((p) => p.id === this.selected_realm_id) ?? null,
+		this.realms?.find((p) => p.id === this.selected_realm_id) ?? null
 	);
 	editing_realm: boolean = $state(false);
 	editing_realm_draft: boolean = $state(false);
@@ -106,10 +110,10 @@ export class App {
 	editing_realm_id: RealmId | null = $derived(
 		this.editing_realm_draft
 			? (this.draft_realm_data?.id ?? null)
-			: (this.selected_realm_data?.id ?? null),
+			: (this.selected_realm_data?.id ?? null)
 	); // this may be `selected_realm_data`, or a new realm def draft that hasn't been created yet
 	editing_realm_data: RealmData | null = $derived(
-		this.editing_realm_draft ? this.draft_realm_data : this.selected_realm_data,
+		this.editing_realm_draft ? this.draft_realm_data : this.selected_realm_data
 	);
 
 	/**
@@ -133,7 +137,7 @@ export class App {
 	constructor(
 		get_audio_context: () => AudioContext,
 		initial_site_data: SiteData | null = null,
-		storage_key = 'app',
+		storage_key = 'app'
 	) {
 		this.get_audio_context = get_audio_context;
 		this.storage_key = storage_key;
@@ -146,14 +150,14 @@ export class App {
 		}
 
 		// TODO refactor
-		const {selected_project_id} = this.app_data;
+		const { selected_project_id } = this.app_data;
 		const project_data = this.load_project(
-			selected_project_id ?? // eslint-disable-line @typescript-eslint/no-unnecessary-condition
+			selected_project_id ??
 				this.app_data.projects[0]?.id ??
-				this.create_project(default_project_data()).id,
+				this.create_project(default_project_data()).id
 		)!;
 		this.selected_project_id = project_data.id;
-		this.selected_realm_id = this.app_data.selected_realm_id ?? project_data.realms[0]?.id ?? null; // eslint-disable-line @typescript-eslint/no-unnecessary-condition
+		this.selected_realm_id = this.app_data.selected_realm_id ?? project_data.realms[0]?.id ?? null;
 		// TODO rethink how this works - is setting state inside an $effect, and in a constructor
 		// save changes to `selected_project_id` and `selected_realm_id` back to the `app_data`,
 		// these could be decoupled but are often fired together
@@ -165,7 +169,7 @@ export class App {
 				selected_project_id !== app_data.selected_project_id ||
 				selected_realm_id !== app_data.selected_realm_id
 			) {
-				this.app_data = {...app_data, selected_project_id, selected_realm_id};
+				this.app_data = { ...app_data, selected_project_id, selected_realm_id };
 			}
 		});
 	}
@@ -176,7 +180,11 @@ export class App {
 	}
 
 	load(): AppData {
-		const loaded = load_from_storage(this.storage_key, () => AppData.parse({}), AppData.parse);
+		const loaded = load_from_storage(
+			this.storage_key,
+			() => s.parse_or_throw(AppData, {}),
+			(v) => s.parse_or_throw(AppData, v)
+		);
 		let ids_to_delete: Array<ProjectId> | null = null;
 		for (const p of loaded.projects) {
 			if (localStorage.getItem(p.id) === null) {
@@ -197,17 +205,17 @@ export class App {
 		const project_data = this.project_datas.find((p) => p.id === id);
 		set_in_storage(id, project_data); // correctly deletes the storage key if `undefined`
 		const app_data = this.app_data;
-		const {projects} = app_data;
+		const { projects } = app_data;
 		if (project_data) {
 			if (!projects.some((p) => p.id === id)) {
 				this.app_data = {
 					...app_data,
-					projects: projects.concat({id, name: project_data.name}),
+					projects: projects.concat({ id, name: project_data.name })
 				};
 			}
 		} else {
 			if (projects.some((p) => p.id === id)) {
-				this.app_data = {...app_data, projects: projects.filter((p) => p.id !== id)};
+				this.app_data = { ...app_data, projects: projects.filter((p) => p.id !== id) };
 			}
 		}
 	};
@@ -216,7 +224,7 @@ export class App {
 		// a project created this session is already loaded, so don't add it twice
 		const existing = id ? this.project_datas.find((p) => p.id === id) : undefined;
 		if (existing) return existing;
-		const loaded = id ? load_from_storage(id, null, ProjectData.parse) : null;
+		const loaded = id ? load_from_storage(id, null, (v) => s.parse_or_throw(ProjectData, v)) : null;
 		if (loaded) {
 			// TODO batch if this code stays imperative like this
 			this.project_datas = this.project_datas.concat(loaded);
@@ -226,10 +234,10 @@ export class App {
 		if (id && this.app_data.projects.some((p) => p.id === id)) {
 			this.app_data = {
 				...this.app_data,
-				projects: this.app_data.projects.filter((p) => p.id !== id),
+				projects: this.app_data.projects.filter((p) => p.id !== id)
 			};
 		}
-		const project_data = ProjectData.parse({});
+		const project_data = s.parse_or_throw(ProjectData, {});
 		this.create_project(project_data);
 		return project_data;
 	};
@@ -251,7 +259,7 @@ export class App {
 			return;
 		}
 		this.editing_project = true;
-		const {id} = project_data;
+		const { id } = project_data;
 		const found = this.project_datas.find((d) => d.id === id);
 		if (found) {
 			// existing project
@@ -265,19 +273,19 @@ export class App {
 	};
 
 	remove_project = (id: ProjectId): void => {
-		const {projects} = this.app_data;
+		const { projects } = this.app_data;
 		const existing = projects.find((d) => d.id === id);
 		if (!existing) return;
 		// TODO syncing `app_data` with `projects` is awkward
 		this.app_data = {
 			...this.app_data,
-			projects: projects.filter((p) => p.id !== id),
+			projects: projects.filter((p) => p.id !== id)
 		};
 		this.project_datas = this.project_datas.filter((p) => p.id !== id);
 		if (this.selected_project_id === id) {
 			this.selected_project_id =
-				this.project_datas[0]?.id ?? // eslint-disable-line @typescript-eslint/no-unnecessary-condition
-				this.load_project(this.app_data.projects[0]?.id)?.id ??
+				this.project_datas[0]?.id ??
+				this.load_project(this.app_data.projects[0]?.id ?? null)?.id ??
 				null;
 		}
 		this.save_project(id);
@@ -285,7 +293,7 @@ export class App {
 
 	create_project = (project_data: ProjectData): ProjectData => {
 		const projects = this.project_datas;
-		const {id} = project_data;
+		const { id } = project_data;
 		const existing = projects.find((d) => d.id === id);
 		if (existing) {
 			return existing;
@@ -293,7 +301,7 @@ export class App {
 		// TODO syncing `app_data` with `projects` is awkward
 		this.app_data = {
 			...this.app_data,
-			projects: this.app_data.projects.concat({id, name: project_data.name}),
+			projects: this.app_data.projects.concat({ id, name: project_data.name })
 		};
 		this.project_datas = projects.concat(project_data);
 		this.selected_project_id = id;
@@ -311,10 +319,10 @@ export class App {
 		if (!project_data) {
 			return;
 		}
-		const {id: _, name, ...rest} = project_data;
-		const new_project_data = ProjectData.parse({
+		const { id: _, name, ...rest } = project_data;
+		const new_project_data = s.parse_or_throw(ProjectData, {
 			...rest,
-			name: to_next_name(name, projects),
+			name: to_next_name(name, projects)
 		});
 		this.create_project(new_project_data);
 		this.draft_project_data = new_project_data; // TODO move to component?
@@ -325,20 +333,20 @@ export class App {
 
 	update_project = (project_data: ProjectData): void => {
 		const projects = this.project_datas;
-		const {id} = project_data;
+		const { id } = project_data;
 		const index = projects.findIndex((p) => p.id === id);
 		if (index === -1) {
 			return; // no active project
 		}
-		const existing = projects[index];
+		const existing = projects[index]!;
 		// TODO syncing `app_data` with `projects` is awkward
 		if (project_data.name !== existing.name) {
 			const app_data = this.app_data;
 			this.app_data = {
 				...app_data,
 				projects: app_data.projects.map((p) =>
-					p.id === id ? {id: p.id, name: project_data.name} : p,
-				),
+					p.id === id ? { id: p.id, name: project_data.name } : p
+				)
 			};
 		}
 		const updated = projects.slice();
@@ -369,7 +377,7 @@ export class App {
 			return;
 		}
 		this.editing_realm = true;
-		const {id} = realm_data;
+		const { id } = realm_data;
 		const found = this.realms?.find((d) => d.id === id);
 		if (found) {
 			// existing realm
@@ -387,7 +395,7 @@ export class App {
 		if (!project_data) {
 			return; // no active project
 		}
-		const {realms} = project_data;
+		const { realms } = project_data;
 		const realm_data = realms.find((d) => d.id === id);
 		if (!realm_data) {
 			return;
@@ -400,7 +408,7 @@ export class App {
 		}
 		this.update_project({
 			...project_data,
-			realms: realms.filter((d) => d !== realm_data),
+			realms: realms.filter((d) => d !== realm_data)
 		});
 	};
 
@@ -409,18 +417,18 @@ export class App {
 		if (!project_data) {
 			return; // no active project
 		}
-		const {realms} = project_data;
+		const { realms } = project_data;
 		const realm_data = realms.find((d) => d.id === id);
 		if (!realm_data) {
 			return;
 		}
-		const {id: _, name, levels, ...rest} = realm_data;
+		const { id: _, name, levels, ...rest } = realm_data;
 		// the copied levels get new ids, because level ids must be unique across the project's realms
 		// for lookups like `update_level` and for `level_stats`
-		const new_realm_data = RealmData.parse({
+		const new_realm_data = s.parse_or_throw(RealmData, {
 			...rest,
 			name: to_next_name(name, realms),
-			levels: levels.map(({id: _, ...level}) => level),
+			levels: levels.map(({ id: _, ...level }) => level)
 		});
 		this.create_realm(new_realm_data);
 		this.draft_realm_data = new_realm_data; // TODO move to component?
@@ -432,7 +440,7 @@ export class App {
 		if (!project_data) {
 			return; // no active project
 		}
-		const {realms} = project_data;
+		const { realms } = project_data;
 		// TODO is it weird that these access both `this.realms` and the source of truth `project_data`,
 		// or would it be better to always go through the `project_data`?
 		const existing = realms.find((d) => d.id === realm_data.id);
@@ -440,7 +448,7 @@ export class App {
 			return;
 		}
 
-		this.update_project({...project_data, realms: realms.concat(realm_data)});
+		this.update_project({ ...project_data, realms: realms.concat(realm_data) });
 		if (select) this.selected_realm_id = realm_data.id;
 		// TODO is awkward but works
 		if (this.draft_realm_data?.id === realm_data.id) {
@@ -453,15 +461,15 @@ export class App {
 		if (!project_data) {
 			return; // no active project
 		}
-		const {realms} = project_data;
-		const {id} = realm_data;
+		const { realms } = project_data;
+		const { id } = realm_data;
 		const index = realms.findIndex((d) => d.id === id);
 		if (index === -1) {
 			return;
 		}
 		const updated = realms.slice();
 		updated[index] = realm_data;
-		this.update_project({...project_data, realms: updated});
+		this.update_project({ ...project_data, realms: updated });
 		this.selected_realm_id = id;
 	};
 
@@ -484,10 +492,10 @@ export class App {
 		if (!project_data) {
 			return; // no active project
 		}
-		const {realms} = project_data;
+		const { realms } = project_data;
 		for (let i = 0; i < realms.length; i++) {
-			const realm_data = realms[i];
-			const {levels} = realm_data;
+			const realm_data = realms[i]!;
+			const { levels } = realm_data;
 			const level_data_index = levels.findIndex((d) => d.id === id);
 			if (level_data_index === -1) continue;
 			if (id === this.draft_level_data?.id) {
@@ -496,8 +504,8 @@ export class App {
 			const next_realms = realms.slice();
 			const next_levels = levels.slice();
 			next_levels.splice(level_data_index, 1);
-			next_realms[i] = {...realm_data, levels: next_levels};
-			this.update_project({...project_data, realms: next_realms});
+			next_realms[i] = { ...realm_data, levels: next_levels };
+			this.update_project({ ...project_data, realms: next_realms });
 			return;
 		}
 	};
@@ -508,12 +516,12 @@ export class App {
 		if (!project_data) {
 			return; // no active project
 		}
-		const {realms} = project_data;
+		const { realms } = project_data;
 		const realm_data = this.selected_realm_data;
 		if (!realm_data) {
 			return;
 		}
-		const {levels} = realm_data;
+		const { levels } = realm_data;
 
 		const existing = levels.find((d) => d.id === level_data.id);
 		if (existing) {
@@ -527,10 +535,10 @@ export class App {
 		}
 		next_realms[realm_data_index] = {
 			...realm_data,
-			levels: realm_data.levels.concat(level_data),
+			levels: realm_data.levels.concat(level_data)
 		};
 
-		this.update_project({...project_data, realms: next_realms});
+		this.update_project({ ...project_data, realms: next_realms });
 		this.editing_level = false;
 		this.draft_level_data = null;
 
@@ -542,13 +550,16 @@ export class App {
 		if (!realm_data) {
 			return; // no active realm
 		}
-		const {levels} = realm_data;
+		const { levels } = realm_data;
 		const level_data = levels.find((d) => d.id === id);
 		if (!level_data) {
 			return;
 		}
-		const {id: _, name, ...rest} = level_data;
-		const new_level_data = LevelData.parse({...rest, name: to_next_name(name, levels)});
+		const { id: _, name, ...rest } = level_data;
+		const new_level_data = s.parse_or_throw(LevelData, {
+			...rest,
+			name: to_next_name(name, levels)
+		});
 		this.create_level(new_level_data);
 		this.editing_level = true;
 		this.draft_level_data = new_level_data; // TODO move to component?
@@ -559,18 +570,18 @@ export class App {
 		if (!project_data) {
 			return; // no active project
 		}
-		const {realms} = project_data;
-		const {id} = level_data;
+		const { realms } = project_data;
+		const { id } = level_data;
 		for (let i = 0; i < realms.length; i++) {
-			const realm_data = realms[i];
-			const {levels} = realm_data;
+			const realm_data = realms[i]!;
+			const { levels } = realm_data;
 			const level_data_index = levels.findIndex((d) => d.id === id);
 			if (level_data_index === -1) continue;
 			const next_levels = levels.slice();
 			next_levels[level_data_index] = level_data;
 			const next_realms = realms.slice();
-			next_realms[i] = {...realm_data, levels: next_levels};
-			this.update_project({...project_data, realms: next_realms});
+			next_realms[i] = { ...realm_data, levels: next_levels };
+			this.update_project({ ...project_data, realms: next_realms });
 			this.draft_level_data = level_data; // TODO maybe push to the component?
 			return;
 		}
@@ -581,7 +592,7 @@ export class App {
 		if (!project_data) return;
 		this.update_project({
 			...project_data,
-			level_stats: add_mistakes_to_level_stats(project_data.level_stats, id, mistakes),
+			level_stats: add_mistakes_to_level_stats(project_data.level_stats, id, mistakes)
 		});
 	};
 

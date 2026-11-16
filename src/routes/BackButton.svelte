@@ -1,5 +1,5 @@
 <script lang="ts">
-	import type {Snippet} from 'svelte';
+	import type { Snippet } from 'svelte';
 
 	interface Props {
 		title?: string;
@@ -7,7 +7,7 @@
 		children?: Snippet;
 	}
 
-	const {title = 'go back', onclick, children}: Props = $props();
+	const { title = 'go back', onclick, children }: Props = $props();
 </script>
 
 <button type="button" {title} class="icon_button plain_button" {onclick}>

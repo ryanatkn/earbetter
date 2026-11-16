@@ -1,14 +1,14 @@
 <script lang="ts">
-	import Svg from '@ryanatkn/fuz/Svg.svelte';
-	import {github_logo} from '@ryanatkn/fuz/logos.js';
+	import Svg from '@fuzdev/fuz_ui/Svg.svelte';
+	import { logo_github } from '@fuzdev/fuz_ui/logos.ts';
 
-	import SiteBreadcrumb from '$routes/SiteBreadcrumb.svelte';
+	import SiteBreadcrumb from './SiteBreadcrumb.svelte';
 
 	interface Props {
 		hide_main_menu_button?: boolean;
 	}
 
-	const {hide_main_menu_button = false}: Props = $props();
+	const { hide_main_menu_button = false }: Props = $props();
 </script>
 
 <footer>
@@ -17,8 +17,7 @@
 	</div>
 	<div class="box">
 		<a class="box chip p_md" href="https://github.com/ryanatkn/earbetter">
-			<Svg data={github_logo} size="var(--icon_size_lg)" />
-			source code
+			<Svg data={logo_github} size="var(--icon_size_lg)" /> source code
 		</a>
 	</div>
 	<!-- TODO switch to `class="font_size_xl"` when Fuz changes to use vb/vi -->

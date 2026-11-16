@@ -1,4 +1,4 @@
-import {midi_chromas, midi_naturals, type Midi, compute_naturals, type Chroma} from '$lib/music.js';
+import { midi_chromas, midi_naturals, type Midi, compute_naturals, type Chroma } from './music.ts';
 
 const KEY_HEIGHT_MULT = 5; // width * mult = height // TODO - make dependent on container? is this the right layout tradeoff to make in terms of aspect ratio?
 const ACCIDENTAL_KEY_WIDTH_MULT = 7 / 12;
@@ -19,7 +19,7 @@ const key_left_offset_pct: Record<Chroma, number> = {
 	9: -1 / 2, // -1 / 2,
 	10: 0,
 	11: -1 / 3, // -1 / 4,
-	12: 0,
+	12: 0
 };
 
 export interface Piano {
@@ -47,10 +47,10 @@ export const compute_piano = (
 	width: number,
 	min_note: Midi,
 	max_note: Midi,
-	max_height = 500,
+	max_height = 500
 ): Piano => {
-	const min_note_offset = Math.abs(key_left_offset_pct[midi_chromas[min_note]]);
-	let max_note_offset = Math.abs(key_left_offset_pct[midi_chromas[max_note]]);
+	const min_note_offset = Math.abs(key_left_offset_pct[midi_chromas[min_note]!]);
+	let max_note_offset = Math.abs(key_left_offset_pct[midi_chromas[max_note]!]);
 	if (max_note_offset) max_note_offset = 1 - max_note_offset;
 
 	const note_count = max_note - min_note + 1;
@@ -61,7 +61,7 @@ export const compute_piano = (
 			natural_key_height: max_height,
 			natural_key_width: 0,
 			accidental_key_height: 0,
-			accidental_key_width: 0,
+			accidental_key_width: 0
 		};
 	}
 
@@ -89,7 +89,7 @@ export const compute_piano = (
 			// this could be improved but it's kinda close
 			left_offset =
 				natural_index * natural_key_width +
-				key_left_offset_pct[midi_chromas[note]] * accidental_key_width +
+				key_left_offset_pct[midi_chromas[note]!] * accidental_key_width +
 				min_note_offset * accidental_key_width;
 		}
 
@@ -97,7 +97,7 @@ export const compute_piano = (
 			note,
 			left_offset,
 			width: key_width,
-			height: key_height,
+			height: key_height
 		});
 	}
 
@@ -106,6 +106,6 @@ export const compute_piano = (
 		natural_key_height,
 		natural_key_width,
 		accidental_key_height,
-		accidental_key_width,
+		accidental_key_width
 	};
 };

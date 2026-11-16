@@ -1,9 +1,9 @@
 <script lang="ts">
-	import {slide} from 'svelte/transition';
+	import { slide } from 'svelte/transition';
 
-	import type {RealmData, RealmId} from '$lib/earbetter/realm.js';
-	import RealmStatsSummary from '$lib/earbetter/RealmStatsSummary.svelte';
-	import type {ProjectData} from '$lib/earbetter/project.js';
+	import type { RealmData, RealmId } from './realm.ts';
+	import RealmStatsSummary from './RealmStatsSummary.svelte';
+	import type { ProjectData } from './project.ts';
 
 	interface Props {
 		realm_data: RealmData;
@@ -22,7 +22,7 @@
 		edit = null,
 		remove = null,
 		selected,
-		editing,
+		editing
 	}: Props = $props();
 
 	let removing = $state(false);
@@ -46,7 +46,7 @@
 			type="button"
 			class="icon_button plain_button font_size_xl deselectable"
 			class:selected={selected && !removing && editing}
-			class:color_c={removing}
+			class:palette_c={removing}
 			title={removing ? 'remove realm' : editing ? 'stop editing realm' : 'edit realm'}
 			onclick={() => (removing ? remove?.(realm_data.id) : edit?.(realm_data))}
 		>

@@ -1,33 +1,38 @@
-import {z} from 'zod';
-import {random_item} from '@ryanatkn/belt/random.js';
-import type {Flavored} from '@ryanatkn/belt/types.js';
+import * as s from '@fuzdev/fuz_schema/schema.ts';
+import { random_item } from '@fuzdev/fuz_util/random.ts';
 
-import {DEFAULT_LEVEL_STATS, LevelStats} from '$lib/earbetter/level.svelte.js';
-import {emojis} from '$lib/emoji.js';
-import {RealmData} from '$lib/earbetter/realm.js';
-import {to_random_id} from '$lib/id.js';
+import { DEFAULT_LEVEL_STATS, LevelStats } from './level.svelte.ts';
+import { emojis } from '../emoji.ts';
+import { RealmData } from './realm.ts';
+import { to_random_id } from '../id.ts';
 
-export const ProjectId = z.string();
-export type ProjectId = Flavored<z.infer<typeof ProjectId>, 'ProjectId'>; // TODO @many this doesn't work when used as a schema, use z.brand() instead? or are the egonomics too bad?
+export const ProjectId = s.flavor(s.string, 'ProjectId');
+export type ProjectId = s.Infer<typeof ProjectId>;
 export const create_project_id = (): ProjectId => to_random_id();
 
-export const ProjectName = z.string().min(1).max(1000);
-export type ProjectName = Flavored<z.infer<typeof ProjectName>, 'ProjectName'>; // TODO @many this doesn't work when used as a schema, use z.brand() instead? or are the egonomics too bad?
+export const ProjectName = s.flavor(
+	s.pipe(s.string, s.min_length(1), s.max_length(1000)),
+	'ProjectName'
+);
+export type ProjectName = s.Infer<typeof ProjectName>;
 const random_project_name = (): ProjectName =>
 	random_item(emojis).glyph + random_item(emojis).glyph;
 
 // Like `ProjectData` but just the stuff needed for display.
 // Used to avoid loading every project into memory at startup.
-export const ProjectMetadata = z.object({
+// strips unknown keys because it's persisted across versions
+export const ProjectMetadata = s.strip_object({
 	id: ProjectId,
-	name: ProjectName,
+	name: ProjectName
 });
-export type ProjectMetadata = z.infer<typeof ProjectMetadata>;
+export type ProjectMetadata = s.Infer<typeof ProjectMetadata>;
 
-export const ProjectData = z.object({
-	id: ProjectId.default(create_project_id),
-	name: ProjectName.default(random_project_name),
-	realms: z.array(RealmData).default(() => []),
-	level_stats: LevelStats.default(() => structuredClone(DEFAULT_LEVEL_STATS)),
+// strips unknown keys because it's persisted and imported across versions
+export const ProjectData = s.strip_object({
+	id: s.with_default_fn(ProjectId, create_project_id),
+	name: s.with_default_fn(ProjectName, random_project_name),
+	realms: s.with_default_fn(s.array(RealmData), () => []),
+	level_stats: s.with_default_fn(LevelStats, () => structuredClone(DEFAULT_LEVEL_STATS))
 });
-export type ProjectData = z.infer<typeof ProjectData>;
+export type ProjectData = s.Infer<typeof ProjectData>;
+export type ProjectDataInput = s.InferInput<typeof ProjectData>;

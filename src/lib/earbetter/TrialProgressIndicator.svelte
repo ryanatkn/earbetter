@@ -1,27 +1,27 @@
 <script lang="ts">
-	import {fade} from 'svelte/transition';
+	import { fade } from 'svelte/transition';
 
-	import type {Level, Status} from '$lib/earbetter/level.svelte.js';
+	import type { Level, Status } from './level.svelte.ts';
 
 	interface Props {
 		level: Level;
 	}
 
-	const {level}: Props = $props();
+	const { level }: Props = $props();
 
 	const current_index = $derived(
-		level.trial ? (level.trial.presenting_index ?? level.trial.guessing_index) : null,
+		level.trial ? (level.trial.presenting_index ?? level.trial.guessing_index) : null
 	);
 
 	const to_bg_color = (s: Status, index: number, current_index: number | null): string =>
 		s === 'showing_failure_feedback'
 			? 'transparent'
 			: s === 'complete' || s === 'showing_success_feedback'
-				? 'var(--lighten_4)'
+				? 'var(--lighten_40)'
 				: index === current_index
-					? 'var(--lighten_3)'
+					? 'var(--lighten_30)'
 					: current_index !== null && index < current_index
-						? 'var(--lighten_2)'
+						? 'var(--lighten_20)'
 						: 'transparent';
 
 	const percent_complete = $derived(
@@ -33,7 +33,7 @@
 					? (level.trial.presenting_index + 0.5) / level.trial.sequence.length
 					: level.trial?.guessing_index != null
 						? (level.trial.guessing_index + 0.5) / level.trial.sequence.length
-						: 0,
+						: 0
 	);
 </script>
 
@@ -43,7 +43,7 @@
 		style:--progress_bar_percent={percent_complete}
 		transition:fade
 	>
-		{#each {length: level.trial.sequence.length} as _, index (index)}
+		{#each { length: level.trial.sequence.length } as _, index (index)}
 			<div
 				class="trial"
 				style:background-color={to_bg_color(level.status, index, current_index)}
@@ -75,6 +75,6 @@
 	.progress_bar {
 		--progress_bar_duration: var(--duration_2);
 		--progress_bar_height: var(--space_xs2);
-		--progress_bar_bg: var(--lighten_3);
+		--progress_bar_bg: var(--lighten_30);
 	}
 </style>

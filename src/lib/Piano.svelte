@@ -1,10 +1,10 @@
 <script lang="ts">
-	import type {Snippet} from 'svelte';
-	import type {SvelteSet} from 'svelte/reactivity';
+	import type { Snippet } from 'svelte';
+	import type { SvelteSet } from 'svelte/reactivity';
 
-	import PianoKey from '$lib/PianoKey.svelte';
-	import {MIDI_MIN, MIDI_MAX, type Midi} from '$lib/music.js';
-	import {compute_piano} from '$lib/piano.js';
+	import PianoKey from './PianoKey.svelte';
+	import { MIDI_MIN, MIDI_MAX, type Midi } from './music.ts';
+	import { compute_piano } from './piano.ts';
 
 	interface Props {
 		width: number;
@@ -32,7 +32,7 @@
 
 	const {
 		width,
-		max_height = undefined,
+		max_height,
 		min_note = MIDI_MIN,
 		max_note = MIDI_MAX,
 		enabled_notes = null,
@@ -43,7 +43,7 @@
 		middle_c_label,
 		allow_sticking,
 		onpress,
-		onrelease,
+		onrelease
 	}: Props = $props();
 
 	const {
@@ -51,7 +51,7 @@
 		natural_key_width,
 		natural_key_height,
 		accidental_key_width,
-		accidental_key_height,
+		accidental_key_height
 	} = $derived(compute_piano(width, min_note, max_note, max_height));
 
 	/**

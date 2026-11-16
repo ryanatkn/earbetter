@@ -1,20 +1,24 @@
-import {z} from 'zod';
-import type {Flavored} from '@ryanatkn/belt/types.js';
+import * as s from '@fuzdev/fuz_schema/schema.ts';
 
-import {LevelData} from '$lib/earbetter/level.svelte.js';
-import {to_random_id} from '$lib/id.js';
+import { LevelData } from './level.svelte.ts';
+import { to_random_id } from '../id.ts';
 
-export const RealmId = z.string();
-export type RealmId = Flavored<z.infer<typeof RealmId>, 'RealmId'>; // TODO @many this doesn't work when used as a schema, use z.brand() instead? or are the egonomics too bad?
+export const RealmId = s.flavor(s.string, 'RealmId');
+export type RealmId = s.Infer<typeof RealmId>;
 export const create_realm_id = (): RealmId => to_random_id();
 
-export const RealmName = z.string().min(1).max(1000);
-export type RealmName = Flavored<z.infer<typeof RealmName>, 'RealmName'>; // TODO @many this doesn't work when used as a schema, use z.brand() instead? or are the egonomics too bad?
+export const RealmName = s.flavor(
+	s.pipe(s.string, s.min_length(1), s.max_length(1000)),
+	'RealmName'
+);
+export type RealmName = s.Infer<typeof RealmName>;
 const DEFAULT_REALM_NAME = 'new realm';
 
-export const RealmData = z.object({
-	id: RealmId.default(create_realm_id),
-	name: RealmName.default(DEFAULT_REALM_NAME),
-	levels: z.array(LevelData).default(() => []),
+// strips unknown keys because it's persisted and imported across versions
+export const RealmData = s.strip_object({
+	id: s.with_default_fn(RealmId, create_realm_id),
+	name: s.with_default(RealmName, DEFAULT_REALM_NAME),
+	levels: s.with_default_fn(s.array(LevelData), () => [])
 });
-export type RealmData = z.infer<typeof RealmData>;
+export type RealmData = s.Infer<typeof RealmData>;
+export type RealmDataInput = s.InferInput<typeof RealmData>;
