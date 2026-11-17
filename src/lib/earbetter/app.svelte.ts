@@ -16,7 +16,8 @@ import { load_from_storage, set_in_storage } from '../storage.ts';
 import { RealmId, RealmData } from './realm.ts';
 import default_project_data from '../projects/default_project.ts';
 import { to_next_name } from '../entity.ts';
-import type { Instrument, Volume } from '../audio_helpers.ts';
+import { with_velocity, type Instrument, type Volume } from '../audio_helpers.ts';
+import { start_playing_note, type StopPlaying } from '../play_note.ts';
 import { to_notes_in_scale, type Midi, type PitchClass, type Scale } from '../music.ts';
 import { MidiInputs } from '../midi_inputs.svelte.ts';
 import { SiteData } from '../site_data.ts';
@@ -157,6 +158,36 @@ export class App {
 	get midi_inputs(): Array<MIDIInput> | null {
 		return this.#midi_inputs?.current ?? null;
 	}
+
+	/**
+	 * The stop functions of the notes held by `start_note`, enforcing at most one of each note.
+	 */
+	readonly #held_notes: Map<Midi, StopPlaying> = new Map();
+
+	/**
+	 * Starts holding `note` until `stop_note`, with the app's instrument and its volume
+	 * scaled by `velocity`, like from a MIDI key. A note already held is left as is.
+	 */
+	start_note = (note: Midi, velocity: number | null = null): void => {
+		if (this.#held_notes.has(note)) return;
+		this.#held_notes.set(
+			note,
+			start_playing_note(
+				this,
+				this.get_audio_context(),
+				note,
+				with_velocity(this.volume, velocity),
+				this.instrument
+			)
+		);
+	};
+
+	stop_note = (note: Midi): void => {
+		const stop = this.#held_notes.get(note);
+		if (!stop) return;
+		stop();
+		this.#held_notes.delete(note);
+	};
 
 	show_trainer_help: boolean = $derived(this.app_data.show_trainer_help);
 	toggle_trainer_help = (): void => {

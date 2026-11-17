@@ -4,14 +4,11 @@
 	import { resolve } from '$app/paths';
 
 	import Piano from '#lib/Piano.svelte';
-	import { audio_context_context } from '#lib/audio_context.ts';
 	import MidiInput from '#lib/MidiInput.svelte';
-	import { start_playing, stop_playing } from '#lib/play_note.ts';
 	import InitMidiButton from '#lib/InitMidiButton.svelte';
 	import VolumeControl from '#lib/VolumeControl.svelte';
 	import Header from '#routes/Header.svelte';
 	import Footer from '#routes/Footer.svelte';
-	import { with_velocity } from '#lib/audio_helpers.ts';
 	import InstrumentControl from '#lib/InstrumentControl.svelte';
 	import MidiRangeControl from '#lib/MidiRangeControl.svelte';
 	import { Midi } from '#lib/music.ts';
@@ -45,17 +42,13 @@
 		set_in_storage(SITE_DATA_STORAGE_KEY, data);
 	};
 
-	const ac = audio_context_context.get();
-
-	const { playing_notes } = app;
-
 	let clientWidth: number | undefined = $state();
 
 	const piano_padding = 20;
 
 	const play = (note: Midi, velocity: number | null = null): void => {
 		if (!app.enabled_notes || app.enabled_notes.has(note)) {
-			start_playing(app, ac(), note, with_velocity(app.volume, velocity), app.instrument);
+			app.start_note(note, velocity);
 		}
 	};
 </script>
@@ -64,11 +57,7 @@
 	<title>Earbetter: piano</title>
 </svelte:head>
 
-<MidiInput
-	inputs={app.midi_inputs}
-	onnotestart={(note, velocity) => play(note, velocity)}
-	onnotestop={(note) => stop_playing(note)}
-/>
+<MidiInput inputs={app.midi_inputs} onnotestart={play} onnotestop={app.stop_note} />
 <main bind:clientWidth>
 	<BackButton onclick={() => goto(resolve('/'))} />
 	<Header />
@@ -78,10 +67,10 @@
 				width={clientWidth - piano_padding * 2}
 				{min_note}
 				{max_note}
-				pressed_keys={playing_notes}
+				pressed_keys={app.playing_notes}
 				enabled_notes={app.enabled_notes}
 				onpress={(note) => play(note)}
-				onrelease={(note) => stop_playing(note)}
+				onrelease={app.stop_note}
 				middle_c_label
 				allow_sticking
 			/>

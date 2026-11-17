@@ -1,5 +1,5 @@
 import { App } from '#lib/earbetter/app.svelte.ts';
-import { create_fake_audio_context } from '../test_helpers.ts';
+import { create_fake_audio_context, type FakeAudioContext } from '../test_helpers.ts';
 
 export const TEST_STORAGE_KEY = 'app';
 export const TEST_SITE_STORAGE_KEY = 'site';
@@ -9,9 +9,8 @@ export const TEST_SITE_STORAGE_KEY = 'site';
  * `App` saves on write, so it owns no effects and needs no root or teardown.
  * Callers stub `localStorage` and mock `esm-env` so storage behaves like the browser.
  */
-export const create_app = (): App => {
-	const { ac } = create_fake_audio_context();
-	return new App(() => ac, {
+export const create_app = (audio: FakeAudioContext = create_fake_audio_context()): App => {
+	return new App(() => audio.ac, {
 		storage_key: TEST_STORAGE_KEY,
 		site_storage_key: TEST_SITE_STORAGE_KEY
 	});

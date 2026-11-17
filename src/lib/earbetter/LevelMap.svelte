@@ -3,17 +3,14 @@
 	import { slide } from 'svelte/transition';
 	import { BROWSER } from 'esm-env';
 
-	import { audio_context_context } from '../audio_context.ts';
 	import InitMidiButton from '../InitMidiButton.svelte';
 	import LevelForm from './LevelForm.svelte';
 	import Projects from './Projects.svelte';
 	import VolumeControl from '../VolumeControl.svelte';
-	import { with_velocity } from '../audio_helpers.ts';
 	import InstrumentControl from '../InstrumentControl.svelte';
 	import { app_context } from './app.svelte.ts';
 	import ControlsInstructions from './ControlsInstructions.svelte';
 	import MidiInput from '../MidiInput.svelte';
-	import { start_playing, stop_playing } from '../play_note.ts';
 	import Realms from './Realms.svelte';
 	import { LevelData, MISTAKE_HISTORY_LENGTH } from './level.svelte.ts';
 	import RealmEditor from './RealmEditor.svelte';
@@ -32,8 +29,6 @@
 		update_level
 	} = app;
 
-	const ac = audio_context_context.get();
-
 	// TODO review the draft/editing data properties of `app`, some inconsistencies between levels/realms/projects
 	const level_data = $derived(app.draft_level_data ?? s.parse_or_throw(LevelData, {}));
 
@@ -42,15 +37,7 @@
 	const no_realms = $derived(!app.realms?.length);
 </script>
 
-<MidiInput
-	inputs={app.midi_inputs}
-	onnotestart={(note, velocity) => {
-		start_playing(app, ac(), note, with_velocity(app.volume, velocity), app.instrument);
-	}}
-	onnotestop={(note) => {
-		stop_playing(note);
-	}}
-/>
+<MidiInput inputs={app.midi_inputs} onnotestart={app.start_note} onnotestop={app.stop_note} />
 <div class="map">
 	{#if app.project_datas.length}
 		<div class="width_atmost_sm">

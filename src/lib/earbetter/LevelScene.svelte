@@ -9,11 +9,8 @@
 	import Piano from '../Piano.svelte';
 	import LevelProgressIndicator from './LevelProgressIndicator.svelte';
 	import TrialProgressIndicator from './TrialProgressIndicator.svelte';
-	import { audio_context_context } from '../audio_context.ts';
 	import MidiInput from '../MidiInput.svelte';
 	import type { Midi } from '../music.ts';
-	import { start_playing, stop_playing } from '../play_note.ts';
-	import { with_velocity } from '../audio_helpers.ts';
 	import LevelStatsSummary from './LevelStatsSummary.svelte';
 	import TextBurst from '../TextBurst.svelte';
 	import { app_context } from './app.svelte.ts';
@@ -27,8 +24,6 @@
 	const { level, level_stats, exit_level }: Props = $props();
 
 	const app = app_context.get();
-
-	const ac = audio_context_context.get();
 
 	let clientWidth: number | undefined = $state();
 
@@ -126,14 +121,12 @@
 	onnotestart={(note, velocity) => {
 		// TODO should this be ignored if it's not an enabled key? should the level itself ignore the guess?
 		if (level.status === 'complete') {
-			start_playing(app, ac(), note, with_velocity(app.volume, velocity), app.instrument);
+			app.start_note(note, velocity);
 		} else {
 			level.guess(note);
 		}
 	}}
-	onnotestop={(note) => {
-		stop_playing(note);
-	}}
+	onnotestop={app.stop_note}
 />
 <!-- hide from screen readers, see keyboard commands -->
 <div class="level" class:initial bind:clientWidth onclick={click} aria-hidden="true">
@@ -155,10 +148,9 @@
 				onpress={level.status === 'waiting_for_input'
 					? (note) => on_press_key(note)
 					: level.status === 'complete'
-						? (note) =>
-								start_playing(app, ac(), note, with_velocity(app.volume, null), app.instrument)
+						? (note) => app.start_note(note)
 						: undefined}
-				onrelease={level.status === 'complete' ? (note) => stop_playing(note) : undefined}
+				onrelease={level.status === 'complete' ? app.stop_note : undefined}
 			/>
 		{/if}
 	</div>

@@ -1,16 +1,12 @@
 <script lang="ts">
 	import { plural } from '@fuzdev/fuz_util/string.ts';
 	import type { Snippet } from 'svelte';
-	import type { SvelteSet } from 'svelte/reactivity';
 	import { innerWidth } from 'svelte/reactivity/window';
 
 	import Piano from './Piano.svelte';
-	import { audio_context_context } from './audio_context.ts';
 	import MidiInput from './MidiInput.svelte';
-	import { start_playing, stop_playing } from './play_note.ts';
 	import InitMidiButton from './InitMidiButton.svelte';
 	import VolumeControl from './VolumeControl.svelte';
-	import { Instrument, Volume, with_velocity } from './audio_helpers.ts';
 	import InstrumentControl from './InstrumentControl.svelte';
 	import {
 		Midi,
@@ -22,17 +18,11 @@
 		pitch_classes,
 		to_notes_in_scale
 	} from './music.ts';
+	import { app_context } from './earbetter/app.svelte.ts';
 
 	// TODO @many naming convention between `IntervalsInput`/`NotesInput`/`SelectNotesControl`?
 
 	interface Props {
-		audio_state: {
-			volume: Volume;
-			instrument: Instrument;
-			playing_notes: SvelteSet<Midi>;
-			midi_access: MIDIAccess | null;
-			readonly midi_inputs: ReadonlyArray<MIDIInput> | null;
-		};
 		notes: Set<Midi>;
 		min_note: Midi;
 		max_note: Midi;
@@ -40,9 +30,9 @@
 		oninput?: (notes: Array<Midi> | null) => void; // TODO @many set reactivity - API is strange returning an array but taking a set (maybe return both?)
 	}
 
-	const { audio_state, notes, min_note, max_note, before_buttons, oninput }: Props = $props();
+	const { notes, min_note, max_note, before_buttons, oninput }: Props = $props();
 
-	const playing_notes = $derived(audio_state.playing_notes);
+	const app = app_context.get();
 
 	// TODO @many set reactivity - refactor these collections to use `svelte/reactivity` sets instead of cloning, upstream and downstream where appropriate
 
@@ -82,19 +72,7 @@
 
 	let key = $state(DEFAULT_PITCH_CLASS);
 
-	const ac = audio_context_context.get();
-
 	const piano_padding = 20;
-
-	const play = (note: Midi, velocity: number | null = null): void => {
-		start_playing(
-			audio_state,
-			ac(),
-			note,
-			with_velocity(audio_state.volume, velocity),
-			audio_state.instrument
-		);
-	};
 
 	const toggle_scale = (scale: Scale): void => {
 		const scale_notes = to_notes_in_scale(scale, key, min_note, max_note);
@@ -118,11 +96,7 @@
 	};
 </script>
 
-<MidiInput
-	inputs={audio_state.midi_inputs}
-	onnotestart={(note, velocity) => play(note, velocity)}
-	onnotestop={(note) => stop_playing(note)}
-/>
+<MidiInput inputs={app.midi_inputs} onnotestart={app.start_note} onnotestop={app.stop_note} />
 
 <div class="notes_input pt_lg">
 	{@render buttons()}
@@ -134,17 +108,15 @@
 				{min_note}
 				{max_note}
 				max_height={300}
-				pressed_keys={playing_notes}
+				pressed_keys={app.playing_notes}
 				highlighted_keys={current_notes}
 				middle_c_label
 				allow_sticking
 				onpress={(note) => {
 					toggle_note(note);
-					play(note);
+					app.start_note(note);
 				}}
-				onrelease={(note) => {
-					stop_playing(note);
-				}}
+				onrelease={app.stop_note}
 			/>
 		{/if}
 	</div>
@@ -174,11 +146,11 @@
 	</section>
 	<form class="width_atmost_sm panel p_md">
 		<fieldset>
-			<InstrumentControl bind:instrument={audio_state.instrument} />
-			<VolumeControl bind:volume={audio_state.volume} />
+			<InstrumentControl bind:instrument={app.instrument} />
+			<VolumeControl bind:volume={app.volume} />
 		</fieldset>
 		<fieldset>
-			<InitMidiButton midi_state={audio_state} />
+			<InitMidiButton midi_state={app} />
 		</fieldset>
 	</form>
 </div>

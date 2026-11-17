@@ -10,10 +10,8 @@ import {
 } from './audio_helpers.ts';
 import { type Midi, midi_to_freq } from './music.ts';
 
-// TODO this API is haphazard and somewhat bad, in particular `play_note` versus `start_playing` and `stop_playing`,
-// and we need to support more options like `velocity`, should probably have a single options object.
-// One possibility is `play_note` accepts both a `duration` and `unless_already` flag.
-// Needs a full rethink with the `Audio` class idea.
+// Held notes, like a pressed piano key, go through `App.start_note` and `App.stop_note`,
+// which build on `start_playing_note` here.
 
 export const play_note = (
 	state: { playing_notes: SvelteSet<Midi> },
@@ -72,29 +70,4 @@ export const start_playing_note = (
 
 		state.playing_notes.delete(note);
 	};
-};
-
-// Helpers to play a single note at a time.
-// Maybe this should be put in the main context and wrap `ac` so it's not accessed directly?
-
-// TODO is redundant with `playing_notes` and manually updated
-const playing: Map<Midi, StopPlaying> = new Map(); // global cache used to enforce that at most one of each note plays
-
-export const start_playing = (
-	state: { playing_notes: SvelteSet<Midi> },
-	ac: AudioContext,
-	note: Midi,
-	volume?: Volume,
-	instrument?: Instrument
-): void => {
-	const current = playing.get(note);
-	if (current) return;
-	playing.set(note, start_playing_note(state, ac, note, volume, instrument));
-};
-
-export const stop_playing = (note: Midi): void => {
-	const stop = playing.get(note);
-	if (!stop) return;
-	stop();
-	playing.delete(note);
 };

@@ -22,7 +22,6 @@
 	import NotesInput from '../NotesInput.svelte';
 	import Piano from '../Piano.svelte';
 	import CopyToClipboard from './CopyToClipboard.svelte';
-	import { app_context } from './app.svelte.ts';
 
 	interface Props {
 		level_data: LevelData;
@@ -43,8 +42,6 @@
 		onplay,
 		onclose
 	}: Props = $props();
-
-	const app = app_context.get();
 
 	let removing = $state(false);
 
@@ -372,7 +369,6 @@
 				<h2 class="my_0">pick tonics</h2>
 				<!-- TODO @many set reactivity - this `new Set` is a hack, probably change the data structure to a set, need serialization for storage -->
 				<NotesInput
-					audio_state={app}
 					notes={new Set(updated_tonics)}
 					min_note={updated_min_note}
 					max_note={updated_max_note}
