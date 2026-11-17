@@ -65,7 +65,7 @@
 </svelte:head>
 
 <MidiInput
-	midi_access={app.midi_access}
+	inputs={app.midi_inputs}
 	onnotestart={(note, velocity) => play(note, velocity)}
 	onnotestop={(note) => stop_playing(note)}
 />

@@ -48,7 +48,7 @@
 </script>
 
 <MidiInput
-	midi_access={app.midi_access}
+	inputs={app.midi_inputs}
 	onnotestart={(note, velocity) => {
 		start_playing(app, ac(), note, with_velocity(app.volume, velocity), app.instrument);
 	}}

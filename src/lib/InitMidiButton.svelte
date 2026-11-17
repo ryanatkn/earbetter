@@ -2,11 +2,14 @@
 	import type { AsyncStatus } from '@fuzdev/fuz_util/async.ts';
 	import { fade } from 'svelte/transition';
 
-	import type { MIDIAccess } from './WebMIDI.ts';
+	import type { MIDIAccess, MIDIInput } from './WebMIDI.ts';
 	import { reset_midi_access, request_access as default_request_access } from './midi_access.ts';
 
 	interface Props {
-		midi_state: { midi_access: MIDIAccess | null };
+		midi_state: {
+			midi_access: MIDIAccess | null;
+			readonly midi_inputs: ReadonlyArray<MIDIInput> | null;
+		};
 		request_access?: (state: { midi_access: MIDIAccess | null }) => Promise<MIDIAccess | null>;
 	}
 
@@ -16,17 +19,13 @@
 
 	let request_status: AsyncStatus = $state('initial');
 
-	const midi_inputs = $derived(
-		midi_state.midi_access && Array.from(midi_state.midi_access.inputs.values())
-	);
+	const midi_inputs = $derived(midi_state.midi_inputs);
 	const midi_input_count = $derived(midi_inputs?.length ?? 0);
 
 	// eslint-disable-next-line @typescript-eslint/no-unnecessary-type-assertion
 	const disabled = $derived(midi_input_count > 0 || (request_status as AsyncStatus) === 'pending'); // TODO the cast is due to a typechecking bug (likely `svelte-check`)
 
 	let request_error: string | undefined = $state();
-
-	// $inspect('midi_state.midi_access', midi_state.midi_access);
 </script>
 
 <button

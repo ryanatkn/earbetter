@@ -18,7 +18,8 @@ import default_project_data from '../projects/default_project.ts';
 import { to_next_name } from '../entity.ts';
 import type { Instrument, Volume } from '../audio_helpers.ts';
 import { to_notes_in_scale, type Midi, type PitchClass, type Scale } from '../music.ts';
-import type { MIDIAccess } from '../WebMIDI.ts';
+import type { MIDIAccess, MIDIInput } from '../WebMIDI.ts';
+import { MidiInputs } from '../midi_inputs.svelte.ts';
 import { SiteData } from '../site_data.ts';
 
 // TODO maybe a `@batched` or `@action` decorator instead of manual `batch`?
@@ -54,6 +55,10 @@ export interface AppOptions {
  * Persistence is save-on-write: the setters for `app_data` and `site_data`,
  * and the accessors built on them, write through to storage,
  * so no effect watches the state.
+ *
+ * Writes from other tabs flow back in through `receive_storage`,
+ * which the root layout calls on the window's `storage` event.
+ * They update state without writing back. Each tab keeps its own selected project and realm.
  */
 export class App {
 	readonly storage_key: string;
@@ -78,6 +83,39 @@ export class App {
 	set site_data(value: SiteData) {
 		this.#site_data = value;
 		set_in_storage(this.site_storage_key, value);
+	}
+
+	/**
+	 * Applies a write from another tab without writing it back.
+	 * Unparseable values are ignored, keeping this tab's state.
+	 * @param key - the changed `localStorage` key, or `null` when storage was cleared
+	 * @param value - the new serialized value, or `null` when the key was removed
+	 */
+	receive_storage(key: string | null, value: string | null): void {
+		if (key === null) return;
+		if (key === this.site_storage_key) {
+			const parsed = parse_stored(SiteData, value);
+			if (parsed) this.#site_data = parsed;
+		} else if (key === this.storage_key) {
+			const parsed = parse_stored(AppData, value);
+			if (!parsed) return;
+			const { selected_project_id, selected_realm_id } = this.#app_data;
+			this.#app_data = { ...parsed, selected_project_id, selected_realm_id };
+		} else {
+			const index = this.project_datas.findIndex((p) => p.id === key);
+			if (index === -1) return; // projects not loaded in this tab load when selected
+			if (value === null) {
+				this.project_datas = this.project_datas.filter((p) => p.id !== key);
+				if (this.selected_project_id === key)
+					this.select_project(this.project_datas[0]?.id ?? null);
+				return;
+			}
+			const parsed = parse_stored(ProjectData, value);
+			if (!parsed) return;
+			const updated = this.project_datas.slice();
+			updated[index] = parsed;
+			this.project_datas = updated;
+		}
 	}
 
 	get volume(): Volume {
@@ -115,6 +153,13 @@ export class App {
 	 * Holds the result of `navigator.requestMIDIAccess`.
 	 */
 	midi_access: MIDIAccess | null = $state(null);
+	#midi_inputs: MidiInputs | null = $derived(this.midi_access && new MidiInputs(this.midi_access));
+	/**
+	 * The connected MIDI inputs, updated as devices connect and disconnect.
+	 */
+	get midi_inputs(): Array<MIDIInput> | null {
+		return this.#midi_inputs?.current ?? null;
+	}
 
 	show_trainer_help: boolean = $derived(this.app_data.show_trainer_help);
 	toggle_trainer_help = (): void => {
@@ -650,3 +695,16 @@ export class App {
 		await goto(resolve(`/trainer`));
 	};
 }
+
+/**
+ * Parses a serialized storage value from another tab, or `null` if it's missing or invalid.
+ */
+const parse_stored = <T extends s.Schema>(schema: T, value: string | null): s.Infer<T> | null => {
+	if (value === null) return null;
+	try {
+		const parsed = s.parse(schema, JSON.parse(value));
+		return parsed.ok ? parsed.value : null;
+	} catch {
+		return null;
+	}
+};

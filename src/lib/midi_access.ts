@@ -1,8 +1,6 @@
 import type { MIDIAccess } from './WebMIDI.ts';
 import { request_midi_access } from './midi_helpers.ts';
 
-// TODO handle disconnections
-
 let requesting: Promise<MIDIAccess | null> | undefined;
 
 // TODO @many source from `audio` in context, delete this or heavily refactor

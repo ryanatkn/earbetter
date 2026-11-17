@@ -22,7 +22,7 @@
 		pitch_classes,
 		to_notes_in_scale
 	} from './music.ts';
-	import type { MIDIAccess } from './WebMIDI.ts';
+	import type { MIDIAccess, MIDIInput } from './WebMIDI.ts';
 
 	// TODO @many naming convention between `IntervalsInput`/`NotesInput`/`SelectNotesControl`?
 
@@ -32,6 +32,7 @@
 			instrument: Instrument;
 			playing_notes: SvelteSet<Midi>;
 			midi_access: MIDIAccess | null;
+			readonly midi_inputs: ReadonlyArray<MIDIInput> | null;
 		};
 		notes: Set<Midi>;
 		min_note: Midi;
@@ -117,7 +118,7 @@
 </script>
 
 <MidiInput
-	midi_access={audio_state.midi_access}
+	inputs={audio_state.midi_inputs}
 	onnotestart={(note, velocity) => play(note, velocity)}
 	onnotestop={(note) => stop_playing(note)}
 />

@@ -124,7 +124,7 @@
 
 <svelte:window onkeydowncapture={keydown} />
 <MidiInput
-	midi_access={app.midi_access}
+	inputs={app.midi_inputs}
 	onnotestart={(note, velocity) => {
 		// TODO should this be ignored if it's not an enabled key? should the level itself ignore the guess?
 		if (level.status === 'complete') {

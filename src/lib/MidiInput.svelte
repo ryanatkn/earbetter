@@ -1,10 +1,13 @@
 <script lang="ts">
-	import { type MIDIMessageEvent, MIDICommand, type MIDIAccess } from './WebMIDI.ts';
+	import { type MIDIMessageEvent, MIDICommand, type MIDIInput } from './WebMIDI.ts';
 	import { parse_midi_message } from './midi_helpers.ts';
 	import type { Midi } from './music.ts';
 
 	interface Props {
-		midi_access: MIDIAccess | null;
+		/**
+		 * The inputs to listen to, usually the reactive `App.midi_inputs`.
+		 */
+		inputs: ReadonlyArray<MIDIInput> | null;
 		onnotestart?: (note: Midi, velocity: number) => void;
 		onnotestop?: (note: Midi, velocity: number) => void;
 		onpadstart?: (note: Midi, velocity: number) => void;
@@ -12,10 +15,7 @@
 		onmodwheel?: (velocity: number) => void;
 	}
 
-	const { midi_access, onnotestart, onnotestop, onpadstart, onpadstop, onmodwheel }: Props =
-		$props();
-
-	// $inspect('midi_access', midi_access);
+	const { inputs, onnotestart, onnotestop, onpadstart, onpadstop, onmodwheel }: Props = $props();
 
 	const onmidimessage = (event: MIDIMessageEvent): void => {
 		const { command, channel, note, velocity } = parse_midi_message(event);
@@ -57,10 +57,10 @@
 		}
 	};
 
-	// syncs listeners on the external `MIDIAccess` inputs, so this is a genuine effect
+	// syncs listeners on the external MIDI inputs, so this is a genuine effect,
+	// and it reruns as `inputs` changes when devices connect and disconnect
 	$effect(() => {
-		if (!midi_access) return;
-		const inputs = Array.from(midi_access.inputs.values());
+		if (!inputs) return;
 		for (const input of inputs) {
 			input.addEventListener('midimessage', onmidimessage as any);
 		}

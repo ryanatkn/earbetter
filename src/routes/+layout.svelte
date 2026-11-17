@@ -101,7 +101,7 @@
 	<title>Earbetter</title>
 </svelte:head>
 
-<svelte:window onkeydown={keydown} />
+<svelte:window onkeydown={keydown} onstorage={(e) => app.receive_storage(e.key, e.newValue)} />
 
 <InitAudioContext />
 
