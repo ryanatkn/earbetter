@@ -21,7 +21,7 @@
 	import IntervalsInput from '../IntervalsInput.svelte';
 	import NotesInput from '../NotesInput.svelte';
 	import Piano from '../Piano.svelte';
-	import CopyToClipboard from './CopyToClipboard.svelte';
+	import ImportDataDialog from './ImportDataDialog.svelte';
 
 	interface Props {
 		level_data: LevelData;
@@ -93,43 +93,20 @@
 			!deep_equal(normalized_updated_tonics, level_data.tonics)
 	);
 
-	// TODO lots of similarity with `ProjectForm`
-	let importing = $state(false);
 	let picking_intervals = $state(false);
 	let picking_tonics = $state(false);
-	let serialized = $state('');
-	let updated = $state('');
-	const changed_serialized = $derived(serialized !== updated);
-	// resets when the `level_data` prop changes, and import failures overwrite it
-	let parse_error_message = $derived.by(() => {
-		level_data;
-		return '';
-	});
-	let level_data_el: HTMLTextAreaElement | undefined = $state();
-	let start_importing_el: HTMLButtonElement | undefined = $state();
 	let intervals_el: HTMLInputElement | undefined = $state();
 	let tonics_el: HTMLInputElement | undefined = $state();
 	const tonics_set = $derived(updated_tonics && new Set(updated_tonics));
 
-	const import_data = (): void => {
-		parse_error_message = '';
-		try {
-			const json = JSON.parse(updated);
-			// add an `id` if there is none
-			if (json && !json.id) json.id = create_level_id();
-			const parsed = s.parse_or_throw(LevelData, json);
-			const error = to_level_data_error(parsed);
-			if (error) throw Error(error);
-			onsubmit(parsed);
-		} catch (err) {
-			parse_error_message = err.message || 'unknown error';
-		}
-		importing = false;
-	};
-
-	const start_importing_data = () => {
-		serialized = updated = JSON.stringify(to_data());
-		importing = true;
+	/**
+	 * Parses imported level data, rejecting a level that can't be played.
+	 */
+	const parse_imported = (json: unknown): LevelData => {
+		const parsed = s.parse_or_throw(LevelData, json);
+		const error = to_level_data_error(parsed);
+		if (error) throw Error(error);
+		return parsed;
 	};
 
 	// TODO Putting these values here persists form values across UI states but not across page nav,
@@ -278,14 +255,20 @@
 				<button type="button" onclick={() => onduplicate(level_data.id)}>duplicate level</button>
 			{/if}
 		{/if}
-		<button type="button" onclick={start_importing_data} bind:this={start_importing_el}>
-			{#if editing}import/export data{:else}import data{/if}
-		</button>
-		{#if parse_error_message}
-			<div class="overflow-x:auto">
-				<Alert status="error"><pre>{parse_error_message}</pre></Alert>
-			</div>
-		{/if}
+		<ImportDataDialog
+			noun="level"
+			data={level_data}
+			{to_data}
+			parse={parse_imported}
+			create_id={create_level_id}
+			onimport={onsubmit}
+		>
+			{#snippet children(open)}
+				<button type="button" onclick={open}>
+					{#if editing}import/export data{:else}import data{/if}
+				</button>
+			{/snippet}
+		</ImportDataDialog>
 		{#if onplay && editing}
 			<button
 				type="button"
@@ -302,33 +285,6 @@
 		{/if}
 	</div>
 </form>
-{#if importing}
-	<Dialog
-		onclose={() => {
-			importing = false;
-			start_importing_el?.focus();
-		}}
-	>
-		<div class="importing pane shadow_xl shadow_d_50 p_xl width_atmost_md mx_auto">
-			<h2 class="my_0">import level data</h2>
-			<CopyToClipboard
-				text={updated}
-				oncopy={() => {
-					level_data_el?.select();
-				}}
-			/>
-			<textarea bind:value={updated} bind:this={level_data_el}></textarea>
-			<button
-				type="button"
-				onclick={import_data}
-				disabled={!changed_serialized}
-				title={changed_serialized ? undefined : 'data has not changed'}
-			>
-				import level data
-			</button>
-		</div>
-	</Dialog>
-{/if}
 {#if picking_intervals}
 	<Dialog
 		onclose={() => {
@@ -386,9 +342,6 @@
 	.fields {
 		display: flex;
 		flex-direction: column;
-	}
-	.importing textarea {
-		height: calc(var(--input_height) * 3);
 	}
 
 	.small_input {
