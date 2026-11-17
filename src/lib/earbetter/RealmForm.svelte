@@ -23,7 +23,7 @@
 	let removing = $state(false);
 
 	let updated_name: RealmName = $derived(realm_data.name); // TODO name? `changed`?
-	const normalized_updated_name = $derived((updated_name as any)?.trim());
+	const normalized_updated_name = $derived(updated_name.trim());
 
 	const to_data = (): RealmData =>
 		s.parse_or_throw(RealmData, {

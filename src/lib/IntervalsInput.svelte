@@ -29,37 +29,20 @@
 	}: Props = $props();
 
 	// TODO visualize the intervals with a piano
-	const intervals_from_scale_and_octave = $derived(to_scale_notes(scale, octaves));
-	const serialized_intervals_from_scale_and_octave = $derived(
-		serialize_intervals(intervals_from_scale_and_octave)
-	);
 
-	const serialized_intervals = $state(serialize_intervals(intervals));
-	let input_intervals_str = $state(serialized_intervals);
-
-	// TODO this is experimental - is it a good pattern? the point is to share the textarea with 2 sources of truth, this makes it declarative
-	// TODO maybe on init, we should figure out a way to use the intervals from the scale and octave when appropriate, but I can't think of when that is right now
-	// The order here matters, on init we want the prop intervals to be the source of truth.
-	const last_time_intervals_from_scale_and_octave_changed = $derived.by(() => {
-		intervals_from_scale_and_octave;
-		return Date.now();
+	/**
+	 * The textarea's text and where it came from. The textarea shares two sources of truth:
+	 * the `intervals` prop, which resets it, and the scale and octaves, which overwrite it when changed.
+	 */
+	let current: { str: string; from_scale: boolean } = $derived({
+		str: serialize_intervals(intervals),
+		from_scale: false
 	});
-	const last_time_intervals_changed = $derived.by(() => {
-		intervals;
-		input_intervals_str;
-		return Date.now();
-	});
+	const use_scale = (): void => {
+		current = { str: serialize_intervals(to_scale_notes(scale, octaves)), from_scale: true };
+	};
 
-	const current_is_from_scale_and_octaves = $derived(
-		last_time_intervals_from_scale_and_octave_changed > last_time_intervals_changed // tie goes to `intervals`
-	);
-
-	const current_str = $derived(
-		current_is_from_scale_and_octaves
-			? serialized_intervals_from_scale_and_octave
-			: input_intervals_str
-	);
-	const current_intervals = $derived(parse_intervals(current_str));
+	const current_intervals = $derived(parse_intervals(current.str));
 
 	const changed = $derived(!deep_equal(intervals, current_intervals));
 	const valid = $derived(!!current_intervals.length);
@@ -67,26 +50,28 @@
 
 <small>
 	<textarea
-		value={current_str}
-		oninput={(e) => (input_intervals_str = e.currentTarget.value)}
+		value={current.str}
+		oninput={(e) => (current = { str: e.currentTarget.value, from_scale: false })}
 		class="preview width_atmost_sm panel"></textarea>
 </small>
 <button
 	type="button"
 	class="accent mb_lg"
 	disabled={!changed || !valid}
-	onclick={() =>
-		oninput?.(
-			current_intervals,
-			current_is_from_scale_and_octaves ? { scale, octaves } : undefined
-		)}
+	onclick={() => oninput?.(current_intervals, current.from_scale ? { scale, octaves } : undefined)}
 >
 	use these intervals
 </button>
 <label>
 	<div class="title text-align:center">scale</div>
 	<!-- TODO bind the objects not the names to simplify -->
-	<select value={scale.name} onchange={(e) => (scale = lookup_scale(e.currentTarget.value))}>
+	<select
+		value={scale.name}
+		onchange={(e) => {
+			scale = lookup_scale(e.currentTarget.value);
+			use_scale();
+		}}
+	>
 		{#each scales as s (s)}
 			<option value={s.name}>{s.name}</option>
 		{/each}
@@ -95,7 +80,18 @@
 <label>
 	<div class="title text-align:center">octaves</div>
 	<div class="text-align:center">{octaves}</div>
-	<input type="range" min={1} max={6} bind:value={octaves} />
+	<input
+		type="range"
+		min={1}
+		max={6}
+		bind:value={
+			() => octaves,
+			(v) => {
+				octaves = v;
+				use_scale();
+			}
+		}
+	/>
 </label>
 
 <style>

@@ -1,8 +1,6 @@
 import { createSubscriber } from 'svelte/reactivity';
 import { on } from 'svelte/events';
 
-import type { MIDIAccess, MIDIInput } from './WebMIDI.ts';
-
 /**
  * A reactive view of the connected inputs of a `MIDIAccess`.
  * Reading `current` in an effect listens for `statechange` while anything observes it,

@@ -2,7 +2,6 @@ import { test, assert } from 'vitest';
 import { flushSync } from 'svelte';
 
 import { MidiInputs } from '#lib/midi_inputs.svelte.ts';
-import type { MIDIAccess, MIDIInput, MIDIPortDeviceState } from '#lib/WebMIDI.ts';
 
 interface FakeAccess {
 	access: MIDIAccess;

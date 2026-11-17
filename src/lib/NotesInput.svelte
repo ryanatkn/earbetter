@@ -22,7 +22,6 @@
 		pitch_classes,
 		to_notes_in_scale
 	} from './music.ts';
-	import type { MIDIAccess, MIDIInput } from './WebMIDI.ts';
 
 	// TODO @many naming convention between `IntervalsInput`/`NotesInput`/`SelectNotesControl`?
 
@@ -43,12 +42,16 @@
 
 	const { audio_state, notes, min_note, max_note, before_buttons, oninput }: Props = $props();
 
-	const { playing_notes } = audio_state;
+	const playing_notes = $derived(audio_state.playing_notes);
 
 	// TODO @many set reactivity - refactor these collections to use `svelte/reactivity` sets instead of cloning, upstream and downstream where appropriate
 
-	let updated_notes: Set<Midi> | undefined = $state();
-	const updated_notes_array: Array<Midi> | undefined = $derived(
+	// the draft, `null` until the player changes something, and reset when the `notes` prop changes
+	let updated_notes: Set<Midi> | null = $derived.by((): Set<Midi> | null => {
+		notes;
+		return null;
+	});
+	const updated_notes_array: Array<Midi> | null = $derived(
 		updated_notes && Array.from(updated_notes).sort((a, b) => a - b)
 	);
 
@@ -74,8 +77,6 @@
 		}
 		updated_notes = updated;
 	};
-
-	// $inspect(`notes`, current_notes);
 
 	// TODO lots of copypasta below
 
@@ -199,7 +200,7 @@
 		class="accent"
 		disabled={!changed}
 		onclick={() => {
-			oninput?.(updated_notes_array!);
+			oninput?.(updated_notes_array);
 		}}
 	>
 		select {#if notes_count === 0}all{:else}{notes_count}{/if} tonic{plural(notes_count)}

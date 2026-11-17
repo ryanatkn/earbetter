@@ -19,7 +19,6 @@
 			: undefined
 	);
 	const perfect = $derived(sum === 0);
-	// $inspect((`mistakes, length, target, sum, perfect`, mistakes, length, target, sum, perfect));
 </script>
 
 {#if perfect}

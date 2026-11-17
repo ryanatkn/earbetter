@@ -1,4 +1,3 @@
-import type { MIDIAccess } from './WebMIDI.ts';
 import { request_midi_access } from './midi_helpers.ts';
 
 let requesting: Promise<MIDIAccess | null> | undefined;

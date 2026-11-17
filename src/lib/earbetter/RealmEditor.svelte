@@ -16,9 +16,6 @@
 
 	const editing = $derived(app.realms ? app.realms.some((d) => d.id === realm_data.id) : false);
 
-	// $inspect(`app.selected_realm_data`, app.selected_realm_data);
-	// $inspect(`app.realms`, app.realms);
-
 	const update_or_create = (r: RealmData, select: boolean) => {
 		if (app.realms?.some((d) => d.id === r.id)) {
 			update_realm(r);
@@ -41,8 +38,8 @@
 				update_or_create(data, true);
 			}
 		}}
-		onremove={(realm_id) => remove_realm(realm_id)}
-		onduplicate={(realm_id) => duplicate_realm(realm_id)}
+		onremove={remove_realm}
+		onduplicate={duplicate_realm}
 		onclose={() => (app.editing_realm = false)}
 	/>
 </div>

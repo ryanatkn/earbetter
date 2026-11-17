@@ -10,8 +10,6 @@ import { to_random_id } from '../id.ts';
 import type { GetAudioContext } from '../audio_context.ts';
 import type { App } from './app.svelte.ts';
 
-// TODO this isn't idiomatic signals code yet, uses `peek` too much
-
 export const DEFAULT_NOTE_DURATION: Milliseconds = 333; // TODO adjust this to make more challenging levels
 export const DEFAULT_NOTE_DURATION_2: Milliseconds = 500; // TODO adjust this to make more challenging levels
 export const DEFAULT_NOTE_DURATION_FAILED: Milliseconds = 67;
@@ -119,11 +117,12 @@ export class Level {
 		this.error = to_level_data_error(level_data);
 	}
 
-	status: Status = $state(DEFAULT_STATUS);
-	mistakes: number = $state(0);
-	trial: Trial | null = $state(DEFAULT_TRIAL);
-	trials: Array<Trial> = $state([]);
-	last_guess: Midi | null = $state(null);
+	// raw because each is only ever replaced, never mutated in place
+	status: Status = $state.raw(DEFAULT_STATUS);
+	mistakes: number = $state.raw(0);
+	trial: Trial | null = $state.raw(DEFAULT_TRIAL);
+	trials: Array<Trial> = $state.raw([]);
+	last_guess: Midi | null = $state.raw(null);
 	/**
 	 * The most recent judged guess, kept after its feedback status ends so the UI can finish showing it.
 	 */
@@ -490,7 +489,7 @@ export const to_level_data_error = (level_data: LevelData): string | null => {
 
 export const to_level_url = (level_data: LevelData): string => {
 	const data: LevelHashData = { level: level_data };
-	return resolve((`/trainer/level` + serialize_to_hash(data)) as any);
+	return resolve('/trainer/level') + serialize_to_hash(data);
 };
 
 // TODO the record's keys are `LevelId`s but `s.record` doesn't check keys, `s.keyed_record` needs fuz_schema 0.6

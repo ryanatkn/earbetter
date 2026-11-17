@@ -1,6 +1,5 @@
 <script lang="ts">
-	import { type MIDIMessageEvent, MIDICommand, type MIDIInput } from './WebMIDI.ts';
-	import { parse_midi_message } from './midi_helpers.ts';
+	import { MidiCommand, parse_midi_message } from './midi_helpers.ts';
 	import type { Midi } from './music.ts';
 
 	interface Props {
@@ -18,10 +17,12 @@
 	const { inputs, onnotestart, onnotestop, onpadstart, onpadstop, onmodwheel }: Props = $props();
 
 	const onmidimessage = (event: MIDIMessageEvent): void => {
-		const { command, channel, note, velocity } = parse_midi_message(event);
+		const message = parse_midi_message(event);
+		if (!message) return;
+		const { command, channel, note, velocity } = message;
 
 		switch (command) {
-			case MIDICommand.Stop: {
+			case MidiCommand.Stop: {
 				if (channel === 0) {
 					onnotestop?.(note, velocity);
 				} else if (channel === 9) {
@@ -29,7 +30,7 @@
 				}
 				break;
 			}
-			case MIDICommand.Start: {
+			case MidiCommand.Start: {
 				if (channel === 0) {
 					if (velocity === 0) {
 						// this is weird but seems to be correct
@@ -47,7 +48,7 @@
 				}
 				break;
 			}
-			case MIDICommand.Knob: {
+			case MidiCommand.Knob: {
 				if (note === 1) {
 					onmodwheel?.(velocity);
 				}
@@ -62,11 +63,11 @@
 	$effect(() => {
 		if (!inputs) return;
 		for (const input of inputs) {
-			input.addEventListener('midimessage', onmidimessage as any);
+			input.addEventListener('midimessage', onmidimessage);
 		}
 		return () => {
 			for (const input of inputs) {
-				input.removeEventListener('midimessage', onmidimessage as any);
+				input.removeEventListener('midimessage', onmidimessage);
 			}
 		};
 	});

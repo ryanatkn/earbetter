@@ -37,7 +37,6 @@
 	} = $derived(app);
 
 	const ac = audio_context_context.get();
-	if (BROWSER) (window as any).ac = ac;
 
 	// TODO review the draft/editing data properties of `app`, some inconsistencies between levels/realms/projects
 	const level_data = $derived(app.draft_level_data ?? s.parse_or_throw(LevelData, {}));

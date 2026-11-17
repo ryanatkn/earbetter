@@ -49,7 +49,7 @@
 	let removing = $state(false);
 
 	let updated_name: string = $derived(level_data.name);
-	const normalized_updated_name = $derived((updated_name as any)?.trim());
+	const normalized_updated_name = $derived(updated_name.trim());
 	let updated_intervals: Intervals = $derived(level_data.intervals);
 	let updated_tonics: ReadonlyArray<Midi> | null = $derived(level_data.tonics);
 	const normalized_updated_tonics = $derived(
@@ -137,8 +137,6 @@
 
 	// TODO Putting these values here persists form values across UI states but not across page nav,
 	// use SvelteKit snapshots for that - https://kit.svelte.dev/docs/snapshots
-	// This is an object instead of as plain values because
-	// Svelte errors on the non-$state `let` updates, and that'll work well with snapshots.
 	let scale = $state(DEFAULT_SCALE);
 	let octaves = $state(1);
 
@@ -333,7 +331,7 @@
 				disabled={!changed_serialized}
 				title={changed_serialized ? undefined : 'data has not changed'}
 			>
-				import project data
+				import level data
 			</button>
 		</div>
 	</Dialog>

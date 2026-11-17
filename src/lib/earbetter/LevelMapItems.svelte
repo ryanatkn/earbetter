@@ -17,8 +17,6 @@
 
 	const no_levels = $derived(!levels.length);
 
-	// $inspect(`levels`, levels);
-
 	const click_create_new = () => {
 		if (no_levels) {
 			// TODO eslint bug

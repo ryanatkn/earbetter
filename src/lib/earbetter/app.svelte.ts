@@ -18,11 +18,8 @@ import default_project_data from '../projects/default_project.ts';
 import { to_next_name } from '../entity.ts';
 import type { Instrument, Volume } from '../audio_helpers.ts';
 import { to_notes_in_scale, type Midi, type PitchClass, type Scale } from '../music.ts';
-import type { MIDIAccess, MIDIInput } from '../WebMIDI.ts';
 import { MidiInputs } from '../midi_inputs.svelte.ts';
 import { SiteData } from '../site_data.ts';
-
-// TODO maybe a `@batched` or `@action` decorator instead of manual `batch`?
 
 // TODO refactor all storage calls, and rethink in signals instead of all top-level orchestration (that's less reusable)
 
@@ -306,7 +303,6 @@ export class App {
 		if (existing) return existing;
 		const loaded = id ? load_from_storage(id, null, (v) => s.parse_or_throw(ProjectData, v)) : null;
 		if (loaded) {
-			// TODO batch if this code stays imperative like this
 			this.project_datas = this.project_datas.concat(loaded);
 			return loaded;
 		}
@@ -590,7 +586,6 @@ export class App {
 		}
 	};
 
-	// TODO inconsistent naming with `realm` having the `_def` prefix here
 	create_level = (level_data: LevelData): void => {
 		const project_data = this.selected_project_data;
 		if (!project_data) {
@@ -688,8 +683,7 @@ export class App {
 	}
 
 	/**
-	 * Navigates to the `/trainer` and resets the the active level to its initial `null` state.
-	 * @returns `true` if the active level was exited or `false` if there was no active level
+	 * Navigates to `/trainer`, which clears the active level because the URL has no level hash.
 	 */
 	exit_level = async (): Promise<void> => {
 		await goto(resolve(`/trainer`));

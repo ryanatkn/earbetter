@@ -25,7 +25,10 @@
 		</div>
 	{:else if app.level && level_stats}
 		<div class="level">
-			<LevelScene level={app.level} {level_stats} exit_level={app.exit_level} />
+			<!-- keyed so a new level, like from back/forward between levels, gets a fresh scene that starts it -->
+			{#key app.level}
+				<LevelScene level={app.level} {level_stats} exit_level={app.exit_level} />
+			{/key}
 		</div>
 	{:else}
 		<div class="box height:100%">

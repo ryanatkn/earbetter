@@ -1,64 +1,54 @@
 import { BROWSER } from 'esm-env';
 
-import type {
-	MIDICommand,
-	MIDIMessageEvent,
-	MIDIOptions,
-	MIDIAccess,
-	MIDIChannel,
-	requestMIDIAccess,
-	MIDIInputMap,
-	MIDIOutputMap,
-	MIDIConnectionEvent
-} from './WebMIDI.ts';
 import type { Midi } from './music.ts';
-import { noop_ssr } from './util.ts';
 
-// WebMIDI helpers specific to cosmicplayground
+/**
+ * The MIDI status nibbles this app handles.
+ */
+export const MidiCommand = {
+	Stop: 8,
+	Start: 9,
+	Knob: 11,
+	PitchBend: 14
+} as const;
+export type MidiCommand = (typeof MidiCommand)[keyof typeof MidiCommand];
 
 export interface MidiMessage {
-	command: (typeof MIDICommand)[number];
-	channel: MIDIChannel;
+	/**
+	 * The status nibble, which may be a command other than the `MidiCommand`s.
+	 */
+	command: number;
+	/**
+	 * Zero-based, 0 through 15.
+	 */
+	channel: number;
 	note: Midi;
 	velocity: number; // [0, 1]
 }
 
 /**
- * Parse basic information out of a MIDI message.
+ * Parse basic information out of a MIDI message, or `null` if it has no data.
  * https://stackoverflow.com/questions/40902864/how-to-parse-web-midi-api-input-messages-onmidimessage
  */
-export const parse_midi_message = (e: MIDIMessageEvent): MidiMessage => {
+export const parse_midi_message = (e: MIDIMessageEvent): MidiMessage | null => {
+	const { data } = e;
+	if (!data || data.length < 3) return null;
 	return {
-		command: e.data[0] >> 4,
-		channel: e.data[0] & 0xf,
-		note: e.data[1],
-		velocity: e.data[2] / 127
+		command: data[0]! >> 4,
+		channel: data[0]! & 0xf,
+		note: data[1]!,
+		velocity: data[2]! / 127
 	};
 };
 
 /**
  * Uses `navigator.requestMIDIAccess`, throwing an error on failure.
  * Callers should normally prefer to use `$lib/midi_access.ts#request_access` instead of this.
- * @param opts - WebMIDI options - https://developer.mozilla.org/en-US/docs/Web/API/WebMIDI_API
+ * @param options - WebMIDI options - https://developer.mozilla.org/en-US/docs/Web/API/WebMIDI_API
  */
-export const request_midi_access = async (opts?: Partial<MIDIOptions>): Promise<MIDIAccess> => {
-	if (!BROWSER) return new MidiAccessStub();
-	const n = navigator as any;
-	const request_access: requestMIDIAccess | undefined = n.requestMIDIAccess?.bind(n);
-	if (!request_access) {
-		throw Error(`Midi is not supported in this browser`);
+export const request_midi_access = async (options?: MIDIOptions): Promise<MIDIAccess> => {
+	if (!BROWSER || !('requestMIDIAccess' in navigator)) {
+		throw Error(`MIDI is not supported in this browser`);
 	}
-	const options: MIDIOptions = {
-		sysex: undefined,
-		software: undefined,
-		...opts
-	};
-	return request_access(options);
+	return navigator.requestMIDIAccess(options);
 };
-
-class MidiAccessStub extends EventTarget implements MIDIAccess {
-	readonly inputs: MIDIInputMap = new Map();
-	readonly outputs: MIDIOutputMap = new Map();
-	onstatechange: (event: MIDIConnectionEvent) => void = noop_ssr;
-	readonly sysexEnabled: boolean = false;
-}

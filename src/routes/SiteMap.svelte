@@ -14,7 +14,7 @@
 	<ul class="unstyled">
 		{#each pages as p (p.slug)}
 			<li>
-				<a class="panel" href={resolve(p.slug as any)} class:selected={p.slug === selected_slug}>
+				<a class="panel" href={resolve(p.slug)} class:selected={p.slug === selected_slug}>
 					{p.slug}
 				</a>
 			</li>

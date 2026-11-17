@@ -17,8 +17,6 @@
 
 	let { scale = $bindable(), key = $bindable() }: Props = $props();
 
-	// $inspect('scale', scale);
-
 	// TODO @many event callback or $bindable here and below
 </script>
 

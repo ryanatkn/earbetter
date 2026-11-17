@@ -12,7 +12,6 @@
 	import Dialog from '@fuzdev/fuz_ui/Dialog.svelte';
 	import { untrack, type Snippet } from 'svelte';
 	import { page } from '$app/state';
-	import { BROWSER } from 'esm-env';
 
 	import { audio_context_context } from '#lib/audio_context.ts';
 	import { request_access } from '#lib/midi_access.ts';
@@ -40,7 +39,6 @@
 	const get_audio_context = audio_context_context.set();
 
 	const app = app_context.set(new App(get_audio_context));
-	if (BROWSER) (window as any).app = app;
 
 	const main_menu = main_menu_context.set();
 

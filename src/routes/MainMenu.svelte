@@ -16,10 +16,6 @@
 
 	// TODO @many let any routes (and components?) add sections to the menu via snippets
 
-	/**
-	 * Designed as a singleton to be used in the entire application. Maybe make more general?
-	 */
-
 	const app = app_context.get();
 
 	const main_menu = main_menu_context.get();

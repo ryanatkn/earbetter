@@ -1,7 +1,6 @@
 import { test, assert, vi, beforeEach } from 'vitest';
 
 import { request_access, reset_midi_access } from '#lib/midi_access.ts';
-import type { MIDIAccess } from '#lib/WebMIDI.ts';
 import { assert_rejects } from './test_helpers.ts';
 
 const create_state = (): { midi_access: MIDIAccess | null } => ({ midi_access: null });

@@ -2,7 +2,6 @@
 	import type { AsyncStatus } from '@fuzdev/fuz_util/async.ts';
 	import { fade } from 'svelte/transition';
 
-	import type { MIDIAccess, MIDIInput } from './WebMIDI.ts';
 	import { reset_midi_access, request_access as default_request_access } from './midi_access.ts';
 
 	interface Props {

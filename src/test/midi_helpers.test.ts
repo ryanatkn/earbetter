@@ -1,7 +1,6 @@
 import { describe, test, assert, vi, afterEach } from 'vitest';
 
 import { parse_midi_message, request_midi_access } from '#lib/midi_helpers.ts';
-import type { MIDIAccess, MIDIMessageEvent } from '#lib/WebMIDI.ts';
 import { assert_rejects } from './test_helpers.ts';
 
 const to_event = (...data: Array<number>): MIDIMessageEvent =>
@@ -22,6 +21,10 @@ const cases: Array<
 	['note off', [0x80, 48, 64], 8, 0, 48, 64 / 127],
 	['control change', [0xb3, 7, 100], 11, 3, 7, 100 / 127]
 ];
+test('parse_midi_message ignores a message without data', () => {
+	assert.strictEqual(parse_midi_message({ data: null } as unknown as MIDIMessageEvent), null);
+});
+
 test.each(cases)('parse_midi_message %s', (_label, data, command, channel, note, velocity) => {
 	assert.deepEqual(parse_midi_message(to_event(...data)), { command, channel, note, velocity });
 });
@@ -36,11 +39,11 @@ describe('request_midi_access', () => {
 		await assert_rejects(() => request_midi_access(), /not supported/);
 	});
 
-	test('requests with default options merged', async () => {
+	test('requests with the given options', async () => {
 		const access = {} as MIDIAccess;
 		const requestMIDIAccess = vi.fn(() => Promise.resolve(access));
 		vi.stubGlobal('navigator', { requestMIDIAccess });
 		assert.strictEqual(await request_midi_access({ sysex: true }), access);
-		assert.deepEqual(requestMIDIAccess.mock.calls, [[{ sysex: true, software: undefined }]] as any);
+		assert.deepEqual(requestMIDIAccess.mock.calls, [[{ sysex: true }]] as Array<Array<unknown>>);
 	});
 });
