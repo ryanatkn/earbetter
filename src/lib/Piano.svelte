@@ -6,8 +6,10 @@
 	import { MIDI_MIN, MIDI_MAX, type Midi } from './music.ts';
 	import { compute_piano } from './piano.ts';
 
+	/**
+	 * Fills the width of its container, measuring itself, and sizes its keys to fit.
+	 */
 	interface Props {
-		width: number;
 		max_height?: number | undefined;
 		min_note?: Midi;
 		max_note?: Midi;
@@ -31,7 +33,6 @@
 	}
 
 	const {
-		width,
 		max_height,
 		min_note = MIDI_MIN,
 		max_note = MIDI_MAX,
@@ -46,13 +47,9 @@
 		onrelease
 	}: Props = $props();
 
-	const {
-		piano_keys,
-		natural_key_width,
-		natural_key_height,
-		accidental_key_width,
-		accidental_key_height
-	} = $derived(compute_piano(width, min_note, max_note, max_height));
+	let width: number | undefined = $state();
+
+	const piano = $derived(width ? compute_piano(width, min_note, max_note, max_height) : null);
 
 	/**
 	 * Used to allow dragging across the piano regardless of where the mousedown event occurred.
@@ -66,36 +63,43 @@
 	onmouseleave={() => (pressing_any = false)}
 />
 
-<div
-	class="piano"
-	class:disabled={!clickable}
-	aria-disabled={!clickable}
-	style:width="{width}px"
-	style:height="{natural_key_height}px"
-	style:--piano_natural_key_width="{natural_key_width}px"
-	style:--piano_natural_key_height="{natural_key_height}px"
-	style:--piano_accidental_key_width="{accidental_key_width}px"
-	style:--piano_accidental_key_height="{accidental_key_height}px"
->
-	{#each piano_keys as { note, left_offset } (note)}
-		<PianoKey
-			{note}
-			{left_offset}
-			{clickable}
-			enabled={!enabled_notes || enabled_notes.has(note)}
-			pressed={pressed_keys?.has(note)}
-			highlighted={highlighted_keys?.has(note)}
-			emphasized={emphasized_keys?.has(note)}
-			{middle_c_label}
-			{allow_sticking}
-			{pressing_any}
-			{onpress}
-			{onrelease}
-		/>
-	{/each}
+<div class="sizer" bind:clientWidth={width}>
+	{#if piano}
+		<div
+			class="piano"
+			class:disabled={!clickable}
+			aria-disabled={!clickable}
+			style:width="{width}px"
+			style:height="{piano.natural_key_height}px"
+			style:--piano_natural_key_width="{piano.natural_key_width}px"
+			style:--piano_natural_key_height="{piano.natural_key_height}px"
+			style:--piano_accidental_key_width="{piano.accidental_key_width}px"
+			style:--piano_accidental_key_height="{piano.accidental_key_height}px"
+		>
+			{#each piano.piano_keys as { note, left_offset } (note)}
+				<PianoKey
+					{note}
+					{left_offset}
+					{clickable}
+					enabled={!enabled_notes || enabled_notes.has(note)}
+					pressed={pressed_keys?.has(note)}
+					highlighted={highlighted_keys?.has(note)}
+					emphasized={emphasized_keys?.has(note)}
+					{middle_c_label}
+					{allow_sticking}
+					{pressing_any}
+					{onpress}
+					{onrelease}
+				/>
+			{/each}
+		</div>
+	{/if}
 </div>
 
 <style>
+	.sizer {
+		width: 100%;
+	}
 	.piano {
 		position: relative;
 	}

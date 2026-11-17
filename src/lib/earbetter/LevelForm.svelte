@@ -137,9 +137,6 @@
 	let scale = $state(DEFAULT_SCALE);
 	let octaves = $state(1);
 
-	// TODO helper component for measuring? with `let:width` - first look at Svelte's new box bindings
-	let piano_width: number | undefined = $state();
-
 	const lowest_note_error = $derived(updated_min_note >= updated_max_note);
 </script>
 
@@ -221,7 +218,6 @@
 			<Alert status="error">the lowest note must be lower than the highest</Alert>
 		{:else}
 			<Piano
-				width={piano_width ?? 0}
 				max_height={50}
 				min_note={updated_min_note}
 				max_note={updated_max_note}
@@ -231,7 +227,7 @@
 			/>
 			<br />
 		{/if}
-		<fieldset bind:clientWidth={piano_width}>
+		<fieldset>
 			<label class="mb_0" title="the possible starting notes for each trial">
 				<div class="title">tonics</div>
 				<input

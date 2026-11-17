@@ -1,7 +1,6 @@
 <script lang="ts">
 	import { plural } from '@fuzdev/fuz_util/string.ts';
 	import type { Snippet } from 'svelte';
-	import { innerWidth } from 'svelte/reactivity/window';
 
 	import Piano from './Piano.svelte';
 	import MidiInput from './MidiInput.svelte';
@@ -101,24 +100,20 @@
 <div class="notes_input pt_lg">
 	{@render buttons()}
 	<div class="piano_wrapper" style:padding="{piano_padding}px">
-		{#if innerWidth.current}
-			<!-- TODO @many hacky width -->
-			<Piano
-				width={innerWidth.current - piano_padding * 5}
-				{min_note}
-				{max_note}
-				max_height={300}
-				pressed_keys={app.playing_notes}
-				highlighted_keys={current_notes}
-				middle_c_label
-				allow_sticking
-				onpress={(note) => {
-					toggle_note(note);
-					app.start_note(note);
-				}}
-				onrelease={app.stop_note}
-			/>
-		{/if}
+		<Piano
+			{min_note}
+			{max_note}
+			max_height={300}
+			pressed_keys={app.playing_notes}
+			highlighted_keys={current_notes}
+			middle_c_label
+			allow_sticking
+			onpress={(note) => {
+				toggle_note(note);
+				app.start_note(note);
+			}}
+			onrelease={app.stop_note}
+		/>
 	</div>
 	<section class="box">
 		<label class="mb_lg">

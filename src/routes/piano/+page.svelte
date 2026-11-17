@@ -42,8 +42,6 @@
 		set_in_storage(SITE_DATA_STORAGE_KEY, data);
 	};
 
-	let clientWidth: number | undefined = $state();
-
 	const piano_padding = 20;
 
 	const play = (note: Midi, velocity: number | null = null): void => {
@@ -58,23 +56,20 @@
 </svelte:head>
 
 <MidiInput inputs={app.midi_inputs} onnotestart={play} onnotestop={app.stop_note} />
-<main bind:clientWidth>
+<main>
 	<BackButton onclick={() => goto(resolve('/'))} />
 	<Header />
 	<div class="piano_wrapper" style:padding="{piano_padding}px">
-		{#if clientWidth}
-			<Piano
-				width={clientWidth - piano_padding * 2}
-				{min_note}
-				{max_note}
-				pressed_keys={app.playing_notes}
-				enabled_notes={app.enabled_notes}
-				onpress={(note) => play(note)}
-				onrelease={app.stop_note}
-				middle_c_label
-				allow_sticking
-			/>
-		{/if}
+		<Piano
+			{min_note}
+			{max_note}
+			pressed_keys={app.playing_notes}
+			enabled_notes={app.enabled_notes}
+			onpress={(note) => play(note)}
+			onrelease={app.stop_note}
+			middle_c_label
+			allow_sticking
+		/>
 	</div>
 	<form class="width_atmost_sm panel p_md">
 		<fieldset>

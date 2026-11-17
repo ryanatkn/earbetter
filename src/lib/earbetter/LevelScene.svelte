@@ -25,8 +25,6 @@
 
 	const app = app_context.get();
 
-	let clientWidth: number | undefined = $state();
-
 	// TODO `level_data` is not reactive, so we can destructure, but should we?
 	const { level_data } = $derived(level);
 	const guessing_index = $derived(level.trial?.guessing_index);
@@ -129,7 +127,7 @@
 	onnotestop={app.stop_note}
 />
 <!-- hide from screen readers, see keyboard commands -->
-<div class="level" class:initial bind:clientWidth onclick={click} aria-hidden="true">
+<div class="level" class:initial onclick={click} aria-hidden="true">
 	<div class="level_progress" title="level progress">
 		<LevelProgressIndicator {level} />
 	</div>
@@ -137,22 +135,19 @@
 		<TrialProgressIndicator {level} />
 	</div>
 	<div class="piano_wrapper" style:padding="{piano_padding}px" bind:this={piano_wrapper_el}>
-		{#if clientWidth}
-			<Piano
-				width={clientWidth - piano_padding * 2}
-				min_note={level_data.min_note}
-				max_note={level_data.max_note}
-				enabled_notes={level.trial?.valid_notes}
-				{pressed_keys}
-				{highlighted_keys}
-				onpress={level.status === 'waiting_for_input'
-					? (note) => on_press_key(note)
-					: level.status === 'complete'
-						? (note) => app.start_note(note)
-						: undefined}
-				onrelease={level.status === 'complete' ? app.stop_note : undefined}
-			/>
-		{/if}
+		<Piano
+			min_note={level_data.min_note}
+			max_note={level_data.max_note}
+			enabled_notes={level.trial?.valid_notes}
+			{pressed_keys}
+			{highlighted_keys}
+			onpress={level.status === 'waiting_for_input'
+				? (note) => on_press_key(note)
+				: level.status === 'complete'
+					? (note) => app.start_note(note)
+					: undefined}
+			onrelease={level.status === 'complete' ? app.stop_note : undefined}
+		/>
 	</div>
 	<div class="feedback" class:success class:failure class:complete>
 		{#if complete}
