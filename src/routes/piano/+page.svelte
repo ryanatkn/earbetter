@@ -111,6 +111,7 @@
 		align-items: center;
 	}
 	.piano_wrapper {
+		width: 100%; /* the self-measuring piano fills this, so it can't shrink to fit */
 		padding: var(--space_md);
 	}
 </style>
