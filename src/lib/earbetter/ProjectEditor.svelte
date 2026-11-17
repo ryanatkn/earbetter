@@ -1,16 +1,12 @@
 <script lang="ts">
 	import * as s from '@fuzdev/fuz_schema/schema.ts';
 	import ProjectForm from './ProjectForm.svelte';
-	import type { App } from './app.svelte.ts';
+	import { app_context } from './app.svelte.ts';
 	import { ProjectData } from './project.ts';
 
-	interface Props {
-		app: App; // TODO maybe change to be more granular objects?
-	}
+	const app = app_context.get();
 
-	const { app }: Props = $props();
-
-	const { remove_project, duplicate_project, update_project, create_project } = $derived(app);
+	const { remove_project, duplicate_project, update_project, create_project } = app;
 
 	const project_data = $derived(app.editing_project_data ?? s.parse_or_throw(ProjectData, {}));
 

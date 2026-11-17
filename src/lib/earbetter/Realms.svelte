@@ -4,15 +4,11 @@
 
 	import { RealmData } from './realm.ts';
 	import RealmItems from './RealmItems.svelte';
-	import type { App } from './app.svelte.ts';
+	import { app_context } from './app.svelte.ts';
 
-	interface Props {
-		app: App; // TODO maybe change to be more granular objects?
-	}
+	const app = app_context.get();
 
-	const { app }: Props = $props();
-
-	const { select_realm, edit_realm, remove_realm } = $derived(app);
+	const { select_realm, edit_realm, remove_realm } = app;
 
 	const creating = $derived(
 		app.editing_realm &&

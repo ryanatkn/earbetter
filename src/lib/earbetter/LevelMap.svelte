@@ -10,7 +10,7 @@
 	import VolumeControl from '../VolumeControl.svelte';
 	import { with_velocity } from '../audio_helpers.ts';
 	import InstrumentControl from '../InstrumentControl.svelte';
-	import type { App } from './app.svelte.ts';
+	import { app_context } from './app.svelte.ts';
 	import ControlsInstructions from './ControlsInstructions.svelte';
 	import MidiInput from '../MidiInput.svelte';
 	import { start_playing, stop_playing } from '../play_note.ts';
@@ -20,11 +20,7 @@
 	import LevelMapItems from './LevelMapItems.svelte';
 	import ProjectEditor from './ProjectEditor.svelte';
 
-	interface Props {
-		app: App;
-	}
-
-	const { app }: Props = $props();
+	const app = app_context.get();
 
 	const {
 		toggle_trainer_help,
@@ -34,7 +30,7 @@
 		duplicate_level,
 		create_level,
 		update_level
-	} = $derived(app);
+	} = app;
 
 	const ac = audio_context_context.get();
 
@@ -60,14 +56,14 @@
 		<div class="width_atmost_sm">
 			{#if app.selected_project_data}
 				<section class="card" transition:slide>
-					<Projects {app} />
+					<Projects />
 				</section>
 			{/if}
 			<!-- TODO bug with eslint-plugin-svelte? -->
 			<!-- eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing -->
 			{#if (app.editing_project && app.editing_project_data) || !app.selected_project_data}
 				<section class="card" transition:slide>
-					<ProjectEditor {app} />
+					<ProjectEditor />
 				</section>
 			{/if}
 			<section class="card" transition:slide>
@@ -122,13 +118,13 @@
 			</section>
 		{/if}
 		<section class="card">
-			<Realms {app} />
+			<Realms />
 		</section>
 		<!-- TODO bug probably with eslint-plugin-svelte or typescript-eslint -->
 		<!-- eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing -->
 		{#if (app.editing_realm && app.editing_realm_data) || no_realms}
 			<section class="card" transition:slide>
-				<RealmEditor {app} />
+				<RealmEditor />
 			</section>
 		{/if}
 	</div>
@@ -136,7 +132,7 @@
 		<div class="width_atmost_sm">
 			{#if app.levels}
 				<section class="card" transition:slide>
-					<LevelMapItems {app} levels={app.levels} />
+					<LevelMapItems />
 				</section>
 			{/if}
 			<!-- TODO bug, maybe in eslint-plugin-svelte? -->

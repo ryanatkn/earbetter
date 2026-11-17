@@ -3,15 +3,16 @@
 	import { tick } from 'svelte';
 
 	import type { LevelData } from './level.svelte.ts';
-	import type { App } from './app.svelte.ts';
+	import { app_context } from './app.svelte.ts';
 	import LevelStatsSummary from './LevelStatsSummary.svelte';
 
 	interface Props {
-		app: App;
 		level_data: LevelData;
 	}
 
-	const { app, level_data }: Props = $props();
+	const { level_data }: Props = $props();
+
+	const app = app_context.get();
 
 	// TODO hacky - the `editing_this_level` is needed when clicking into a level and going back,
 	// the `draft_level_data` is set but `editing_level` may be false,

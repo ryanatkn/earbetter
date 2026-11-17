@@ -4,11 +4,8 @@
 
 	import Header from '#routes/Header.svelte';
 	import Footer from '#routes/Footer.svelte';
-	import { app_context } from '#lib/earbetter/app.svelte.ts';
 	import LevelMap from '#lib/earbetter/LevelMap.svelte';
 	import BackButton from '#routes/BackButton.svelte';
-
-	const app = app_context.get();
 </script>
 
 <svelte:head>
@@ -18,6 +15,6 @@
 <main>
 	<BackButton onclick={() => goto(resolve('/'))} />
 	<Header />
-	<LevelMap {app} />
+	<LevelMap />
 	<div class="box"><Footer /></div>
 </main>

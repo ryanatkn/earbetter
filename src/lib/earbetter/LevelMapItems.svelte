@@ -1,15 +1,12 @@
 <script lang="ts">
 	import * as s from '@fuzdev/fuz_schema/schema.ts';
 	import LevelMapItem from './LevelMapItem.svelte';
-	import type { App } from './app.svelte.ts';
+	import { app_context } from './app.svelte.ts';
 	import { LevelData } from './level.svelte.ts';
 
-	interface Props {
-		app: App;
-		levels: Array<LevelData>; // TODO making this a prop here, but using `app` most places, maybe change it to context?
-	}
+	const app = app_context.get();
 
-	const { app, levels }: Props = $props();
+	const levels = $derived(app.levels ?? []);
 
 	const editing_draft = $derived(
 		app.editing_level && !levels.some((d) => d === app.draft_level_data)
@@ -35,7 +32,7 @@
 	</header>
 	<menu class="levels unstyled mb_0">
 		{#each levels as d (d.id)}
-			<LevelMapItem {app} level_data={d} />
+			<LevelMapItem level_data={d} />
 		{/each}
 	</menu>
 	<button

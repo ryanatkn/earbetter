@@ -1,16 +1,12 @@
 <script lang="ts">
 	import * as s from '@fuzdev/fuz_schema/schema.ts';
 	import RealmForm from './RealmForm.svelte';
-	import type { App } from './app.svelte.ts';
+	import { app_context } from './app.svelte.ts';
 	import { RealmData } from './realm.ts';
 
-	interface Props {
-		app: App; // TODO maybe change to be more granular objects?
-	}
+	const app = app_context.get();
 
-	const { app }: Props = $props();
-
-	const { remove_realm, duplicate_realm, update_realm, create_realm } = $derived(app);
+	const { remove_realm, duplicate_realm, update_realm, create_realm } = app;
 
 	const realm_data = $derived(app.editing_realm_data ?? s.parse_or_throw(RealmData, {}));
 
