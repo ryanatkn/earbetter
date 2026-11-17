@@ -22,6 +22,7 @@
 	import NotesInput from '../NotesInput.svelte';
 	import Piano from '../Piano.svelte';
 	import ImportDataDialog from './ImportDataDialog.svelte';
+	import { app_context } from './app.svelte.ts';
 
 	interface Props {
 		level_data: LevelData;
@@ -42,6 +43,8 @@
 		onplay,
 		onclose
 	}: Props = $props();
+
+	const app = app_context.get();
 
 	let removing = $state(false);
 
@@ -117,8 +120,7 @@
 	const lowest_note_error = $derived(updated_min_note >= updated_max_note);
 </script>
 
-<!-- TODO this class `.level_def_form` is used to focus from another component -->
-<form class="level_def_form width:100%">
+<form class="width:100%" {@attach app.register_form('level')}>
 	<header>
 		<h2 class="my_0">
 			{#if editing}editing level{:else}create a new level{/if}

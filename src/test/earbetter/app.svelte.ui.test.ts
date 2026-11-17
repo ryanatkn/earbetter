@@ -47,3 +47,17 @@ test('each app holds its own notes', () => {
 	second.stop_note(60);
 	assert.ok(first.playing_notes.has(60));
 });
+
+test('register_form tracks the mounted form until it unmounts', () => {
+	const app = create_app();
+	const first = {} as HTMLFormElement;
+	const second = {} as HTMLFormElement;
+	const cleanup_first = app.register_form('level')(first);
+	assert.strictEqual(app.form_els.level, first);
+	const cleanup_second = app.register_form('level')(second);
+	cleanup_first?.(); // a stale cleanup leaves the newer form registered
+	assert.strictEqual(app.form_els.level, second);
+	cleanup_second?.();
+	assert.strictEqual(app.form_els.level, null);
+	assert.strictEqual(app.form_els.realm, null);
+});

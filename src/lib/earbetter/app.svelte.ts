@@ -3,6 +3,7 @@ import * as s from '@fuzdev/fuz_schema/schema.ts';
 import { create_context } from '@fuzdev/fuz_ui/context_helpers.ts';
 import { resolve } from '$app/paths';
 import { SvelteSet } from 'svelte/reactivity';
+import type { Attachment } from 'svelte/attachments';
 
 import {
 	add_mistakes_to_level_stats,
@@ -158,6 +159,25 @@ export class App {
 	get midi_inputs(): Array<MIDIInput> | null {
 		return this.#midi_inputs?.current ?? null;
 	}
+
+	/**
+	 * The mounted level and realm forms, registered by their `register_form` attachments,
+	 * so other components' event handlers can focus or scroll to them.
+	 * Plain fields rather than state, because nothing renders from them.
+	 */
+	readonly form_els: Record<'level' | 'realm', HTMLFormElement | null> = {
+		level: null,
+		realm: null
+	};
+
+	register_form =
+		(kind: 'level' | 'realm'): Attachment<HTMLFormElement> =>
+		(el) => {
+			this.form_els[kind] = el;
+			return () => {
+				if (this.form_els[kind] === el) this.form_els[kind] = null;
+			};
+		};
 
 	/**
 	 * The stop functions of the notes held by `start_note`, enforcing at most one of each note.

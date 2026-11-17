@@ -53,8 +53,7 @@
 				app.edit_level(opening ? level_data : null);
 				if (opening) {
 					await tick();
-					const el = document.querySelector('.level_def_form');
-					el?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+					app.form_els.level?.scrollIntoView({ behavior: 'smooth', block: 'center' });
 				}
 			}
 		}}

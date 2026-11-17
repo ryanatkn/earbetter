@@ -6,6 +6,7 @@
 	import { create_realm_id, RealmData, RealmName, type RealmId } from './realm.ts';
 	import default_project_data from '../projects/default_project.ts';
 	import ImportDataDialog from './ImportDataDialog.svelte';
+	import { app_context } from './app.svelte.ts';
 
 	interface Props {
 		realm_data: RealmData;
@@ -17,6 +18,8 @@
 	}
 
 	const { realm_data, editing = false, onsubmit, onremove, onduplicate, onclose }: Props = $props();
+
+	const app = app_context.get();
 
 	let removing = $state(false);
 
@@ -37,8 +40,7 @@
 	let toggle_create_default_realms = $state(false);
 </script>
 
-<!-- TODO this class `.realm_def_form` is used to focus from another component -->
-<form class="realm_def_form">
+<form {@attach app.register_form('realm')}>
 	<header>
 		<h2 class="my_0">
 			{#if editing}editing realm{:else}create a new realm{/if}
