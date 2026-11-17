@@ -46,11 +46,10 @@
 	let serialized = $state('');
 	let updated = $state('');
 	const changed_serialized = $derived(serialized !== updated);
-	let parse_error_message = $state('');
-	// TODO @many review this effect to try to remove it
-	$effect(() => {
+	// resets when the `project_data` prop changes, and import failures overwrite it
+	let parse_error_message = $derived.by(() => {
 		project_data;
-		parse_error_message = '';
+		return '';
 	});
 	let project_data_el: HTMLTextAreaElement | undefined = $state();
 	let start_importing_el: HTMLButtonElement | undefined = $state();

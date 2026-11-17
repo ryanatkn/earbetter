@@ -181,6 +181,49 @@ describe('Level', () => {
 		assert.deepEqual(successes, [['level', 1]]);
 	});
 
+	test('feedback records each judged guess and outlives its status', async () => {
+		const { level } = create_level();
+		level.start();
+		assert.strictEqual(level.feedback, null);
+		await finish_prompt(level);
+		const wrong = wrong_note(level, 0);
+		level.guess(wrong);
+		assert.strictEqual(level.feedback, null, 'a free guess is not judged');
+		const { sequence } = level.trial!;
+		level.guess(sequence[0]!);
+		level.guess(wrong_note(level, 1));
+		const failure = level.feedback;
+		assert.deepEqual(failure, { kind: 'failure', note: wrong_note(level, 1) });
+		await vi.advanceTimersByTimeAsync(DEFAULT_FEEDBACK_DURATION);
+		assert.strictEqual(level.feedback, failure, 'kept after the status moves on');
+		await finish_prompt(level);
+		guess_all(level);
+		assert.deepEqual(level.feedback, { kind: 'success', note: sequence.at(-1) });
+	});
+
+	test('repeated feedback of the same kind is a new event', async () => {
+		const { level } = create_level({ trial_count: 2 });
+		level.start();
+		await finish_prompt(level);
+		guess_all(level);
+		const first = level.feedback;
+		await vi.advanceTimersByTimeAsync(DEFAULT_FEEDBACK_DURATION);
+		await finish_prompt(level);
+		guess_all(level);
+		assert.strictEqual(level.feedback?.kind, 'success');
+		assert.notStrictEqual(level.feedback, first);
+	});
+
+	test('reset clears the feedback', async () => {
+		const { level } = create_level();
+		level.start();
+		await finish_prompt(level);
+		guess_all(level);
+		assert.ok(level.feedback);
+		level.reset();
+		assert.strictEqual(level.feedback, null);
+	});
+
 	test('retry replays the current trial', async () => {
 		const { level, audio } = create_level();
 		level.start();

@@ -1,7 +1,7 @@
 import * as s from '@fuzdev/fuz_schema/schema.ts';
 
-import { Volume, Instrument, DEFAULT_VOLUME, DEFAULT_INSTRUMENT } from '#lib/audio_helpers.ts';
-import { DEFAULT_PITCH_CLASS, DEFAULT_SCALE, PitchClass, Scale } from '#lib/music.ts';
+import { Volume, Instrument, DEFAULT_VOLUME, DEFAULT_INSTRUMENT } from './audio_helpers.ts';
+import { DEFAULT_PITCH_CLASS, DEFAULT_SCALE, PitchClass, Scale } from './music.ts';
 
 // TODO name for this? `SiteData`, `GlobalState`, `UserSettings`, something else?
 

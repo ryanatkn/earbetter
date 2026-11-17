@@ -1,6 +1,5 @@
 import { goto } from '$app/navigation';
 import * as s from '@fuzdev/fuz_schema/schema.ts';
-import { untrack } from 'svelte';
 import { create_context } from '@fuzdev/fuz_ui/context_helpers.ts';
 import { resolve } from '$app/paths';
 import { SvelteSet } from 'svelte/reactivity';
@@ -17,22 +16,10 @@ import { load_from_storage, set_in_storage } from '../storage.ts';
 import { RealmId, RealmData } from './realm.ts';
 import default_project_data from '../projects/default_project.ts';
 import { to_next_name } from '../entity.ts';
-import {
-	DEFAULT_INSTRUMENT,
-	DEFAULT_VOLUME,
-	type Instrument,
-	type Volume
-} from '../audio_helpers.ts';
-import {
-	DEFAULT_SCALE,
-	pitch_classes,
-	to_notes_in_scale,
-	type Midi,
-	type PitchClass,
-	type Scale
-} from '../music.ts';
+import type { Instrument, Volume } from '../audio_helpers.ts';
+import { to_notes_in_scale, type Midi, type PitchClass, type Scale } from '../music.ts';
 import type { MIDIAccess } from '../WebMIDI.ts';
-import type { SiteData } from '../../routes/site_data.ts';
+import { SiteData } from '../site_data.ts';
 
 // TODO maybe a `@batched` or `@action` decorator instead of manual `batch`?
 
@@ -52,17 +39,73 @@ export type AppData = s.Infer<typeof AppData>;
 
 export const app_context = create_context<App>();
 
+export interface AppOptions {
+	/**
+	 * The `localStorage` key for the `AppData`.
+	 */
+	storage_key?: string;
+	/**
+	 * The `localStorage` key for the `SiteData` settings.
+	 */
+	site_storage_key?: string;
+}
+
+/**
+ * Persistence is save-on-write: the setters for `app_data` and `site_data`,
+ * and the accessors built on them, write through to storage,
+ * so no effect watches the state.
+ */
 export class App {
+	readonly storage_key: string;
+	readonly site_storage_key: string;
+
 	// TODO wheres the source of truth?
 	// currently manually syncing the same changes to both `app_data` `projects` --
 	// mixing serialization concerns with runtime representations
-	app_data: AppData = $state.raw()!;
+	#app_data: AppData = $state.raw()!;
+	get app_data(): AppData {
+		return this.#app_data;
+	}
+	set app_data(value: AppData) {
+		this.#app_data = value;
+		set_in_storage(this.storage_key, value);
+	}
 
-	// TODO does initializing these to the defaults without the app data cause any weirdness? creating them eagerly because we can't do `this.volume = $state(...)` in the constructor
-	volume: Volume = $state(DEFAULT_VOLUME);
-	instrument: Instrument = $state(DEFAULT_INSTRUMENT);
-	scale: Scale = $state.raw(DEFAULT_SCALE);
-	key: PitchClass = $state(pitch_classes[0]);
+	#site_data: SiteData = $state.raw()!;
+	get site_data(): SiteData {
+		return this.#site_data;
+	}
+	set site_data(value: SiteData) {
+		this.#site_data = value;
+		set_in_storage(this.site_storage_key, value);
+	}
+
+	get volume(): Volume {
+		return this.site_data.volume;
+	}
+	set volume(volume: Volume) {
+		if (volume !== this.site_data.volume) this.site_data = { ...this.site_data, volume };
+	}
+	get instrument(): Instrument {
+		return this.site_data.instrument;
+	}
+	set instrument(instrument: Instrument) {
+		if (instrument !== this.site_data.instrument) {
+			this.site_data = { ...this.site_data, instrument };
+		}
+	}
+	get scale(): Scale {
+		return this.site_data.scale;
+	}
+	set scale(scale: Scale) {
+		if (scale !== this.site_data.scale) this.site_data = { ...this.site_data, scale };
+	}
+	get key(): PitchClass {
+		return this.site_data.key;
+	}
+	set key(key: PitchClass) {
+		if (key !== this.site_data.key) this.site_data = { ...this.site_data, key };
+	}
 	enabled_notes: Set<Midi> | null = $derived(
 		this.scale.name === 'chromatic' ? null : to_notes_in_scale(this.scale, this.key)
 	);
@@ -83,7 +126,14 @@ export class App {
 
 	project_datas: ReadonlyArray<ProjectData> = $state.raw([]); // TODO weird name
 
-	selected_project_id: ProjectId | null = $state(null);
+	get selected_project_id(): ProjectId | null {
+		return this.app_data.selected_project_id;
+	}
+	set selected_project_id(selected_project_id: ProjectId | null) {
+		if (selected_project_id !== this.app_data.selected_project_id) {
+			this.app_data = { ...this.app_data, selected_project_id };
+		}
+	}
 	selected_project_data: ProjectData | null = $derived(
 		this.project_datas.find((p) => p.id === this.selected_project_id) ?? null
 	);
@@ -100,7 +150,14 @@ export class App {
 		this.editing_project_draft ? this.draft_project_data : this.selected_project_data
 	);
 
-	selected_realm_id: RealmId | null = $state(null);
+	get selected_realm_id(): RealmId | null {
+		return this.app_data.selected_realm_id;
+	}
+	set selected_realm_id(selected_realm_id: RealmId | null) {
+		if (selected_realm_id !== this.app_data.selected_realm_id) {
+			this.app_data = { ...this.app_data, selected_realm_id };
+		}
+	}
 	selected_realm_data: RealmData | null = $derived(
 		this.realms?.find((p) => p.id === this.selected_realm_id) ?? null
 	);
@@ -132,22 +189,18 @@ export class App {
 	draft_level_data: LevelData | null = $state.raw(null);
 
 	readonly get_audio_context: () => AudioContext;
-	readonly storage_key: string;
 
-	constructor(
-		get_audio_context: () => AudioContext,
-		initial_site_data: SiteData | null = null,
-		storage_key = 'app'
-	) {
+	constructor(get_audio_context: () => AudioContext, options?: AppOptions) {
 		this.get_audio_context = get_audio_context;
-		this.storage_key = storage_key;
-		this.app_data = this.load();
-		if (initial_site_data) {
-			this.volume = initial_site_data.volume;
-			this.instrument = initial_site_data.instrument;
-			this.scale = initial_site_data.scale;
-			this.key = initial_site_data.key;
-		}
+		this.storage_key = options?.storage_key ?? 'app';
+		this.site_storage_key = options?.site_storage_key ?? 'site';
+		// loading assigns the private fields, so it doesn't write back what it just read
+		this.#app_data = this.load();
+		this.#site_data = load_from_storage(
+			this.site_storage_key,
+			() => s.parse_or_throw(SiteData, {}),
+			(v) => s.parse_or_throw(SiteData, v)
+		);
 
 		// TODO refactor
 		const { selected_project_id } = this.app_data;
@@ -158,20 +211,6 @@ export class App {
 		)!;
 		this.selected_project_id = project_data.id;
 		this.selected_realm_id = this.app_data.selected_realm_id ?? project_data.realms[0]?.id ?? null;
-		// TODO rethink how this works - is setting state inside an $effect, and in a constructor
-		// save changes to `selected_project_id` and `selected_realm_id` back to the `app_data`,
-		// these could be decoupled but are often fired together
-		$effect(() => {
-			const app_data = untrack(() => this.app_data);
-			const selected_project_id = this.selected_project_id;
-			const selected_realm_id = this.selected_realm_id;
-			if (
-				selected_project_id !== app_data.selected_project_id ||
-				selected_realm_id !== app_data.selected_realm_id
-			) {
-				this.app_data = { ...app_data, selected_project_id, selected_realm_id };
-			}
-		});
 	}
 
 	// returns a stable reference to data that's immutable by convention
@@ -195,10 +234,6 @@ export class App {
 			loaded.projects = loaded.projects.filter((p) => !ids_to_delete.includes(p.id));
 		}
 		return loaded;
-	}
-
-	save(data: AppData): void {
-		set_in_storage(this.storage_key, data);
 	}
 
 	save_project = (id: ProjectId): void => {

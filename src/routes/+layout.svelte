@@ -17,8 +17,6 @@
 	import { audio_context_context } from '#lib/audio_context.ts';
 	import { request_access } from '#lib/midi_access.ts';
 	import { App, app_context } from '#lib/earbetter/app.svelte.ts';
-	import { load_from_storage, set_in_storage } from '#lib/storage.ts';
-	import { SiteData } from './site_data.ts';
 	import InitAudioContext from '#lib/InitAudioContext.svelte';
 	import MainMenu from './MainMenu.svelte';
 	import { main_menu_context } from './main_menu_state.svelte.ts';
@@ -39,16 +37,9 @@
 
 	site_context.set(new SiteState({ icon: logo_earbetter, pkg_json }));
 
-	// load site data
-	const SITE_DATA_STORAGE_KEY = 'site';
-	const initial_site_data = load_from_storage(
-		SITE_DATA_STORAGE_KEY,
-		() => s.parse_or_throw(SiteData, {}),
-		(v) => s.parse_or_throw(SiteData, v)
-	);
 	const get_audio_context = audio_context_context.set();
 
-	const app = app_context.set(new App(get_audio_context, initial_site_data));
+	const app = app_context.set(new App(get_audio_context));
 	if (BROWSER) (window as any).app = app;
 
 	const main_menu = main_menu_context.set();
@@ -57,40 +48,11 @@
 		const parsed = s.parse(LevelHashData, parse_from_hash(page.url.hash));
 		return parsed.ok ? parsed.value : null;
 	});
+	// a genuine effect: syncs the external URL into the app, and hash-only changes
+	// don't fire `afterNavigate`, so no navigation callback covers every case
 	$effect(() => {
 		const d = current_level_hash_data;
 		untrack(() => app.set_active_level_data(d?.level ?? null));
-	});
-
-	// save site data
-	const to_site_data = (): SiteData => ({
-		// note these have to use `.value`, the `$`-prefix doesn't work for reactivity
-		volume: app.volume,
-		instrument: app.instrument,
-		scale: app.scale,
-		key: app.key
-	});
-
-	// TODO @many probably refactor, maybe combining the two into one piece of state
-	let inited_site_data_save = false;
-	$effect(() => {
-		const site_data = to_site_data();
-		if (inited_site_data_save) {
-			set_in_storage(SITE_DATA_STORAGE_KEY, site_data);
-		} else {
-			inited_site_data_save = true;
-		}
-	});
-
-	// TODO @many probably refactor, maybe combining the two into one piece of state
-	let inited_app_save = false;
-	$effect(() => {
-		const data = app.toJSON();
-		if (inited_app_save) {
-			app.save(data);
-		} else {
-			inited_app_save = true;
-		}
 	});
 
 	// TODO refactor

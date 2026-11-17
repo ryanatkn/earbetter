@@ -1,6 +1,5 @@
 import * as s from '@fuzdev/fuz_schema/schema.ts';
 import { describe, test, assert, vi, beforeEach, afterEach } from 'vitest';
-import { flushSync } from 'svelte';
 
 import { AppData } from '#lib/earbetter/app.svelte.ts';
 import { ProjectData } from '#lib/earbetter/project.ts';
@@ -8,38 +7,22 @@ import { create_memory_storage } from '../test_helpers.ts';
 import {
 	create_app,
 	read_stored,
-	TEST_STORAGE_KEY,
-	type AppHarness
-} from './app_test_helpers.svelte.ts';
+	TEST_SITE_STORAGE_KEY,
+	TEST_STORAGE_KEY
+} from './app_test_helpers.ts';
 
 vi.mock('$app/navigation', () => ({ goto: vi.fn() }));
-
-let harnesses: Array<AppHarness> = [];
-const create = (...args: Parameters<typeof create_app>): AppHarness => {
-	const harness = create_app(...args);
-	harnesses.push(harness);
-	return harness;
-};
 
 beforeEach(() => {
 	vi.stubGlobal('localStorage', create_memory_storage());
 });
 afterEach(() => {
-	for (const h of harnesses) h.destroy();
-	harnesses = [];
 	vi.unstubAllGlobals();
 });
 
-/**
- * Persists app data the way the root layout does.
- */
-const save = ({ app }: AppHarness): void => {
-	app.save(app.toJSON());
-};
-
 describe('a fresh app', () => {
 	test('creates and selects the default project', () => {
-		const { app } = create();
+		const app = create_app();
 		assert.strictEqual(app.project_datas.length, 1);
 		const project = app.project_datas[0]!;
 		assert.strictEqual(app.selected_project_id, project.id);
@@ -50,27 +33,30 @@ describe('a fresh app', () => {
 
 	// regression: the created project was loaded back from storage and added a second time
 	test('holds each project once', () => {
-		const { app } = create();
+		const app = create_app();
 		assert.strictEqual(new Set(app.project_datas.map((p) => p.id)).size, app.project_datas.length);
 	});
 
 	test('syncs the selection into the app data', () => {
-		const { app } = create();
+		const app = create_app();
 		assert.strictEqual(app.app_data.selected_project_id, app.selected_project_id);
 		assert.strictEqual(app.app_data.selected_realm_id, app.selected_realm_id);
 		const realm = app.realms![2]!;
 		app.select_realm(realm.id);
-		flushSync();
 		assert.strictEqual(app.app_data.selected_realm_id, realm.id);
 	});
 
-	test('applies the initial site data', () => {
-		const { app } = create({
-			volume: 0.2,
-			instrument: 'square',
-			scale: { name: 'major', notes: [2, 4, 5, 7, 9, 11] },
-			key: 'D'
-		});
+	test('loads the stored site data', () => {
+		localStorage.setItem(
+			TEST_SITE_STORAGE_KEY,
+			JSON.stringify({
+				volume: 0.2,
+				instrument: 'square',
+				scale: { name: 'major', notes: [2, 4, 5, 7, 9, 11] },
+				key: 'D'
+			})
+		);
+		const app = create_app();
 		assert.strictEqual(app.volume, 0.2);
 		assert.strictEqual(app.instrument, 'square');
 		assert.strictEqual(app.key, 'D');
@@ -81,13 +67,13 @@ describe('a fresh app', () => {
 	});
 
 	test('enables every note for the chromatic scale', () => {
-		const { app } = create();
+		const app = create_app();
 		assert.strictEqual(app.scale.name, 'chromatic');
 		assert.strictEqual(app.enabled_notes, null);
 	});
 
 	test('toggles the trainer help', () => {
-		const { app } = create();
+		const app = create_app();
 		assert.strictEqual(app.show_trainer_help, true);
 		app.toggle_trainer_help();
 		assert.strictEqual(app.show_trainer_help, false);
@@ -96,17 +82,28 @@ describe('a fresh app', () => {
 });
 
 describe('persistence', () => {
-	test('restores the projects and selection', () => {
-		const first = create();
-		const realm = first.app.realms![1]!;
-		first.app.select_realm(realm.id);
-		flushSync();
-		save(first);
+	test('saves the site settings on write', () => {
+		const app = create_app();
+		assert.strictEqual(read_stored(TEST_SITE_STORAGE_KEY), null); // loading doesn't write
+		app.volume = 0.3;
+		app.instrument = 'triangle';
+		app.key = 'E';
+		const stored = read_stored(TEST_SITE_STORAGE_KEY);
+		assert.strictEqual(stored.volume, 0.3);
+		assert.strictEqual(stored.instrument, 'triangle');
+		assert.strictEqual(stored.key, 'E');
+		assert.strictEqual(create_app().volume, 0.3);
+	});
 
-		const { app } = create();
-		assert.strictEqual(app.selected_project_id, first.app.selected_project_id);
+	test('restores the projects and selection', () => {
+		const first = create_app();
+		const realm = first.realms![1]!;
+		first.select_realm(realm.id);
+
+		const app = create_app();
+		assert.strictEqual(app.selected_project_id, first.selected_project_id);
 		assert.strictEqual(app.selected_realm_id, realm.id);
-		assert.deepEqual(app.project_datas, first.app.project_datas);
+		assert.deepEqual(app.project_datas, first.project_datas);
 	});
 
 	test('drops projects whose data is missing', () => {
@@ -124,7 +121,7 @@ describe('persistence', () => {
 				})
 			)
 		);
-		const { app } = create();
+		const app = create_app();
 		assert.deepEqual(
 			app.app_data.projects.map((p) => p.id),
 			[project.id]
@@ -144,7 +141,7 @@ describe('persistence', () => {
 				})
 			)
 		);
-		const { app } = create();
+		const app = create_app();
 		assert.notStrictEqual(app.selected_project_id, 'corrupt');
 		assert.ok(app.selected_project_data);
 		assert.deepEqual(
@@ -156,14 +153,14 @@ describe('persistence', () => {
 
 	test('resets corrupt app data', () => {
 		localStorage.setItem(TEST_STORAGE_KEY, '{"projects": 5}');
-		const { app } = create();
+		const app = create_app();
 		assert.strictEqual(app.project_datas.length, 1);
 	});
 });
 
 describe('projects', () => {
 	test('create_project adds, selects, and persists', () => {
-		const { app } = create();
+		const app = create_app();
 		const project = s.parse_or_throw(ProjectData, { name: 'new' });
 		assert.strictEqual(app.create_project(project), project);
 		assert.strictEqual(app.selected_project_id, project.id);
@@ -172,22 +169,20 @@ describe('projects', () => {
 	});
 
 	test('create_project returns an existing project with the same id', () => {
-		const { app } = create();
+		const app = create_app();
 		const existing = app.project_datas[0]!;
 		assert.strictEqual(app.create_project({ ...existing, name: 'other' }), existing);
 		assert.strictEqual(app.project_datas.length, 1);
 	});
 
 	test('select_project loads a stored project', () => {
-		const first = create();
+		const first = create_app();
 		const other = s.parse_or_throw(ProjectData, { name: 'other' });
-		first.app.create_project(other);
-		const original = first.app.project_datas[0]!;
-		first.app.select_project(original.id);
-		flushSync();
-		save(first);
+		first.create_project(other);
+		const original = first.project_datas[0]!;
+		first.select_project(original.id);
 
-		const { app } = create();
+		const app = create_app();
 		assert.strictEqual(app.project_datas.length, 1);
 		app.select_project(other.id);
 		assert.strictEqual(app.project_datas.length, 2);
@@ -196,14 +191,14 @@ describe('projects', () => {
 	});
 
 	test('select_project with null clears the selection', () => {
-		const { app } = create();
+		const app = create_app();
 		app.select_project(null);
 		assert.strictEqual(app.selected_project_data, null);
 		assert.strictEqual(app.realms, null);
 	});
 
 	test('update_project renames in the app data and persists', () => {
-		const { app } = create();
+		const app = create_app();
 		const project = app.project_datas[0]!;
 		app.update_project({ ...project, name: 'renamed' });
 		assert.strictEqual(app.selected_project_data?.name, 'renamed');
@@ -212,14 +207,14 @@ describe('projects', () => {
 	});
 
 	test('update_project ignores an unknown project', () => {
-		const { app } = create();
+		const app = create_app();
 		const before = app.project_datas;
 		app.update_project(s.parse_or_throw(ProjectData, {}));
 		assert.strictEqual(app.project_datas, before);
 	});
 
 	test('duplicate_project copies with a new id and name', () => {
-		const { app } = create();
+		const app = create_app();
 		const project = app.project_datas[0]!;
 		app.duplicate_project(project.id);
 		const copy = app.project_datas[1]!;
@@ -231,7 +226,7 @@ describe('projects', () => {
 	});
 
 	test('remove_project selects another project and deletes the stored data', () => {
-		const { app } = create();
+		const app = create_app();
 		const first = app.project_datas[0]!;
 		const second = app.create_project(s.parse_or_throw(ProjectData, {}));
 		app.remove_project(second.id);
@@ -244,7 +239,7 @@ describe('projects', () => {
 	});
 
 	test('removing the last project creates a new one', () => {
-		const { app } = create();
+		const app = create_app();
 		const only = app.project_datas[0]!;
 		app.remove_project(only.id);
 		assert.strictEqual(app.project_datas.length, 1);
@@ -256,7 +251,7 @@ describe('projects', () => {
 	});
 
 	test('edit_project distinguishes drafts from existing projects', () => {
-		const { app } = create();
+		const app = create_app();
 		const project = app.project_datas[0]!;
 		app.edit_project(project);
 		assert.strictEqual(app.editing_project, true);

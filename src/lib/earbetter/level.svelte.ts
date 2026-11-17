@@ -77,6 +77,16 @@ export interface Trial {
 	retry_count: number;
 }
 
+/**
+ * The judgement of a guess that the player sees, as data rather than inferred from `status`,
+ * so the UI can react to each one even when two in a row share a status.
+ * A new object for each judgement, so its identity marks the event.
+ */
+export interface Feedback {
+	kind: 'success' | 'failure';
+	note: Midi;
+}
+
 const DEFAULT_STATUS: Status = 'initial';
 const DEFAULT_TRIAL: Trial | null = null;
 
@@ -114,11 +124,16 @@ export class Level {
 	trial: Trial | null = $state(DEFAULT_TRIAL);
 	trials: Array<Trial> = $state([]);
 	last_guess: Midi | null = $state(null);
+	/**
+	 * The most recent judged guess, kept after its feedback status ends so the UI can finish showing it.
+	 */
+	feedback: Feedback | null = $state.raw(null);
 
 	reset = (): void => {
 		this.cancel();
 		this.trial = DEFAULT_TRIAL;
 		this.trials = [];
+		this.feedback = null;
 		this.update_status(DEFAULT_STATUS);
 		this.start();
 	};
@@ -217,6 +232,7 @@ export class Level {
 			}
 			// TODO should this be "on enter showing_failure_feedback state" logic?
 			this.mistakes += 1;
+			this.feedback = { kind: 'failure', note };
 			this.update_status('showing_failure_feedback');
 			this.schedule_feedback(this.retry_trial);
 			return;
@@ -235,6 +251,7 @@ export class Level {
 
 		if (guessing_index >= sequence_length - 1) {
 			// if more -> update current response index
+			this.feedback = { kind: 'success', note };
 			this.update_status('showing_success_feedback');
 			// TODO should this be "on enter showing_success_feedback state" logic?
 			if (trial.index < this.level_data.trial_count - 1) {

@@ -1,6 +1,4 @@
 <script lang="ts">
-	import { onDestroy } from 'svelte';
-
 	import { type MIDIMessageEvent, MIDICommand, type MIDIAccess } from './WebMIDI.ts';
 	import { parse_midi_message } from './midi_helpers.ts';
 	import type { Midi } from './music.ts';
@@ -59,24 +57,17 @@
 		}
 	};
 
-	// TODO clean up
-	const unsubscribers: Array<() => void> = [];
-	const unsubscribe = (): void => {
-		for (const u of unsubscribers) u();
-		unsubscribers.length = 0;
-	};
-	onDestroy(unsubscribe);
-
-	const subscribe = ($ma: MIDIAccess | null) => {
-		if (unsubscribers.length) unsubscribe();
-		if (!$ma) return;
-		for (const input of $ma.inputs.values()) {
+	// syncs listeners on the external `MIDIAccess` inputs, so this is a genuine effect
+	$effect(() => {
+		if (!midi_access) return;
+		const inputs = Array.from(midi_access.inputs.values());
+		for (const input of inputs) {
 			input.addEventListener('midimessage', onmidimessage as any);
-			unsubscribers.push(() => {
-				input.removeEventListener('midimessage', onmidimessage as any);
-			});
 		}
-	};
-
-	$effect(() => subscribe(midi_access));
+		return () => {
+			for (const input of inputs) {
+				input.removeEventListener('midimessage', onmidimessage as any);
+			}
+		};
+	});
 </script>

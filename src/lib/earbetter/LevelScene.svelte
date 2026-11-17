@@ -2,7 +2,8 @@
 	import { is_editable, swallow } from '@fuzdev/fuz_util/dom.ts';
 	import { scale, fly } from 'svelte/transition';
 	import { plural } from '@fuzdev/fuz_util/string.ts';
-	import { onMount, untrack } from 'svelte';
+	import { onMount } from 'svelte';
+	import type { Attachment } from 'svelte/attachments';
 
 	import { LevelStats, type Level } from './level.svelte.ts';
 	import Piano from '../Piano.svelte';
@@ -47,46 +48,25 @@
 		level.guess(note);
 	};
 
-	let feedback_count = $state(0);
-
-	let last_feedback_status: null | 'success' | 'failure' = $state(null);
-
 	const waiting = $derived(level.status === 'waiting_for_input');
 	const success = $derived(level.status === 'showing_success_feedback');
 	const failure = $derived(level.status === 'showing_failure_feedback');
 	const complete = $derived(level.status === 'complete');
 
-	// TODO better way to do these? callback to `level`?
-	$effect(() => {
-		if (success) untrack(update_success);
-	});
-	$effect(() => {
-		if (failure) untrack(update_failure);
-	});
-	const update_success = () => {
-		feedback_count++;
-		last_feedback_status = 'success';
-		update_text_burst_position();
-	};
-	const update_failure = () => {
-		feedback_count++;
-		last_feedback_status = 'failure';
-		update_text_burst_position();
-	};
-
 	let piano_wrapper_el: HTMLElement | undefined = $state();
-	let text_burst_offset_x = $state(0);
-	let text_burst_offset_y = $state(0);
-	const update_text_burst_position = () => {
-		if (!piano_wrapper_el) return;
-		const guessed = level.last_guess;
-		if (guessed === null) return;
-		const note_el = piano_wrapper_el.querySelector(`[data-note="${guessed}"]`);
-		if (!note_el) return;
-		const rect = note_el.getBoundingClientRect();
-		text_burst_offset_x = rect.x;
-		text_burst_offset_y = rect.y + rect.height / 2;
-	};
+
+	/**
+	 * Positions a feedback burst at the piano key that was guessed.
+	 * Each burst is keyed on its `Level.feedback` and mounts fresh, so this measures once per guess.
+	 */
+	const place_at_note =
+		(note: Midi): Attachment<HTMLElement> =>
+		(el) => {
+			const note_el = piano_wrapper_el?.querySelector(`[data-note="${note}"]`);
+			if (!note_el) return;
+			const rect = note_el.getBoundingClientRect();
+			el.style.transform = `translate3d(${rect.x}px, ${rect.y + rect.height / 2}px, 0)`;
+		};
 
 	const initial = $derived(waiting && guessing_index === 0); // the initial user-prompting trial state before any inputs have been entered by the player (related, "prompting")
 
@@ -223,21 +203,19 @@
 				</div>
 			</div>
 		{/if}
-		{#if last_feedback_status !== null}
+		{#if level.feedback}
+			{@const feedback = level.feedback}
 			<div class="feedback_text_bursts">
-				<div style:transform="translate3d({text_burst_offset_x}px, {text_burst_offset_y}px, 0)">
-					{#if last_feedback_status === 'success'}
-						{#key feedback_count}
+				{#key feedback}
+					<div {@attach place_at_note(feedback.note)}>
+						{#if feedback.kind === 'success'}
 							<TextBurst count={11} items={['🎵', '🎶', '🌸', '🌻', '🌼', '🍀']} />
-						{/key}
-					{/if}
-					{#if last_feedback_status === 'failure'}
-						<!-- TODO grayscale? -->
-						{#key feedback_count}
+						{:else}
+							<!-- TODO grayscale? -->
 							<TextBurst count={5} items={['🦜', '⁉', '❔', '❌']} />
-						{/key}
-					{/if}
-				</div>
+						{/if}
+					</div>
+				{/key}
 			</div>
 		{/if}
 	</div>

@@ -39,9 +39,11 @@
 	let min_note = $state(initial_piano_settings.min_note);
 	let max_note = $state(initial_piano_settings.max_note);
 
-	const to_piano_data = (): PianoSettings => ({ min_note, max_note });
-	const save_piano_data = () => set_in_storage(SITE_DATA_STORAGE_KEY, to_piano_data());
-	$effect(save_piano_data);
+	// saves on write through the function bindings below, no effect watches the state
+	const save_piano_data = (): void => {
+		const data: PianoSettings = { min_note, max_note };
+		set_in_storage(SITE_DATA_STORAGE_KEY, data);
+	};
 
 	const ac = audio_context_context.get();
 
@@ -97,7 +99,22 @@
 			<InitMidiButton midi_state={app} />
 		</fieldset>
 		<fieldset class="row">
-			<MidiRangeControl bind:min_note bind:max_note />
+			<MidiRangeControl
+				bind:min_note={
+					() => min_note,
+					(v) => {
+						min_note = v;
+						save_piano_data();
+					}
+				}
+				bind:max_note={
+					() => max_note,
+					(v) => {
+						max_note = v;
+						save_piano_data();
+					}
+				}
+			/>
 		</fieldset>
 	</form>
 	<Footer />

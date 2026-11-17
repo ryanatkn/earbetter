@@ -48,19 +48,19 @@
 
 	let removing = $state(false);
 
-	let updated_name: string = $state(level_data.name);
+	let updated_name: string = $derived(level_data.name);
 	const normalized_updated_name = $derived((updated_name as any)?.trim());
-	let updated_intervals: Intervals = $state.raw(level_data.intervals);
-	let updated_tonics: ReadonlyArray<Midi> | null = $state.raw(level_data.tonics);
+	let updated_intervals: Intervals = $derived(level_data.intervals);
+	let updated_tonics: ReadonlyArray<Midi> | null = $derived(level_data.tonics);
 	const normalized_updated_tonics = $derived(
 		updated_tonics
 			? updated_tonics.filter((t) => t >= updated_min_note && t <= updated_max_note)
 			: updated_tonics
 	);
-	let updated_trial_count: number = $state(level_data.trial_count);
-	let updated_sequence_length: number = $state(level_data.sequence_length);
-	let updated_min_note: Midi = $state(level_data.min_note);
-	let updated_max_note: Midi = $state(level_data.max_note);
+	let updated_trial_count: number = $derived(level_data.trial_count);
+	let updated_sequence_length: number = $derived(level_data.sequence_length);
+	let updated_min_note: Midi = $derived(level_data.min_note);
+	let updated_max_note: Midi = $derived(level_data.max_note);
 
 	const to_raw_data = () => ({
 		id: level_data.id,
@@ -86,17 +86,6 @@
 		return to_level_data_error(parsed.value);
 	});
 
-	// TODO @many review this effect to try to remove it
-	$effect(() => {
-		updated_name = level_data.name;
-		updated_intervals = level_data.intervals;
-		updated_tonics = level_data.tonics;
-		updated_trial_count = level_data.trial_count;
-		updated_sequence_length = level_data.sequence_length;
-		updated_min_note = level_data.min_note;
-		updated_max_note = level_data.max_note;
-	});
-
 	const changed = $derived(
 		normalized_updated_name !== level_data.name ||
 			updated_trial_count !== level_data.trial_count ||
@@ -114,11 +103,10 @@
 	let serialized = $state('');
 	let updated = $state('');
 	const changed_serialized = $derived(serialized !== updated);
-	let parse_error_message = $state('');
-	// TODO @many review this effect to try to remove it
-	$effect(() => {
+	// resets when the `level_data` prop changes, and import failures overwrite it
+	let parse_error_message = $derived.by(() => {
 		level_data;
-		parse_error_message = '';
+		return '';
 	});
 	let level_data_el: HTMLTextAreaElement | undefined = $state();
 	let start_importing_el: HTMLButtonElement | undefined = $state();
