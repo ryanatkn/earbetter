@@ -1,33 +1,64 @@
 <!doctype html>
-<html lang="en" class="dark">
+<html lang="en">
 	<head>
 		<meta charset="utf-8" />
 		<link rel="icon" href="/favicon.png" />
 		<link rel="icon" href="/logo.svg" sizes="any" type="image/svg+xml" />
 		<meta name="viewport" content="width=device-width, initial-scale=1" />
-		<meta http-equiv="content-security-policy" content="child-src 'none'; default-src 'none'; frame-src 'self'; worker-src 'self' blob:; connect-src 'self'; font-src 'self' data: https://*.ryanatkn.com/ https://*.spiderspace.org/ https://*.webdevladder.net/ https://*.dealt.dev/ https://*.fuz.dev/ https://*.ztack.net/ https://*.grogarden.org/ https://*.zzz.software/ https://*.zzzbot.dev/ https://*.cosmicplayground.org/ https://ryanatkn.github.io/; img-src 'self' data: blob: filesystem: https://*.ryanatkn.com/ https://*.spiderspace.org/ https://*.webdevladder.net/ https://*.dealt.dev/ https://*.fuz.dev/ https://*.ztack.net/ https://*.grogarden.org/ https://*.zzz.software/ https://*.zzzbot.dev/ https://*.cosmicplayground.org/ https://ryanatkn.github.io/; manifest-src 'self'; media-src 'self' data: blob: mediastream: filesystem: https://*.ryanatkn.com/ https://*.spiderspace.org/ https://*.webdevladder.net/ https://*.dealt.dev/ https://*.fuz.dev/ https://*.ztack.net/ https://*.grogarden.org/ https://*.zzz.software/ https://*.zzzbot.dev/ https://*.cosmicplayground.org/ https://ryanatkn.github.io/; object-src 'none'; script-src 'self' 'sha256-QOxqn7EUzb3ydF9SALJoJGWSvywW9R0AfTDSenB83Z8=' 'sha256-Nkh2TZOL/i93LoibhVvgvK0u8Uph3Uf7OTWcuOgwQEU='; script-src-elem 'self' 'sha256-QOxqn7EUzb3ydF9SALJoJGWSvywW9R0AfTDSenB83Z8=' 'sha256-Nkh2TZOL/i93LoibhVvgvK0u8Uph3Uf7OTWcuOgwQEU='; script-src-attr 'none'; style-src 'self' 'unsafe-inline'; style-src-elem 'self' 'unsafe-inline'; style-src-attr 'unsafe-inline'; base-uri 'none'; form-action 'self'; upgrade-insecure-requests">
-		<link rel="modulepreload" href="/_app/immutable/entry/start.Db79EeXJ.js">
-		<link rel="modulepreload" href="/_app/immutable/chunks/Bv49_G5z.js">
-		<link rel="modulepreload" href="/_app/immutable/chunks/CJaerUHp.js">
-		<link rel="modulepreload" href="/_app/immutable/entry/app.D0Hfoprm.js">
-		<link rel="modulepreload" href="/_app/immutable/chunks/DsnmJJEf.js">
-		<link rel="modulepreload" href="/_app/immutable/chunks/C-YpJhoF.js">
-		<link rel="modulepreload" href="/_app/immutable/chunks/DEPAWzjT.js">
+
+		<script>
+			// defaults to dark, unlike fuz_ui's `auto`, matching `src/routes/+layout.svelte`
+			document.documentElement.classList.add(
+				((c) =>
+					c === 'light' || (c === 'auto' && !matchMedia('(prefers-color-scheme:dark)').matches)
+						? 'light'
+						: 'dark')(localStorage.getItem('fuz:color-scheme'))
+			);
+		</script>
+
+		<meta http-equiv="content-security-policy" content="child-src 'none'; default-src 'none'; frame-src 'self' https://*.fuz.dev/; worker-src 'self' blob: 'wasm-unsafe-eval'; connect-src 'self' https://*.fuz.dev/; font-src 'self' data: https://*.fuz.dev/; img-src 'self' data: blob: filesystem: https://*.fuz.dev/; manifest-src 'self'; media-src 'self' data: blob: mediastream: filesystem: https://*.fuz.dev/; object-src 'none'; script-src 'self' 'wasm-unsafe-eval' 'sha256-CkhymyixntvSTuePGizI3BFtnRFlWWg95YBmBOCFxfY=' 'sha256-jy7yFYKaqsvDylfJ7TZXogF+T/VMX9mY3b23OaQ2qzM='; script-src-elem 'self' 'sha256-CkhymyixntvSTuePGizI3BFtnRFlWWg95YBmBOCFxfY=' 'sha256-jy7yFYKaqsvDylfJ7TZXogF+T/VMX9mY3b23OaQ2qzM='; script-src-attr 'none'; style-src 'self' 'unsafe-inline'; style-src-elem 'self' 'unsafe-inline'; style-src-attr 'unsafe-inline'; base-uri 'none'; form-action 'self'; upgrade-insecure-requests">
+		<link href="/_app/immutable/entry/start.D0oml_gK.js" rel="modulepreload">
+		<link href="/_app/immutable/entry/payload.DSmR2FwN.js" rel="modulepreload">
+		<link href="/_app/immutable/chunks/DclECHGd.js" rel="modulepreload">
+		<link href="/_app/immutable/chunks/Cs5dChl6.js" rel="modulepreload">
+		<link href="/_app/immutable/chunks/CrWZGFRq.js" rel="modulepreload">
+		<link href="/_app/immutable/chunks/CC0uph1V.js" rel="modulepreload">
+		<link href="/_app/immutable/entry/app.BjKBVQwC.js" rel="modulepreload">
+		<link href="/_app/immutable/nodes/0.5QGTCm1O.js" rel="modulepreload">
+		<link href="/_app/immutable/chunks/BdFlb6Sq.js" rel="modulepreload">
+		<link href="/_app/immutable/chunks/Cm3VRdDp.js" rel="modulepreload">
+		<link href="/_app/immutable/chunks/VvkWmqsZ.js" rel="modulepreload">
+		<link href="/_app/immutable/chunks/BziDtKn4.js" rel="modulepreload">
+		<link href="/_app/immutable/chunks/CyvFx4PF.js" rel="modulepreload">
+		<link href="/_app/immutable/chunks/DtSt6O-a.js" rel="modulepreload">
+		<link href="/_app/immutable/chunks/B-LOob8u.js" rel="modulepreload">
+		<link href="/_app/immutable/chunks/Dx-5pAms.js" rel="modulepreload">
+		<link href="/_app/immutable/chunks/DjX4kmr7.js" rel="modulepreload">
+		<link href="/_app/immutable/nodes/2.BI364W-h.js" rel="modulepreload">
+		<link href="/_app/immutable/chunks/DCO4Ojz6.js" rel="modulepreload">
+		
+		<link href="/_app/immutable/assets/Footer.o_R4LZP1.css" rel="stylesheet">
+		<link href="/_app/immutable/assets/Dialog.DfiimBCd.css" rel="stylesheet">
+		<link href="/_app/immutable/assets/InitMidiButton.-uajpXa4.css" rel="stylesheet">
+		<link href="/_app/immutable/assets/VolumeControl.hj_5Wa9k.css" rel="stylesheet">
+		<link href="/_app/immutable/assets/0.CB0X51jF.css" rel="stylesheet">
+		<link href="/_app/immutable/assets/Header.Db24AerH.css" rel="stylesheet">
+		<link href="/_app/immutable/assets/2.DA1A4fxb.css" rel="stylesheet">
 	</head>
 	<body data-sveltekit-preload-data="hover">
 		<div style="display: contents">
 			<script>
 				{
-					__sveltekit_1yjj7zn = {
-						base: ""
+					__sveltekit_125hxeq = {
+						base: "",
+						version: "23108a5972e3553b443239f730681722add123e5"
 					};
 
 					const element = document.currentScript.parentElement;
 
-					Promise.all([
-						import("/_app/immutable/entry/start.Db79EeXJ.js"),
-						import("/_app/immutable/entry/app.D0Hfoprm.js")
-					]).then(([kit, app]) => {
+					import("/_app/immutable/entry/start.D0oml_gK.js").then(async (kit) => {
+						kit.init(__sveltekit_125hxeq);
+						const app = await import("/_app/immutable/entry/app.BjKBVQwC.js");
 						kit.start(app, element);
 					});
 				}

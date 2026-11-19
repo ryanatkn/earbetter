@@ -1,0 +1,1 @@
+import{a as e}from"./Cm3VRdDp.js";var t=()=>{};Promise.resolve();var n=e(()=>{let e;return()=>e??=r()}),r=()=>new AudioContext;export{t as n,n as t};

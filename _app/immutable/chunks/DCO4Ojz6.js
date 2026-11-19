@@ -1,0 +1,1 @@
+import{$ as e,Ft as t,It as n,tt as r,vt as i}from"./CC0uph1V.js";import{a,i as o}from"./VvkWmqsZ.js";var s=r(`<header class="svelte-vny38x"><div class="box panel p_md pt_xl2 svelte-vny38x"><!> <h1 class="my_md">earbetter</h1></div></header>`);function c(r){var c=s(),l=i(c),u=i(l);a(u,{get data(){return o},size:`var(--icon_size_xl3)`}),t(2),n(l),n(c),e(r,c)}export{c as t};
