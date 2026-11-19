@@ -7,6 +7,7 @@
 
 - features a [configurable ear trainer](https://earbetter.ryanatkn.com/trainer)
 - also has a [playable piano](https://earbetter.ryanatkn.com/piano)
+- and a [pulse generator](https://earbetter.ryanatkn.com/pulse) for click trains and pulsed tones
 - supports MIDI devices like piano keyboards
 - levels can be shared via their links or exporting/importing data
 

@@ -15,6 +15,7 @@
 			<ul class="unstyled">
 				<li><a class="panel" href={resolve('/trainer')}>train your ear!</a></li>
 				<li><a class="panel" href={resolve('/piano')}>play piano!</a></li>
+				<li><a class="panel" href={resolve('/pulse')}>hear a pulse!</a></li>
 			</ul>
 		</nav>
 	</section>
